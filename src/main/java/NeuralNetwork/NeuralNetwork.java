@@ -17,10 +17,10 @@ public class NeuralNetwork {
     }
 
     public double[] getNetworkOutput(double[] inputs) {
-        hiddenLayers.get(0).calculateLayerOutput(inputs);
+        hiddenLayers.get(0).getOutput(inputs);
 
         for (int i = 1; i < hiddenLayers.size(); i++) {
-            hiddenLayers.get(1).calculateLayerOutput(hiddenLayers.get(0).layerOutputs);
+            hiddenLayers.get(1).getOutput(hiddenLayers.get(0).layerOutputs);
         }
 
         return hiddenLayers.get(hiddenLayers.size() - 1).layerOutputs;
