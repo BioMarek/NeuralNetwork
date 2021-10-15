@@ -3,6 +3,11 @@ package NeuralNetwork;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The {@link NeuralNetwork} is composed of {@link Layer}. Hidden layers compute result based on input supplied into
+ * first layer. Results of computations are propagated into subsequent layers up to last layer which output is final
+ * output of {@link NeuralNetwork}.
+ */
 public class NeuralNetwork {
     private final List<Layer> hiddenLayers;
 

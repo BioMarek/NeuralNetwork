@@ -7,6 +7,8 @@ import static org.hamcrest.Matchers.*;
 
 
 public class NeuronTests {
+    private static final int TEST_REPEATS = 20;
+
     private Neuron neuron;
     private Neuron copy;
 
@@ -19,7 +21,6 @@ public class NeuronTests {
     @Test
     void copy_createsCorrectCopy() {
         assertThat(neuron.bias, equalTo(copy.bias));
-        assertThat(neuron.output, equalTo(copy.output));
         assertThat(neuron.innerPotential, equalTo(copy.innerPotential));
         assertThat(neuron.weights, equalTo(copy.weights));
         assertThat(neuron.equals(copy), is(true));
@@ -39,13 +40,16 @@ public class NeuronTests {
 
     @Test
     void getOutput_returnsCorrectOutputForUnitStepFunction() {
-        double result = (neuron.bias + neuron.weights[0] + neuron.weights[1]) >= 0.0D ? 1.0D : 0.0D;
-        assertThat(neuron.getOutput(new double[]{1, 1}), equalTo(result));
+        neuronTestOutput(1, 1);
+        neuronTestOutput(0, 1);
+        neuronTestOutput(1, 0);
+        neuronTestOutput(0, 0);
+    }
 
-        result = (neuron.bias + neuron.weights[1]) >= 0 ? 1 : 0;
-        assertThat(neuron.getOutput(new double[]{0, 1}), equalTo(result));
-
-        result = (neuron.bias + neuron.weights[0]) >= 0 ? 1 : 0;
-        assertThat(neuron.getOutput(new double[]{1, 0}), equalTo(result));
+    void neuronTestOutput(int first, int second) {
+        for (int i = 0; i < TEST_REPEATS; i++) {
+            double result = (neuron.bias + first * neuron.weights[0] + second * neuron.weights[1]) >= 0.0D ? 1.0D : 0.0D;
+            assertThat(neuron.getOutput(new double[]{first, second}), equalTo(result));
+        }
     }
 }

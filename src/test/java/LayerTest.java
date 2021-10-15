@@ -8,6 +8,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
 public class LayerTest {
+    private static final int TEST_REPEATS = 20;
+
     private Layer layer;
     private Layer copy;
 
@@ -43,25 +45,20 @@ public class LayerTest {
 
     @Test
     void getOutput_returnsCorrectOutputForUnitStepFunction() {
-        layer.getOutput(new double[]{1, 1});
-        double result1 = (layer.neurons[0].bias + layer.neurons[0].weights[0] + layer.neurons[0].weights[1]) >= 0.0D ? 1.0D : 0.0D;
-        double result2 = (layer.neurons[1].bias + layer.neurons[1].weights[0] + layer.neurons[1].weights[1]) >= 0.0D ? 1.0D : 0.0D;
+        layerTestOutput(1, 1);
+        layerTestOutput(1, 0);
+        layerTestOutput(0, 1);
+        layerTestOutput(0, 0);
+    }
 
-        assertThat(layer.layerOutputs[0], equalTo(result1));
-        assertThat(layer.layerOutputs[1], equalTo(result2));
+    void layerTestOutput(int first, int second){
+        layer.getOutput(new double[]{first, second});
+        for (int i = 0; i < TEST_REPEATS; i++){
+            double result1 = (layer.neurons[0].bias + first * layer.neurons[0].weights[0] + second * layer.neurons[0].weights[1]) >= 0.0D ? 1.0D : 0.0D;
+            double result2 = (layer.neurons[1].bias + first * layer.neurons[1].weights[0] + second * layer.neurons[1].weights[1]) >= 0.0D ? 1.0D : 0.0D;
 
-        layer.getOutput(new double[]{0, 1});
-        result1 = (layer.neurons[0].bias + layer.neurons[0].weights[1]) >= 0.0D ? 1.0D : 0.0D;
-        result2 = (layer.neurons[1].bias + layer.neurons[1].weights[1]) >= 0.0D ? 1.0D : 0.0D;
-
-        assertThat(layer.layerOutputs[0], equalTo(result1));
-        assertThat(layer.layerOutputs[1], equalTo(result2));
-
-        layer.getOutput(new double[]{1, 0});
-        result1 = (layer.neurons[0].bias + layer.neurons[0].weights[0]) >= 0.0D ? 1.0D : 0.0D;
-        result2 = (layer.neurons[1].bias + layer.neurons[1].weights[0]) >= 0.0D ? 1.0D : 0.0D;
-
-        assertThat(layer.layerOutputs[0], equalTo(result1));
-        assertThat(layer.layerOutputs[1], equalTo(result2));
+            assertThat(layer.layerOutputs[0], equalTo(result1));
+            assertThat(layer.layerOutputs[1], equalTo(result2));
+        }
     }
 }
