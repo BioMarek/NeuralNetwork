@@ -24,7 +24,13 @@ public class Layer {
 
     public Layer copy() {
         Layer layer = new Layer();
-        layer.neurons = Arrays.copyOf(this.neurons, this.neurons.length);
+        Neuron[] newNeurons = new Neuron[neurons.length];
+
+        for (int i = 0; i < neurons.length; i++){
+            newNeurons[i] = neurons[i].copy();
+        }
+
+        layer.neurons = newNeurons;
         layer.layerOutputs = Arrays.copyOf(this.layerOutputs, this.layerOutputs.length);
         return layer;
     }
