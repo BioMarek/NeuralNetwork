@@ -36,4 +36,16 @@ public class NeuronTests {
         copy.weights[0] = 10;
         assertThat(neuron.weights[0], not(equalTo(copy.weights[0])));
     }
+
+    @Test
+    void getOutput_returnsCorrectOutputForUnitStepFunction() {
+        double result = (neuron.bias + neuron.weights[0] + neuron.weights[1]) >= 0.0D ? 1.0D : 0.0D;
+        assertThat(neuron.getOutput(new double[]{1, 1}), equalTo(result));
+
+        result = (neuron.bias + neuron.weights[1]) >= 0 ? 1 : 0;
+        assertThat(neuron.getOutput(new double[]{0, 1}), equalTo(result));
+
+        result = (neuron.bias + neuron.weights[0]) >= 0 ? 1 : 0;
+        assertThat(neuron.getOutput(new double[]{1, 0}), equalTo(result));
+    }
 }
