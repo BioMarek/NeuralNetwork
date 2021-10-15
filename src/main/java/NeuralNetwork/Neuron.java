@@ -1,16 +1,18 @@
 package NeuralNetwork;
 
-import java.util.Arrays;
-import java.util.Objects;
+import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
+import java.util.Arrays;
+
+@EqualsAndHashCode
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Neuron {
     public double[] weights;
     public double innerPotential;
     public double output;
     public double bias;
-
-    private Neuron(){
-    }
 
     public Neuron(int numOfNeuronInPrevLayer) {
         weights = Util.randomDoubleArray(numOfNeuronInPrevLayer);
@@ -19,7 +21,7 @@ public class Neuron {
         bias = Util.randomDouble();
     }
 
-    public Neuron copy(){
+    public Neuron copy() {
         Neuron neuron = new Neuron();
         neuron.weights = Arrays.copyOf(this.weights, this.weights.length);
         neuron.innerPotential = this.innerPotential;
@@ -29,9 +31,9 @@ public class Neuron {
         return neuron;
     }
 
-    public double getOutput(double[] prevLayerOutputs){
+    public double getOutput(double[] prevLayerOutputs) {
         double result = bias;
-        for (int i = 0; i < weights.length; i++){
+        for (int i = 0; i < weights.length; i++) {
             result += (weights[i] * prevLayerOutputs[i]);
         }
         return Util.activationFunctionUnitStep(result);
@@ -44,23 +46,5 @@ public class Neuron {
             stringBuilder.append(String.format(" %7.4f", weight));
         }
         return stringBuilder.toString();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Neuron neuron = (Neuron) o;
-        return Double.compare(neuron.innerPotential, innerPotential) == 0
-                && Double.compare(neuron.output, output) == 0
-                && Double.compare(neuron.bias, bias) == 0 &&
-                Arrays.equals(weights, neuron.weights);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = Objects.hash(innerPotential, output, bias);
-        result = 31 * result + Arrays.hashCode(weights);
-        return result;
     }
 }

@@ -11,7 +11,7 @@ public class LayerTest {
     Layer copy = layer.copy();
 
     @Test
-    void copy(){
+    void copy() {
         assertThat(Arrays.equals(layer.layerOutputs, copy.layerOutputs), is(true));
         assertThat(layer.equals(copy), is(true));
     }
