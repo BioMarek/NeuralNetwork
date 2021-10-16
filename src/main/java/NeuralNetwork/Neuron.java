@@ -37,7 +37,7 @@ public class Neuron {
     /**
      * Calculates output of neuron using {@link Util#activationFunctionUnitStep(double)}}.
      *
-     * @param prevLayerOutputs The outputs of layer which are used as inputs for layer containing this neuron.
+     * @param prevLayerOutputs the outputs of layer which are used as inputs for layer containing this neuron
      * @return 1 or 0 based on result of {@link Util#activationFunctionUnitStep(double)}}
      */
     public double getOutput(double[] prevLayerOutputs) {
@@ -46,6 +46,17 @@ public class Neuron {
             result += (weights[i] * prevLayerOutputs[i]);
         }
         return Util.activationFunctionUnitStep(result);
+    }
+
+    /**
+     * The function takes random weight of {@link Neuron} by and changes it to new number in [-1, 1] interval.
+     *
+     * @param numOfMutations number of weights that should be changed
+     */
+    public void mutateRandomWeight(int numOfMutations) {
+        for (int i = 0; i < numOfMutations; i++) {
+            weights[Util.randomInt(0, weights.length)] = Util.randomDouble();
+        }
     }
 
     @Override

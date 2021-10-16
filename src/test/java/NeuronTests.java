@@ -2,6 +2,8 @@ import NeuralNetwork.Neuron;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
@@ -46,9 +48,18 @@ public class NeuronTests {
         neuronTestOutput(0, 0);
     }
 
-    void neuronTestOutput(int first, int second) {
+    @Test
+    void mutateRandomWeight_changesWeight() {
+        copy.mutateRandomWeight(1);
+        assertThat(Arrays.compare(neuron.weights, copy.weights), not(equalTo(0)));
+    }
+
+    private void neuronTestOutput(int first, int second) {
         for (int i = 0; i < TEST_REPEATS; i++) {
-            double result = (neuron.bias + first * neuron.weights[0] + second * neuron.weights[1]) >= 0.0D ? 1.0D : 0.0D;
+            double result = (neuron.bias +
+                            first * neuron.weights[0] +
+                            second * neuron.weights[1]
+            ) >= 0.0D ? 1.0D : 0.0D;
             assertThat(neuron.getOutput(new double[]{first, second}), equalTo(result));
         }
     }

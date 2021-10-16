@@ -53,6 +53,18 @@ public class Layer {
     }
 
     /**
+     * The function randomly picks given number of {@link Neuron} and changes given number randomly chosen weights.
+     *
+     * @param numOfNeuronsToMutate number of neurons that should be mutated
+     * @param numOfMutations       number of weight changes in each neuron
+     */
+    public void mutateRandomNeuron(int numOfNeuronsToMutate, int numOfMutations) {
+        for (int i = 0; i < numOfNeuronsToMutate; i++) {
+            neurons[Util.randomInt(0, neurons.length)].mutateRandomWeight(numOfMutations);
+        }
+    }
+
+    /**
      * Prints contents of layer in human-readable format.
      */
     public void printLayer() {

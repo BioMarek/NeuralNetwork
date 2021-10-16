@@ -5,11 +5,38 @@ import java.util.Random;
 public class Util {
     static private final Random random = new Random();
 
-    public static double randomDouble(int from, int to){
+    /**
+     * The function returns double integer in [from, to) interval.
+     *
+     * @param from lower bound, inclusive
+     * @param to   upper bound, exclusive
+     * @return random double in [from, to) interval
+     */
+    public static double randomDouble(int from, int to) {
+        if (to < from)
+            throw new IllegalArgumentException(String.format("Upper bound '%d' cannot be smaller than lower bound '%d'.", to, from));
+
         return (to - from) * random.nextDouble() + from;
     }
 
-    public static double randomDouble(){
+    /**
+     * The function returns random integer in [from, to) interval.
+     *
+     * @param from lower bound, inclusive
+     * @param to   upper bound, exclusive
+     * @return random integer in [from, to) interval
+     */
+    public static int randomInt(int from, int to) {
+        if (to < from)
+            throw new IllegalArgumentException(String.format("Upper bound '%d' cannot be smaller than lower bound '%d'.", to, from));
+
+        return from + random.nextInt(to - from);
+    }
+
+    /**
+     * @return random double in [-1, 1] interval.
+     */
+    public static double randomDouble() {
         return random.nextDouble() * 2.0D - 1.0D;
     }
 

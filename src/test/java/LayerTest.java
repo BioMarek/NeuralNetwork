@@ -51,11 +51,24 @@ public class LayerTest {
         layerTestOutput(0, 0);
     }
 
-    void layerTestOutput(int first, int second){
+    @Test
+    void mutateRandomNeuron_changesNeuron() {
+        copy.mutateRandomNeuron(1, 1);
+        assertThat(layer.neurons, not(equalTo(copy.neurons)));
+    }
+
+    private void layerTestOutput(int first, int second) {
         layer.getOutput(new double[]{first, second});
-        for (int i = 0; i < TEST_REPEATS; i++){
-            double result1 = (layer.neurons[0].bias + first * layer.neurons[0].weights[0] + second * layer.neurons[0].weights[1]) >= 0.0D ? 1.0D : 0.0D;
-            double result2 = (layer.neurons[1].bias + first * layer.neurons[1].weights[0] + second * layer.neurons[1].weights[1]) >= 0.0D ? 1.0D : 0.0D;
+        for (int i = 0; i < TEST_REPEATS; i++) {
+            double result1 = (layer.neurons[0].bias +
+                            first * layer.neurons[0].weights[0] +
+                            second * layer.neurons[0].weights[1]
+            ) >= 0.0D ? 1.0D : 0.0D;
+
+            double result2 = (layer.neurons[1].bias +
+                            first * layer.neurons[1].weights[0] +
+                            second * layer.neurons[1].weights[1]
+            ) >= 0.0D ? 1.0D : 0.0D;
 
             assertThat(layer.layerOutputs[0], equalTo(result1));
             assertThat(layer.layerOutputs[1], equalTo(result2));
