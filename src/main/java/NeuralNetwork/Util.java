@@ -34,7 +34,7 @@ public class Util {
     }
 
     /**
-     * @return random double in [-1, 1] interval.
+     * @return random double from [-1, 1] interval.
      */
     public static double randomDouble() {
         return random.nextDouble() * 2.0D - 1.0D;

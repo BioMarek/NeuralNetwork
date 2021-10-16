@@ -12,12 +12,12 @@ public class NeuralNetwork {
     private final List<Layer> hiddenLayers;
 
     public NeuralNetwork(int[] sizes) {
-        this.hiddenLayers = new ArrayList<>();
+        if (sizes.length < 1)
+            throw new IllegalArgumentException("Neural network needs at least 1 hidden layer");
 
-        if (sizes.length > 1) {
-            for (int i = 1; i < sizes.length; ++i) {
-                this.hiddenLayers.add(new Layer(sizes[i - 1], sizes[i]));
-            }
+        this.hiddenLayers = new ArrayList<>();
+        for (int i = 1; i < sizes.length; ++i) {
+            this.hiddenLayers.add(new Layer(sizes[i - 1], sizes[i]));
         }
     }
 
@@ -45,9 +45,7 @@ public class NeuralNetwork {
      * @param numOfMutations       number of weight changes in each neuron
      */
     public void mutateLayers(int numOfNeuronsToMutate, int numOfMutations) {
-        for (Layer layer : hiddenLayers) {
-            layer.mutateRandomNeuron(numOfNeuronsToMutate, numOfMutations);
-        }
+        hiddenLayers.forEach((layer -> layer.mutateRandomNeuron(numOfNeuronsToMutate, numOfMutations)));
     }
 
     /**
