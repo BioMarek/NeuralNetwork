@@ -29,6 +29,7 @@ public class LayerTest {
     void copy_changeInOutputOfLayerCopyDoesntChangeOriginal() {
         copy.layerOutputs[0] = 10;
         assertThat(layer.layerOutputs[0], not(equalTo(copy.layerOutputs[0])));
+        assertThat(layer.equals(copy), is(false));
     }
 
     @Test

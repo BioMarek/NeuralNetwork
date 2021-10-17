@@ -1,24 +1,47 @@
 package NeuralNetwork;
 
+import lombok.EqualsAndHashCode;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * The {@link NeuralNetwork} is composed of {@link Layer}. Hidden layers compute result based on input supplied into
  * first layer. Results of computations are propagated into subsequent layers up to last layer which output is final
  * output of {@link NeuralNetwork}.
  */
+@EqualsAndHashCode
 public class NeuralNetwork {
-    private final List<Layer> hiddenLayers;
+    public final List<Layer> hiddenLayers;
 
+    /**
+     * @param sizes Array of sizes, first number is number of {@link NeuralNetwork} inputs. Numbers size[1]...size[n]
+     *              say how many {@link Neuron} should be in n-th hidden {@link Layer}.
+     */
     public NeuralNetwork(int[] sizes) {
         if (sizes.length < 1)
             throw new IllegalArgumentException("Neural network needs at least 1 hidden layer");
 
-        this.hiddenLayers = new ArrayList<>();
+        hiddenLayers = new ArrayList<>();
         for (int i = 1; i < sizes.length; ++i) {
-            this.hiddenLayers.add(new Layer(sizes[i - 1], sizes[i]));
+            hiddenLayers.add(new Layer(sizes[i - 1], sizes[i]));
         }
+    }
+
+    public NeuralNetwork(List<Layer> hiddenLayers) {
+        this.hiddenLayers = hiddenLayers;
+    }
+
+    /**
+     * @return deep copy of {@link NeuralNetwork}
+     */
+    public NeuralNetwork copy() {
+        return new NeuralNetwork(
+                hiddenLayers.stream()
+                        .map(x -> x.copy())
+                        .collect(Collectors.toList())
+        );
     }
 
     /**

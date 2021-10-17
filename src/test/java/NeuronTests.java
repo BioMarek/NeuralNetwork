@@ -29,13 +29,13 @@ public class NeuronTests {
     }
 
     @Test
-    void copy_changeOfCopyBiasDoesntChangeOriginal() {
+    void copy_changeInCopyBiasDoesntChangeOriginal() {
         copy.bias = 10;
         assertThat(neuron.bias, not(equalTo(copy.bias)));
     }
 
     @Test
-    void copy_changeOfCopyWeightDoesntChangeOriginal() {
+    void copy_changeInCopyWeightDoesntChangeOriginal() {
         copy.weights[0] = 10;
         assertThat(neuron.weights[0], not(equalTo(copy.weights[0])));
     }
