@@ -1,6 +1,8 @@
 import NeuralNetwork.Util;
 import org.junit.jupiter.api.Test;
 
+import java.util.stream.DoubleStream;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -60,5 +62,15 @@ public class UtilTest {
     @Test
     void randomDouble_throwsExceptionWhenUpperBoundIsSmallerThanLowerBound() {
         assertThrows(IllegalArgumentException.class, () -> Util.randomDouble(5, 2));
+    }
+
+    @Test
+    void randomDouble_randomDoubleArrayReturnsArrayWithCorrectNumbers() {
+        for (int i = 0; i < TEST_REPEATS; i++) {
+            double[] array = Util.randomDoubleArray(10);
+
+            assertThat(DoubleStream.of(array).allMatch(j -> j >= -1.0D), is(true));
+            assertThat(DoubleStream.of(array).allMatch(j -> j < 1.0D), is(true));
+        }
     }
 }
