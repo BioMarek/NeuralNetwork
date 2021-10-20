@@ -1,16 +1,18 @@
 package Visualization;
 
 import NeuralNetwork.Layer;
+import NeuralNetwork.NeuralNetwork;
 import NeuralNetwork.Neuron;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Arrays;
 
 public class NeuralNetworkPanel extends JPanel {
     private final int neuronSize = 40;
-    private final int neuronYaxisGap = 60;
-    private final int neuronXaxisGap = 50;
-    private final int xDistanceBetweenLayers = 150;
+    private final int neuronYAxisGap = 60;
+    private final int neuronXAxisGap = 50;
+    private final int xAxisDistanceBetweenLayers = 150;
 
     public NeuralNetworkPanel() {
         this.setPreferredSize(new Dimension(500, 500));
@@ -24,12 +26,15 @@ public class NeuralNetworkPanel extends JPanel {
     }
 
     public void drawNeuralNetwork(Graphics2D graphics) {
-        Layer layer = new Layer(5, 5);
-        Layer layer2 = new Layer(5, 5);
+        NeuralNetwork neuralNetwork = new NeuralNetwork(new int[]{10, 2, 6, 5});
 
-        drawLayer(graphics, layer, 0);
-        drawLayer(graphics, layer2, 1);
-        drawWeights(graphics, layer, layer2, 0);
+        int[] yAxisOffsets = layersYAxisOffset(neuralNetwork);
+        for (int i = 0; i < neuralNetwork.hiddenLayers.size(); i++) {
+            drawLayer(graphics, neuralNetwork.hiddenLayers.get(i), i, yAxisOffsets[i]);
+        }
+        for (int i = 0; i < neuralNetwork.hiddenLayers.size() - 1; i++) {
+            drawWeights(graphics, neuralNetwork.hiddenLayers.get(i), neuralNetwork.hiddenLayers.get(i + 1), i, yAxisOffsets);
+        }
     }
 
     /**
@@ -39,15 +44,15 @@ public class NeuralNetworkPanel extends JPanel {
      * @param layer      {@link Layer} to draw
      * @param layerIndex index of {@link Layer} in {@link NeuralNetwork}
      */
-    public void drawLayer(Graphics2D graphics, Layer layer, int layerIndex) {
+    public void drawLayer(Graphics2D graphics, Layer layer, int layerIndex, int yAxisOffset) {
         graphics.setStroke(new BasicStroke(3));
 
-        int neuronYPosition = neuronYaxisGap;
-        int layerXPosition = neuronXaxisGap + layerIndex * xDistanceBetweenLayers;
+        int neuronYPosition = neuronYAxisGap + yAxisOffset;
+        int layerXPosition = neuronXAxisGap + layerIndex * xAxisDistanceBetweenLayers;
 
         for (int i = 0; i < layer.neurons.length; i++) {
             graphics.drawOval(layerXPosition, neuronYPosition, neuronSize, neuronSize);
-            neuronYPosition += neuronYaxisGap;
+            neuronYPosition += neuronYAxisGap;
         }
     }
 
@@ -60,23 +65,23 @@ public class NeuralNetworkPanel extends JPanel {
      * @param rightLayer     {@link Layer} with the index 'i + 1' in {@link NeuralNetwork}
      * @param leftLayerIndex index 'i' of {@link Layer} in {@link NeuralNetwork}
      */
-    public void drawWeights(Graphics2D graphics, Layer leftLayer, Layer rightLayer, int leftLayerIndex) {
+    public void drawWeights(Graphics2D graphics, Layer leftLayer, Layer rightLayer, int leftLayerIndex, int[] yAxisOffset) {
         graphics.setStroke(new BasicStroke(2));
 
-        int leftNeuronY = neuronYaxisGap;
-        int leftLayerX = neuronXaxisGap + leftLayerIndex * xDistanceBetweenLayers;
-        int rightLayerX = neuronXaxisGap + (leftLayerIndex + 1) * xDistanceBetweenLayers;
+        int leftNeuronY = neuronYAxisGap + yAxisOffset[leftLayerIndex];
+        int leftLayerX = neuronXAxisGap + leftLayerIndex * xAxisDistanceBetweenLayers;
+        int rightLayerX = leftLayerX + xAxisDistanceBetweenLayers;
 
         for (int leftNeuron = 0; leftNeuron < leftLayer.neurons.length; leftNeuron++) {
-            int rightNeuronY = neuronYaxisGap;
+            int rightNeuronY = neuronYAxisGap + yAxisOffset[leftLayerIndex + 1];
             for (int rightNeuron = 0; rightNeuron < rightLayer.neurons.length; rightNeuron++) {
                 graphics.setColor(weightToColor(rightLayer.neurons[rightNeuron].weights[leftNeuron]));
                 drawLine(graphics,
                         weightLineStartingPoint(leftNeuronY, leftLayerX, neuronSize),
                         weightLineEndingPoint(rightNeuronY, rightLayerX, neuronSize));
-                rightNeuronY += neuronYaxisGap;
+                rightNeuronY += neuronYAxisGap;
             }
-            leftNeuronY += neuronYaxisGap;
+            leftNeuronY += neuronYAxisGap;
         }
     }
 
@@ -122,6 +127,29 @@ public class NeuralNetworkPanel extends JPanel {
      * @return red if weight is negative blue otherwise
      */
     public Color weightToColor(double weight) {
-        return weight >= 0 ? new Color(255, 0, 0) : new Color(0, 0, 255);
+        return weight < 0 ? new Color(255, 0, 0) : new Color(0, 0, 255);
+    }
+
+    /**
+     * The function calculates offset on y axis so that {@link Layer}s with different number of {@link Neuron} are centered.
+     *
+     * @param neuralNetwork which {@link Layer}s will be evaluated
+     * @return array of offsets for each layer
+     */
+    public int[] layersYAxisOffset(NeuralNetwork neuralNetwork) {
+        int[] offsets = new int[neuralNetwork.hiddenLayers.size()];
+        int[] layerHeights = new int[neuralNetwork.hiddenLayers.size()];
+
+        for (int i = 0; i < neuralNetwork.hiddenLayers.size(); i++) {
+            layerHeights[i] = (neuralNetwork.hiddenLayers.get(i).neurons.length - 1) * neuronYAxisGap + neuronSize;
+        }
+
+        int maxHeight = Arrays.stream(layerHeights).max().getAsInt();
+
+        for (int i = 0; i < neuralNetwork.hiddenLayers.size(); i++) {
+            offsets[i] = (maxHeight - layerHeights[i]) / 2;
+        }
+
+        return offsets;
     }
 }
