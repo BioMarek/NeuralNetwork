@@ -6,7 +6,9 @@ import NeuralNetwork.Neuron;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class NeuralNetworkPanel extends JPanel {
     private final int neuronSize = 40;
@@ -44,7 +46,7 @@ public class NeuralNetworkPanel extends JPanel {
      * @param layer      {@link Layer} to draw
      * @param layerIndex index of {@link Layer} in {@link NeuralNetwork}
      */
-    public void drawLayer(Graphics2D graphics, Layer layer, int layerIndex, int yAxisOffset) {
+    protected void drawLayer(Graphics2D graphics, Layer layer, int layerIndex, int yAxisOffset) {
         graphics.setStroke(new BasicStroke(3));
 
         int neuronYPosition = neuronYAxisGap + yAxisOffset;
@@ -65,7 +67,7 @@ public class NeuralNetworkPanel extends JPanel {
      * @param rightLayer     {@link Layer} with the index 'i + 1' in {@link NeuralNetwork}
      * @param leftLayerIndex index 'i' of {@link Layer} in {@link NeuralNetwork}
      */
-    public void drawWeights(Graphics2D graphics, Layer leftLayer, Layer rightLayer, int leftLayerIndex, int[] yAxisOffset) {
+    protected void drawWeights(Graphics2D graphics, Layer leftLayer, Layer rightLayer, int leftLayerIndex, int[] yAxisOffset) {
         graphics.setStroke(new BasicStroke(2));
 
         int leftNeuronY = neuronYAxisGap + yAxisOffset[leftLayerIndex];
@@ -93,7 +95,7 @@ public class NeuralNetworkPanel extends JPanel {
      * @param neuronSize  {@link Neuron} size
      * @return {@link Point}
      */
-    public Point weightLineStartingPoint(int leftNeuronY, int leftLayerX, int neuronSize) {
+    protected Point weightLineStartingPoint(int leftNeuronY, int leftLayerX, int neuronSize) {
         return new Point(leftLayerX + neuronSize, leftNeuronY + neuronSize / 2);
     }
 
@@ -105,7 +107,7 @@ public class NeuralNetworkPanel extends JPanel {
      * @param neuronSize   {@link Neuron} size
      * @return {@link Point}
      */
-    public Point weightLineEndingPoint(int rightNeuronY, int rightLayerX, int neuronSize) {
+    protected Point weightLineEndingPoint(int rightNeuronY, int rightLayerX, int neuronSize) {
         return new Point(rightLayerX, rightNeuronY + neuronSize / 2);
     }
 
@@ -116,7 +118,7 @@ public class NeuralNetworkPanel extends JPanel {
      * @param starting {@link Point} where the line starts
      * @param ending   {@link Point} where the line ends
      */
-    public void drawLine(Graphics2D graphics, Point starting, Point ending) {
+    protected void drawLine(Graphics2D graphics, Point starting, Point ending) {
         graphics.drawLine(starting.x, starting.y, ending.x, ending.y);
     }
 
@@ -126,7 +128,7 @@ public class NeuralNetworkPanel extends JPanel {
      * @param weight weight of {@link Neuron}
      * @return red if weight is negative blue otherwise
      */
-    public Color weightToColor(double weight) {
+    protected Color weightToColor(double weight) {
         return weight < 0 ? new Color(255, 0, 0) : new Color(0, 0, 255);
     }
 
@@ -136,20 +138,13 @@ public class NeuralNetworkPanel extends JPanel {
      * @param neuralNetwork which {@link Layer}s will be evaluated
      * @return array of offsets for each layer
      */
-    public int[] layersYAxisOffset(NeuralNetwork neuralNetwork) {
-        int[] offsets = new int[neuralNetwork.hiddenLayers.size()];
-        int[] layerHeights = new int[neuralNetwork.hiddenLayers.size()];
+    protected int[] layersYAxisOffset(NeuralNetwork neuralNetwork) {
+        List<Integer> layerHeights = neuralNetwork.hiddenLayers.stream()
+                .map(layer -> (layer.neurons.length - 1) * neuronYAxisGap + neuronSize)
+                .collect(Collectors.toList());
 
-        for (int i = 0; i < neuralNetwork.hiddenLayers.size(); i++) {
-            layerHeights[i] = (neuralNetwork.hiddenLayers.get(i).neurons.length - 1) * neuronYAxisGap + neuronSize;
-        }
-
-        int maxHeight = Arrays.stream(layerHeights).max().getAsInt();
-
-        for (int i = 0; i < neuralNetwork.hiddenLayers.size(); i++) {
-            offsets[i] = (maxHeight - layerHeights[i]) / 2;
-        }
-
-        return offsets;
+        return layerHeights.stream()
+                .mapToInt(x -> (Collections.max(layerHeights) - x) / 2)
+                .toArray();
     }
 }
