@@ -79,8 +79,8 @@ public class NeuralNetworkPanel extends JPanel {
             for (int rightNeuron = 0; rightNeuron < rightLayer.neurons.length; rightNeuron++) {
                 graphics.setColor(weightToColor(rightLayer.neurons[rightNeuron].weights[leftNeuron]));
                 drawLine(graphics,
-                        weightLineStartingPoint(leftNeuronY, leftLayerX, neuronSize),
-                        weightLineEndingPoint(rightNeuronY, rightLayerX, neuronSize));
+                        weightLineStartingPoint(leftNeuronY, leftLayerX),
+                        weightLineEndingPoint(rightNeuronY, rightLayerX));
                 rightNeuronY += neuronYAxisGap;
             }
             leftNeuronY += neuronYAxisGap;
@@ -92,10 +92,9 @@ public class NeuralNetworkPanel extends JPanel {
      *
      * @param leftNeuronY y index of {@link Neuron} upper left corner
      * @param leftLayerX  x index of {@link Neuron} upper left corner
-     * @param neuronSize  {@link Neuron} size
      * @return {@link Point}
      */
-    protected Point weightLineStartingPoint(int leftNeuronY, int leftLayerX, int neuronSize) {
+    protected Point weightLineStartingPoint(int leftNeuronY, int leftLayerX) {
         return new Point(leftLayerX + neuronSize, leftNeuronY + neuronSize / 2);
     }
 
@@ -104,10 +103,9 @@ public class NeuralNetworkPanel extends JPanel {
      *
      * @param rightNeuronY y index of {@link Neuron} upper left corner
      * @param rightLayerX  x index of {@link Neuron} upper left corner
-     * @param neuronSize   {@link Neuron} size
      * @return {@link Point}
      */
-    protected Point weightLineEndingPoint(int rightNeuronY, int rightLayerX, int neuronSize) {
+    protected Point weightLineEndingPoint(int rightNeuronY, int rightLayerX) {
         return new Point(rightLayerX, rightNeuronY + neuronSize / 2);
     }
 
