@@ -15,7 +15,7 @@ public class LayerTest {
 
     @BeforeEach
     void init() {
-        layer = new Layer(2, 2);
+        layer = new Layer(2, 2, 1);
         copy = layer.copy();
     }
 

@@ -15,10 +15,14 @@ import java.util.stream.Stream;
 public class Layer {
     public Neuron[] neurons;
     public double[] layerOutputs;
+    public int index;
+    public int length;
 
-    public Layer(int numOfNeuronInPrevLayer, int numOfNeurons) {
+    public Layer(int numOfNeuronInPrevLayer, int numOfNeurons, int index) {
         this.neurons = new Neuron[numOfNeurons];
         this.layerOutputs = new double[numOfNeurons];
+        this.index = index;
+        this.length = numOfNeurons;
 
         for (int i = 0; i < numOfNeurons; i++) {
             neurons[i] = new Neuron(numOfNeuronInPrevLayer);
@@ -30,14 +34,16 @@ public class Layer {
      */
     public Layer copy() {
         Layer layer = new Layer();
-        Neuron[] newNeurons = new Neuron[neurons.length];
+        Neuron[] newNeurons = new Neuron[length];
 
-        for (int i = 0; i < neurons.length; i++) {
+        for (int i = 0; i < length; i++) {
             newNeurons[i] = neurons[i].copy();
         }
 
         layer.neurons = newNeurons;
         layer.layerOutputs = Arrays.copyOf(this.layerOutputs, this.layerOutputs.length);
+        layer.index = this.index;
+        layer.length = this.length;
         return layer;
     }
 
@@ -47,7 +53,7 @@ public class Layer {
      * @param prevLayerOutputs The outputs of layer which are used as inputs for this layer.
      */
     public void getOutput(double[] prevLayerOutputs) {
-        for (int i = 0; i < neurons.length; i++) {
+        for (int i = 0; i < length; i++) {
             layerOutputs[i] = neurons[i].getOutput(prevLayerOutputs);
         }
     }
@@ -60,7 +66,7 @@ public class Layer {
      */
     public void mutateRandomNeuron(int numOfNeuronsToMutate, int numOfMutations) {
         for (int i = 0; i < numOfNeuronsToMutate; i++) {
-            neurons[Util.randomInt(0, neurons.length)].mutateRandomWeight(numOfMutations);
+            neurons[Util.randomInt(0, length)].mutateRandomWeight(numOfMutations);
         }
     }
 

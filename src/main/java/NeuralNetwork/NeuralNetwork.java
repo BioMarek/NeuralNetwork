@@ -24,8 +24,8 @@ public class NeuralNetwork {
             throw new IllegalArgumentException("Neural network needs at least 1 hidden layer");
 
         hiddenLayers = new ArrayList<>();
-        for (int i = 1; i < sizes.length; ++i) {
-            hiddenLayers.add(new Layer(sizes[i - 1], sizes[i]));
+        for (int i = 0; i < sizes.length - 1; i++) {
+            hiddenLayers.add(new Layer(sizes[i], sizes[i + 1], i));
         }
     }
 
