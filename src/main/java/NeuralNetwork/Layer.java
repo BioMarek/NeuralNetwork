@@ -1,22 +1,19 @@
 package NeuralNetwork;
 
-import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 /**
  * The class represents hidden layer of neural network.
  */
-@EqualsAndHashCode
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Layer {
     public Neuron[] neurons;
     public double[] layerOutputs;
     public int index;
     public int length;
+
+    private Layer(){}
 
     public Layer(int numOfNeuronInPrevLayer, int numOfNeurons, int index) {
         this.neurons = new Neuron[numOfNeurons];
@@ -75,5 +72,21 @@ public class Layer {
      */
     public void printLayer() {
         Stream.of(neurons).forEach(System.out::println);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Layer layer = (Layer) o;
+        return index == layer.index && length == layer.length && Arrays.equals(neurons, layer.neurons) && Arrays.equals(layerOutputs, layer.layerOutputs);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(index, length);
+        result = 31 * result + Arrays.hashCode(neurons);
+        result = 31 * result + Arrays.hashCode(layerOutputs);
+        return result;
     }
 }

@@ -1,20 +1,17 @@
 package NeuralNetwork;
 
-import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-
 import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * The class represents {@link Neuron} which is main building block of {@link Layer}.
  */
-@EqualsAndHashCode
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Neuron {
     public double[] weights;
     public double innerPotential;
     public double bias;
+
+    private Neuron(){}
 
     public Neuron(int numOfNeuronInPrevLayer) {
         weights = Util.randomDoubleArray(numOfNeuronInPrevLayer);
@@ -66,5 +63,20 @@ public class Neuron {
             stringBuilder.append(String.format(" %7.4f", weight));
         }
         return stringBuilder.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Neuron neuron = (Neuron) o;
+        return Double.compare(neuron.innerPotential, innerPotential) == 0 && Double.compare(neuron.bias, bias) == 0 && Arrays.equals(weights, neuron.weights);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(innerPotential, bias);
+        result = 31 * result + Arrays.hashCode(weights);
+        return result;
     }
 }
