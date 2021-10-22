@@ -10,8 +10,10 @@ import java.util.stream.Collectors;
  * first layer. Results of computations are propagated into subsequent layers up to last layer which output is final
  * output of {@link NeuralNetwork}.
  */
-public class NeuralNetwork {
+public class NeuralNetwork implements Comparable{
     public final List<Layer> hiddenLayers;
+    public int score;
+    public String name;
 
     /**
      * @param sizes Array of sizes, first number is number of {@link NeuralNetwork} inputs. Numbers size[1]...size[n]
@@ -77,6 +79,15 @@ public class NeuralNetwork {
             System.out.println("Layer: " + i);
             hiddenLayers.get(i).printLayer();
         }
+    }
+
+    @Override
+    public int compareTo(Object o)
+    {
+        NeuralNetwork that = (NeuralNetwork) o;
+        if (this.score == that.score)
+            return 0;
+        return (this.score > that.score) ? 1 : -1;
     }
 
     @Override
