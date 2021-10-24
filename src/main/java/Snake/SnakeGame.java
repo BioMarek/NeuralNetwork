@@ -2,11 +2,13 @@ package Snake;
 
 import NeuralNetwork.Util;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
+/**
+ * Snake game it used check whether {@link NeuralNetwork} can play simple game.
+ */
 public class SnakeGame {
+    private final int EMPTY = 0;
     private final int WALL = 1;
     private final int BODY = 2;
     private final int HEAD = 3;
@@ -14,7 +16,7 @@ public class SnakeGame {
 
     private final int[][] grid;
     private final int size;
-    private final List<BodyPart> snake;
+    private List<BodyPart> snake;
     private Direction lastDirection;
 
     public SnakeGame(int size) {
@@ -22,6 +24,24 @@ public class SnakeGame {
         this.grid = new int[size][size];
         this.lastDirection = Direction.UP;
 
+        initSnake();
+        placeFood();
+        snakeToGrid();
+        printSnake();
+    }
+
+    public void mainLoop() {
+        Scanner scanner = new Scanner(System.in);
+        boolean gameOver = false;
+        while (!gameOver) {
+            String move = scanner.next();
+            gameOver = moveSnake(keyToDirection(move));
+            snakeToGrid();
+            printSnake();
+        }
+    }
+
+    public void initSnake() {
         snake = new ArrayList<>();
         snake.add(new BodyPart(true, size / 2, size / 2));
         snake.add(new BodyPart(false, size / 2 + 1, size / 2));
@@ -33,40 +53,9 @@ public class SnakeGame {
                     grid[row][column] = WALL;
             }
         }
-        putFood();
-        snakeToGrid();
-        printSnake();
     }
 
-    public void mainLoop() {
-        Scanner scanner = new Scanner(System.in);
-        while (true) {
-            String move = scanner.next();
-            boolean gameOver = false;
-            switch (move) {
-                case "w":
-                    gameOver = moveSnake(Direction.UP);
-                    break;
-                case "s":
-                    gameOver = moveSnake(Direction.DOWN);
-                    break;
-                case "a":
-                    gameOver = moveSnake(Direction.LEFT);
-                    break;
-                case "d":
-                    gameOver = moveSnake(Direction.RIGHT);
-                    break;
-            }
-            snakeToGrid();
-            printSnake();
-            System.out.println(gameOver);
-
-            if (gameOver)
-                return;
-        }
-    }
-
-    public void putFood() {
+    public void placeFood() {
         while (true) {
             int x = Util.randomInt(1, size - 1);
             int y = Util.randomInt(1, size - 1);
@@ -75,7 +64,7 @@ public class SnakeGame {
                 y = Util.randomInt(1, size - 1);
             } else {
                 grid[x][y] = FOOD;
-                break;
+                return;
             }
         }
     }
@@ -103,54 +92,60 @@ public class SnakeGame {
         return gameOver;
     }
 
-    public boolean moveByOne(int row, int column){
+    public Direction keyToDirection(String key) {
+        switch (key) {
+            case "w":
+                lastDirection = Direction.UP;
+                return Direction.UP;
+            case "s":
+                lastDirection = Direction.DOWN;
+                return Direction.DOWN;
+            case "a":
+                lastDirection = Direction.LEFT;
+                return Direction.LEFT;
+            case "d":
+                lastDirection = Direction.RIGHT;
+                return Direction.RIGHT;
+        }
+        return lastDirection;
+    }
+
+    public boolean moveByOne(int row, int column) {
         if (grid[row][column] == WALL || grid[row][column] == BODY)
             return true;
         if (grid[row][column] == FOOD) {
             snake.get(0).head = false;
             snake.add(0, new BodyPart(true, row, column));
-            putFood();
+            placeFood();
         } else {
             snake.get(0).head = false;
             snake.add(0, new BodyPart(true, row, column));
             BodyPart toRemove = snake.get(snake.size() - 1);
-            grid[toRemove.row][toRemove.column] = 0;
+            grid[toRemove.row][toRemove.column] = EMPTY;
             snake.remove(toRemove);
         }
-        lastDirection = Direction.LEFT;
         return false;
     }
 
     public void snakeToGrid() {
         for (BodyPart bodyPart : snake) {
-            if (bodyPart.head)
-                grid[bodyPart.row][bodyPart.column] = HEAD;
-            else
-                grid[bodyPart.row][bodyPart.column] = BODY;
+            grid[bodyPart.row][bodyPart.column] = bodyPart.head ? HEAD : BODY;
         }
     }
 
     public void printSnake() {
+        Map<Integer, String> tiles = new HashMap<>();
+        tiles.put(WALL, "X");
+        tiles.put(HEAD, "H");
+        tiles.put(BODY, "B");
+        tiles.put(FOOD, "O");
+        tiles.put(EMPTY, " ");
+
         for (int row = 0; row < size; row++) {
             for (int column = 0; column < size; column++) {
-                switch (grid[row][column]) {
-                    case WALL:
-                        System.out.print((char) 182);
-                        break;
-                    case HEAD:
-                        System.out.print("H");
-                        break;
-                    case BODY:
-                        System.out.print("B");
-                        break;
-                    case FOOD:
-                        System.out.print("O");
-                        break;
-                    default:
-                        System.out.print(" ");
-                }
+                System.out.print(tiles.get(grid[row][column]));
             }
-            System.out.println("");
+            System.out.println();
         }
     }
 }
