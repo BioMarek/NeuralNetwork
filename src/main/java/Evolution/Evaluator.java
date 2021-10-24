@@ -3,17 +3,24 @@ package Evolution;
 import NeuralNetwork.NeuralNetwork;
 
 public class Evaluator {
-    public int evaluate(NeuralNetwork neuralNetwork){
-        int score = 0;
-        score += getScore(neuralNetwork.getNetworkOutput(getInputs()));
-        return score;
+    /**
+     * Evaluates outputs of {@link NeuralNetwork}
+     *
+     * @param neuralNetwork that evaluates input produces and produces output
+     * @param inputs        array of inputs
+     * @return score given by scoring function
+     */
+    public int evaluate(NeuralNetwork neuralNetwork, double[] inputs) {
+        return getScore(neuralNetwork.getNetworkOutput(inputs));
     }
 
-    public int getScore(double[] output){
+    /**
+     * Scoring function gives score to each particular output
+     *
+     * @param output {@link NeuralNetwork} output
+     * @return score
+     */
+    public int getScore(double[] output) {
         return 1;
-    }
-
-    public double[] getInputs(){
-        return new double[]{0};
     }
 }
