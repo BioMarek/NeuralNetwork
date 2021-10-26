@@ -176,4 +176,12 @@ public class SnakeGame {
         snakeDTO.downSafe = (grid[snakeRow + 1][snakeColumn] == WALL || grid[snakeRow + 1][snakeColumn] == BODY) ? -1 : 1;
         return snakeDTO;
     }
+
+    public boolean processNeuralNetworkMove(String move) {
+        boolean gameOver = false;
+        gameOver = moveSnake(keyToDirection(move));
+        snakeToGrid();
+        printSnake();
+        return gameOver;
+    }
 }

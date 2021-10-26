@@ -11,7 +11,8 @@ public class Neuron {
     public double innerPotential;
     public double bias;
 
-    private Neuron(){}
+    private Neuron() {
+    }
 
     public Neuron(int numOfNeuronInPrevLayer) {
         weights = Util.randomDoubleArray(numOfNeuronInPrevLayer);
@@ -43,6 +44,20 @@ public class Neuron {
             result += (weights[i] * prevLayerOutputs[i]);
         }
         return Util.activationFunctionUnitStep(result);
+    }
+
+    /**
+     * Calculates output of neuron without any activation function
+     *
+     * @param prevLayerOutputs the outputs of layer which are used as inputs for layer containing this neuron
+     * @return multiple of previous layer outputs and weights
+     */
+    public double getOutputRaw(double[] prevLayerOutputs) {
+        double result = bias;
+        for (int i = 0; i < weights.length; i++) {
+            result += (weights[i] * prevLayerOutputs[i]);
+        }
+        return result;
     }
 
     /**

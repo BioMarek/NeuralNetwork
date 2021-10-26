@@ -13,7 +13,8 @@ public class Layer {
     public int index;
     public int length;
 
-    private Layer(){}
+    private Layer() {
+    }
 
     public Layer(int numOfNeuronInPrevLayer, int numOfNeurons, int index) {
         this.neurons = new Neuron[numOfNeurons];
@@ -52,6 +53,17 @@ public class Layer {
     public void getOutput(double[] prevLayerOutputs) {
         for (int i = 0; i < length; i++) {
             layerOutputs[i] = neurons[i].getOutput(prevLayerOutputs);
+        }
+    }
+
+    /**
+     * Calculates raw output of layer and saves it into layerOutputs {@link #layerOutputs}.
+     *
+     * @param prevLayerOutputs The outputs of layer which are used as inputs for this layer.
+     */
+    public void getOutputRaw(double[] prevLayerOutputs) {
+        for (int i = 0; i < length; i++) {
+            layerOutputs[i] = neurons[i].getOutputRaw(prevLayerOutputs);
         }
     }
 

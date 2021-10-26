@@ -55,7 +55,26 @@ public class NeuralNetwork implements Comparable<NeuralNetwork> {
         hiddenLayers.get(0).getOutput(inputs);
 
         for (int i = 1; i < hiddenLayers.size(); i++) {
-            hiddenLayers.get(1).getOutput(hiddenLayers.get(0).layerOutputs);
+            hiddenLayers.get(i).getOutput(hiddenLayers.get(i - 1).layerOutputs);
+        }
+
+        return hiddenLayers.get(hiddenLayers.size() - 1).layerOutputs;
+    }
+
+    /**
+     * returns raw output of network
+     * @param inputs
+     * @return
+     */
+    public double[] getNetworkOutputRaw(double[] inputs) {
+        hiddenLayers.get(0).getOutput(inputs);
+
+        for (int i = 1; i < hiddenLayers.size(); i++) {
+            if (i != hiddenLayers.size() - 1)
+                hiddenLayers.get(i).getOutput(hiddenLayers.get(i - 1).layerOutputs);
+            else {
+                hiddenLayers.get(i).getOutputRaw(hiddenLayers.get(i - 1).layerOutputs);
+            }
         }
 
         return hiddenLayers.get(hiddenLayers.size() - 1).layerOutputs;
