@@ -16,8 +16,10 @@ public class SnakeGame {
 
     private final int[][] grid;
     private final int size;
-    private List<BodyPart> snake;
-    private Direction lastDirection;
+    protected List<BodyPart> snake;
+    protected int foodRow;
+    protected int foodColumn;
+    public Direction lastDirection;
 
     public SnakeGame(int size) {
         this.size = size;
@@ -28,17 +30,6 @@ public class SnakeGame {
         placeFood();
         snakeToGrid();
         printSnake();
-    }
-
-    public void mainLoop() {
-        Scanner scanner = new Scanner(System.in);
-        boolean gameOver = false;
-        while (!gameOver) {
-            String move = scanner.next();
-            gameOver = moveSnake(keyToDirection(move));
-            snakeToGrid();
-            printSnake();
-        }
     }
 
     public void initSnake() {
@@ -57,79 +48,23 @@ public class SnakeGame {
 
     public void placeFood() {
         while (true) {
-            int x = Util.randomInt(1, size - 1);
-            int y = Util.randomInt(1, size - 1);
-            if (grid[x][y] == HEAD || grid[x][y] == BODY) {
-                x = Util.randomInt(1, size - 1);
-                y = Util.randomInt(1, size - 1);
+            int row = Util.randomInt(1, size - 1);
+            int column = Util.randomInt(1, size - 1);
+            if (grid[row][column] == HEAD || grid[row][column] == BODY) {
+                row = Util.randomInt(1, size - 1);
+                column = Util.randomInt(1, size - 1);
             } else {
-                grid[x][y] = FOOD;
+                foodRow = row;
+                foodColumn = column;
+                grid[row][column] = FOOD;
                 return;
             }
         }
     }
 
-    public boolean moveSnake(Direction direction) {
-        boolean gameOver = false;
-        switch (direction) {
-            case UP:
-                gameOver = moveByOne(snake.get(0).row - 1, snake.get(0).column);
-                lastDirection = Direction.UP;
-                break;
-            case DOWN:
-                gameOver = moveByOne(snake.get(0).row + 1, snake.get(0).column);
-                lastDirection = Direction.DOWN;
-                break;
-            case LEFT:
-                gameOver = moveByOne(snake.get(0).row, snake.get(0).column - 1);
-                lastDirection = Direction.LEFT;
-                break;
-            case RIGHT:
-                gameOver = moveByOne(snake.get(0).row, snake.get(0).column + 1);
-                lastDirection = Direction.LEFT;
-                break;
-        }
-        return gameOver;
-    }
-
-    public Direction keyToDirection(String key) {
-        switch (key) {
-            case "w":
-                lastDirection = Direction.UP;
-                return Direction.UP;
-            case "s":
-                lastDirection = Direction.DOWN;
-                return Direction.DOWN;
-            case "a":
-                lastDirection = Direction.LEFT;
-                return Direction.LEFT;
-            case "d":
-                lastDirection = Direction.RIGHT;
-                return Direction.RIGHT;
-        }
-        return lastDirection;
-    }
-
-    public boolean moveByOne(int row, int column) {
-        if (grid[row][column] == WALL || grid[row][column] == BODY)
-            return true;
-        if (grid[row][column] == FOOD) {
-            snake.get(0).head = false;
-            snake.add(0, new BodyPart(true, row, column));
-            placeFood();
-        } else {
-            snake.get(0).head = false;
-            snake.add(0, new BodyPart(true, row, column));
-            BodyPart toRemove = snake.get(snake.size() - 1);
-            grid[toRemove.row][toRemove.column] = EMPTY;
-            snake.remove(toRemove);
-        }
-        return false;
-    }
-
     public void snakeToGrid() {
         for (BodyPart bodyPart : snake) {
-            grid[bodyPart.row][bodyPart.column] = bodyPart.head ? HEAD : BODY;
+            grid[bodyPart.row][bodyPart.column] = bodyPart.isHead ? HEAD : BODY;
         }
     }
 
@@ -147,5 +82,98 @@ public class SnakeGame {
             }
             System.out.println();
         }
+    }
+
+    public void mainLoop() {
+        Scanner scanner = new Scanner(System.in);
+        boolean gameOver = false;
+        while (!gameOver) {
+            String move = scanner.next();
+            gameOver = moveSnake(keyToDirection(move));
+            snakeToGrid();
+            printSnake();
+        }
+    }
+
+    public Direction keyToDirection(String key) {
+        Map<String, Direction> keyToDirection = new HashMap<>();
+        keyToDirection.put("w", Direction.UP);
+        keyToDirection.put("s", Direction.DOWN);
+        keyToDirection.put("a", Direction.LEFT);
+        keyToDirection.put("d", Direction.RIGHT);
+
+        if (keyToDirection.get(key) == null || lastDirection == Direction.opposite(keyToDirection.get(key))) {
+            return lastDirection;
+        }
+        lastDirection = keyToDirection.get(key);
+
+        return lastDirection;
+    }
+
+    public boolean moveSnake(Direction direction) {
+        boolean gameOver = false;
+        switch (direction) {
+            case UP:
+                gameOver = moveByOne(snake.get(0).row - 1, snake.get(0).column);
+                break;
+            case DOWN:
+                gameOver = moveByOne(snake.get(0).row + 1, snake.get(0).column);
+                break;
+            case LEFT:
+                gameOver = moveByOne(snake.get(0).row, snake.get(0).column - 1);
+                break;
+            case RIGHT:
+                gameOver = moveByOne(snake.get(0).row, snake.get(0).column + 1);
+                break;
+        }
+        return gameOver;
+    }
+
+    public boolean moveByOne(int row, int column) {
+        if (grid[row][column] == WALL || grid[row][column] == BODY)
+            return true;
+
+        snake.get(0).isHead = false;
+        snake.add(0, new BodyPart(true, row, column));
+
+        if (grid[row][column] == FOOD) {
+            placeFood();
+        } else {
+            BodyPart toRemove = snake.get(snake.size() - 1);
+            grid[toRemove.row][toRemove.column] = EMPTY;
+            snake.remove(toRemove);
+        }
+        return false;
+    }
+
+    public SnakeDTO snakeMapper() {
+        SnakeDTO snakeDTO = new SnakeDTO();
+
+        int rowDistance = snake.get(0).row - foodRow;
+        if (rowDistance >= 0) {
+            snakeDTO.upDistanceToFood = rowDistance;
+            snakeDTO.downDistanceToFood = -1 * size;
+        } else {
+            snakeDTO.downDistanceToFood = -1 * rowDistance;
+            snakeDTO.upDistanceToFood = -1 * size;
+        }
+
+        int columnDistance = snake.get(0).column - foodColumn;
+        if (columnDistance >= 0) {
+            snakeDTO.leftDistanceToFood = columnDistance;
+            snakeDTO.rightDistanceToFood = -1 * size;
+        } else {
+            snakeDTO.rightDistanceToFood = -1 * columnDistance;
+            snakeDTO.leftDistanceToFood = -1 * size;
+        }
+
+        int snakeRow = snake.get(0).row;
+        int snakeColumn = snake.get(0).column;
+
+        snakeDTO.leftSafe = (grid[snakeRow][snakeColumn - 1] == WALL || grid[snakeRow][snakeColumn - 1] == BODY) ? -1 : 1;
+        snakeDTO.rightSafe = (grid[snakeRow][snakeColumn + 1] == WALL || grid[snakeRow][snakeColumn + 1] == BODY) ? -1 : 1;
+        snakeDTO.upSafe = (grid[snakeRow - 1][snakeColumn] == WALL || grid[snakeRow - 1][snakeColumn] == BODY) ? -1 : 1;
+        snakeDTO.downSafe = (grid[snakeRow + 1][snakeColumn] == WALL || grid[snakeRow + 1][snakeColumn] == BODY) ? -1 : 1;
+        return snakeDTO;
     }
 }

@@ -1,12 +1,12 @@
 package Snake;
 
 public class BodyPart {
-    boolean head;
+    boolean isHead;
     int row;
     int column;
 
-    public BodyPart(boolean head, int row, int column) {
-        this.head = head;
+    public BodyPart(boolean isHead, int row, int column) {
+        this.isHead = isHead;
         this.row = row;
         this.column = column;
     }

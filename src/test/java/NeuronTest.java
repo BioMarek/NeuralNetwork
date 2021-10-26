@@ -8,7 +8,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
 
-public class NeuronTests {
+public class NeuronTest {
     private static final int TEST_REPEATS = 20;
 
     private Neuron neuron;
