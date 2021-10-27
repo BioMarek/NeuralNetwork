@@ -1,4 +1,5 @@
 import NeuralNetwork.Neuron;
+import NeuralNetwork.Util;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -60,7 +61,7 @@ public class NeuronTest {
                             first * neuron.weights[0] +
                             second * neuron.weights[1]
             ) >= 0.0D ? 1.0D : 0.0D;
-            assertThat(neuron.getOutput(new double[]{first, second}), equalTo(result));
+            assertThat(neuron.getOutput(new double[]{first, second}, Util.activationFunctionUnitStep()), equalTo(result));
         }
     }
 }

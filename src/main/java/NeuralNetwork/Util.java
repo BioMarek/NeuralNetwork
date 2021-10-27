@@ -1,6 +1,7 @@
 package NeuralNetwork;
 
 import java.util.Random;
+import java.util.function.Function;
 
 public class Util {
     static private final Random random = new Random();
@@ -44,8 +45,12 @@ public class Util {
         return random.doubles(size, -1.0D, 1.0D).toArray();
     }
 
-    public static double activationFunctionUnitStep(double innerPotential) {
-        return innerPotential >= 0.0D ? 1.0D : 0.0D;
+    public static Function<Double, Double> activationFunctionUnitStep() {
+        return (Double innerPotential) -> innerPotential >= 0.0D ? 1.0D : 0.0D;
+    }
+
+    public static Function<Double, Double> activationFunctionIdentity() {
+        return (Double innerPotential) -> innerPotential;
     }
 
     public static double activationFunctionSigmoid(double innerPotential, double steepness) {
@@ -57,8 +62,10 @@ public class Util {
         return sigmoid * (1.0D - sigmoid);
     }
 
-    public static double activationFunctionHyperbolicTangent(double innerPotential) {
-        double eToNegativeIP = Math.exp(-innerPotential);
-        return (1.0D - eToNegativeIP) / (1.0D + eToNegativeIP);
+    public static Function<Double, Double> activationFunctionHyperbolicTangent() {
+        return (Double innerPotential) -> {
+            double eToNegativeIP = Math.exp(-innerPotential);
+            return (1.0D - eToNegativeIP) / (1.0D + eToNegativeIP);
+        };
     }
 }

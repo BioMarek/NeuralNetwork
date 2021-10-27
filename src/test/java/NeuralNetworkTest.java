@@ -1,9 +1,11 @@
 import NeuralNetwork.NeuralNetwork;
+import NeuralNetwork.Util;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class NeuralNetworkTest {
@@ -11,14 +13,17 @@ public class NeuralNetworkTest {
     private NeuralNetwork copy;
 
     @BeforeEach
-    void init(){
-        neuralNetwork = new NeuralNetwork(new int[]{1, 1, 1});
+    void init() {
+        neuralNetwork = new NeuralNetwork(new int[]{1, 1, 1}, Util.activationFunctionUnitStep(), Util.activationFunctionIdentity());
         copy = neuralNetwork.copy();
     }
 
     @Test
     void neuralNetwork_throwsErrorWhenWrongNumberOfHiddenLayersIsSupplied() {
-        assertThrows(IllegalArgumentException.class, () -> neuralNetwork = new NeuralNetwork(new int[]{}));
+        assertThrows(IllegalArgumentException.class, () -> neuralNetwork = new NeuralNetwork(
+                new int[]{},
+                Util.activationFunctionUnitStep(),
+                Util.activationFunctionIdentity()));
     }
 
     @Test
@@ -34,7 +39,7 @@ public class NeuralNetworkTest {
     }
 
     @Test
-    void neuralNetwork_mutateLayersChangesAllLayers(){
+    void neuralNetwork_mutateLayersChangesAllLayers() {
         copy.mutateLayers(1, 1);
         assertThat(copy.hiddenLayers.get(0).equals(neuralNetwork.hiddenLayers.get(0)), is(false));
         assertThat(copy.hiddenLayers.get(1).equals(neuralNetwork.hiddenLayers.get(1)), is(false));

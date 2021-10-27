@@ -2,6 +2,7 @@ package NeuralNetwork;
 
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.function.Function;
 
 /**
  * The class represents {@link Neuron} which is main building block of {@link Layer}.
@@ -33,31 +34,18 @@ public class Neuron {
     }
 
     /**
-     * Calculates output of neuron using {@link Util#activationFunctionUnitStep(double)}}.
+     * Calculates output of neuron using supplied activation function.
      *
-     * @param prevLayerOutputs the outputs of layer which are used as inputs for layer containing this neuron
-     * @return 1 or 0 based on result of {@link Util#activationFunctionUnitStep(double)}}
+     * @param prevLayerOutputs   the outputs of layer which are used as inputs for layer containing this neuron
+     * @param activationFunction function used to calculate output
+     * @return result of activation function applied to sum of multiples of weights and inputs
      */
-    public double getOutput(double[] prevLayerOutputs) {
+    public double getOutput(double[] prevLayerOutputs, Function<Double, Double> activationFunction) {
         double result = bias;
         for (int i = 0; i < weights.length; i++) {
             result += (weights[i] * prevLayerOutputs[i]);
         }
-        return Util.activationFunctionUnitStep(result);
-    }
-
-    /**
-     * Calculates output of neuron without any activation function
-     *
-     * @param prevLayerOutputs the outputs of layer which are used as inputs for layer containing this neuron
-     * @return multiple of previous layer outputs and weights
-     */
-    public double getOutputRaw(double[] prevLayerOutputs) {
-        double result = bias;
-        for (int i = 0; i < weights.length; i++) {
-            result += (weights[i] * prevLayerOutputs[i]);
-        }
-        return result;
+        return activationFunction.apply(result);
     }
 
     /**

@@ -2,6 +2,7 @@ package NeuralNetwork;
 
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 /**
@@ -48,22 +49,12 @@ public class Layer {
     /**
      * Calculates output of layer and saves it into layerOutputs {@link #layerOutputs}.
      *
-     * @param prevLayerOutputs The outputs of layer which are used as inputs for this layer.
+     * @param prevLayerOutputs   the outputs of layer which are used as inputs for this layer.
+     * @param activationFunction function used to calculate outputs
      */
-    public void getOutput(double[] prevLayerOutputs) {
+    public void getOutput(double[] prevLayerOutputs, Function<Double, Double> activationFunction) {
         for (int i = 0; i < length; i++) {
-            layerOutputs[i] = neurons[i].getOutput(prevLayerOutputs);
-        }
-    }
-
-    /**
-     * Calculates raw output of layer and saves it into layerOutputs {@link #layerOutputs}.
-     *
-     * @param prevLayerOutputs The outputs of layer which are used as inputs for this layer.
-     */
-    public void getOutputRaw(double[] prevLayerOutputs) {
-        for (int i = 0; i < length; i++) {
-            layerOutputs[i] = neurons[i].getOutputRaw(prevLayerOutputs);
+            layerOutputs[i] = neurons[i].getOutput(prevLayerOutputs, activationFunction);
         }
     }
 

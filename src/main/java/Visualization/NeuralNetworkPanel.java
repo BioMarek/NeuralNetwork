@@ -3,6 +3,7 @@ package Visualization;
 import NeuralNetwork.Layer;
 import NeuralNetwork.NeuralNetwork;
 import NeuralNetwork.Neuron;
+import NeuralNetwork.Util;
 
 import javax.swing.*;
 import java.awt.*;
@@ -35,7 +36,7 @@ public class NeuralNetworkPanel extends JPanel {
     }
 
     public void drawNeuralNetwork() {
-        NeuralNetwork neuralNetwork = new NeuralNetwork(new int[]{10, 2, 6, 5});
+        NeuralNetwork neuralNetwork = new NeuralNetwork(new int[]{10, 2, 6, 5}, Util.activationFunctionUnitStep(), Util.activationFunctionIdentity());
 
         int[] yAxisOffsets = layersYAxisOffset(neuralNetwork);
         for (int i = 0; i < neuralNetwork.hiddenLayers.size(); i++) {
@@ -68,8 +69,8 @@ public class NeuralNetworkPanel extends JPanel {
      * Draws weights between Layer on the "left" the one with smaller index and layer on the "right" the one with
      * higher index.
      *
-     * @param leftLayer      {@link Layer} with the index 'i' in {@link NeuralNetwork}
-     * @param rightLayer     {@link Layer} with the index 'i + 1' in {@link NeuralNetwork}
+     * @param leftLayer  {@link Layer} with the index 'i' in {@link NeuralNetwork}
+     * @param rightLayer {@link Layer} with the index 'i + 1' in {@link NeuralNetwork}
      */
     protected void drawWeights(Layer leftLayer, Layer rightLayer, int[] yAxisOffset) {
         graphics.setStroke(new BasicStroke(weightStroke));

@@ -3,6 +3,7 @@ package NeuralNetwork;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -12,14 +13,21 @@ import java.util.stream.Collectors;
  */
 public class NeuralNetwork implements Comparable<NeuralNetwork> {
     public final List<Layer> hiddenLayers;
+    Function<Double, Double> hiddenLayerActivationFunc;
+    Function<Double, Double> outputLayerActivationFunc;
     public int score;
     public String name;
 
     /**
-     * @param sizes Array of sizes, first number is number of {@link NeuralNetwork} inputs. Numbers size[1]...size[n]
-     *              say how many {@link Neuron} should be in n-th hidden {@link Layer}.
+     * @param sizes                     Array of sizes, first number is number of {@link NeuralNetwork} inputs. Numbers
+     *                                  size[1]...size[n] say how many {@link Neuron} should be in n-th hidden {@link Layer}.
+     * @param hiddenLayerActivationFunc activation function used in hidden layers
+     * @param outputLayerActivationFunc activation function used in output layer
      */
-    public NeuralNetwork(int[] sizes) {
+    public NeuralNetwork(int[] sizes, Function<Double, Double> hiddenLayerActivationFunc, Function<Double, Double> outputLayerActivationFunc) {
+        this.hiddenLayerActivationFunc = hiddenLayerActivationFunc;
+        this.outputLayerActivationFunc = outputLayerActivationFunc;
+
         if (sizes.length < 1)
             throw new IllegalArgumentException("Neural network needs at least 1 hidden layer");
 
@@ -52,28 +60,13 @@ public class NeuralNetwork implements Comparable<NeuralNetwork> {
      * @return vector of values copmuted by {@link NeuralNetwork}
      */
     public double[] getNetworkOutput(double[] inputs) {
-        hiddenLayers.get(0).getOutput(inputs);
-
-        for (int i = 1; i < hiddenLayers.size(); i++) {
-            hiddenLayers.get(i).getOutput(hiddenLayers.get(i - 1).layerOutputs);
-        }
-
-        return hiddenLayers.get(hiddenLayers.size() - 1).layerOutputs;
-    }
-
-    /**
-     * returns raw output of network
-     * @param inputs
-     * @return
-     */
-    public double[] getNetworkOutputRaw(double[] inputs) {
-        hiddenLayers.get(0).getOutput(inputs);
+        hiddenLayers.get(0).getOutput(inputs, hiddenLayerActivationFunc);
 
         for (int i = 1; i < hiddenLayers.size(); i++) {
             if (i != hiddenLayers.size() - 1)
-                hiddenLayers.get(i).getOutput(hiddenLayers.get(i - 1).layerOutputs);
+                hiddenLayers.get(i).getOutput(hiddenLayers.get(i - 1).layerOutputs, hiddenLayerActivationFunc);
             else {
-                hiddenLayers.get(i).getOutputRaw(hiddenLayers.get(i - 1).layerOutputs);
+                hiddenLayers.get(i).getOutput(hiddenLayers.get(i - 1).layerOutputs, outputLayerActivationFunc);
             }
         }
 

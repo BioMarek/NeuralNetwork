@@ -5,23 +5,31 @@ import Snake.SnakeGame;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 public class EvolutionEngine {
     // TODO needs redesign
     List<NeuralNetwork> neuralNetworks = new ArrayList<NeuralNetwork>();
+    Function<Double, Double> hiddenLayerActivationFunc;
+    Function<Double, Double> outputLayerActivationFunc;
 
-    public EvolutionEngine(int numOfNetworks, int[] neuralNetworkSettings) {
+    public EvolutionEngine(int numOfNetworks,
+                           int[] neuralNetworkSettings,
+                           Function<Double, Double> hiddenLayerActivationFunc,
+                           Function<Double, Double> outputLayerActivationFunc) {
+        this.hiddenLayerActivationFunc = hiddenLayerActivationFunc;
+        this.outputLayerActivationFunc = outputLayerActivationFunc;
         for (int i = 0; i < numOfNetworks; i++) {
-            this.neuralNetworks.add(new NeuralNetwork(neuralNetworkSettings));
+            this.neuralNetworks.add(new NeuralNetwork(neuralNetworkSettings, hiddenLayerActivationFunc, outputLayerActivationFunc));
         }
     }
 
     public void playSnake() {
-        NeuralNetwork nn = new NeuralNetwork(new int[]{8, 10, 4});
+        NeuralNetwork nn = new NeuralNetwork(new int[]{8, 10, 4}, hiddenLayerActivationFunc, outputLayerActivationFunc);
         SnakeGame snakeGame = new SnakeGame(20);
 
         for (int i = 0; i < 10; i++) {
-            double[] networkOutput = nn.getNetworkOutputRaw(snakeGame.snakeMapper().getInput());
+            double[] networkOutput = nn.getNetworkOutput(snakeGame.snakeMapper().getInput());
             boolean gameOver = snakeGame.processNeuralNetworkMove(translateOutputToKey(networkOutput));
             System.out.println(gameOver);
         }

@@ -1,4 +1,5 @@
 import NeuralNetwork.Layer;
+import NeuralNetwork.Util;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -59,7 +60,7 @@ public class LayerTest {
     }
 
     private void layerTestOutput(int first, int second) {
-        layer.getOutput(new double[]{first, second});
+        layer.getOutput(new double[]{first, second}, Util.activationFunctionUnitStep());
         for (int i = 0; i < TEST_REPEATS; i++) {
             double result1 = (layer.neurons[0].bias +
                             first * layer.neurons[0].weights[0] +
