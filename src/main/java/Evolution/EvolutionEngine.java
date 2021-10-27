@@ -8,25 +8,13 @@ import java.util.List;
 import java.util.function.Function;
 
 public class EvolutionEngine {
-    // TODO needs redesign
-    List<NeuralNetwork> neuralNetworks = new ArrayList<>();
-    Function<Double, Double> hiddenLayerActivationFunc;
-    Function<Double, Double> outputLayerActivationFunc;
+    private final List<NeuralNetwork> neuralNetworks = new ArrayList<>();
 
-    public EvolutionEngine(int numOfNetworks,
-                           int[] neuralNetworkSettings,
-                           Function<Double, Double> hiddenLayerActivationFunc,
-                           Function<Double, Double> outputLayerActivationFunc) {
-        this.hiddenLayerActivationFunc = hiddenLayerActivationFunc;
-        this.outputLayerActivationFunc = outputLayerActivationFunc;
-
-        for (int i = 0; i < numOfNetworks; i++) {
-            this.neuralNetworks.add(new NeuralNetwork(neuralNetworkSettings, hiddenLayerActivationFunc, outputLayerActivationFunc));
-        }
+    private EvolutionEngine() {
     }
 
     public void playSnake() {
-        NeuralNetwork nn = new NeuralNetwork(new int[]{8, 10, 4}, hiddenLayerActivationFunc, outputLayerActivationFunc);
+        NeuralNetwork nn = neuralNetworks.get(0);
         SnakeGame snakeGame = new SnakeGame(20);
 
         for (int i = 0; i < 10; i++) {
@@ -64,5 +52,37 @@ public class EvolutionEngine {
 
     public void nextGeneration() {
 
+    }
+
+    public static class EvolutionEngineBuilder {
+        private final int numOfNetworks;
+        private final int[] neuralNetworkSettings;
+        private Function<Double, Double> hiddenLayerActivationFunc;
+        private Function<Double, Double> outputLayerActivationFunc;
+
+        public EvolutionEngineBuilder(int numOfNetworks, int[] neuralNetworkSettings) {
+            this.numOfNetworks = numOfNetworks;
+            this.neuralNetworkSettings = neuralNetworkSettings;
+        }
+
+        public EvolutionEngineBuilder hiddenLayerActivationFunc(Function<Double, Double> hiddenLayerActivationFunc) {
+            this.hiddenLayerActivationFunc = hiddenLayerActivationFunc;
+            return this;
+        }
+
+        public EvolutionEngineBuilder outputLayerActivationFunc(Function<Double, Double> outputLayerActivationFunc) {
+            this.outputLayerActivationFunc = outputLayerActivationFunc;
+            return this;
+        }
+
+        public EvolutionEngine build() {
+            EvolutionEngine evolutionEngine = new EvolutionEngine();
+
+            for (int i = 0; i < numOfNetworks; i++) {
+                evolutionEngine.neuralNetworks.add(new NeuralNetwork(neuralNetworkSettings, hiddenLayerActivationFunc, outputLayerActivationFunc));
+            }
+
+            return evolutionEngine;
+        }
     }
 }

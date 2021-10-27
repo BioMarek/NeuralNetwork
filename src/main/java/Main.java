@@ -3,10 +3,12 @@ import NeuralNetwork.Util;
 
 public class Main {
     public static void main(String[] args) {
-        EvolutionEngine evolutionEngine = new EvolutionEngine(1,
-                new int[]{1, 1, 1},
-                Util.activationFunctionUnitStep(),
-                Util.activationFunctionIdentity());
+        EvolutionEngine evolutionEngine = new EvolutionEngine
+                .EvolutionEngineBuilder(1, new int[]{8, 10, 4})
+                .hiddenLayerActivationFunc(Util.activationFunctionUnitStep())
+                .outputLayerActivationFunc(Util.activationFunctionIdentity())
+                .build();
+
         evolutionEngine.playSnake();
     }
 }
