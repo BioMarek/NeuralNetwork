@@ -3,7 +3,7 @@ package Snake;
 /**
  * DTO used to transfer state of snake to {@link NeuralNetwork}. DistanceToFood variables represent number of moves in
  * particular direction to food. Moving to direction that increases distance from food is designed as negative board
- * size irrespective of actual distance. SafeVariables say whether move to that direction results in death (-1) or is
+ * size irrespective of actual distance. Safe variables say whether move to that direction results in death (-1) or is
  * safe (1)
  */
 public class SnakeDTO {

@@ -29,6 +29,7 @@ public class SnakeGame {
         this.grid = new int[size][size];
 
         initSnake();
+        placeFood();
         snakeToGrid();
         printSnakeGame();
     }
@@ -48,7 +49,6 @@ public class SnakeGame {
                     grid[row][column] = WALL;
             }
         }
-        placeFood();
     }
 
     /**
@@ -74,9 +74,7 @@ public class SnakeGame {
      * Places snake into grid.
      */
     public void snakeToGrid() {
-        for (BodyPart bodyPart : snake) {
-            grid[bodyPart.row][bodyPart.column] = bodyPart.isHead ? HEAD : BODY;
-        }
+        snake.forEach((bodyPart) -> grid[bodyPart.row][bodyPart.column] = bodyPart.isHead ? HEAD : BODY);
     }
 
     /**
@@ -138,33 +136,32 @@ public class SnakeGame {
      * @param direction where to move snake
      */
     public void moveSnake(Direction direction) {
+        int headRow = snake.get(0).row;
+        int headColumn = snake.get(0).column;
         switch (direction) {
             case UP:
-                moveByOne(snake.get(0).row - 1, snake.get(0).column);
+                moveByOne(headRow - 1, headColumn);
                 break;
             case DOWN:
-                moveByOne(snake.get(0).row + 1, snake.get(0).column);
+                moveByOne(headRow + 1, headColumn);
                 break;
             case LEFT:
-                moveByOne(snake.get(0).row, snake.get(0).column - 1);
+                moveByOne(headRow, headColumn - 1);
                 break;
             case RIGHT:
-                moveByOne(snake.get(0).row, snake.get(0).column + 1);
+                moveByOne(headRow, headColumn + 1);
                 break;
         }
     }
 
     /**
-     * Moves Snake by to the new position
+     * Moves Snake by to the new position. When snake hits wall or the body isGameOver is set to true.
      *
      * @param row    where to move head
      * @param column where to move head
      */
     public void moveByOne(int row, int column) {
-        if (grid[row][column] == WALL || grid[row][column] == BODY) {
-            isGameOver = true;
-            return;
-        }
+        isGameOver = grid[row][column] == WALL || grid[row][column] == BODY;
 
         snake.get(0).isHead = false;
         snake.add(0, new BodyPart(true, row, column));
@@ -186,23 +183,24 @@ public class SnakeGame {
      */
     public SnakeDTO snakeMapper() {
         SnakeDTO snakeDTO = new SnakeDTO();
+        int wrongDirection = -1 * size;
 
         int rowDistance = snake.get(0).row - foodRow;
         if (rowDistance >= 0) {
             snakeDTO.upDistanceToFood = rowDistance;
-            snakeDTO.downDistanceToFood = -1 * size;
+            snakeDTO.downDistanceToFood = wrongDirection;
         } else {
             snakeDTO.downDistanceToFood = -1 * rowDistance;
-            snakeDTO.upDistanceToFood = -1 * size;
+            snakeDTO.upDistanceToFood = wrongDirection;
         }
 
         int columnDistance = snake.get(0).column - foodColumn;
         if (columnDistance >= 0) {
             snakeDTO.leftDistanceToFood = columnDistance;
-            snakeDTO.rightDistanceToFood = -1 * size;
+            snakeDTO.rightDistanceToFood = wrongDirection;
         } else {
             snakeDTO.rightDistanceToFood = -1 * columnDistance;
-            snakeDTO.leftDistanceToFood = -1 * size;
+            snakeDTO.leftDistanceToFood = wrongDirection;
         }
 
         int headRow = snake.get(0).row;
