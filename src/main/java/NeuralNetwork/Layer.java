@@ -52,7 +52,7 @@ public class Layer {
      * @param prevLayerOutputs   the outputs of layer which are used as inputs for this layer.
      * @param activationFunction function used to calculate outputs
      */
-    public void getOutput(double[] prevLayerOutputs, Function<Double, Double> activationFunction) {
+    public void calculateOutput(double[] prevLayerOutputs, Function<Double, Double> activationFunction) {
         for (int i = 0; i < length; i++) {
             layerOutputs[i] = neurons[i].getOutput(prevLayerOutputs, activationFunction);
         }

@@ -9,7 +9,7 @@ import java.util.function.Function;
 
 public class EvolutionEngine {
     // TODO needs redesign
-    List<NeuralNetwork> neuralNetworks = new ArrayList<NeuralNetwork>();
+    List<NeuralNetwork> neuralNetworks = new ArrayList<>();
     Function<Double, Double> hiddenLayerActivationFunc;
     Function<Double, Double> outputLayerActivationFunc;
 
@@ -19,6 +19,7 @@ public class EvolutionEngine {
                            Function<Double, Double> outputLayerActivationFunc) {
         this.hiddenLayerActivationFunc = hiddenLayerActivationFunc;
         this.outputLayerActivationFunc = outputLayerActivationFunc;
+
         for (int i = 0; i < numOfNetworks; i++) {
             this.neuralNetworks.add(new NeuralNetwork(neuralNetworkSettings, hiddenLayerActivationFunc, outputLayerActivationFunc));
         }
@@ -30,8 +31,9 @@ public class EvolutionEngine {
 
         for (int i = 0; i < 10; i++) {
             double[] networkOutput = nn.getNetworkOutput(snakeGame.snakeMapper().getInput());
-            boolean gameOver = snakeGame.processNeuralNetworkMove(translateOutputToKey(networkOutput));
-            System.out.println(gameOver);
+            snakeGame.processNeuralNetworkMove(translateOutputToKey(networkOutput));
+            if (snakeGame.isGameOver)
+                break;
         }
     }
 

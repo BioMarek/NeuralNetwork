@@ -60,7 +60,7 @@ public class LayerTest {
     }
 
     private void layerTestOutput(int first, int second) {
-        layer.getOutput(new double[]{first, second}, Util.activationFunctionUnitStep());
+        layer.calculateOutput(new double[]{first, second}, Util.activationFunctionUnitStep());
         for (int i = 0; i < TEST_REPEATS; i++) {
             double result1 = (layer.neurons[0].bias +
                             first * layer.neurons[0].weights[0] +

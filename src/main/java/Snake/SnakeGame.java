@@ -19,19 +19,23 @@ public class SnakeGame {
     protected List<BodyPart> snake;
     protected int foodRow;
     protected int foodColumn;
-    public Direction lastDirection;
+
+    public Direction lastDirection = Direction.UP;
+    public int snakeScore = 0;
+    public boolean isGameOver = false;
 
     public SnakeGame(int size) {
         this.size = size;
         this.grid = new int[size][size];
-        this.lastDirection = Direction.UP;
 
         initSnake();
-        placeFood();
         snakeToGrid();
-        printSnake();
+        printSnakeGame();
     }
 
+    /**
+     * Creates initial snake game setup
+     */
     public void initSnake() {
         snake = new ArrayList<>();
         snake.add(new BodyPart(true, size / 2, size / 2));
@@ -44,8 +48,12 @@ public class SnakeGame {
                     grid[row][column] = WALL;
             }
         }
+        placeFood();
     }
 
+    /**
+     * Tries to place food on grid randomly. If the food is placed on snake new random position is found.
+     */
     public void placeFood() {
         while (true) {
             int row = Util.randomInt(1, size - 1);
@@ -62,13 +70,19 @@ public class SnakeGame {
         }
     }
 
+    /**
+     * Places snake into grid.
+     */
     public void snakeToGrid() {
         for (BodyPart bodyPart : snake) {
             grid[bodyPart.row][bodyPart.column] = bodyPart.isHead ? HEAD : BODY;
         }
     }
 
-    public void printSnake() {
+    /**
+     * Prints snakeGame using asci characters.
+     */
+    public void printSnakeGame() {
         Map<Integer, String> tiles = new HashMap<>();
         tiles.put(WALL, "X");
         tiles.put(HEAD, "H");
@@ -84,17 +98,25 @@ public class SnakeGame {
         }
     }
 
+    /**
+     * Main loop when game is played by person.
+     */
     public void mainLoop() {
         Scanner scanner = new Scanner(System.in);
-        boolean gameOver = false;
-        while (!gameOver) {
+        while (!isGameOver) {
             String move = scanner.next();
-            gameOver = moveSnake(keyToDirection(move));
+            moveSnake(keyToDirection(move));
             snakeToGrid();
-            printSnake();
+            printSnakeGame();
         }
     }
 
+    /**
+     * Maps pressed key to {@link Direction}.
+     *
+     * @param key String representation of key
+     * @return {@link Direction} corresponding to pressed key
+     */
     public Direction keyToDirection(String key) {
         Map<String, Direction> keyToDirection = new HashMap<>();
         keyToDirection.put("w", Direction.UP);
@@ -110,42 +132,58 @@ public class SnakeGame {
         return lastDirection;
     }
 
-    public boolean moveSnake(Direction direction) {
-        boolean gameOver = false;
+    /**
+     * Moves Snake to given direction
+     *
+     * @param direction where to move snake
+     */
+    public void moveSnake(Direction direction) {
         switch (direction) {
             case UP:
-                gameOver = moveByOne(snake.get(0).row - 1, snake.get(0).column);
+                moveByOne(snake.get(0).row - 1, snake.get(0).column);
                 break;
             case DOWN:
-                gameOver = moveByOne(snake.get(0).row + 1, snake.get(0).column);
+                moveByOne(snake.get(0).row + 1, snake.get(0).column);
                 break;
             case LEFT:
-                gameOver = moveByOne(snake.get(0).row, snake.get(0).column - 1);
+                moveByOne(snake.get(0).row, snake.get(0).column - 1);
                 break;
             case RIGHT:
-                gameOver = moveByOne(snake.get(0).row, snake.get(0).column + 1);
+                moveByOne(snake.get(0).row, snake.get(0).column + 1);
                 break;
         }
-        return gameOver;
     }
 
-    public boolean moveByOne(int row, int column) {
-        if (grid[row][column] == WALL || grid[row][column] == BODY)
-            return true;
+    /**
+     * Moves Snake by to the new position
+     *
+     * @param row    where to move head
+     * @param column where to move head
+     */
+    public void moveByOne(int row, int column) {
+        if (grid[row][column] == WALL || grid[row][column] == BODY) {
+            isGameOver = true;
+            return;
+        }
 
         snake.get(0).isHead = false;
         snake.add(0, new BodyPart(true, row, column));
 
         if (grid[row][column] == FOOD) {
             placeFood();
+            snakeScore += 1;
         } else {
             BodyPart toRemove = snake.get(snake.size() - 1);
             grid[toRemove.row][toRemove.column] = EMPTY;
             snake.remove(toRemove);
         }
-        return false;
     }
 
+    /**
+     * Maps current snake state to {@link SnakeDTO} which is used to pass state to {@link NeuralNetwork}
+     *
+     * @return DTO describing state
+     */
     public SnakeDTO snakeMapper() {
         SnakeDTO snakeDTO = new SnakeDTO();
 
@@ -167,21 +205,24 @@ public class SnakeGame {
             snakeDTO.leftDistanceToFood = -1 * size;
         }
 
-        int snakeRow = snake.get(0).row;
-        int snakeColumn = snake.get(0).column;
+        int headRow = snake.get(0).row;
+        int headColumn = snake.get(0).column;
 
-        snakeDTO.leftSafe = (grid[snakeRow][snakeColumn - 1] == WALL || grid[snakeRow][snakeColumn - 1] == BODY) ? -1 : 1;
-        snakeDTO.rightSafe = (grid[snakeRow][snakeColumn + 1] == WALL || grid[snakeRow][snakeColumn + 1] == BODY) ? -1 : 1;
-        snakeDTO.upSafe = (grid[snakeRow - 1][snakeColumn] == WALL || grid[snakeRow - 1][snakeColumn] == BODY) ? -1 : 1;
-        snakeDTO.downSafe = (grid[snakeRow + 1][snakeColumn] == WALL || grid[snakeRow + 1][snakeColumn] == BODY) ? -1 : 1;
+        snakeDTO.leftSafe = (grid[headRow][headColumn - 1] == WALL || grid[headRow][headColumn - 1] == BODY) ? -1 : 1;
+        snakeDTO.rightSafe = (grid[headRow][headColumn + 1] == WALL || grid[headRow][headColumn + 1] == BODY) ? -1 : 1;
+        snakeDTO.upSafe = (grid[headRow - 1][headColumn] == WALL || grid[headRow - 1][headColumn] == BODY) ? -1 : 1;
+        snakeDTO.downSafe = (grid[headRow + 1][headColumn] == WALL || grid[headRow + 1][headColumn] == BODY) ? -1 : 1;
         return snakeDTO;
     }
 
-    public boolean processNeuralNetworkMove(String move) {
-        boolean gameOver = false;
-        gameOver = moveSnake(keyToDirection(move));
+    /**
+     * Calculates one snake move after {@link NeuralNetwork} input.
+     *
+     * @param move supplied by {@link NeuralNetwork}
+     */
+    public void processNeuralNetworkMove(String move) {
+        moveSnake(keyToDirection(move));
         snakeToGrid();
-        printSnake();
-        return gameOver;
+        printSnakeGame();
     }
 }

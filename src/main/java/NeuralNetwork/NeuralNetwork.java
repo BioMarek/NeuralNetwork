@@ -60,17 +60,19 @@ public class NeuralNetwork implements Comparable<NeuralNetwork> {
      * @return vector of values copmuted by {@link NeuralNetwork}
      */
     public double[] getNetworkOutput(double[] inputs) {
-        hiddenLayers.get(0).getOutput(inputs, hiddenLayerActivationFunc);
+        int outputLayerIndex = hiddenLayers.size() - 1;
+        hiddenLayers.get(0).calculateOutput(inputs, hiddenLayerActivationFunc);
 
-        for (int i = 1; i < hiddenLayers.size(); i++) {
-            if (i != hiddenLayers.size() - 1)
-                hiddenLayers.get(i).getOutput(hiddenLayers.get(i - 1).layerOutputs, hiddenLayerActivationFunc);
-            else {
-                hiddenLayers.get(i).getOutput(hiddenLayers.get(i - 1).layerOutputs, outputLayerActivationFunc);
-            }
+        for (int i = 1; i < hiddenLayers.size() - 1; i++) {
+            hiddenLayers.get(i).calculateOutput(
+                    hiddenLayers.get(i - 1).layerOutputs,
+                    hiddenLayerActivationFunc);
         }
+        hiddenLayers.get(outputLayerIndex).calculateOutput(
+                hiddenLayers.get(outputLayerIndex - 1).layerOutputs,
+                outputLayerActivationFunc);
 
-        return hiddenLayers.get(hiddenLayers.size() - 1).layerOutputs;
+        return hiddenLayers.get(outputLayerIndex).layerOutputs;
     }
 
     /**
