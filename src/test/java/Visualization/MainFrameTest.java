@@ -27,19 +27,19 @@ public class MainFrameTest {
 
     @Test
     void layersYAxisOffset_returnsCorrectOffsets() {
-        // TODO make parametrized test, fix failing test
-        NeuralNetwork neuralNetwork = new NeuralNetwork(new int[]{1, 1, 1}, Util.activationFunctionUnitStep(), Util.activationFunctionIdentity());
+        // TODO make parametrized test
+        NeuralNetwork neuralNetwork = new NeuralNetwork(new int[]{2, 5, 3}, Util.activationFunctionUnitStep(), Util.activationFunctionIdentity());
         int[] offsets = neuralNetworkPanel.layersYAxisOffset(neuralNetwork);
         assertThat(offsets[0], is(0));
         assertThat(offsets[1], is(60));
 
-        NeuralNetwork neuralNetwork2 = new NeuralNetwork(new int[]{1, 1, 1}, Util.activationFunctionUnitStep(), Util.activationFunctionIdentity());
+        NeuralNetwork neuralNetwork2 = new NeuralNetwork(new int[]{2, 4, 1, 2}, Util.activationFunctionUnitStep(), Util.activationFunctionIdentity());
         int[] offsets2 = neuralNetworkPanel.layersYAxisOffset(neuralNetwork2);
         assertThat(offsets2[0], is(0));
         assertThat(offsets2[1], is(90));
         assertThat(offsets2[2], is(60));
 
-        NeuralNetwork neuralNetwork3 = new NeuralNetwork(new int[]{1, 1, 1}, Util.activationFunctionUnitStep(), Util.activationFunctionIdentity());
+        NeuralNetwork neuralNetwork3 = new NeuralNetwork(new int[]{2, 2, 8, 7}, Util.activationFunctionUnitStep(), Util.activationFunctionIdentity());
         int[] offsets3 = neuralNetworkPanel.layersYAxisOffset(neuralNetwork3);
         assertThat(offsets3[0], is(180));
         assertThat(offsets3[1], is(0));
