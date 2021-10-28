@@ -2,16 +2,16 @@ package Evolution;
 
 import NeuralNetwork.NeuralNetwork;
 import Snake.SnakeGame;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class EvolutionEngine {
     private final List<NeuralNetwork> neuralNetworks = new ArrayList<>();
-
-    private EvolutionEngine() {
-    }
 
     public void playSnake() {
         NeuralNetwork nn = neuralNetworks.get(0);

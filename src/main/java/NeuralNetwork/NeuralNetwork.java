@@ -1,8 +1,9 @@
 package NeuralNetwork;
 
+import lombok.EqualsAndHashCode;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -11,6 +12,7 @@ import java.util.stream.Collectors;
  * first layer. Results of computations are propagated into subsequent layers up to last layer which output is final
  * output of {@link NeuralNetwork}.
  */
+@EqualsAndHashCode
 public class NeuralNetwork implements Comparable<NeuralNetwork> {
     public final List<Layer> hiddenLayers;
     Function<Double, Double> hiddenLayerActivationFunc;
@@ -100,18 +102,5 @@ public class NeuralNetwork implements Comparable<NeuralNetwork> {
         if (this.score == neuralNetwork.score)
             return 0;
         return (this.score > neuralNetwork.score) ? 1 : -1;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        NeuralNetwork that = (NeuralNetwork) o;
-        return Objects.equals(hiddenLayers, that.hiddenLayers);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(hiddenLayers);
     }
 }
