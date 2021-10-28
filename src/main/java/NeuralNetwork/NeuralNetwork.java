@@ -15,8 +15,8 @@ import java.util.stream.Collectors;
 @EqualsAndHashCode
 public class NeuralNetwork implements Comparable<NeuralNetwork> {
     public final List<Layer> hiddenLayers;
-    Function<Double, Double> hiddenLayerActivationFunc;
-    Function<Double, Double> outputLayerActivationFunc;
+    public Function<Double, Double> hiddenLayerActivationFunc;
+    public Function<Double, Double> outputLayerActivationFunc;
     public int score;
     public String name;
 
