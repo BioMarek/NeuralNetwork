@@ -4,8 +4,8 @@ import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.Arrays;
-import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -14,7 +14,7 @@ import java.util.stream.Stream;
  */
 @EqualsAndHashCode
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class Layer {
+public class Layer implements Serializable {
     public Neuron[] neurons;
     public double[] layerOutputs;
     public int index;

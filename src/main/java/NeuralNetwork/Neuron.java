@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.function.Function;
 
@@ -12,7 +13,7 @@ import java.util.function.Function;
  */
 @EqualsAndHashCode
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class Neuron {
+public class Neuron implements Serializable {
     public double[] weights;
     public double innerPotential;
     public double bias;

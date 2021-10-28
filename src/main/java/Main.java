@@ -13,5 +13,8 @@ public class Main {
         evolutionEngine.playSnake();
 
         NeuralNetwork neuralNetwork = new NeuralNetwork(new int[]{8, 10, 4}, Util.activationFunctionUnitStep(), Util.activationFunctionUnitStep());
+        neuralNetwork.saveToFile("file", "");
+        NeuralNetwork loaded = neuralNetwork.loadFromFile("file_0", Util.activationFunctionUnitStep(), Util.activationFunctionUnitStep());
+        System.out.println(loaded.equals(neuralNetwork));
     }
 }
