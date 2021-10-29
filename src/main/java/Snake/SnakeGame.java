@@ -31,7 +31,6 @@ public class SnakeGame {
         initSnake();
         placeFood();
         snakeToGrid();
-        printSnakeGame();
     }
 
     /**
@@ -221,6 +220,5 @@ public class SnakeGame {
     public void processNeuralNetworkMove(String move) {
         moveSnake(keyToDirection(move));
         snakeToGrid();
-        printSnakeGame();
     }
 }
