@@ -11,49 +11,49 @@ public class SnakeGameTest {
     @Test
     void keyToDirection_returnsCorrectDirectionWhenLastDirectionIsUp() {
         snakeGame.lastDirection = Direction.UP;
-        assertThat(snakeGame.keyToDirection("w"), is(Direction.UP));
+        assertThat(snakeGame.toDirection("w"), is(Direction.UP));
         snakeGame.lastDirection = Direction.UP;
-        assertThat(snakeGame.keyToDirection("a"), is(Direction.LEFT));
+        assertThat(snakeGame.toDirection("a"), is(Direction.LEFT));
         snakeGame.lastDirection = Direction.UP;
-        assertThat(snakeGame.keyToDirection("s"), is(Direction.UP));
+        assertThat(snakeGame.toDirection("s"), is(Direction.UP));
         snakeGame.lastDirection = Direction.UP;
-        assertThat(snakeGame.keyToDirection("d"), is(Direction.RIGHT));
+        assertThat(snakeGame.toDirection("d"), is(Direction.RIGHT));
     }
 
     @Test
     void keyToDirection_returnsCorrectDirectionWhenLastDirectionIsDown() {
         snakeGame.lastDirection = Direction.DOWN;
-        assertThat(snakeGame.keyToDirection("w"), is(Direction.DOWN));
+        assertThat(snakeGame.toDirection("w"), is(Direction.DOWN));
         snakeGame.lastDirection = Direction.DOWN;
-        assertThat(snakeGame.keyToDirection("a"), is(Direction.LEFT));
+        assertThat(snakeGame.toDirection("a"), is(Direction.LEFT));
         snakeGame.lastDirection = Direction.DOWN;
-        assertThat(snakeGame.keyToDirection("s"), is(Direction.DOWN));
+        assertThat(snakeGame.toDirection("s"), is(Direction.DOWN));
         snakeGame.lastDirection = Direction.DOWN;
-        assertThat(snakeGame.keyToDirection("d"), is(Direction.RIGHT));
+        assertThat(snakeGame.toDirection("d"), is(Direction.RIGHT));
     }
 
     @Test
     void keyToDirection_returnsCorrectDirectionWhenLastDirectionIsLeft() {
         snakeGame.lastDirection = Direction.LEFT;
-        assertThat(snakeGame.keyToDirection("w"), is(Direction.UP));
+        assertThat(snakeGame.toDirection("w"), is(Direction.UP));
         snakeGame.lastDirection = Direction.LEFT;
-        assertThat(snakeGame.keyToDirection("a"), is(Direction.LEFT));
+        assertThat(snakeGame.toDirection("a"), is(Direction.LEFT));
         snakeGame.lastDirection = Direction.LEFT;
-        assertThat(snakeGame.keyToDirection("s"), is(Direction.DOWN));
+        assertThat(snakeGame.toDirection("s"), is(Direction.DOWN));
         snakeGame.lastDirection = Direction.LEFT;
-        assertThat(snakeGame.keyToDirection("d"), is(Direction.LEFT));
+        assertThat(snakeGame.toDirection("d"), is(Direction.LEFT));
     }
 
     @Test
     void keyToDirection_returnsCorrectDirectionWhenLastDirectionIsRight() {
         snakeGame.lastDirection = Direction.RIGHT;
-        assertThat(snakeGame.keyToDirection("w"), is(Direction.UP));
+        assertThat(snakeGame.toDirection("w"), is(Direction.UP));
         snakeGame.lastDirection = Direction.RIGHT;
-        assertThat(snakeGame.keyToDirection("a"), is(Direction.RIGHT));
+        assertThat(snakeGame.toDirection("a"), is(Direction.RIGHT));
         snakeGame.lastDirection = Direction.RIGHT;
-        assertThat(snakeGame.keyToDirection("s"), is(Direction.DOWN));
+        assertThat(snakeGame.toDirection("s"), is(Direction.DOWN));
         snakeGame.lastDirection = Direction.RIGHT;
-        assertThat(snakeGame.keyToDirection("d"), is(Direction.RIGHT));
+        assertThat(snakeGame.toDirection("d"), is(Direction.RIGHT));
     }
 
     @Test
@@ -133,13 +133,13 @@ public class SnakeGameTest {
     @Test
     void indexOfMaxValue_returnsCorrectDirection() {
         double[] output = new double[]{2, 1, 1, 1};
-        assertThat(snakeGame.indexOfMaxValue(output), is(0));
+        assertThat(snakeGame.maxValueIndex(output), is(0));
         output = new double[]{1, 2, 1, 1};
-        assertThat(snakeGame.indexOfMaxValue(output), is(1));
+        assertThat(snakeGame.maxValueIndex(output), is(1));
         output = new double[]{1, 1, 2, 1};
-        assertThat(snakeGame.indexOfMaxValue(output), is(2));
+        assertThat(snakeGame.maxValueIndex(output), is(2));
         output = new double[]{1, 1, 1, 2};
-        assertThat(snakeGame.indexOfMaxValue(output), is(3));
+        assertThat(snakeGame.maxValueIndex(output), is(3));
     }
 
     @Test

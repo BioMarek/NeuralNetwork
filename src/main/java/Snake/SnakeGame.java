@@ -15,6 +15,9 @@ public class SnakeGame implements Game {
     private final int BODY = 2;
     private final int HEAD = 3;
     private final int FOOD = 4;
+    private Map<Integer, String> tilesMap;
+    private Map<String, Direction> keyToDirection;
+    private Map<Integer, Direction> indexToDirection;
 
     private final int size;
     private int[][] grid;
@@ -29,6 +32,7 @@ public class SnakeGame implements Game {
 
     public SnakeGame(int size) {
         this.size = size;
+        initMaps();
         reset();
     }
 
@@ -41,10 +45,31 @@ public class SnakeGame implements Game {
         snakeToGrid();
     }
 
+    protected void initMaps() {
+        tilesMap = new HashMap<>();
+        tilesMap.put(WALL, "X");
+        tilesMap.put(HEAD, "H");
+        tilesMap.put(BODY, "B");
+        tilesMap.put(FOOD, "O");
+        tilesMap.put(EMPTY, " ");
+
+        keyToDirection = new HashMap<>();
+        keyToDirection.put("w", Direction.UP);
+        keyToDirection.put("s", Direction.DOWN);
+        keyToDirection.put("a", Direction.LEFT);
+        keyToDirection.put("d", Direction.RIGHT);
+
+        indexToDirection = new HashMap<>();
+        indexToDirection.put(0, Direction.UP);
+        indexToDirection.put(1, Direction.DOWN);
+        indexToDirection.put(2, Direction.LEFT);
+        indexToDirection.put(3, Direction.RIGHT);
+    }
+
     /**
      * Creates initial snake game setup
      */
-    public void initSnake() {
+    protected void initSnake() {
         snakeScore = 0;
         lastDirection = Direction.UP;
         this.grid = new int[size][size];
@@ -65,11 +90,11 @@ public class SnakeGame implements Game {
     /**
      * Tries to place food on grid randomly. If the food is placed on snake new random position is found.
      */
-    public void placeFood() {
+    protected void placeFood() {
         while (true) {
             int row = Util.randomInt(1, size - 1);
             int column = Util.randomInt(1, size - 1);
-            if (grid[row][column] == HEAD || grid[row][column] == BODY) {
+            if (grid[row][column] != EMPTY) {
                 row = Util.randomInt(1, size - 1);
                 column = Util.randomInt(1, size - 1);
             } else {
@@ -84,7 +109,7 @@ public class SnakeGame implements Game {
     /**
      * Places snake into grid.
      */
-    public void snakeToGrid() {
+    protected void snakeToGrid() {
         snake.forEach((bodyPart) -> grid[bodyPart.row][bodyPart.column] = bodyPart.isHead ? HEAD : BODY);
     }
 
@@ -92,16 +117,9 @@ public class SnakeGame implements Game {
      * Prints snakeGame using asci characters.
      */
     public void printSnakeGame() {
-        Map<Integer, String> tiles = new HashMap<>();
-        tiles.put(WALL, "X");
-        tiles.put(HEAD, "H");
-        tiles.put(BODY, "B");
-        tiles.put(FOOD, "O");
-        tiles.put(EMPTY, " ");
-
         for (int row = 0; row < size; row++) {
             for (int column = 0; column < size; column++) {
-                System.out.print(tiles.get(grid[row][column]));
+                System.out.print(tilesMap.get(grid[row][column]));
             }
             System.out.println();
         }
@@ -114,7 +132,7 @@ public class SnakeGame implements Game {
         Scanner scanner = new Scanner(System.in);
         while (!isGameOver) {
             String move = scanner.next();
-            moveSnake(keyToDirection(move));
+            moveSnake(toDirection(move));
             snakeToGrid();
             printSnakeGame();
         }
@@ -126,18 +144,9 @@ public class SnakeGame implements Game {
      * @param key String representation of key
      * @return {@link Direction} corresponding to pressed key
      */
-    public Direction keyToDirection(String key) {
-        Map<String, Direction> keyToDirection = new HashMap<>();
-        keyToDirection.put("w", Direction.UP);
-        keyToDirection.put("s", Direction.DOWN);
-        keyToDirection.put("a", Direction.LEFT);
-        keyToDirection.put("d", Direction.RIGHT);
-
-        if (keyToDirection.get(key) == null || lastDirection == Direction.opposite(keyToDirection.get(key))) {
-            return lastDirection;
-        }
-        lastDirection = keyToDirection.get(key);
-
+    protected Direction toDirection(String key) {
+        Direction directionToMove = keyToDirection.get(key);
+        lastDirection = directionToMove == null || lastDirection == Direction.opposite(directionToMove) ? lastDirection : directionToMove;
         return lastDirection;
     }
 
@@ -146,7 +155,7 @@ public class SnakeGame implements Game {
      *
      * @param direction where to move snake
      */
-    public void moveSnake(Direction direction) {
+    protected void moveSnake(Direction direction) {
         int headRow = snake.get(0).row;
         int headColumn = snake.get(0).column;
         switch (direction) {
@@ -171,7 +180,7 @@ public class SnakeGame implements Game {
      * @param row    where to move head
      * @param column where to move head
      */
-    public void moveByOne(int row, int column) {
+    protected void moveByOne(int row, int column) {
         isGameOver = grid[row][column] == WALL || grid[row][column] == BODY;
 
         snake.get(0).isHead = false;
@@ -192,7 +201,7 @@ public class SnakeGame implements Game {
      *
      * @return DTO describing state
      */
-    public SnakeDTO snakeMapper() {
+    protected SnakeDTO snakeMapper() {
         SnakeDTO snakeDTO = new SnakeDTO();
         int wrongDirection = -1 * size;
 
@@ -243,25 +252,33 @@ public class SnakeGame implements Game {
         neuralNetwork.score = snakeScore;
     }
 
-    public Direction outputToDirection(double[] neuralNetworkOutput) {
-        Map<Integer, Direction> indexToDirection = new HashMap<>();
-        indexToDirection.put(0, Direction.UP);
-        indexToDirection.put(1, Direction.DOWN);
-        indexToDirection.put(2, Direction.LEFT);
-        indexToDirection.put(3, Direction.RIGHT);
+    /**
+     * The function converts output of {@link NeuralNetwork} to direction where to move.
+     *
+     * @param neuralNetworkOutput output of {@link NeuralNetwork}
+     * @return direction where {@link NeuralNetwork decided to move
+     */
 
-        Direction directionToMove = indexToDirection.get(indexOfMaxValue(neuralNetworkOutput));
+    protected Direction outputToDirection(double[] neuralNetworkOutput) {
+        Direction directionToMove = indexToDirection.get(maxValueIndex(neuralNetworkOutput));
         lastDirection = (lastDirection != Direction.opposite(directionToMove)) ? directionToMove : lastDirection;
         return lastDirection;
     }
 
-    public int indexOfMaxValue(double[] neuralNetworkOutput) {
-        int maxIndex = 0;
-        double max = neuralNetworkOutput[0];
+    /**
+     * The function returns index of max value in given array
+     *
+     * @param array double array
+     * @return index of max number in array
+     */
 
-        for (int i = 0; i < neuralNetworkOutput.length; i++) {
-            if (max < neuralNetworkOutput[i]) {
-                max = neuralNetworkOutput[i];
+    protected int maxValueIndex(double[] array) {
+        int maxIndex = 0;
+        double max = array[0];
+
+        for (int i = 0; i < array.length; i++) {
+            if (max < array[i]) {
+                max = array[i];
                 maxIndex = i;
             }
         }
