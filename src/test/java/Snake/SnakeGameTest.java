@@ -129,4 +129,35 @@ public class SnakeGameTest {
         assertThat(snakeGame.snakeMapper().rightSafe, is(-1));
         assertThat(snakeGame.snakeMapper().downSafe, is(-1));
     }
+
+    @Test
+    void indexOfMaxValue_returnsCorrectDirection() {
+        double[] output = new double[]{2, 1, 1, 1};
+        assertThat(snakeGame.indexOfMaxValue(output), is(0));
+        output = new double[]{1, 2, 1, 1};
+        assertThat(snakeGame.indexOfMaxValue(output), is(1));
+        output = new double[]{1, 1, 2, 1};
+        assertThat(snakeGame.indexOfMaxValue(output), is(2));
+        output = new double[]{1, 1, 1, 2};
+        assertThat(snakeGame.indexOfMaxValue(output), is(3));
+    }
+
+    @Test
+    void outputToDirection_returnsCorrectDirection() {
+        double[] output = new double[]{2, 1, 1, 1};
+        snakeGame.lastDirection = Direction.LEFT;
+        assertThat(snakeGame.outputToDirection(output), is(Direction.UP));
+
+        output = new double[]{1, 2, 1, 1};
+        snakeGame.lastDirection = Direction.LEFT;
+        assertThat(snakeGame.outputToDirection(output), is(Direction.DOWN));
+
+        output = new double[]{1, 1, 2, 1};
+        snakeGame.lastDirection = Direction.DOWN;
+        assertThat(snakeGame.outputToDirection(output), is(Direction.LEFT));
+
+        output = new double[]{1, 1, 1, 2};
+        snakeGame.lastDirection = Direction.DOWN;
+        assertThat(snakeGame.outputToDirection(output), is(Direction.RIGHT));
+    }
 }

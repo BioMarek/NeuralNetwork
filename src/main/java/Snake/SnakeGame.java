@@ -16,20 +16,26 @@ public class SnakeGame implements Game {
     private final int HEAD = 3;
     private final int FOOD = 4;
 
-    private final int[][] grid;
     private final int size;
+    private int[][] grid;
+
     protected List<BodyPart> snake;
     protected int foodRow;
     protected int foodColumn;
 
-    public Direction lastDirection = Direction.UP;
-    public int snakeScore = 0;
+    public Direction lastDirection;
+    public int snakeScore;
     public boolean isGameOver = false;
 
     public SnakeGame(int size) {
         this.size = size;
-        this.grid = new int[size][size];
+        reset();
+    }
 
+    /**
+     * Resets game into initial state.
+     */
+    public void reset() {
         initSnake();
         placeFood();
         snakeToGrid();
@@ -39,6 +45,10 @@ public class SnakeGame implements Game {
      * Creates initial snake game setup
      */
     public void initSnake() {
+        snakeScore = 0;
+        lastDirection = Direction.UP;
+        this.grid = new int[size][size];
+
         snake = new ArrayList<>();
         snake.add(new BodyPart(true, size / 2, size / 2));
         snake.add(new BodyPart(false, size / 2 + 1, size / 2));
@@ -215,34 +225,37 @@ public class SnakeGame implements Game {
     }
 
     /**
-     * Calculates one snake move after {@link NeuralNetwork} input.
+     * Plays game of {@link SnakeGame} with one {@link NeuralNetwork} for maxNumberOfMoves.
      *
-     * @param move supplied by {@link NeuralNetwork}
-     */
-    public void processNeuralNetworkMove(String move) {
-        moveSnake(keyToDirection(move));
-        snakeToGrid();
-    }
-
-    /**
-     * Plays one game of {@link SnakeGame} with one {@link NeuralNetwork}
-     *
-     * @param neuralNetwork that plays game
+     * @param neuralNetwork    that plays game
+     * @param maxNumberOfMoves maximal number of snake moves so that snake won move in cycles
      */
     public void play(NeuralNetwork neuralNetwork, int maxNumberOfMoves) {
-        SnakeGame snakeGame = new SnakeGame(20);
         double[] networkOutput;
 
         for (int i = 0; i < maxNumberOfMoves; i++) {
-            networkOutput = neuralNetwork.getNetworkOutput(snakeGame.snakeMapper().getInput());
-            snakeGame.processNeuralNetworkMove(translateOutputToKey(networkOutput));
-            if (snakeGame.isGameOver)
+            networkOutput = neuralNetwork.getNetworkOutput(snakeMapper().getInput());
+            moveSnake(outputToDirection(networkOutput));
+            snakeToGrid();
+            if (isGameOver)
                 break;
         }
-        neuralNetwork.score = snakeGame.snakeScore;
+        neuralNetwork.score = snakeScore;
     }
 
-    public String translateOutputToKey(double[] neuralNetworkOutput) {
+    public Direction outputToDirection(double[] neuralNetworkOutput) {
+        Map<Integer, Direction> indexToDirection = new HashMap<>();
+        indexToDirection.put(0, Direction.UP);
+        indexToDirection.put(1, Direction.DOWN);
+        indexToDirection.put(2, Direction.LEFT);
+        indexToDirection.put(3, Direction.RIGHT);
+
+        Direction directionToMove = indexToDirection.get(indexOfMaxValue(neuralNetworkOutput));
+        lastDirection = (lastDirection != Direction.opposite(directionToMove)) ? directionToMove : lastDirection;
+        return lastDirection;
+    }
+
+    public int indexOfMaxValue(double[] neuralNetworkOutput) {
         int maxIndex = 0;
         double max = neuralNetworkOutput[0];
 
@@ -252,18 +265,6 @@ public class SnakeGame implements Game {
                 maxIndex = i;
             }
         }
-
-        switch (maxIndex) {
-            case 0:
-                return "w";
-            case 1:
-                return "s";
-            case 2:
-                return "a";
-            case 3:
-                return "d";
-        }
-
-        return "error";
+        return maxIndex;
     }
 }

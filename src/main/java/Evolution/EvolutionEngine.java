@@ -15,6 +15,7 @@ public class EvolutionEngine {
     private int[] neuralNetworkSettings;
     private Function<Double, Double> hiddenLayerActivationFunc;
     private Function<Double, Double> outputLayerActivationFunc;
+
     protected List<NeuralNetwork> neuralNetworks = new ArrayList<>();
     protected int totalNumOfNetworks;
     protected int networksGenerated;
@@ -34,6 +35,7 @@ public class EvolutionEngine {
 
     public void makeNextGeneration() {
         for (NeuralNetwork neuralNetwork : neuralNetworks) {
+            game.reset();
             game.play(neuralNetwork, maxNumberOfMoves);
         }
         neuralNetworks.sort(Collections.reverseOrder());

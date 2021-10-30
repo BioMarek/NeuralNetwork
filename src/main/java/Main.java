@@ -9,6 +9,6 @@ public class Main {
                 .setOutputLayerActivationFunc(Util.activationFunctionIdentity())
                 .build();
 
-        evolutionEngine.calculateEvolution(50);
+        evolutionEngine.calculateEvolution(100);
     }
 }
