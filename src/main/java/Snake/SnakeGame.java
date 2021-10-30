@@ -1,5 +1,7 @@
 package Snake;
 
+import Interfaces.Game;
+import NeuralNetwork.NeuralNetwork;
 import NeuralNetwork.Util;
 
 import java.util.*;
@@ -7,7 +9,7 @@ import java.util.*;
 /**
  * Snake game it used check whether {@link NeuralNetwork} can play simple game.
  */
-public class SnakeGame {
+public class SnakeGame implements Game {
     private final int EMPTY = 0;
     private final int WALL = 1;
     private final int BODY = 2;
@@ -220,5 +222,48 @@ public class SnakeGame {
     public void processNeuralNetworkMove(String move) {
         moveSnake(keyToDirection(move));
         snakeToGrid();
+    }
+
+    /**
+     * Plays one game of {@link SnakeGame} with one {@link NeuralNetwork}
+     *
+     * @param neuralNetwork that plays game
+     */
+    public void play(NeuralNetwork neuralNetwork, int maxNumberOfMoves) {
+        SnakeGame snakeGame = new SnakeGame(20);
+        double[] networkOutput;
+
+        for (int i = 0; i < maxNumberOfMoves; i++) {
+            networkOutput = neuralNetwork.getNetworkOutput(snakeGame.snakeMapper().getInput());
+            snakeGame.processNeuralNetworkMove(translateOutputToKey(networkOutput));
+            if (snakeGame.isGameOver)
+                break;
+        }
+        neuralNetwork.score = snakeGame.snakeScore;
+    }
+
+    public String translateOutputToKey(double[] neuralNetworkOutput) {
+        int maxIndex = 0;
+        double max = neuralNetworkOutput[0];
+
+        for (int i = 0; i < neuralNetworkOutput.length; i++) {
+            if (max < neuralNetworkOutput[i]) {
+                max = neuralNetworkOutput[i];
+                maxIndex = i;
+            }
+        }
+
+        switch (maxIndex) {
+            case 0:
+                return "w";
+            case 1:
+                return "s";
+            case 2:
+                return "a";
+            case 3:
+                return "d";
+        }
+
+        return "error";
     }
 }

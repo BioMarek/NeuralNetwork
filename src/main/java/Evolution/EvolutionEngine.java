@@ -1,7 +1,7 @@
 package Evolution;
 
+import Interfaces.Game;
 import NeuralNetwork.NeuralNetwork;
-import Snake.SnakeGame;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -22,59 +22,19 @@ public class EvolutionEngine {
     protected int networksToMutate; // number of top scoring networks copies that are mutated and copied into next generation
     protected int currentGenerations;
     protected int maxNumberOfMoves; // to stop AI moving in cycles
-
-    /**
-     * Plays one game of {@link SnakeGame} with one {@link NeuralNetwork}
-     *
-     * @param neuralNetwork that plays game
-     */
-    public void playSnake(NeuralNetwork neuralNetwork) {
-        SnakeGame snakeGame = new SnakeGame(20);
-        double[] networkOutput;
-
-        for (int i = 0; i < maxNumberOfMoves; i++) {
-            networkOutput = neuralNetwork.getNetworkOutput(snakeGame.snakeMapper().getInput());
-            snakeGame.processNeuralNetworkMove(translateOutputToKey(networkOutput));
-            if (snakeGame.isGameOver)
-                break;
-        }
-        neuralNetwork.score = snakeGame.snakeScore;
-    }
-
-    public String translateOutputToKey(double[] neuralNetworkOutput) {
-        int maxIndex = 0;
-        double max = neuralNetworkOutput[0];
-
-        for (int i = 0; i < neuralNetworkOutput.length; i++) {
-            if (max < neuralNetworkOutput[i]) {
-                max = neuralNetworkOutput[i];
-                maxIndex = i;
-            }
-        }
-
-        switch (maxIndex) {
-            case 0:
-                return "w";
-            case 1:
-                return "s";
-            case 2:
-                return "a";
-            case 3:
-                return "d";
-        }
-
-        return "error";
-    }
+    protected int numOfNeuronsToMutate;
+    protected int numOfMutations;
+    protected Game game;
 
     public void calculateEvolution(int numOfGenerations) {
         for (int i = 0; i < numOfGenerations; i++) {
-            nextGeneration();
+            makeNextGeneration();
         }
     }
 
-    public void nextGeneration() {
+    public void makeNextGeneration() {
         for (NeuralNetwork neuralNetwork : neuralNetworks) {
-            playSnake(neuralNetwork);
+            game.play(neuralNetwork, maxNumberOfMoves);
         }
         neuralNetworks.sort(Collections.reverseOrder());
         printScores();
@@ -88,7 +48,8 @@ public class EvolutionEngine {
             }
             if (i >= networksToKeep && i < (networksToMutate + networksToKeep)) {
                 NeuralNetwork neuralNetwork = neuralNetworks.get(i - networksToMutate).copy();
-                neuralNetwork.mutateLayers(1, 1);
+                neuralNetwork.mutateLayers(numOfNeuronsToMutate, numOfMutations);
+                neuralNetwork.name = Integer.toString(networksGenerated++);
                 neuralNetworksNewGeneration.add(neuralNetwork);
             }
             if (i >= networksToMutate + networksToKeep) {
@@ -107,19 +68,27 @@ public class EvolutionEngine {
         System.out.println();
     }
 
+    public NeuralNetwork getNeuralNetwork(int index) {
+        return neuralNetworks.get(index);
+    }
+
     public static class EvolutionEngineBuilder {
         private final int[] neuralNetworkSettings;
+        private final Game game;
         private Function<Double, Double> hiddenLayerActivationFunc;
         private Function<Double, Double> outputLayerActivationFunc;
         private int totalNumOfNetworks = 100;
         private int networksToKeep = 40;
         private int networksToMutate = 40;
         private int maxNumberOfMoves = 500;
+        private int numOfNeuronsToMutate = 1;
+        private int numOfMutations = 1;
 
-        public EvolutionEngineBuilder(int[] neuralNetworkSettings, Function<Double, Double> hiddenLayerActivationFunc) {
+        public EvolutionEngineBuilder(int[] neuralNetworkSettings, Function<Double, Double> hiddenLayerActivationFunc, Game game) {
             this.neuralNetworkSettings = neuralNetworkSettings;
             this.hiddenLayerActivationFunc = hiddenLayerActivationFunc;
             this.outputLayerActivationFunc = hiddenLayerActivationFunc;
+            this.game = game;
         }
 
         public EvolutionEngineBuilder setTotalNumOfNetworks(int totalNumOfNetworks) {
@@ -147,6 +116,16 @@ public class EvolutionEngine {
             return this;
         }
 
+        public EvolutionEngineBuilder setNumOfNeuronsToMutate(int numOfNeuronsToMutate) {
+            this.numOfNeuronsToMutate = numOfNeuronsToMutate;
+            return this;
+        }
+
+        public EvolutionEngineBuilder setNumOfMutations(int numOfMutations) {
+            this.numOfMutations = numOfMutations;
+            return this;
+        }
+
         /**
          * Builds evolution engine. {@link NeuralNetwork} will get number names starting from 0 increasing by 1.
          *
@@ -154,6 +133,7 @@ public class EvolutionEngine {
          */
         public EvolutionEngine build() {
             EvolutionEngine evolutionEngine = new EvolutionEngine();
+            evolutionEngine.game = game;
             evolutionEngine.networksGenerated = 0;
             evolutionEngine.currentGenerations = 0;
 
@@ -163,13 +143,15 @@ public class EvolutionEngine {
                 evolutionEngine.neuralNetworks.add(neuralNetwork);
             }
 
-            evolutionEngine.neuralNetworkSettings = this.neuralNetworkSettings;
-            evolutionEngine.hiddenLayerActivationFunc = this.hiddenLayerActivationFunc;
-            evolutionEngine.outputLayerActivationFunc = this.outputLayerActivationFunc;
-            evolutionEngine.totalNumOfNetworks = this.totalNumOfNetworks;
-            evolutionEngine.networksToKeep = this.networksToKeep;
-            evolutionEngine.networksToMutate = this.networksToMutate;
-            evolutionEngine.maxNumberOfMoves = this.maxNumberOfMoves;
+            evolutionEngine.neuralNetworkSettings = neuralNetworkSettings;
+            evolutionEngine.hiddenLayerActivationFunc = hiddenLayerActivationFunc;
+            evolutionEngine.outputLayerActivationFunc = outputLayerActivationFunc;
+            evolutionEngine.totalNumOfNetworks = totalNumOfNetworks;
+            evolutionEngine.networksToKeep = networksToKeep;
+            evolutionEngine.networksToMutate = networksToMutate;
+            evolutionEngine.maxNumberOfMoves = maxNumberOfMoves;
+            evolutionEngine.numOfNeuronsToMutate = numOfNeuronsToMutate;
+            evolutionEngine.numOfMutations = numOfMutations;
             return evolutionEngine;
         }
     }
