@@ -25,6 +25,7 @@ public class EvolutionEngine {
     protected int maxNumberOfMoves; // to stop AI moving in cycles
     protected int numOfNeuronsToMutate;
     protected int numOfMutations;
+    protected int numOfTrials; // how many times NeuralNetwork plays the game
     protected Game game;
 
     public void calculateEvolution(int numOfGenerations) {
@@ -35,8 +36,10 @@ public class EvolutionEngine {
 
     public void makeNextGeneration() {
         for (NeuralNetwork neuralNetwork : neuralNetworks) {
-            game.reset();
-            game.play(neuralNetwork, maxNumberOfMoves);
+            for (int i = 0; i < numOfTrials; i++){
+                game.reset();
+                game.play(neuralNetwork, maxNumberOfMoves);
+            }
         }
         neuralNetworks.sort(Collections.reverseOrder());
         printScores();
@@ -85,6 +88,7 @@ public class EvolutionEngine {
         private int maxNumberOfMoves = 500;
         private int numOfNeuronsToMutate = 1;
         private int numOfMutations = 1;
+        private int numOfTrials = 10;
 
         public EvolutionEngineBuilder(int[] neuralNetworkSettings, Function<Double, Double> hiddenLayerActivationFunc, Game game) {
             this.neuralNetworkSettings = neuralNetworkSettings;
@@ -128,6 +132,11 @@ public class EvolutionEngine {
             return this;
         }
 
+        public EvolutionEngineBuilder setNumOfTrials(int numOfTrials) {
+            this.numOfMutations = numOfTrials;
+            return this;
+        }
+
         /**
          * Builds evolution engine. {@link NeuralNetwork} will get number names starting from 0 increasing by 1.
          *
@@ -154,6 +163,7 @@ public class EvolutionEngine {
             evolutionEngine.maxNumberOfMoves = maxNumberOfMoves;
             evolutionEngine.numOfNeuronsToMutate = numOfNeuronsToMutate;
             evolutionEngine.numOfMutations = numOfMutations;
+            evolutionEngine.numOfTrials = numOfTrials;
             return evolutionEngine;
         }
     }

@@ -249,6 +249,26 @@ public class SnakeGame implements Game {
             if (isGameOver)
                 break;
         }
+        neuralNetwork.score += snakeScore;
+    }
+
+    /**
+     * should be replaced by gui version
+     *
+     * @param neuralNetwork    that plays game
+     * @param maxNumberOfMoves maximal number of snake moves so that snake won move in cycles
+     */
+    public void showSnakeMoves(NeuralNetwork neuralNetwork, int maxNumberOfMoves) {
+        double[] networkOutput;
+
+        for (int i = 0; i < maxNumberOfMoves; i++) {
+            networkOutput = neuralNetwork.getNetworkOutput(snakeMapper().getInput());
+            moveSnake(outputToDirection(networkOutput));
+            snakeToGrid();
+            printSnakeGame();
+            if (isGameOver)
+                break;
+        }
         neuralNetwork.score = snakeScore;
     }
 
