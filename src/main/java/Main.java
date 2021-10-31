@@ -1,4 +1,5 @@
 import Evolution.EvolutionEngine;
+import NeuralNetwork.NeuralNetwork;
 import NeuralNetwork.Util;
 import Snake.SnakeGame;
 
@@ -11,6 +12,14 @@ public class Main {
                 .setNumOfMutations(2)
                 .build();
 
+        long start = System.currentTimeMillis();
         evolutionEngine.calculateEvolution(2000);
+        long stop = System.currentTimeMillis();
+        System.out.println("It took: " + (stop - start) + "ms");
+
+        SnakeGame snakeGame = new SnakeGame(20);
+        NeuralNetwork neuralNetwork = evolutionEngine.getNeuralNetwork(0);
+        System.out.println(neuralNetwork.name);
+        snakeGame.showSnakeMoves(neuralNetwork, 500);
     }
 }
