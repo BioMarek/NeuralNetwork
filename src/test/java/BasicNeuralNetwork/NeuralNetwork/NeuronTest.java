@@ -1,5 +1,7 @@
-import NeuralNetwork.Neuron;
-import NeuralNetwork.Util;
+package BasicNeuralNetwork.NeuralNetwork;
+
+import BasicNeuralNetwork.NeuralNetwork.Neuron;
+import Utils.Util;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

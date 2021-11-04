@@ -1,4 +1,4 @@
-import NeuralNetwork.Util;
+import Utils.Util;
 import org.junit.jupiter.api.Test;
 
 import java.util.stream.DoubleStream;

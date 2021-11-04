@@ -1,4 +1,4 @@
-package Snake;
+package Games.Snake;
 
 public enum Direction {
     UP, DOWN, LEFT, RIGHT, NONE;

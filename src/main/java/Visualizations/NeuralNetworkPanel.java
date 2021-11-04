@@ -1,9 +1,9 @@
-package Visualization;
+package Visualizations;
 
-import NeuralNetwork.Layer;
-import NeuralNetwork.NeuralNetwork;
-import NeuralNetwork.Neuron;
-import NeuralNetwork.Util;
+import BasicNeuralNetwork.NeuralNetwork.Layer;
+import BasicNeuralNetwork.NeuralNetwork.NeuralNetwork;
+import BasicNeuralNetwork.NeuralNetwork.Neuron;
+import Utils.Util;
 
 import javax.swing.*;
 import java.awt.*;

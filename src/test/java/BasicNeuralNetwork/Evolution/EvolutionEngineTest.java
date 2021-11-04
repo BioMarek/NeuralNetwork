@@ -1,7 +1,7 @@
-package Evolution;
+package BasicNeuralNetwork.Evolution;
 
-import NeuralNetwork.Util;
-import Snake.SnakeGame;
+import Utils.Util;
+import Games.Snake.SnakeGame;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;

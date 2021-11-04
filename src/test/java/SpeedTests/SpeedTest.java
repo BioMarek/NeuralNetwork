@@ -1,6 +1,6 @@
 package SpeedTests;
 
-import NeuralNetwork.Neuron;
+import BasicNeuralNetwork.NeuralNetwork.Neuron;
 
 /**
  * Used to test how fast different implementations of functions are.

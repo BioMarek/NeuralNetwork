@@ -1,5 +1,6 @@
-package NeuralNetwork;
+package BasicNeuralNetwork.NeuralNetwork;
 
+import Utils.Util;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;

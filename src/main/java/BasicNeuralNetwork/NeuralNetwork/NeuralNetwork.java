@@ -1,4 +1,4 @@
-package NeuralNetwork;
+package BasicNeuralNetwork.NeuralNetwork;
 
 import lombok.EqualsAndHashCode;
 
@@ -52,7 +52,7 @@ public class NeuralNetwork implements Comparable<NeuralNetwork>, Serializable {
     public NeuralNetwork copy() {
         NeuralNetwork copy = new NeuralNetwork(
                 hiddenLayers.stream()
-                        .map(x -> x.copy())
+                        .map(Layer::copy)
                         .collect(Collectors.toList()), score, name
         );
         copy.hiddenLayerActivationFunc = hiddenLayerActivationFunc;
@@ -146,7 +146,7 @@ public class NeuralNetwork implements Comparable<NeuralNetwork>, Serializable {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        throw new RuntimeException("Failed to load NeuralNetwork");
+        throw new RuntimeException("Failed to load BasicNeuralNetwork.NeuralNetwork");
     }
 
     @Override

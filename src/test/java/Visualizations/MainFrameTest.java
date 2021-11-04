@@ -1,7 +1,7 @@
-package Visualization;
+package Visualizations;
 
-import NeuralNetwork.NeuralNetwork;
-import NeuralNetwork.Util;
+import BasicNeuralNetwork.NeuralNetwork.NeuralNetwork;
+import Utils.Util;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

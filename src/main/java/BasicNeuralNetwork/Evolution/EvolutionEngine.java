@@ -1,7 +1,7 @@
-package Evolution;
+package BasicNeuralNetwork.Evolution;
 
-import Interfaces.Game;
-import NeuralNetwork.NeuralNetwork;
+import Games.Game;
+import BasicNeuralNetwork.NeuralNetwork.NeuralNetwork;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -25,7 +25,7 @@ public class EvolutionEngine {
     protected int maxNumberOfMoves; // to stop AI moving in cycles
     protected int numOfNeuronsToMutate;
     protected int numOfMutations;
-    protected int numOfTrials; // how many times NeuralNetwork plays the game
+    protected int numOfTrials; // how many times BasicNeuralNetwork.NeuralNetwork plays the game
     protected Game game;
     protected boolean verbose;
 

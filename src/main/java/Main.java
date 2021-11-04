@@ -1,7 +1,7 @@
-import Evolution.EvolutionEngine;
-import NeuralNetwork.NeuralNetwork;
-import NeuralNetwork.Util;
-import Snake.SnakeGame;
+import BasicNeuralNetwork.Evolution.EvolutionEngine;
+import BasicNeuralNetwork.NeuralNetwork.NeuralNetwork;
+import Utils.Util;
+import Games.Snake.SnakeGame;
 
 public class Main {
     public static void main(String[] args) {

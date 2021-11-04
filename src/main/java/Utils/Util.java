@@ -1,4 +1,4 @@
-package NeuralNetwork;
+package Utils;
 
 import java.util.Random;
 import java.util.function.Function;

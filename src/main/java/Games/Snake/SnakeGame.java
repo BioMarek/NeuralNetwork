@@ -1,13 +1,13 @@
-package Snake;
+package Games.Snake;
 
-import Interfaces.Game;
-import NeuralNetwork.NeuralNetwork;
-import NeuralNetwork.Util;
+import Games.Game;
+import BasicNeuralNetwork.NeuralNetwork.NeuralNetwork;
+import Utils.Util;
 
 import java.util.*;
 
 /**
- * Snake game it used check whether {@link NeuralNetwork} can play simple game.
+ * Games.Snake game it used check whether {@link NeuralNetwork} can play simple game.
  */
 public class SnakeGame implements Game {
     private final int EMPTY = 0;
@@ -151,7 +151,7 @@ public class SnakeGame implements Game {
     }
 
     /**
-     * Moves Snake to given direction
+     * Moves Games.Snake to given direction
      *
      * @param direction where to move snake
      */
@@ -175,7 +175,7 @@ public class SnakeGame implements Game {
     }
 
     /**
-     * Moves Snake by to the new position. When snake hits wall or the body isGameOver is set to true.
+     * Moves Games.Snake by to the new position. When snake hits wall or the body isGameOver is set to true.
      *
      * @param row    where to move head
      * @param column where to move head
