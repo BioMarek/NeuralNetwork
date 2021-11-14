@@ -1,5 +1,16 @@
 package NEAT.Evolution;
 
+import NEAT.Phenotype.Connection;
+import NEAT.Phenotype.Phenotype;
+import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
+/**
+ * The class represents gene which describes how {@link Connection} in {@link Phenotype} should look like.
+ */
+@EqualsAndHashCode
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ConnectionGene {
     public NodeGene from;
     public NodeGene to;
@@ -11,13 +22,5 @@ public class ConnectionGene {
         this.to = to;
         this.weight = weight;
         this.enabled = enabled;
-    }
-
-    public int from(){
-        return from.name;
-    }
-
-    public int to(){
-        return to.name;
     }
 }

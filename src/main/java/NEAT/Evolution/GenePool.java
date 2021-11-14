@@ -7,18 +7,28 @@ import NEAT.Phenotype.Phenotype;
 import Utils.Util;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.function.Function;
 
+/**
+ * The class holds all genes of population.
+ */
 public class GenePool {
     private int maxNeurons = 1000;
     private int numOfGenotypes = 100;
     private int neuronNames = 0;
+    public Function<Double, Double> hiddenLayerActivationFunc;
+    public Function<Double, Double> outputLayerActivationFunc;
     public List<ConnectionGene> connectionGenes = new ArrayList<>();
     public List<NodeGene> nodeGenes = new ArrayList<>();
     public List<Phenotype> phenotypes = new ArrayList<>();
 
-    public void initGenePool(int inputs, int outputs) {
+    public void initGenePool(int inputs, int outputs, Function<Double, Double> hiddenLayerActivationFunc, Function<Double, Double> outputLayerActivationFunc) {
+        this.hiddenLayerActivationFunc = hiddenLayerActivationFunc;
+        this.outputLayerActivationFunc = outputLayerActivationFunc;
+
         List<NodeGene> inputNodes = new ArrayList<>();
         List<NodeGene> outputNodes = new ArrayList<>();
         for (int i = 0; i < inputs; i++) {
@@ -51,6 +61,7 @@ public class GenePool {
                         neurons.get(connectionGene.to.name),
                         connectionGene.weight[i]));
             }
+            Collections.sort(phenotype.connections);
             phenotypes.add(phenotype);
         }
     }
