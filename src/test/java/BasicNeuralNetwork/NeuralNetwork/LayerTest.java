@@ -1,6 +1,5 @@
 package BasicNeuralNetwork.NeuralNetwork;
 
-import BasicNeuralNetwork.NeuralNetwork.Layer;
 import Utils.Util;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,8 +36,8 @@ public class LayerTest {
 
     @Test
     void copy_changeInNeuronOfLayerCopyDoesntChangeOriginal() {
-        copy.neurons[0].weights[0] = 10;
-        assertThat(layer.neurons[0].weights[0], not(equalTo(copy.neurons[0].weights[0])));
+        copy.basicNeurons[0].weights[0] = 10;
+        assertThat(layer.basicNeurons[0].weights[0], not(equalTo(copy.basicNeurons[0].weights[0])));
     }
 
     @Test
@@ -58,20 +57,20 @@ public class LayerTest {
     @Test
     void mutateRandomNeuron_changesNeuron() {
         copy.mutateRandomNeuron(1, 1);
-        assertThat(layer.neurons, not(equalTo(copy.neurons)));
+        assertThat(layer.basicNeurons, not(equalTo(copy.basicNeurons)));
     }
 
     private void layerTestOutput(int first, int second) {
         layer.calculateOutput(new double[]{first, second}, Util.activationFunctionUnitStep());
         for (int i = 0; i < TEST_REPEATS; i++) {
-            double result1 = (layer.neurons[0].bias +
-                            first * layer.neurons[0].weights[0] +
-                            second * layer.neurons[0].weights[1]
+            double result1 = (layer.basicNeurons[0].bias +
+                            first * layer.basicNeurons[0].weights[0] +
+                            second * layer.basicNeurons[0].weights[1]
             ) >= 0.0D ? 1.0D : 0.0D;
 
-            double result2 = (layer.neurons[1].bias +
-                            first * layer.neurons[1].weights[0] +
-                            second * layer.neurons[1].weights[1]
+            double result2 = (layer.basicNeurons[1].bias +
+                            first * layer.basicNeurons[1].weights[0] +
+                            second * layer.basicNeurons[1].weights[1]
             ) >= 0.0D ? 1.0D : 0.0D;
 
             assertThat(layer.layerOutputs[0], equalTo(result1));

@@ -10,32 +10,32 @@ import java.util.Arrays;
 import java.util.function.Function;
 
 /**
- * The class represents {@link Neuron} which is main building block of {@link Layer}.
+ * The class represents {@link BasicNeuron} which is main building block of {@link Layer}.
  */
 @EqualsAndHashCode
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class Neuron implements Serializable {
+public class BasicNeuron implements Serializable {
     public double[] weights;
     public double innerPotential;
     public double bias;
 
 
-    public Neuron(int numOfNeuronInPrevLayer) {
+    public BasicNeuron(int numOfNeuronInPrevLayer) {
         weights = Util.randomDoubleArray(numOfNeuronInPrevLayer);
         innerPotential = Util.randomDouble();
         bias = Util.randomDouble();
     }
 
     /**
-     * @return deep copy of {@link Neuron}
+     * @return deep copy of {@link BasicNeuron}
      */
-    public Neuron copy() {
-        Neuron neuron = new Neuron();
-        neuron.weights = Arrays.copyOf(this.weights, this.weights.length);
-        neuron.innerPotential = this.innerPotential;
-        neuron.bias = this.bias;
+    public BasicNeuron copy() {
+        BasicNeuron basicNeuron = new BasicNeuron();
+        basicNeuron.weights = Arrays.copyOf(this.weights, this.weights.length);
+        basicNeuron.innerPotential = this.innerPotential;
+        basicNeuron.bias = this.bias;
 
-        return neuron;
+        return basicNeuron;
     }
 
     /**
@@ -54,7 +54,7 @@ public class Neuron implements Serializable {
     }
 
     /**
-     * The function takes random weight of {@link Neuron} by and changes it to new number in [-1, 1] interval.
+     * The function takes random weight of {@link BasicNeuron} by and changes it to new number in [-1, 1] interval.
      *
      * @param numOfMutations number of weights that should be changed
      */

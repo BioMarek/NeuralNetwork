@@ -2,7 +2,7 @@ package Visualizations;
 
 import BasicNeuralNetwork.NeuralNetwork.Layer;
 import BasicNeuralNetwork.NeuralNetwork.NeuralNetwork;
-import BasicNeuralNetwork.NeuralNetwork.Neuron;
+import BasicNeuralNetwork.NeuralNetwork.BasicNeuron;
 import Utils.Util;
 
 import javax.swing.*;
@@ -82,7 +82,7 @@ public class NeuralNetworkPanel extends JPanel {
         for (int leftNeuron = 0; leftNeuron < leftLayer.length; leftNeuron++) {
             int rightNeuronY = neuronYAxisGap + yAxisOffset[rightLayer.index];
             for (int rightNeuron = 0; rightNeuron < rightLayer.length; rightNeuron++) {
-                graphics.setColor(weightToColor(rightLayer.neurons[rightNeuron].weights[leftNeuron]));
+                graphics.setColor(weightToColor(rightLayer.basicNeurons[rightNeuron].weights[leftNeuron]));
                 drawLine(weightStartingPoint(leftNeuronY, leftLayerX), weightEndingPoint(rightNeuronY, rightLayerX));
                 rightNeuronY += neuronYAxisGap;
             }
@@ -91,10 +91,10 @@ public class NeuralNetworkPanel extends JPanel {
     }
 
     /**
-     * Calculates weight line starting point based on size of the {@link Neuron} and its position within {@link Layer}.
+     * Calculates weight line starting point based on size of the {@link BasicNeuron} and its position within {@link Layer}.
      *
-     * @param leftNeuronY y index of {@link Neuron} upper left corner
-     * @param leftLayerX  x index of {@link Neuron} upper left corner
+     * @param leftNeuronY y index of {@link BasicNeuron} upper left corner
+     * @param leftLayerX  x index of {@link BasicNeuron} upper left corner
      * @return {@link Point}
      */
     protected Point weightStartingPoint(int leftNeuronY, int leftLayerX) {
@@ -102,10 +102,10 @@ public class NeuralNetworkPanel extends JPanel {
     }
 
     /**
-     * Calculates weight line starting point based on size of the {@link Neuron} and its position within {@link Layer}.
+     * Calculates weight line starting point based on size of the {@link BasicNeuron} and its position within {@link Layer}.
      *
-     * @param rightNeuronY y index of {@link Neuron} upper left corner
-     * @param rightLayerX  x index of {@link Neuron} upper left corner
+     * @param rightNeuronY y index of {@link BasicNeuron} upper left corner
+     * @param rightLayerX  x index of {@link BasicNeuron} upper left corner
      * @return {@link Point}
      */
     protected Point weightEndingPoint(int rightNeuronY, int rightLayerX) {
@@ -125,7 +125,7 @@ public class NeuralNetworkPanel extends JPanel {
     /**
      * Converts weight to color.
      *
-     * @param weight weight of {@link Neuron}
+     * @param weight weight of {@link BasicNeuron}
      * @return red if weight is negative blue otherwise
      */
     protected Color weightToColor(double weight) {
@@ -133,7 +133,7 @@ public class NeuralNetworkPanel extends JPanel {
     }
 
     /**
-     * The function calculates offset on y axis so that {@link Layer}s with different number of {@link Neuron} are centered.
+     * The function calculates offset on y axis so that {@link Layer}s with different number of {@link BasicNeuron} are centered.
      *
      * @param neuralNetwork which {@link Layer}s will be evaluated
      * @return array of offsets for each layer

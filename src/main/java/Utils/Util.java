@@ -1,5 +1,6 @@
 package Utils;
 
+import java.util.Arrays;
 import java.util.Random;
 import java.util.function.Function;
 
@@ -43,6 +44,23 @@ public class Util {
 
     public static double[] randomDoubleArray(int size) {
         return random.doubles(size, -1.0D, 1.0D).toArray();
+    }
+
+    public static boolean[] randomBooleanArray(int size) {
+        boolean[] boolArray = new boolean[size];
+        for (int i = 0; i < size; i++){
+            boolArray[i] = random.nextBoolean();
+        }
+        return boolArray;
+    }
+
+    public static boolean[] booleanArray(int size, boolean type){
+        boolean[] boolArray = new boolean[size];
+        if (type)
+            Arrays.fill(boolArray, Boolean.TRUE);
+        else
+            Arrays.fill(boolArray, Boolean.FALSE);
+        return boolArray;
     }
 
     public static Function<Double, Double> activationFunctionUnitStep() {

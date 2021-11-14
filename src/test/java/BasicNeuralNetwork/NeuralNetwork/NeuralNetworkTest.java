@@ -1,6 +1,5 @@
 package BasicNeuralNetwork.NeuralNetwork;
 
-import BasicNeuralNetwork.NeuralNetwork.NeuralNetwork;
 import Utils.Util;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,8 +34,8 @@ public class NeuralNetworkTest {
 
     @Test
     void copy_changeInCopyDoesntChangeOriginal() {
-        copy.hiddenLayers.get(0).neurons[0].weights[0] = 10;
-        assertThat(copy.hiddenLayers.get(0).neurons[0].weights[0], is(not(neuralNetwork.hiddenLayers.get(0).neurons[0].weights[0])));
+        copy.hiddenLayers.get(0).basicNeurons[0].weights[0] = 10;
+        assertThat(copy.hiddenLayers.get(0).basicNeurons[0].weights[0], is(not(neuralNetwork.hiddenLayers.get(0).basicNeurons[0].weights[0])));
         assertThat(neuralNetwork.equals(copy), is(false));
     }
 

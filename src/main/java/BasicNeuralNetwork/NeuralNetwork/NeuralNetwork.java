@@ -23,7 +23,7 @@ public class NeuralNetwork implements Comparable<NeuralNetwork>, Serializable {
 
     /**
      * @param sizes                     Array of sizes, first number is number of {@link NeuralNetwork} inputs. Numbers
-     *                                  size[1]...size[n] say how many {@link Neuron} should be in n-th hidden {@link Layer}.
+     *                                  size[1]...size[n] say how many {@link BasicNeuron} should be in n-th hidden {@link Layer}.
      * @param hiddenLayerActivationFunc activation function used in hidden layers
      * @param outputLayerActivationFunc activation function used in output layer
      */
