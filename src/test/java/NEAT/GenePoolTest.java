@@ -18,6 +18,7 @@ import static org.hamcrest.Matchers.is;
 
 public class GenePoolTest {
     private final static int MAX_NEURONS = 1000;
+    private final static int NUM_OF_GENOTYPES = 100;
     protected GenePool genePool = new GenePool();
 
     @BeforeEach
@@ -30,16 +31,21 @@ public class GenePoolTest {
     void initGenePool_initialNodeGenesConfigurationIsCorrect() {
         // PREPARE
         List<NodeGene> nodeGenes = genePool.nodeGenes;
+        boolean[] trueArray = Util.booleanArray(NUM_OF_GENOTYPES, true);
 
         // VERIFY
         assertThat(nodeGenes.get(0).name, is(0));
         assertThat(nodeGenes.get(0).type, is(NeuronType.INPUT));
+        assertThat(nodeGenes.get(0).enabled, is(trueArray));
         assertThat(nodeGenes.get(1).name, is(1));
         assertThat(nodeGenes.get(1).type, is(NeuronType.INPUT));
+        assertThat(nodeGenes.get(1).enabled, is(trueArray));
         assertThat(nodeGenes.get(2).name, is(MAX_NEURONS - 1));
         assertThat(nodeGenes.get(2).type, is(NeuronType.OUTPUT));
+        assertThat(nodeGenes.get(2).enabled, is(trueArray));
         assertThat(nodeGenes.get(3).name, is(MAX_NEURONS));
         assertThat(nodeGenes.get(3).type, is(NeuronType.OUTPUT));
+        assertThat(nodeGenes.get(3).enabled, is(trueArray));
     }
 
     @Test
@@ -65,13 +71,29 @@ public class GenePoolTest {
     @Test
     void createPhenotypes_firstPhenotypeFirsNeuronIsCorrect() {
         // PREPARE
-        NEATNeuron neuron = genePool.phenotypes.get(0).inputNeurons.get(0);
+        NEATNeuron neuron1 = genePool.phenotypes.get(0).inputNeurons.get(0);
+        NEATNeuron neuron2 = genePool.phenotypes.get(0).inputNeurons.get(1);
+        NEATNeuron neuron3 = genePool.phenotypes.get(0).outputNeurons.get(0);
+        NEATNeuron neuron4 = genePool.phenotypes.get(0).outputNeurons.get(1);
+
 
         // VERIFY
-        assertThat(neuron.name, is(0));
-        assertThat(neuron.bias, is(0.0));
-        assertThat(neuron.neuronType, is(NeuronType.INPUT));
-        assertThat(neuron.innerPotential, is(0.0));
+        assertThat(neuron1.name, is(0));
+        assertThat(neuron1.bias, is(0.0));
+        assertThat(neuron1.neuronType, is(NeuronType.INPUT));
+        assertThat(neuron1.innerPotential, is(0.0));
+        assertThat(neuron2.name, is(1));
+        assertThat(neuron2.bias, is(0.0));
+        assertThat(neuron2.neuronType, is(NeuronType.INPUT));
+        assertThat(neuron2.innerPotential, is(0.0));
+        assertThat(neuron3.name, is(999));
+        assertThat(neuron3.bias, is(0.0));
+        assertThat(neuron3.neuronType, is(NeuronType.OUTPUT));
+        assertThat(neuron3.innerPotential, is(0.0));
+        assertThat(neuron4.name, is(1000));
+        assertThat(neuron4.bias, is(0.0));
+        assertThat(neuron4.neuronType, is(NeuronType.OUTPUT));
+        assertThat(neuron4.innerPotential, is(0.0));
     }
 
     @Test
@@ -171,17 +193,18 @@ public class GenePoolTest {
     void splitConnection_afterSplitPhenotypeIsCreatedCorrectly() {
         // PREPARE
         List<ConnectionGene> connections = genePool.connectionGenes;
-        genePool.splitConnection(connections.get(0));
-        connections.get(0).enabled[0] = true;
-        connections.get(1).enabled[0] = false;
-        connections.get(5).enabled[0] = true;
+        ConnectionGene connectionGene = connections.get(0);
 
         // EXECUTE
+        genePool.splitConnection(connectionGene);
+        genePool.activateSplitConnection(connectionGene, 0);
         genePool.createPhenotypes();
-        Phenotype phenotype = genePool.phenotypes.get(0);
+        Phenotype phenotype =  genePool.phenotypes.get(0);
 
         // VERIFY
         assertThat(phenotype.hiddenNeurons.size(), is(1));
+        assertThat(phenotype.inputNeurons.size(), is(2));
+        assertThat(phenotype.outputNeurons.size(), is(2));
         assertThat(phenotype.connections.size(), is(5));
         assertThat(phenotype.connections.get(0).from.name, is(0));
         assertThat(phenotype.connections.get(0).to.name, is(2));
@@ -217,6 +240,5 @@ public class GenePoolTest {
         assertThat(connectionGene.enabled[0], is(false));
         assertThat(connectionGene.firstChild.enabled[0], is(true));
         assertThat(connectionGene.secondChild.enabled[0], is(true));
-
     }
 }

@@ -29,16 +29,17 @@ public class GenePool {
     public void initGenePool(int inputs, int outputs, Function<Double, Double> hiddenLayerActivationFunc, Function<Double, Double> outputLayerActivationFunc) {
         this.hiddenLayerActivationFunc = hiddenLayerActivationFunc;
         this.outputLayerActivationFunc = outputLayerActivationFunc;
+        boolean[] allEnabled = Util.booleanArray(numOfGenotypes, true);
 
         List<NodeGene> inputNodes = new ArrayList<>();
         List<NodeGene> outputNodes = new ArrayList<>();
         for (int i = 0; i < inputs; i++) {
-            NodeGene nodeGene = new NodeGene(NeuronType.INPUT, neuronNames++);
+            NodeGene nodeGene = new NodeGene(NeuronType.INPUT, allEnabled, neuronNames++);
             inputNodes.add(nodeGene);
             nodeGenes.add(nodeGene);
         }
         for (int i = 0; i < outputs; i++) {
-            NodeGene nodeGene = new NodeGene(NeuronType.OUTPUT, maxNeurons--);
+            NodeGene nodeGene = new NodeGene(NeuronType.OUTPUT, allEnabled, maxNeurons--);
             outputNodes.add(nodeGene);
             nodeGenes.add(nodeGene);
         }
@@ -51,23 +52,28 @@ public class GenePool {
         Collections.sort(connectionGenes);
     }
 
+    /**
+     * Builds phenotypes from {@link GenePool}
+     */
     public void createPhenotypes() {
-        // TODO what about nodes with inactivated connections
         phenotypes = new ArrayList<>();
         for (int i = 0; i < numOfGenotypes; i++) {
+            int index = i;  // needed for effectively final variable
             LinkedHashMap<Integer, NEATNeuron> neurons = new LinkedHashMap<>();
 
-            nodeGenes.forEach((nodeGene) -> neurons.put(nodeGene.name, new NEATNeuron(nodeGene.name, nodeGene.type)));
+            nodeGenes.stream()
+                    .filter((nodeGene) -> (nodeGene.enabled[index]))
+                    .forEach((nodeGene) -> neurons.put(nodeGene.name, new NEATNeuron(nodeGene.name, nodeGene.type)));
+
             Phenotype phenotype = new Phenotype(new ArrayList<>(neurons.values()));
 
-            for (ConnectionGene connectionGene : connectionGenes) {
-                if (connectionGene.enabled[i]) {
-                    phenotype.connections.add(new Connection(
+            connectionGenes.stream()
+                    .filter((connectionGene) -> connectionGene.enabled[index])
+                    .forEach((connectionGene) -> phenotype.connections.add(new Connection(
                             neurons.get(connectionGene.from.name),
                             neurons.get(connectionGene.to.name),
-                            connectionGene.weight[i]));
-                }
-            }
+                            connectionGene.weight[index])));
+
             phenotypes.add(phenotype);
         }
     }
@@ -91,15 +97,16 @@ public class GenePool {
      * New {@link ConnectionGene}s are disabled in all genotypes.
      */
     public void splitConnection(ConnectionGene oldConnectionGene) {
-        NodeGene newNodeGene = new NodeGene(NeuronType.HIDDEN, neuronNames++);
-        boolean[] newConnectionsEnabled = Util.booleanArray(numOfGenotypes, false);
-        ConnectionGene firstConnectionGene = new ConnectionGene(oldConnectionGene.from, newNodeGene, Util.doubleArrayOfOnes(numOfGenotypes), newConnectionsEnabled);
-        ConnectionGene secondConnectionGene = new ConnectionGene(newNodeGene, oldConnectionGene.to, oldConnectionGene.weight, newConnectionsEnabled);
+        boolean[] allDisabled = Util.booleanArray(numOfGenotypes, false);
+        NodeGene newNodeGene = new NodeGene(NeuronType.HIDDEN, allDisabled, neuronNames++);
+        ConnectionGene firstConnectionGene = new ConnectionGene(oldConnectionGene.from, newNodeGene, Util.doubleArrayOfOnes(numOfGenotypes), allDisabled);
+        ConnectionGene secondConnectionGene = new ConnectionGene(newNodeGene, oldConnectionGene.to, oldConnectionGene.weight, allDisabled);
 
         nodeGenes.add(newNodeGene);
         connectionGenes.add(firstConnectionGene);
         connectionGenes.add(secondConnectionGene);
 
+        newNodeGene.enabled = allDisabled;
         firstConnectionGene.parent = oldConnectionGene;
         secondConnectionGene.parent = oldConnectionGene;
         oldConnectionGene.enabled = Util.booleanArray(numOfGenotypes, true);
@@ -110,21 +117,27 @@ public class GenePool {
         Collections.sort(connectionGenes);
     }
 
-    public List<ConnectionGene> getSplitConnections(){
+    /**
+     * @return list of connections in gene pool that have split counterpart
+     */
+    public List<ConnectionGene> getSplitConnections() {
         return connectionGenes.stream()
                 .filter((connectionGene -> connectionGene.firstChild != null))
                 .collect(Collectors.toList());
     }
 
     /**
-     * Takes previously split {@link ConnectionGene}, disabled old connection and activates its two child connections.
+     * Takes previously split {@link ConnectionGene}, disabled old connection and activates its two child connection
+     * and node.
+     *
      * @param connectionGene which will be inactivated and its children activated
-     * @param phenotype for which split connection will be activated
+     * @param phenotype      for which split connection will be activated
      */
-    public void activateSplitConnection(ConnectionGene connectionGene, int phenotype){
+    public void activateSplitConnection(ConnectionGene connectionGene, int phenotype) {
         connectionGene.enabled[phenotype] = false;
         connectionGene.firstChild.enabled[phenotype] = true;
         connectionGene.secondChild.enabled[phenotype] = true;
+        connectionGene.firstChild.to.enabled[phenotype] = true;
     }
 
     public void printConnections() {
