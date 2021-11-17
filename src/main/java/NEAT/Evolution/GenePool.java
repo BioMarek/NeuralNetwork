@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * The class holds all genes of population.
@@ -46,9 +47,13 @@ public class GenePool {
                 connectionGenes.add(new ConnectionGene(input, output, Util.randomDoubleArray(numOfGenotypes), Util.booleanArray(numOfGenotypes, true)));
             }
         }
+        Collections.sort(nodeGenes);
+        Collections.sort(connectionGenes);
     }
 
     public void createPhenotypes() {
+        // TODO what about nodes with inactivated connections
+        phenotypes = new ArrayList<>();
         for (int i = 0; i < numOfGenotypes; i++) {
             LinkedHashMap<Integer, NEATNeuron> neurons = new LinkedHashMap<>();
 
@@ -56,13 +61,75 @@ public class GenePool {
             Phenotype phenotype = new Phenotype(new ArrayList<>(neurons.values()));
 
             for (ConnectionGene connectionGene : connectionGenes) {
-                phenotype.connections.add(new Connection(
-                        neurons.get(connectionGene.from.name),
-                        neurons.get(connectionGene.to.name),
-                        connectionGene.weight[i]));
+                if (connectionGene.enabled[i]) {
+                    phenotype.connections.add(new Connection(
+                            neurons.get(connectionGene.from.name),
+                            neurons.get(connectionGene.to.name),
+                            connectionGene.weight[i]));
+                }
             }
-            Collections.sort(phenotype.connections);
             phenotypes.add(phenotype);
+        }
+    }
+
+    /**
+     * Assigns new random weight to random connection of given phenotype.
+     *
+     * @param phenotype phenotype to mutate
+     */
+    public void randomWeightMutation(int phenotype) {
+        connectionGenes
+                .get(Util.randomInt(0, connectionGenes.size()))
+                .weight[phenotype] = Util.randomDouble();
+    }
+
+    /**
+     * Splits random {@link ConnectionGene} by introducing new {@link NodeGene} and two new {@link ConnectionGene}s.
+     * First new {@link ConnectionGene} goes from old {@link ConnectionGene} "from" {@link NodeGene} to new
+     * {@link NodeGene} and has weight 1. Second new {@link ConnectionGene} goes from new {@link NodeGene} to old
+     * {@link ConnectionGene} "to" {@link NodeGene} and has same weights as old {@link ConnectionGene}.
+     * New {@link ConnectionGene}s are disabled in all genotypes.
+     */
+    public void splitConnection(ConnectionGene oldConnectionGene) {
+        NodeGene newNodeGene = new NodeGene(NeuronType.HIDDEN, neuronNames++);
+        boolean[] newConnectionsEnabled = Util.booleanArray(numOfGenotypes, false);
+        ConnectionGene firstConnectionGene = new ConnectionGene(oldConnectionGene.from, newNodeGene, Util.doubleArrayOfOnes(numOfGenotypes), newConnectionsEnabled);
+        ConnectionGene secondConnectionGene = new ConnectionGene(newNodeGene, oldConnectionGene.to, oldConnectionGene.weight, newConnectionsEnabled);
+
+        nodeGenes.add(newNodeGene);
+        connectionGenes.add(firstConnectionGene);
+        connectionGenes.add(secondConnectionGene);
+
+        firstConnectionGene.parent = oldConnectionGene;
+        secondConnectionGene.parent = oldConnectionGene;
+        oldConnectionGene.enabled = Util.booleanArray(numOfGenotypes, true);
+        oldConnectionGene.firstChild = firstConnectionGene;
+        oldConnectionGene.secondChild = secondConnectionGene;
+
+        Collections.sort(nodeGenes);
+        Collections.sort(connectionGenes);
+    }
+
+    public List<ConnectionGene> getSplitConnections(){
+        return connectionGenes.stream()
+                .filter((connectionGene -> connectionGene.firstChild != null))
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Takes previously split {@link ConnectionGene}, disabled old connection and activates its two child connections.
+     * @param connectionGene which will be inactivated and its children activated
+     * @param phenotype for which split connection will be activated
+     */
+    public void activateSplitConnection(ConnectionGene connectionGene, int phenotype){
+        connectionGene.enabled[phenotype] = false;
+        connectionGene.firstChild.enabled[phenotype] = true;
+        connectionGene.secondChild.enabled[phenotype] = true;
+    }
+
+    public void printConnections() {
+        for (ConnectionGene connectionGene : connectionGenes) {
+            System.out.println(connectionGene.from.name + " -> " + connectionGene.to.name);
         }
     }
 }

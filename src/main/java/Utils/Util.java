@@ -1,6 +1,7 @@
 package Utils;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 import java.util.function.Function;
 
@@ -46,15 +47,29 @@ public class Util {
         return random.doubles(size, -1.0D, 1.0D).toArray();
     }
 
+    public static double[] doubleArrayOfOnes(int size) {
+        double[] array = new double[size];
+        Arrays.fill(array, 1);
+        return array;
+    }
+
     public static boolean[] randomBooleanArray(int size) {
         boolean[] boolArray = new boolean[size];
-        for (int i = 0; i < size; i++){
+        for (int i = 0; i < size; i++) {
             boolArray[i] = random.nextBoolean();
         }
         return boolArray;
     }
 
-    public static boolean[] booleanArray(int size, boolean type){
+    public static boolean[] reverseBooleanArray(boolean[] array) {
+        boolean[] result = new boolean[array.length];
+        for (int i = 0; i < array.length; i++) {
+            result[i] = !array[i];
+        }
+        return result;
+    }
+
+    public static boolean[] booleanArray(int size, boolean type) {
         boolean[] boolArray = new boolean[size];
         if (type)
             Arrays.fill(boolArray, Boolean.TRUE);

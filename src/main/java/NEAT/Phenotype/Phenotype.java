@@ -58,4 +58,10 @@ public class Phenotype {
         }
         return result;
     }
+
+    public void printConnections() {
+        for (Connection connection : connections) {
+            System.out.println(connection.from.name + " -> " + connection.to.name);
+        }
+    }
 }
