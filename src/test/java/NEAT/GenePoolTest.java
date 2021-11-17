@@ -1,7 +1,9 @@
 package NEAT;
 
+import Games.Snake.SnakeGame;
 import NEAT.Evolution.ConnectionGene;
 import NEAT.Evolution.GenePool;
+import NEAT.Evolution.GenePool.GenePoolBuilder;
 import NEAT.Evolution.NodeGene;
 import NEAT.Phenotype.Connection;
 import NEAT.Phenotype.NEATNeuron;
@@ -19,11 +21,12 @@ import static org.hamcrest.Matchers.is;
 public class GenePoolTest {
     private final static int MAX_NEURONS = 1000;
     private final static int NUM_OF_GENOTYPES = 100;
-    protected GenePool genePool = new GenePool();
+    private final GenePoolBuilder genePoolBuilder = new GenePoolBuilder(2, 2, Util.activationFunctionIdentity(), new SnakeGame(20));
+    protected GenePool genePool;
 
     @BeforeEach
     void init() {
-        genePool.initGenePool(2, 2, Util.activationFunctionIdentity(), Util.activationFunctionIdentity());
+        genePool = genePoolBuilder.build();
         genePool.createPhenotypes();
     }
 
@@ -199,7 +202,7 @@ public class GenePoolTest {
         genePool.splitConnection(connectionGene);
         genePool.activateSplitConnection(connectionGene, 0);
         genePool.createPhenotypes();
-        Phenotype phenotype =  genePool.phenotypes.get(0);
+        Phenotype phenotype = genePool.phenotypes.get(0);
 
         // VERIFY
         assertThat(phenotype.hiddenNeurons.size(), is(1));

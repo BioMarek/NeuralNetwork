@@ -1,5 +1,6 @@
 package NEAT.Evolution;
 
+import Games.Game;
 import NEAT.NeuronType;
 import NEAT.Phenotype.Connection;
 import NEAT.Phenotype.NEATNeuron;
@@ -17,47 +18,22 @@ import java.util.stream.Collectors;
  * The class holds all genes of population.
  */
 public class GenePool {
-    private int maxNeurons = 1000;
-    private int numOfGenotypes = 100;
+    private int totalNumOfGenotypes = 100;
     private int neuronNames = 0;
     public Function<Double, Double> hiddenLayerActivationFunc;
     public Function<Double, Double> outputLayerActivationFunc;
     public List<ConnectionGene> connectionGenes = new ArrayList<>();
     public List<NodeGene> nodeGenes = new ArrayList<>();
     public List<Phenotype> phenotypes = new ArrayList<>();
-
-    public void initGenePool(int inputs, int outputs, Function<Double, Double> hiddenLayerActivationFunc, Function<Double, Double> outputLayerActivationFunc) {
-        this.hiddenLayerActivationFunc = hiddenLayerActivationFunc;
-        this.outputLayerActivationFunc = outputLayerActivationFunc;
-        boolean[] allEnabled = Util.booleanArray(numOfGenotypes, true);
-
-        List<NodeGene> inputNodes = new ArrayList<>();
-        List<NodeGene> outputNodes = new ArrayList<>();
-        for (int i = 0; i < inputs; i++) {
-            NodeGene nodeGene = new NodeGene(NeuronType.INPUT, allEnabled, neuronNames++);
-            inputNodes.add(nodeGene);
-            nodeGenes.add(nodeGene);
-        }
-        for (int i = 0; i < outputs; i++) {
-            NodeGene nodeGene = new NodeGene(NeuronType.OUTPUT, allEnabled, maxNeurons--);
-            outputNodes.add(nodeGene);
-            nodeGenes.add(nodeGene);
-        }
-        for (NodeGene input : inputNodes) {
-            for (NodeGene output : outputNodes) {
-                connectionGenes.add(new ConnectionGene(input, output, Util.randomDoubleArray(numOfGenotypes), Util.booleanArray(numOfGenotypes, true)));
-            }
-        }
-        Collections.sort(nodeGenes);
-        Collections.sort(connectionGenes);
-    }
+    protected Game game;
+    protected boolean verbose;
 
     /**
      * Builds phenotypes from {@link GenePool}
      */
     public void createPhenotypes() {
         phenotypes = new ArrayList<>();
-        for (int i = 0; i < numOfGenotypes; i++) {
+        for (int i = 0; i < totalNumOfGenotypes; i++) {
             int index = i;  // needed for effectively final variable
             LinkedHashMap<Integer, NEATNeuron> neurons = new LinkedHashMap<>();
 
@@ -97,9 +73,9 @@ public class GenePool {
      * New {@link ConnectionGene}s are disabled in all genotypes.
      */
     public void splitConnection(ConnectionGene oldConnectionGene) {
-        boolean[] allDisabled = Util.booleanArray(numOfGenotypes, false);
+        boolean[] allDisabled = Util.booleanArray(totalNumOfGenotypes, false);
         NodeGene newNodeGene = new NodeGene(NeuronType.HIDDEN, allDisabled, neuronNames++);
-        ConnectionGene firstConnectionGene = new ConnectionGene(oldConnectionGene.from, newNodeGene, Util.doubleArrayOfOnes(numOfGenotypes), allDisabled);
+        ConnectionGene firstConnectionGene = new ConnectionGene(oldConnectionGene.from, newNodeGene, Util.doubleArrayOfOnes(totalNumOfGenotypes), allDisabled);
         ConnectionGene secondConnectionGene = new ConnectionGene(newNodeGene, oldConnectionGene.to, oldConnectionGene.weight, allDisabled);
 
         nodeGenes.add(newNodeGene);
@@ -109,7 +85,7 @@ public class GenePool {
         newNodeGene.enabled = allDisabled;
         firstConnectionGene.parent = oldConnectionGene;
         secondConnectionGene.parent = oldConnectionGene;
-        oldConnectionGene.enabled = Util.booleanArray(numOfGenotypes, true);
+        oldConnectionGene.enabled = Util.booleanArray(totalNumOfGenotypes, true);
         oldConnectionGene.firstChild = firstConnectionGene;
         oldConnectionGene.secondChild = secondConnectionGene;
 
@@ -143,6 +119,79 @@ public class GenePool {
     public void printConnections() {
         for (ConnectionGene connectionGene : connectionGenes) {
             System.out.println(connectionGene.from.name + " -> " + connectionGene.to.name);
+        }
+    }
+
+    public static class GenePoolBuilder {
+        private final int inputs;
+        private final int outputs;
+        private final Game game;
+        private final Function<Double, Double> hiddenLayerActivationFunc;
+        private Function<Double, Double> outputLayerActivationFunc;
+        private int totalNumOfGenotypes = 100;
+        private int maxNeurons = 1000;
+        private boolean verbose = true;
+
+        public GenePoolBuilder(int inputs, int outputs, Function<Double, Double> hiddenLayerActivationFunc, Game game) {
+            this.inputs = inputs;
+            this.outputs = outputs;
+            this.hiddenLayerActivationFunc = hiddenLayerActivationFunc;
+            this.game = game;
+
+            this.outputLayerActivationFunc = hiddenLayerActivationFunc;
+        }
+
+        public GenePoolBuilder setOutputLayerActivationFunc(Function<Double, Double> outputLayerActivationFunc) {
+            this.outputLayerActivationFunc = outputLayerActivationFunc;
+            return this;
+        }
+
+        public GenePoolBuilder setTotalNumOfGenotypes(int totalNumOfGenotypes) {
+            this.totalNumOfGenotypes = totalNumOfGenotypes;
+            return this;
+        }
+
+        public GenePoolBuilder setMaxNeurons(int maxNeurons) {
+            this.maxNeurons = maxNeurons;
+            return this;
+        }
+
+        public GenePoolBuilder setVerbose(boolean verbose) {
+            this.verbose = verbose;
+            return this;
+        }
+
+        public GenePool build() {
+            GenePool genePool = new GenePool();
+            genePool.game = this.game;
+            genePool.hiddenLayerActivationFunc = this.hiddenLayerActivationFunc;
+            genePool.outputLayerActivationFunc = this.outputLayerActivationFunc;
+            genePool.totalNumOfGenotypes = this.totalNumOfGenotypes;
+            genePool.verbose = this.verbose;
+
+            boolean[] allEnabled = Util.booleanArray(totalNumOfGenotypes, true);
+
+            List<NodeGene> inputNodes = new ArrayList<>();
+            List<NodeGene> outputNodes = new ArrayList<>();
+            for (int i = 0; i < inputs; i++) {
+                NodeGene nodeGene = new NodeGene(NeuronType.INPUT, allEnabled, genePool.neuronNames++);
+                inputNodes.add(nodeGene);
+                genePool.nodeGenes.add(nodeGene);
+            }
+            for (int i = 0; i < outputs; i++) {
+                NodeGene nodeGene = new NodeGene(NeuronType.OUTPUT, allEnabled, maxNeurons--);
+                outputNodes.add(nodeGene);
+                genePool.nodeGenes.add(nodeGene);
+            }
+            for (NodeGene input : inputNodes) {
+                for (NodeGene output : outputNodes) {
+                    genePool.connectionGenes.add(new ConnectionGene(input, output, Util.randomDoubleArray(totalNumOfGenotypes), Util.booleanArray(totalNumOfGenotypes, true)));
+                }
+            }
+            Collections.sort(genePool.nodeGenes);
+            Collections.sort(genePool.connectionGenes);
+
+            return genePool;
         }
     }
 }
