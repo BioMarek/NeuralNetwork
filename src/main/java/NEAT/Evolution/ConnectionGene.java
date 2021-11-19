@@ -14,13 +14,10 @@ import lombok.NoArgsConstructor;
 public class ConnectionGene implements Comparable<ConnectionGene> {
     public NodeGene from;
     public NodeGene to;
-    public double[] weight;
-    public boolean[] enabled;
-    public ConnectionGene parent = null;
-    public ConnectionGene firstChild = null;
-    public ConnectionGene secondChild = null;
+    public double weight;
+    public boolean enabled;
 
-    public ConnectionGene(NodeGene from, NodeGene to, double[] weight, boolean[] enabled) {
+    public ConnectionGene(NodeGene from, NodeGene to, double weight, boolean enabled) {
         this.from = from;
         this.to = to;
         this.weight = weight;

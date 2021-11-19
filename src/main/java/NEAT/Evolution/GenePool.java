@@ -2,17 +2,11 @@ package NEAT.Evolution;
 
 import Games.Game;
 import NEAT.NeuronType;
-import NEAT.Phenotype.Connection;
-import NEAT.Phenotype.NEATNeuron;
-import NEAT.Phenotype.Phenotype;
+import Utils.Pair;
 import Utils.Util;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * The class holds all genes of population.
@@ -20,107 +14,16 @@ import java.util.stream.Collectors;
 public class GenePool {
     private int totalNumOfGenotypes = 100;
     private int neuronNames = 0;
+    private int inputs;
+    private int outputs;
     public Function<Double, Double> hiddenLayerActivationFunc;
     public Function<Double, Double> outputLayerActivationFunc;
-    public List<ConnectionGene> connectionGenes = new ArrayList<>();
-    public List<NodeGene> nodeGenes = new ArrayList<>();
-    public List<Phenotype> phenotypes = new ArrayList<>();
+    public Set<Integer> nodeGenes = new HashSet<>();
+    public Set<Pair<Integer>> connections = new HashSet<>();
+    public List<Genotype> genotypes = new ArrayList<>();
     protected Game game;
     protected boolean verbose;
 
-    /**
-     * Builds phenotypes from {@link GenePool}
-     */
-    public void createPhenotypes() {
-        phenotypes = new ArrayList<>();
-        for (int i = 0; i < totalNumOfGenotypes; i++) {
-            int index = i;  // needed for effectively final variable
-            LinkedHashMap<Integer, NEATNeuron> neurons = new LinkedHashMap<>();
-
-            nodeGenes.stream()
-                    .filter((nodeGene) -> (nodeGene.enabled[index]))
-                    .forEach((nodeGene) -> neurons.put(nodeGene.name, new NEATNeuron(nodeGene.name, nodeGene.type)));
-
-            Phenotype phenotype = new Phenotype(new ArrayList<>(neurons.values()));
-
-            connectionGenes.stream()
-                    .filter((connectionGene) -> connectionGene.enabled[index])
-                    .forEach((connectionGene) -> phenotype.connections.add(new Connection(
-                            neurons.get(connectionGene.from.name),
-                            neurons.get(connectionGene.to.name),
-                            connectionGene.weight[index])));
-
-            phenotypes.add(phenotype);
-        }
-    }
-
-    /**
-     * Assigns new random weight to random connection of given phenotype.
-     *
-     * @param phenotype phenotype to mutate
-     */
-    public void randomWeightMutation(int phenotype) {
-        connectionGenes
-                .get(Util.randomInt(0, connectionGenes.size()))
-                .weight[phenotype] = Util.randomDouble();
-    }
-
-    /**
-     * Splits random {@link ConnectionGene} by introducing new {@link NodeGene} and two new {@link ConnectionGene}s.
-     * First new {@link ConnectionGene} goes from old {@link ConnectionGene} "from" {@link NodeGene} to new
-     * {@link NodeGene} and has weight 1. Second new {@link ConnectionGene} goes from new {@link NodeGene} to old
-     * {@link ConnectionGene} "to" {@link NodeGene} and has same weights as old {@link ConnectionGene}.
-     * New {@link ConnectionGene}s are disabled in all genotypes.
-     */
-    public void splitConnection(ConnectionGene oldConnectionGene) {
-        boolean[] allDisabled = Util.booleanArray(totalNumOfGenotypes, false);
-        NodeGene newNodeGene = new NodeGene(NeuronType.HIDDEN, allDisabled, neuronNames++);
-        ConnectionGene firstConnectionGene = new ConnectionGene(oldConnectionGene.from, newNodeGene, Util.doubleArrayOfOnes(totalNumOfGenotypes), allDisabled);
-        ConnectionGene secondConnectionGene = new ConnectionGene(newNodeGene, oldConnectionGene.to, oldConnectionGene.weight, allDisabled);
-
-        nodeGenes.add(newNodeGene);
-        connectionGenes.add(firstConnectionGene);
-        connectionGenes.add(secondConnectionGene);
-
-        newNodeGene.enabled = allDisabled;
-        firstConnectionGene.parent = oldConnectionGene;
-        secondConnectionGene.parent = oldConnectionGene;
-        oldConnectionGene.enabled = Util.booleanArray(totalNumOfGenotypes, true);
-        oldConnectionGene.firstChild = firstConnectionGene;
-        oldConnectionGene.secondChild = secondConnectionGene;
-
-        Collections.sort(nodeGenes);
-        Collections.sort(connectionGenes);
-    }
-
-    /**
-     * @return list of connections in gene pool that have split counterpart
-     */
-    public List<ConnectionGene> getSplitConnections() {
-        return connectionGenes.stream()
-                .filter((connectionGene -> connectionGene.firstChild != null))
-                .collect(Collectors.toList());
-    }
-
-    /**
-     * Takes previously split {@link ConnectionGene}, disabled old connection and activates its two child connection
-     * and node.
-     *
-     * @param connectionGene which will be inactivated and its children activated
-     * @param phenotype      for which split connection will be activated
-     */
-    public void activateSplitConnection(ConnectionGene connectionGene, int phenotype) {
-        connectionGene.enabled[phenotype] = false;
-        connectionGene.firstChild.enabled[phenotype] = true;
-        connectionGene.secondChild.enabled[phenotype] = true;
-        connectionGene.firstChild.to.enabled[phenotype] = true;
-    }
-
-    public void printConnections() {
-        for (ConnectionGene connectionGene : connectionGenes) {
-            System.out.println(connectionGene.from.name + " -> " + connectionGene.to.name);
-        }
-    }
 
     public static class GenePoolBuilder {
         private final int inputs;
@@ -164,34 +67,43 @@ public class GenePool {
         public GenePool build() {
             GenePool genePool = new GenePool();
             genePool.game = this.game;
+            genePool.inputs = this.inputs;
+            genePool.outputs = this.outputs;
             genePool.hiddenLayerActivationFunc = this.hiddenLayerActivationFunc;
             genePool.outputLayerActivationFunc = this.outputLayerActivationFunc;
             genePool.totalNumOfGenotypes = this.totalNumOfGenotypes;
             genePool.verbose = this.verbose;
 
-            boolean[] allEnabled = Util.booleanArray(totalNumOfGenotypes, true);
+            for (int i = 0; i < totalNumOfGenotypes; i++) {
+                initGenotype(genePool);
+            }
 
+            return genePool;
+        }
+
+        public void initGenotype(GenePool genePool) {
             List<NodeGene> inputNodes = new ArrayList<>();
             List<NodeGene> outputNodes = new ArrayList<>();
+            List<ConnectionGene> connectionGenes = new ArrayList<>();
+
             for (int i = 0; i < inputs; i++) {
-                NodeGene nodeGene = new NodeGene(NeuronType.INPUT, allEnabled, genePool.neuronNames++);
+                NodeGene nodeGene = new NodeGene(NeuronType.INPUT, genePool.neuronNames++);
                 inputNodes.add(nodeGene);
-                genePool.nodeGenes.add(nodeGene);
             }
             for (int i = 0; i < outputs; i++) {
-                NodeGene nodeGene = new NodeGene(NeuronType.OUTPUT, allEnabled, maxNeurons--);
+                NodeGene nodeGene = new NodeGene(NeuronType.OUTPUT, maxNeurons--);
                 outputNodes.add(nodeGene);
-                genePool.nodeGenes.add(nodeGene);
             }
             for (NodeGene input : inputNodes) {
                 for (NodeGene output : outputNodes) {
-                    genePool.connectionGenes.add(new ConnectionGene(input, output, Util.randomDoubleArray(totalNumOfGenotypes), Util.booleanArray(totalNumOfGenotypes, true)));
+                    connectionGenes.add(new ConnectionGene(input, output, Util.randomDouble(), true));
                 }
             }
-            Collections.sort(genePool.nodeGenes);
-            Collections.sort(genePool.connectionGenes);
+            inputNodes.addAll(outputNodes);
 
-            return genePool;
+            Collections.sort(inputNodes);
+            Collections.sort(connectionGenes);
+            genePool.genotypes.add(new Genotype(inputNodes, connectionGenes, hiddenLayerActivationFunc, outputLayerActivationFunc));
         }
     }
 }

@@ -10,12 +10,10 @@ import lombok.NoArgsConstructor;
 public class NodeGene implements Comparable<NodeGene> {
     public NeuronType type;
     public int name;
-    public boolean[] enabled;
 
-    public NodeGene(NeuronType type, boolean[] enabled, int name) {
+    public NodeGene(NeuronType type, int name) {
         this.type = type;
         this.name = name;
-        this.enabled = enabled;
     }
 
     @Override

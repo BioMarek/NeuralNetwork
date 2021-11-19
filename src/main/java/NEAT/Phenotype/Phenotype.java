@@ -7,7 +7,6 @@ import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -21,15 +20,17 @@ public class Phenotype {
     public List<NEATNeuron> inputNeurons;
     public List<NEATNeuron> hiddenNeurons;
     public List<NEATNeuron> outputNeurons;
-    public List<NEATNeuron> neurons;
     public List<Connection> connections;
+    public Function<Double, Double> hiddenLayerActivationFunc;
+    public Function<Double, Double> outputLayerActivationFunc;
 
-    public Phenotype(List<NEATNeuron> neurons) {
-        this.neurons = neurons;
+    public Phenotype(List<NEATNeuron> neurons, List<Connection> connections, Function<Double, Double> hiddenLayerActivationFunc, Function<Double, Double> outputLayerActivationFunc) {
         this.inputNeurons = neurons.stream().filter(neatNeuron -> neatNeuron.neuronType == NeuronType.INPUT).collect(Collectors.toList());
         this.hiddenNeurons = neurons.stream().filter(neatNeuron -> neatNeuron.neuronType == NeuronType.HIDDEN).collect(Collectors.toList());
         this.outputNeurons = neurons.stream().filter(neatNeuron -> neatNeuron.neuronType == NeuronType.OUTPUT).collect(Collectors.toList());
-        connections = new ArrayList<>();
+        this.connections = connections;
+        this.hiddenLayerActivationFunc = hiddenLayerActivationFunc;
+        this.outputLayerActivationFunc = outputLayerActivationFunc;
     }
 
     /**
@@ -37,11 +38,9 @@ public class Phenotype {
      * {@link Util#activationFunctionIdentity()}.
      *
      * @param inputs                    double array of inputs
-     * @param hiddenLayerActivationFunc activation function used in hidden layer
-     * @param outputLayerActivationFunc activation function used in output layer
      * @return double array of outputs
      */
-    public double[] getOutput(double[] inputs, Function<Double, Double> hiddenLayerActivationFunc, Function<Double, Double> outputLayerActivationFunc) {
+    public double[] getOutput(double[] inputs) {
         for (int i = 0; i < inputs.length; i++) {
             inputNeurons.get(i).bias = inputs[i];
         }
