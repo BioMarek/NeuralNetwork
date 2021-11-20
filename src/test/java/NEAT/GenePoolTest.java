@@ -1,6 +1,7 @@
 package NEAT;
 
 import Games.Snake.SnakeGame;
+import NEAT.Evolution.ConnectionGene;
 import NEAT.Evolution.GenePool;
 import NEAT.Evolution.GenePool.GenePoolBuilder;
 import NEAT.Evolution.Genotype;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 
 public class GenePoolTest {
     private final static int MAX_NEURONS = 1000;
@@ -55,10 +57,12 @@ public class GenePoolTest {
 
     @Test
     void initGenePool_phenotypeIsCreatedFromGenotypeCorrectly() {
+        // PREPARE
         Genotype genotype = genePool.genotypes.get(0);
         Phenotype phenotype = genotype.createPhenotype();
         var connections = phenotype.connections;
 
+        // VERIFY
         assertThat(phenotype.inputNeurons.size(), is(2));
         assertThat(phenotype.hiddenNeurons.size(), is(0));
         assertThat(phenotype.outputNeurons.size(), is(2));
@@ -72,5 +76,37 @@ public class GenePoolTest {
         assertThat(connections.get(2).to, is(phenotype.outputNeurons.get(0)));
         assertThat(connections.get(3).from, is(phenotype.inputNeurons.get(1)));
         assertThat(connections.get(3).to, is(phenotype.outputNeurons.get(1)));
+    }
+
+    @Test
+    void splitConnection_correctlyCreatesNewConnections() {
+        // PREPARE
+        Genotype genotype = genePool.genotypes.get(0);
+        genotype.splitConnection(genotype.connectionGenes.get(0));
+
+        // VERIFY
+        genotype.printConnections();
+        assertThat(genotype.connectionGenes.size(), is(5));
+
+        assertThat(genotype.connectionGenes.get(0).from.name, is(0));
+        assertThat(genotype.connectionGenes.get(0).to.name, is(2));
+        assertThat(genotype.connectionGenes.get(0).weight, is(1.0));
+        assertThat(genotype.connectionGenes.get(0).enabled, is(true));
+
+        assertThat(genotype.connectionGenes.get(4).from.name, is(2));
+        assertThat(genotype.connectionGenes.get(4).to.name, is(999));
+        assertThat(genotype.connectionGenes.get(4).enabled, is(true));
+    }
+
+    @Test
+    void mutateWeight_changesWeight(){
+        // PREPARE
+        Genotype genotype = genePool.genotypes.get(0);
+        ConnectionGene connectionGene = genotype.connectionGenes.get(0);
+        double oldWeight = connectionGene.weight;
+        genotype.mutateWeight(connectionGene);
+
+        // VERIFY
+        assertThat(connectionGene.weight, is(not(oldWeight)));
     }
 }

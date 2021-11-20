@@ -13,7 +13,7 @@ import java.util.function.Function;
  */
 public class GenePool {
     private int totalNumOfGenotypes = 100;
-    private int neuronNames = 0;
+    public int neuronNames = 0;
     private int inputs;
     private int outputs;
     public Function<Double, Double> hiddenLayerActivationFunc;
@@ -74,13 +74,19 @@ public class GenePool {
             genePool.totalNumOfGenotypes = this.totalNumOfGenotypes;
             genePool.verbose = this.verbose;
 
-            for (int i = 0; i < totalNumOfGenotypes; i++) {
-                initGenotype(genePool);
+            initGenotype(genePool);
+            for (int i = 0; i < totalNumOfGenotypes - 1; i++) {
+                genePool.genotypes.add(genePool.genotypes.get(0).copy());
             }
 
             return genePool;
         }
 
+        /**
+         * Creates first genotype for particular number of inputs and outputs.
+         *
+         * @param genePool contains constants and settings.
+         */
         public void initGenotype(GenePool genePool) {
             List<NodeGene> inputNodes = new ArrayList<>();
             List<NodeGene> outputNodes = new ArrayList<>();
@@ -103,7 +109,7 @@ public class GenePool {
 
             Collections.sort(inputNodes);
             Collections.sort(connectionGenes);
-            genePool.genotypes.add(new Genotype(inputNodes, connectionGenes, hiddenLayerActivationFunc, outputLayerActivationFunc));
+            genePool.genotypes.add(new Genotype(genePool, inputNodes, connectionGenes, hiddenLayerActivationFunc, outputLayerActivationFunc));
         }
     }
 }
