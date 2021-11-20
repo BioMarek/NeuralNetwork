@@ -1,15 +1,12 @@
 package NEAT.Evolution;
 
 import NEAT.NeuronType;
-import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 
 @EqualsAndHashCode
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class NodeGene implements Comparable<NodeGene> {
-    public NeuronType type;
-    public int name;
+    public final NeuronType type;
+    public final int name;
 
     public NodeGene(NeuronType type, int name) {
         this.type = type;

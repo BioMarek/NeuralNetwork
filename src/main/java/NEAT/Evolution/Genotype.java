@@ -9,11 +9,12 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.function.Function;
 
-public class Genotype {
+public class Genotype implements Comparable<Genotype> {
     public List<ConnectionGene> connectionGenes;
     public List<NodeGene> nodeGenes;
     public Function<Double, Double> hiddenLayerActivationFunc;
     public Function<Double, Double> outputLayerActivationFunc;
+    public int score = 0;
 
     public Genotype(List<NodeGene> nodeGenes, List<ConnectionGene> connectionGenes, Function<Double, Double> hiddenLayerActivationFunc, Function<Double, Double> outputLayerActivationFunc) {
         this.connectionGenes = connectionGenes;
@@ -32,5 +33,20 @@ public class Genotype {
                 neurons.get(connectionGene.to.name),
                 connectionGene.weight)));
         return new Phenotype(new ArrayList<>(neurons.values()), connections, hiddenLayerActivationFunc, outputLayerActivationFunc);
+    }
+
+    public Genotype copy() {
+        List<ConnectionGene> connectionGenesCopy = new ArrayList<>();
+        connectionGenes.forEach(connectionGene -> connectionGenesCopy.add(connectionGene.copy()));
+        Genotype genotype = new Genotype(nodeGenes, connectionGenesCopy, hiddenLayerActivationFunc, outputLayerActivationFunc);
+        genotype.score = this.score;
+        return genotype;
+    }
+
+    @Override
+    public int compareTo(Genotype genotype) {
+        if (this.score == genotype.score)
+            return 0;
+        return this.score < genotype.score ? -1 : 1;
     }
 }

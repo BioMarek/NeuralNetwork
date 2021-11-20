@@ -14,7 +14,7 @@ import static org.hamcrest.Matchers.is;
 
 public class GenePoolTest {
     private final static int MAX_NEURONS = 1000;
-    private final static double[] INPUT = new double[]{1.0, 1.0};
+
     private final GenePoolBuilder genePoolBuilder = new GenePoolBuilder(2, 2, Util.activationFunctionIdentity(), new SnakeGame(20));
     protected GenePool genePool;
 
@@ -72,44 +72,5 @@ public class GenePoolTest {
         assertThat(connections.get(2).to, is(phenotype.outputNeurons.get(0)));
         assertThat(connections.get(3).from, is(phenotype.inputNeurons.get(1)));
         assertThat(connections.get(3).to, is(phenotype.outputNeurons.get(1)));
-    }
-
-    @Test
-    void getOutput_phenotypeReturnsCorrectOutputWhenWeightsToLeftOutputAreOne() {
-        Genotype genotype = genePool.genotypes.get(0);
-        Phenotype phenotype = genotype.createPhenotype();
-        var connections = phenotype.connections;
-        connections.get(0).weight = 1;
-        connections.get(1).weight = 0;
-        connections.get(2).weight = 1;
-        connections.get(3).weight = 0;
-
-        assertThat(phenotype.getOutput(INPUT), is(new double[]{2.0, 0.0}));
-    }
-
-    @Test
-    void getOutput_phenotypeReturnsCorrectOutputWhenAllWeightsAreOne() {
-        Genotype genotype = genePool.genotypes.get(0);
-        Phenotype phenotype = genotype.createPhenotype();
-        var connections = phenotype.connections;
-        connections.get(0).weight = 1;
-        connections.get(1).weight = 1;
-        connections.get(2).weight = 1;
-        connections.get(3).weight = 1;
-
-        assertThat(phenotype.getOutput(INPUT), is(new double[]{2.0, 2.0}));
-    }
-
-    @Test
-    void getOutput_phenotypeReturnsCorrectOutputWhenAllWeightsAreZero() {
-        Genotype genotype = genePool.genotypes.get(0);
-        Phenotype phenotype = genotype.createPhenotype();
-        var connections = phenotype.connections;
-        connections.get(0).weight = 0;
-        connections.get(1).weight = 0;
-        connections.get(2).weight = 0;
-        connections.get(3).weight = 0;
-
-        assertThat(phenotype.getOutput(INPUT), is(new double[]{0.0, 0.0}));
     }
 }
