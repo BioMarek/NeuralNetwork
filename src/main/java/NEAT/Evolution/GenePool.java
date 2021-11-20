@@ -2,6 +2,7 @@ package NEAT.Evolution;
 
 import Games.Game;
 import NEAT.NeuronType;
+import NEAT.Phenotype.Phenotype;
 import Utils.Pair;
 import Utils.Util;
 
@@ -24,6 +25,32 @@ public class GenePool {
     protected Game game;
     protected boolean verbose;
     protected int maxNumberOfMoves; // to stop AI moving in cycles
+    protected int numOfTrials; // how many times BasicNeuralNetwork.NeuralNetwork plays the game
+
+    public void makeNextGeneration() {
+        for (Genotype genotype : genotypes) {
+            for (int i = 0; i < numOfTrials; i++) {
+                Phenotype phenotype = genotype.createPhenotype();
+                game.reset();
+                game.play(phenotype, maxNumberOfMoves);
+                genotype.score = phenotype.score;
+            }
+        }
+        genotypes.sort(Collections.reverseOrder());
+
+        if (verbose)
+            printScores();
+        for (Genotype genotype : genotypes) {
+            genotype.score = 0;
+        }
+    }
+
+    public void printScores() {
+        for (Genotype genotype : genotypes) {
+            System.out.print(genotype.name + ": " + genotype.score + ", ");
+        }
+        System.out.println();
+    }
 
     public void putConnectionGeneIntoGenePool(int from, int to) {
         connections.add(new Pair<>(from, to));
@@ -60,6 +87,7 @@ public class GenePool {
         private int maxNeurons = 1000;
         private boolean verbose = true;
         private int maxNumberOfMoves = 500;
+        private int numOfTrials = 10;
 
         public GenePoolBuilder(int inputs, int outputs, Function<Double, Double> hiddenLayerActivationFunc, Game game) {
             this.inputs = inputs;
@@ -95,6 +123,11 @@ public class GenePool {
             return this;
         }
 
+        public GenePoolBuilder numOfTrials(int numOfTrials) {
+            this.numOfTrials = numOfTrials;
+            return this;
+        }
+
         public GenePool build() {
             GenePool genePool = new GenePool();
             genePool.game = game;
@@ -105,6 +138,7 @@ public class GenePool {
             genePool.totalNumOfGenotypes = totalNumOfGenotypes;
             genePool.verbose = verbose;
             genePool.maxNumberOfMoves = maxNumberOfMoves;
+            genePool.numOfTrials = numOfTrials;
 
             initGenotype(genePool);
             for (int i = 0; i < totalNumOfGenotypes - 1; i++) {

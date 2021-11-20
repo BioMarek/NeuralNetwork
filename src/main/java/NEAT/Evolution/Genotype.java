@@ -19,6 +19,7 @@ public class Genotype implements Comparable<Genotype> {
     public Function<Double, Double> hiddenLayerActivationFunc;
     public Function<Double, Double> outputLayerActivationFunc;
     public int score = 0;
+    public String name = "0";
 
     public Genotype(GenePool genePool, List<NodeGene> nodeGenes, List<ConnectionGene> connectionGenes, Function<Double, Double> hiddenLayerActivationFunc, Function<Double, Double> outputLayerActivationFunc) {
         this.genePool = genePool;
@@ -99,9 +100,11 @@ public class Genotype implements Comparable<Genotype> {
         return genotype;
     }
 
-    public void play(){
-        genePool.game.play(createPhenotype(), genePool.maxNumberOfMoves);
-    }
+//    public void play(){
+//        Phenotype phenotype = createPhenotype();
+//        genePool.game.play(phenotype, genePool.maxNumberOfMoves);
+//        score = phenotype.score;
+//    }
 
     public void printConnections() {
         for (ConnectionGene connection : connectionGenes) {

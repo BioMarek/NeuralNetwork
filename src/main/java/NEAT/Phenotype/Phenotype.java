@@ -54,8 +54,9 @@ public class Phenotype implements INeuralNetwork {
                 connection.to.innerPotential += connection.from.getOutput(hiddenLayerActivationFunc) * connection.weight;
         }
 
-        double[] result = new double[inputs.length];
-        for (int i = 0; i < inputs.length; i++) {
+        int outputs = outputNeurons.size(); // TODO refactor
+        double[] result = new double[outputs];
+        for (int i = 0; i < outputs; i++) {
             result[i] = outputNeurons.get(i).getOutput(outputLayerActivationFunc);
         }
         return result;

@@ -1,14 +1,22 @@
 import BasicNeuralNetwork.Evolution.EvolutionEngine;
 import BasicNeuralNetwork.NeuralNetwork.NeuralNetwork;
-import Utils.Util;
 import Games.Snake.SnakeGame;
+import NEAT.Evolution.GenePool;
+import Utils.Util;
 
 public class Main {
     public static void main(String[] args) {
-        setupBasicNeuralNetwork();
+        setupNeatNeuralNetwork();
     }
 
-    public static void setupBasicNeuralNetwork(){
+    public static void setupNeatNeuralNetwork() {
+        GenePool genePool = new GenePool.GenePoolBuilder(8, 4, Util.activationFunctionIdentity(), new SnakeGame(20))
+                .build();
+
+        genePool.makeNextGeneration();
+    }
+
+    public static void setupBasicNeuralNetwork() {
         EvolutionEngine evolutionEngine = new EvolutionEngine
                 .EvolutionEngineBuilder(new int[]{8, 8, 4}, Util.activationFunctionUnitStep(), new SnakeGame(20))
                 .setOutputLayerActivationFunc(Util.activationFunctionIdentity())
