@@ -85,7 +85,6 @@ public class GenePoolTest {
         genotype.splitConnection(genotype.connectionGenes.get(0));
 
         // VERIFY
-        genotype.printConnections();
         assertThat(genotype.connectionGenes.size(), is(5));
 
         assertThat(genotype.connectionGenes.get(0).from.name, is(0));

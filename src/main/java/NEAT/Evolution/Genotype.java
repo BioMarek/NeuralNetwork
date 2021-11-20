@@ -99,6 +99,10 @@ public class Genotype implements Comparable<Genotype> {
         return genotype;
     }
 
+    public void play(){
+        genePool.game.play(createPhenotype(), genePool.maxNumberOfMoves);
+    }
+
     public void printConnections() {
         for (ConnectionGene connection : connectionGenes) {
             System.out.println(connection.from.name + " -> " + connection.to.name);

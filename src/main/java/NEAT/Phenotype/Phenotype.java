@@ -1,5 +1,6 @@
 package NEAT.Phenotype;
 
+import Interfaces.INeuralNetwork;
 import NEAT.Evolution.GenePool;
 import NEAT.NeuronType;
 import Utils.Util;
@@ -16,13 +17,14 @@ import java.util.stream.Collectors;
  */
 @EqualsAndHashCode
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class Phenotype {
+public class Phenotype implements INeuralNetwork {
     public List<NEATNeuron> inputNeurons;
     public List<NEATNeuron> hiddenNeurons;
     public List<NEATNeuron> outputNeurons;
     public List<Connection> connections;
     public Function<Double, Double> hiddenLayerActivationFunc;
     public Function<Double, Double> outputLayerActivationFunc;
+    public int score = 0;
 
     public Phenotype(List<NEATNeuron> neurons, List<Connection> connections, Function<Double, Double> hiddenLayerActivationFunc, Function<Double, Double> outputLayerActivationFunc) {
         this.inputNeurons = neurons.stream().filter(neatNeuron -> neatNeuron.neuronType == NeuronType.INPUT).collect(Collectors.toList());
@@ -37,10 +39,11 @@ public class Phenotype {
      * Calculates output of phenotype using supplied activation function. Activation function used in input neurons is
      * {@link Util#activationFunctionIdentity()}.
      *
-     * @param inputs                    double array of inputs
+     * @param inputs double array of inputs
      * @return double array of outputs
      */
-    public double[] getOutput(double[] inputs) {
+    @Override
+    public double[] getNetworkOutput(double[] inputs) {
         for (int i = 0; i < inputs.length; i++) {
             inputNeurons.get(i).bias = inputs[i];
         }
@@ -56,6 +59,16 @@ public class Phenotype {
             result[i] = outputNeurons.get(i).getOutput(outputLayerActivationFunc);
         }
         return result;
+    }
+
+    /**
+     * Increases {@link Phenotype} score by given amount.
+     *
+     * @param amount number that will be added to score
+     */
+    @Override
+    public void increaseScore(int amount) {
+        score += amount;
     }
 
     public void printConnections() {

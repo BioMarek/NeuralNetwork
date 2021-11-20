@@ -23,20 +23,21 @@ public class GenePool {
     public List<Genotype> genotypes = new ArrayList<>();
     protected Game game;
     protected boolean verbose;
+    protected int maxNumberOfMoves; // to stop AI moving in cycles
 
-    public void putConnectionGeneIntoGenePool(int from, int to){
+    public void putConnectionGeneIntoGenePool(int from, int to) {
         connections.add(new Pair<>(from, to));
     }
 
-    public void putConnectionGeneIntoGenePool(ConnectionGene connectionGene){
+    public void putConnectionGeneIntoGenePool(ConnectionGene connectionGene) {
         connections.add(new Pair<>(connectionGene.from.name, connectionGene.to.name));
     }
 
-    public int nodeNameOfSplitConnection(ConnectionGene connectionGene){
+    public int nodeNameOfSplitConnection(ConnectionGene connectionGene) {
         List<Integer> from = new ArrayList<>();
         List<Integer> to = new ArrayList<>();
 
-        for (Pair<Integer> connection : connections){
+        for (Pair<Integer> connection : connections) {
             if (connectionGene.from.name == connection.getFirst())
                 from.add(connection.getSecond());
             if (connectionGene.to.name == connection.getSecond())
@@ -58,6 +59,7 @@ public class GenePool {
         private int totalNumOfGenotypes = 100;
         private int maxNeurons = 1000;
         private boolean verbose = true;
+        private int maxNumberOfMoves = 500;
 
         public GenePoolBuilder(int inputs, int outputs, Function<Double, Double> hiddenLayerActivationFunc, Game game) {
             this.inputs = inputs;
@@ -88,15 +90,21 @@ public class GenePool {
             return this;
         }
 
+        public GenePoolBuilder setMaxNumberOfMoves(int maxNumberOfMoves) {
+            this.maxNumberOfMoves = maxNumberOfMoves;
+            return this;
+        }
+
         public GenePool build() {
             GenePool genePool = new GenePool();
-            genePool.game = this.game;
-            genePool.inputs = this.inputs;
-            genePool.outputs = this.outputs;
-            genePool.hiddenLayerActivationFunc = this.hiddenLayerActivationFunc;
-            genePool.outputLayerActivationFunc = this.outputLayerActivationFunc;
-            genePool.totalNumOfGenotypes = this.totalNumOfGenotypes;
-            genePool.verbose = this.verbose;
+            genePool.game = game;
+            genePool.inputs = inputs;
+            genePool.outputs = outputs;
+            genePool.hiddenLayerActivationFunc = hiddenLayerActivationFunc;
+            genePool.outputLayerActivationFunc = outputLayerActivationFunc;
+            genePool.totalNumOfGenotypes = totalNumOfGenotypes;
+            genePool.verbose = verbose;
+            genePool.maxNumberOfMoves = maxNumberOfMoves;
 
             initGenotype(genePool);
             for (int i = 0; i < totalNumOfGenotypes - 1; i++) {

@@ -2,6 +2,7 @@ package Games.Snake;
 
 import Games.Game;
 import BasicNeuralNetwork.NeuralNetwork.NeuralNetwork;
+import Interfaces.INeuralNetwork;
 import Utils.Util;
 
 import java.util.*;
@@ -239,7 +240,8 @@ public class SnakeGame implements Game {
      * @param neuralNetwork    that plays game
      * @param maxNumberOfMoves maximal number of snake moves so that snake won move in cycles
      */
-    public void play(NeuralNetwork neuralNetwork, int maxNumberOfMoves) {
+    @Override
+    public void play(INeuralNetwork neuralNetwork, int maxNumberOfMoves) {
         double[] networkOutput;
 
         for (int i = 0; i < maxNumberOfMoves; i++) {
@@ -249,7 +251,7 @@ public class SnakeGame implements Game {
             if (isGameOver)
                 break;
         }
-        neuralNetwork.score += snakeScore;
+        neuralNetwork.increaseScore(snakeScore);
     }
 
     /**

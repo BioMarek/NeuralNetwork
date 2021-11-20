@@ -1,5 +1,6 @@
 package BasicNeuralNetwork.NeuralNetwork;
 
+import Interfaces.INeuralNetwork;
 import lombok.EqualsAndHashCode;
 
 import java.io.*;
@@ -14,7 +15,7 @@ import java.util.stream.Collectors;
  * output of {@link NeuralNetwork}.
  */
 @EqualsAndHashCode
-public class NeuralNetwork implements Comparable<NeuralNetwork>, Serializable {
+public class NeuralNetwork implements Comparable<NeuralNetwork>, Serializable, INeuralNetwork {
     public final List<Layer> hiddenLayers;
     public Function<Double, Double> hiddenLayerActivationFunc;
     public Function<Double, Double> outputLayerActivationFunc;
@@ -67,6 +68,7 @@ public class NeuralNetwork implements Comparable<NeuralNetwork>, Serializable {
      * @param inputs to evaluate
      * @return vector of values copmuted by {@link NeuralNetwork}
      */
+    @Override
     public double[] getNetworkOutput(double[] inputs) {
         int outputLayerIndex = hiddenLayers.size() - 1;
         hiddenLayers.get(0).calculateOutput(inputs, hiddenLayerActivationFunc);
@@ -81,6 +83,16 @@ public class NeuralNetwork implements Comparable<NeuralNetwork>, Serializable {
                 outputLayerActivationFunc);
 
         return hiddenLayers.get(outputLayerIndex).layerOutputs;
+    }
+
+    /**
+     * Increases {@link NeuralNetwork} score by given amount.
+     *
+     * @param amount number that will be added to score
+     */
+    @Override
+    public void increaseScore(int amount) {
+        score += amount;
     }
 
     /**

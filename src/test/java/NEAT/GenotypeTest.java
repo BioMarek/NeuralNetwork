@@ -36,7 +36,7 @@ public class GenotypeTest {
         connections.get(2).weight = 1;
         connections.get(3).weight = 0;
 
-        assertThat(phenotype.getOutput(INPUT), is(new double[]{2.0, 0.0}));
+        assertThat(phenotype.getNetworkOutput(INPUT), is(new double[]{2.0, 0.0}));
     }
 
     @Test
@@ -48,7 +48,7 @@ public class GenotypeTest {
         connections.get(2).weight = 1;
         connections.get(3).weight = 1;
 
-        assertThat(phenotype.getOutput(INPUT), is(new double[]{2.0, 2.0}));
+        assertThat(phenotype.getNetworkOutput(INPUT), is(new double[]{2.0, 2.0}));
     }
 
     @Test
@@ -60,7 +60,7 @@ public class GenotypeTest {
         connections.get(2).weight = 0;
         connections.get(3).weight = 0;
 
-        assertThat(phenotype.getOutput(INPUT), is(new double[]{0.0, 0.0}));
+        assertThat(phenotype.getNetworkOutput(INPUT), is(new double[]{0.0, 0.0}));
     }
 
     @Test
