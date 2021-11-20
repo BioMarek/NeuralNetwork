@@ -24,6 +24,30 @@ public class GenePool {
     protected Game game;
     protected boolean verbose;
 
+    public void putConnectionGeneIntoGenePool(int from, int to){
+        connections.add(new Pair<>(from, to));
+    }
+
+    public void putConnectionGeneIntoGenePool(ConnectionGene connectionGene){
+        connections.add(new Pair<>(connectionGene.from.name, connectionGene.to.name));
+    }
+
+    public int nodeNameOfSplitConnection(ConnectionGene connectionGene){
+        List<Integer> from = new ArrayList<>();
+        List<Integer> to = new ArrayList<>();
+
+        for (Pair<Integer> connection : connections){
+            if (connectionGene.from.name == connection.getFirst())
+                from.add(connection.getSecond());
+            if (connectionGene.to.name == connection.getSecond())
+                to.add(connection.getFirst());
+        }
+        from.retainAll(to);
+
+        if (from.size() > 0)
+            return from.get(0);
+        else return -1;
+    }
 
     public static class GenePoolBuilder {
         private final int inputs;
@@ -102,6 +126,7 @@ public class GenePool {
             }
             for (NodeGene input : inputNodes) {
                 for (NodeGene output : outputNodes) {
+                    genePool.putConnectionGeneIntoGenePool(input.name, output.name);
                     connectionGenes.add(new ConnectionGene(input, output, Util.randomDouble(), true));
                 }
             }

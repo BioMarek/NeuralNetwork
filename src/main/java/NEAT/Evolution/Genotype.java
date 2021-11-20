@@ -28,6 +28,11 @@ public class Genotype implements Comparable<Genotype> {
         this.outputLayerActivationFunc = outputLayerActivationFunc;
     }
 
+    /**
+     * Translates {@link Genotype} to {@link Phenotype}.
+     *
+     * @return {@link Phenotype} corresponding to this {@link Genotype}
+     */
     public Phenotype createPhenotype() {
         LinkedHashMap<Integer, NEATNeuron> neurons = new LinkedHashMap<>();
         List<Connection> connections = new ArrayList<>();
@@ -47,7 +52,15 @@ public class Genotype implements Comparable<Genotype> {
      * @param oldConnectionGene to remove and split
      */
     public void splitConnection(ConnectionGene oldConnectionGene) {
-        NodeGene nodeGene = new NodeGene(NeuronType.HIDDEN, genePool.neuronNames++);
+        NodeGene nodeGene;
+        int nodeNameUsedInSplit = genePool.nodeNameOfSplitConnection(oldConnectionGene);
+
+        if (nodeNameUsedInSplit == -1) {
+            nodeGene = new NodeGene(NeuronType.HIDDEN, genePool.neuronNames++);
+        } else {
+            nodeGene = new NodeGene(NeuronType.HIDDEN, nodeNameUsedInSplit);
+        }
+
         ConnectionGene firstConnectionGene = new ConnectionGene(oldConnectionGene.from, nodeGene, 1.0, true);
         ConnectionGene secondConnectionGene = new ConnectionGene(nodeGene, oldConnectionGene.to, oldConnectionGene.weight, true);
 
@@ -55,16 +68,29 @@ public class Genotype implements Comparable<Genotype> {
         connectionGenes.add(firstConnectionGene);
         connectionGenes.add(secondConnectionGene);
         connectionGenes.remove(oldConnectionGene);
-        // TODO add new connections to genePool
+
+        genePool.putConnectionGeneIntoGenePool(firstConnectionGene);
+        genePool.putConnectionGeneIntoGenePool(secondConnectionGene);
 
         Collections.sort(nodeGenes);
         Collections.sort(connectionGenes);
     }
 
+    /**
+     * Assign new random weight to connection.
+     *
+     * @param connectionGene of which weight should be changed
+     */
     public void mutateWeight(ConnectionGene connectionGene) {
         connectionGene.weight = Util.randomDouble();
     }
 
+    /**
+     * Creates deep copy of {@link Genotype}. Only {@link ConnectionGene}s are deep copied other variables are referenced
+     * as they don't change.
+     *
+     * @return copied {@link Genotype} object
+     */
     public Genotype copy() {
         List<ConnectionGene> connectionGenesCopy = new ArrayList<>();
         connectionGenes.forEach(connectionGene -> connectionGenesCopy.add(connectionGene.copy()));

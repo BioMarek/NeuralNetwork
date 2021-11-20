@@ -109,4 +109,14 @@ public class GenePoolTest {
         // VERIFY
         assertThat(connectionGene.weight, is(not(oldWeight)));
     }
+
+    @Test
+    void nodeNameOfSplitConnection_worksCorrectly(){
+        Genotype genotype = genePool.genotypes.get(0);
+        assertThat(genePool.nodeNameOfSplitConnection(genotype.connectionGenes.get(0)), is(-1));
+
+        ConnectionGene connectionGene = genotype.connectionGenes.get(0);
+        genotype.splitConnection(connectionGene);
+        assertThat(genePool.nodeNameOfSplitConnection(connectionGene), is(2));
+    }
 }
