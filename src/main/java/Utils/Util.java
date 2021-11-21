@@ -43,6 +43,16 @@ public class Util {
         return random.nextDouble() * 2.0D - 1.0D;
     }
 
+    /**
+     * The function returns whether trial with supplied chance was successful.
+     *
+     * @param chance that true will be returned
+     * @return true if trial was success, false otherwise
+     */
+    public static boolean randomChance(double chance) {
+        return Util.random.nextDouble() < chance;
+    }
+
     public static double[] randomDoubleArray(int size) {
         return random.doubles(size, -1.0D, 1.0D).toArray();
     }
@@ -102,10 +112,10 @@ public class Util {
         };
     }
 
-    public static double[] primitiveDoubleArrayFromList(List<Double> list){
+    public static double[] primitiveDoubleArrayFromList(List<Double> list) {
         int length = list.size();
         double[] result = new double[length];
-        for (int i = 0; i < length; i++){
+        for (int i = 0; i < length; i++) {
             result[i] = list.get(i);
         }
         return result;

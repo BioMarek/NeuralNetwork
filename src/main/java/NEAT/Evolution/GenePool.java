@@ -27,6 +27,9 @@ public class GenePool implements EvolutionEngine {
 
     protected int maxNumberOfMoves; // to stop AI moving in cycles
     protected int numOfTrials; // how many times NeuralNetwork plays the game
+    protected double chanceToMutateWeight; // chance that weight will be mutated
+    protected double chanceToHardMutateWight; // chance to assign new value to weight when it is being mutated, small change otherwise
+    protected double chanceToSplitConnection;
     protected Game game;
     protected boolean verbose;
 
@@ -117,6 +120,9 @@ public class GenePool implements EvolutionEngine {
         private boolean verbose = true;
         private int maxNumberOfMoves = 500;
         private int numOfTrials = 10;
+        protected double chanceToMutateWeight = 0.8;
+        protected double chanceToHardMutateWight = 0.1;
+        protected double chanceToSplitConnection = 0.03;
 
         public GenePoolBuilder(int inputs, int outputs, Function<Double, Double> hiddenLayerActivationFunc, Game game) {
             this.inputs = inputs;
@@ -152,8 +158,23 @@ public class GenePool implements EvolutionEngine {
             return this;
         }
 
-        public GenePoolBuilder numOfTrials(int numOfTrials) {
+        public GenePoolBuilder setNumOfTrials(int numOfTrials) {
             this.numOfTrials = numOfTrials;
+            return this;
+        }
+
+        public GenePoolBuilder setChanceToMutateWeight(double chanceToMutateWeight) {
+            this.chanceToMutateWeight = chanceToMutateWeight;
+            return this;
+        }
+
+        public GenePoolBuilder setChanceToHardMutateWight(double chanceToHardMutateWight) {
+            this.chanceToHardMutateWight = chanceToHardMutateWight;
+            return this;
+        }
+
+        public GenePoolBuilder setChanceToSplitConnection(double chanceToSplitConnection) {
+            this.chanceToSplitConnection = chanceToSplitConnection;
             return this;
         }
 
@@ -168,6 +189,9 @@ public class GenePool implements EvolutionEngine {
             genePool.verbose = verbose;
             genePool.maxNumberOfMoves = maxNumberOfMoves;
             genePool.numOfTrials = numOfTrials;
+            genePool.chanceToMutateWeight = chanceToMutateWeight;
+            genePool.chanceToHardMutateWight = chanceToHardMutateWight;
+            genePool.chanceToSplitConnection = chanceToSplitConnection;
 
             initGenotype(genePool);
             for (int i = 0; i < totalNumOfGenotypes - 1; i++) {

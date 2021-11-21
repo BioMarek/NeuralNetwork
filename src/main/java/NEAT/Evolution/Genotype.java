@@ -51,6 +51,16 @@ public class Genotype implements Comparable<Genotype> {
     }
 
     /**
+     * Mutates {@link Genotype} with chances set in {@link GenePool}.
+     */
+    public void mutate() {
+        if (Util.randomChance(genePool.chanceToMutateWeight))
+            mutateWeight(getRandomConnection());
+        if (Util.randomChance(genePool.chanceToSplitConnection))
+            splitConnection(getRandomConnection());
+    }
+
+    /**
      * Splits {@link ConnectionGene} into two new ones, the old {@link ConnectionGene} is removed. Weight of the first
      * {@link ConnectionGene} is 1 whereas weight of second one is same as weight of the old one.
      *
@@ -75,12 +85,30 @@ public class Genotype implements Comparable<Genotype> {
     }
 
     /**
-     * Assign new random weight to connection.
+     * With probability chanceToHardMutateWight assigns {@link ConnectionGene} new random weight or with probabilty
+     * 1-chanceToHardMutateWight changes weight slightly. chanceToHardMutateWight is set in {@link GenePool}.
      *
      * @param connectionGene of which weight should be changed
      */
     public void mutateWeight(ConnectionGene connectionGene) {
-        connectionGene.weight = Util.randomDouble();
+        if (Util.randomChance(genePool.chanceToHardMutateWight))
+            connectionGene.weight = Util.randomDouble();
+        else {
+            connectionGene.weight += Util.randomDouble() * 0.2;
+            if (connectionGene.weight > 1.0)
+                connectionGene.weight = 1.0;
+            if (connectionGene.weight < -1.0)
+                connectionGene.weight = -1.0;
+        }
+    }
+
+    /**
+     * Chooses one {@link ConnectionGene} randomly from {@link Genotype} connections.
+     *
+     * @return picked {@link ConnectionGene}
+     */
+    public ConnectionGene getRandomConnection() {
+        return connectionGenes.get(Util.randomInt(0, connectionGenes.size()));
     }
 
     /**
