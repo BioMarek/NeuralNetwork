@@ -69,7 +69,7 @@ public class Phenotype implements NeuralNetwork {
     @Override
     public void printNetwork() {
         for (Connection connection : connections) {
-            System.out.println(connection.from.name + " -> " + connection.to.name);
+            System.out.println(connection.from.name + " -> " + connection.to.name + ": " + connection.weight);
         }
     }
 }

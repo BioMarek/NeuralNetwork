@@ -79,10 +79,10 @@ public class GenePoolTest {
     }
 
     @Test
-    void splitConnection_correctlyCreatesNewConnections() {
+    void addNode_correctlyCreatesNewConnections() {
         // PREPARE
         Genotype genotype = genePool.getGenotypes().get(0);
-        genotype.splitConnection(genotype.connectionGenes.get(0));
+        genotype.addNode(genotype.connectionGenes.get(0));
 
         // VERIFY
         assertThat(genotype.connectionGenes.size(), is(5));
@@ -114,7 +114,7 @@ public class GenePoolTest {
         // PREPARE
         Genotype genotype = genePool.getGenotypes().get(0);
         ConnectionGene connectionGene = genotype.connectionGenes.get(0);
-        genotype.splitConnection(connectionGene);
+        genotype.addNode(connectionGene);
 
         // VERIFY
         assertThat(genePool.nodeNameOfSplitConnection(connectionGene), is(2));

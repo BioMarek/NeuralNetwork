@@ -29,7 +29,10 @@ public class GenePool implements EvolutionEngine {
     protected int numOfTrials; // how many times NeuralNetwork plays the game
     protected double chanceToMutateWeight; // chance that weight will be mutated
     protected double chanceToHardMutateWight; // chance to assign new value to weight when it is being mutated, small change otherwise
-    protected double chanceToSplitConnection;
+    protected double chanceToAddNode;
+    protected int networksToKeep; // number of top scoring networks that are copied into next generation
+    protected int networksToMutate; // number of top scoring networks copies that are mutated and copied into next generation
+    protected int networksGenerated;
     protected Game game;
     protected boolean verbose;
 
@@ -42,6 +45,7 @@ public class GenePool implements EvolutionEngine {
 
     @Override
     public void makeNextGeneration() {
+        System.out.println(connections.size() + " " + connections);
         for (Genotype genotype : genotypes) {
             for (int i = 0; i < numOfTrials; i++) {
                 Phenotype phenotype = genotype.createPhenotype();
@@ -50,10 +54,29 @@ public class GenePool implements EvolutionEngine {
             }
         }
         genotypes.sort(Collections.reverseOrder());
+        System.out.println("best " + genotypes.get(0).connectionGenes.size());
+        genotypes.get(0).createPhenotype().printNetwork();
 
         if (verbose)
             printScores();
         resetScores();
+
+        List<Genotype> genotypesNewGeneration = new ArrayList<>();
+        int limit = 20;
+        for (int i = 0; i < totalNumOfGenotypes; i++) {
+            // copies
+            if (i < limit) {
+                genotypesNewGeneration.add(genotypes.get(i));
+            }
+            // copies with one mutation
+            if (i >= limit) {
+                Genotype genotype = genotypes.get(i - limit).copy();
+                genotype.mutate();
+                genotype.name = Integer.toString(networksGenerated++);
+                genotypesNewGeneration.add(genotype);
+            }
+        }
+        genotypes = genotypesNewGeneration;
     }
 
     @Override
@@ -120,9 +143,12 @@ public class GenePool implements EvolutionEngine {
         private boolean verbose = true;
         private int maxNumberOfMoves = 500;
         private int numOfTrials = 10;
-        protected double chanceToMutateWeight = 0.8;
-        protected double chanceToHardMutateWight = 0.1;
-        protected double chanceToSplitConnection = 0.03;
+        private double chanceToMutateWeight = 0.8;
+        private double chanceToHardMutateWight = 0.1;
+        private double chanceToSplitConnection = 0.03;
+        private int networksToKeep = 40;
+        private int networksToMutate = 40;
+        private int networksGenerated = 0;
 
         public GenePoolBuilder(int inputs, int outputs, Function<Double, Double> hiddenLayerActivationFunc, Game game) {
             this.inputs = inputs;
@@ -173,8 +199,23 @@ public class GenePool implements EvolutionEngine {
             return this;
         }
 
-        public GenePoolBuilder setChanceToSplitConnection(double chanceToSplitConnection) {
+        public GenePoolBuilder setChanceToAddNode(double chanceToSplitConnection) {
             this.chanceToSplitConnection = chanceToSplitConnection;
+            return this;
+        }
+
+        public GenePoolBuilder setNetworksToKeep(int networksToKeep) {
+            this.networksToKeep = networksToKeep;
+            return this;
+        }
+
+        public GenePoolBuilder setNetworksToMutate(int networksToMutate) {
+            this.networksToMutate = networksToMutate;
+            return this;
+        }
+
+        public GenePoolBuilder setNetworksGenerated(int networksGenerated) {
+            this.networksGenerated = networksGenerated;
             return this;
         }
 
@@ -191,7 +232,10 @@ public class GenePool implements EvolutionEngine {
             genePool.numOfTrials = numOfTrials;
             genePool.chanceToMutateWeight = chanceToMutateWeight;
             genePool.chanceToHardMutateWight = chanceToHardMutateWight;
-            genePool.chanceToSplitConnection = chanceToSplitConnection;
+            genePool.chanceToAddNode = chanceToSplitConnection;
+            genePool.networksToKeep = networksToKeep;
+            genePool.networksToMutate = networksToMutate;
+            genePool.networksGenerated = networksGenerated;
 
             initGenotype(genePool);
             for (int i = 0; i < totalNumOfGenotypes - 1; i++) {
@@ -229,7 +273,9 @@ public class GenePool implements EvolutionEngine {
 
             Collections.sort(inputNodes);
             Collections.sort(connectionGenes);
-            genePool.genotypes.add(new Genotype(genePool, inputNodes, connectionGenes, hiddenLayerActivationFunc, outputLayerActivationFunc));
+            Genotype genotype = new Genotype(genePool, inputNodes, connectionGenes, hiddenLayerActivationFunc, outputLayerActivationFunc);
+            genotype.name = Integer.toString(networksGenerated++);
+            genePool.genotypes.add(genotype);
         }
     }
 }

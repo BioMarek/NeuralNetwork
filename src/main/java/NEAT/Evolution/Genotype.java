@@ -56,8 +56,8 @@ public class Genotype implements Comparable<Genotype> {
     public void mutate() {
         if (Util.randomChance(genePool.chanceToMutateWeight))
             mutateWeight(getRandomConnection());
-        if (Util.randomChance(genePool.chanceToSplitConnection))
-            splitConnection(getRandomConnection());
+        if (Util.randomChance(genePool.chanceToAddNode))
+            addNode(getRandomConnection());
     }
 
     /**
@@ -66,7 +66,7 @@ public class Genotype implements Comparable<Genotype> {
      *
      * @param ConnectionGene to remove and split
      */
-    public void splitConnection(ConnectionGene ConnectionGene) {
+    public void addNode(ConnectionGene ConnectionGene) {
         NodeGene nodeGene = new NodeGene(NeuronType.HIDDEN, genePool.nodeNameOfSplitConnection(ConnectionGene));
 
         ConnectionGene firstConnectionGene = new ConnectionGene(ConnectionGene.from, nodeGene, 1.0, true);
