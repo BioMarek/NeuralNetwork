@@ -1,4 +1,4 @@
-import BasicNeuralNetwork.Evolution.EvolutionEngine;
+import BasicNeuralNetwork.Evolution.BasicEvolutionEngine;
 import BasicNeuralNetwork.NeuralNetwork.BasicNeuralNetwork;
 import Games.Snake.SnakeGame;
 import NEAT.Evolution.GenePool;
@@ -17,7 +17,7 @@ public class Main {
     }
 
     public static void setupBasicNeuralNetwork() {
-        EvolutionEngine evolutionEngine = new EvolutionEngine
+        BasicEvolutionEngine evolutionEngine = new BasicEvolutionEngine
                 .EvolutionEngineBuilder(new int[]{8, 8, 4}, Util.activationFunctionUnitStep(), new SnakeGame(20))
                 .setOutputLayerActivationFunc(Util.activationFunctionIdentity())
                 .setNumOfNeuronsToMutate(2)

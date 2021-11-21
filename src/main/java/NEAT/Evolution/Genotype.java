@@ -21,7 +21,11 @@ public class Genotype implements Comparable<Genotype> {
     public int score = 0;
     public String name = "0";
 
-    public Genotype(GenePool genePool, List<NodeGene> nodeGenes, List<ConnectionGene> connectionGenes, Function<Double, Double> hiddenLayerActivationFunc, Function<Double, Double> outputLayerActivationFunc) {
+    public Genotype(GenePool genePool,
+                    List<NodeGene> nodeGenes,
+                    List<ConnectionGene> connectionGenes,
+                    Function<Double, Double> hiddenLayerActivationFunc,
+                    Function<Double, Double> outputLayerActivationFunc) {
         this.genePool = genePool;
         this.connectionGenes = connectionGenes;
         this.nodeGenes = nodeGenes;

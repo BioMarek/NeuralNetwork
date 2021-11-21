@@ -2,6 +2,7 @@ package BasicNeuralNetwork.Evolution;
 
 import BasicNeuralNetwork.NeuralNetwork.BasicNeuralNetwork;
 import Games.Game;
+import Interfaces.EvolutionEngine;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -11,7 +12,7 @@ import java.util.List;
 import java.util.function.Function;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class EvolutionEngine {
+public class BasicEvolutionEngine implements EvolutionEngine {
     private int[] neuralNetworkSettings;
     private Function<Double, Double> hiddenLayerActivationFunc;
     private Function<Double, Double> outputLayerActivationFunc;
@@ -29,25 +30,27 @@ public class EvolutionEngine {
     protected Game game;
     protected boolean verbose;
 
+    @Override
     public void calculateEvolution(int numOfGenerations) {
         for (int i = 0; i < numOfGenerations; i++) {
             makeNextGeneration();
         }
     }
 
+    @Override
     public void makeNextGeneration() {
         for (BasicNeuralNetwork neuralNetwork : neuralNetworks) {
             for (int i = 0; i < numOfTrials; i++) {
                 game.reset();
-                game.play(neuralNetwork, maxNumberOfMoves);
+                neuralNetwork.score += game.play(neuralNetwork, maxNumberOfMoves);
             }
         }
         neuralNetworks.sort(Collections.reverseOrder());
+
         if (verbose)
             printScores();
-        for (BasicNeuralNetwork neuralNetwork : neuralNetworks) {
-            neuralNetwork.score = 0;
-        }
+        resetScores();
+
         List<BasicNeuralNetwork> neuralNetworksNewGeneration = new ArrayList<>();
         for (int i = 0; i < totalNumOfNetworks; i++) {
             if (i < networksToKeep) {
@@ -68,6 +71,14 @@ public class EvolutionEngine {
         neuralNetworks = neuralNetworksNewGeneration;
     }
 
+    @Override
+    public void resetScores() {
+        for (BasicNeuralNetwork neuralNetwork : neuralNetworks) {
+            neuralNetwork.score = 0;
+        }
+    }
+
+    @Override
     public void printScores() {
         for (BasicNeuralNetwork neuralNetwork : neuralNetworks) {
             System.out.print(neuralNetwork.name + ": " + neuralNetwork.score + ", ");
@@ -148,10 +159,10 @@ public class EvolutionEngine {
         /**
          * Builds evolution engine. {@link BasicNeuralNetwork} will get number names starting from 0 increasing by 1.
          *
-         * @return {@link EvolutionEngine}
+         * @return {@link BasicEvolutionEngine}
          */
-        public EvolutionEngine build() {
-            EvolutionEngine evolutionEngine = new EvolutionEngine();
+        public BasicEvolutionEngine build() {
+            BasicEvolutionEngine evolutionEngine = new BasicEvolutionEngine();
             evolutionEngine.game = game;
             evolutionEngine.networksGenerated = 0;
             evolutionEngine.currentGenerations = 0;

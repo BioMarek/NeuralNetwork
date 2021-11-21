@@ -1,7 +1,7 @@
 package Games.Snake;
 
-import Games.Game;
 import BasicNeuralNetwork.NeuralNetwork.BasicNeuralNetwork;
+import Games.Game;
 import Interfaces.NeuralNetwork;
 import Utils.Util;
 
@@ -40,6 +40,7 @@ public class SnakeGame implements Game {
     /**
      * Resets game into initial state.
      */
+    @Override
     public void reset() {
         initSnake();
         placeFood();
@@ -239,9 +240,10 @@ public class SnakeGame implements Game {
      *
      * @param neuralNetwork    that plays game
      * @param maxNumberOfMoves maximal number of snake moves so that snake won move in cycles
+     * @return score {@link NeuralNetwork} achieved in {@link Game}
      */
     @Override
-    public void play(NeuralNetwork neuralNetwork, int maxNumberOfMoves) {
+    public int play(NeuralNetwork neuralNetwork, int maxNumberOfMoves) {
         double[] networkOutput;
 
         for (int i = 0; i < maxNumberOfMoves; i++) {
@@ -251,7 +253,7 @@ public class SnakeGame implements Game {
             if (isGameOver)
                 break;
         }
-        neuralNetwork.increaseScore(snakeScore);
+        return snakeScore;
     }
 
     /**

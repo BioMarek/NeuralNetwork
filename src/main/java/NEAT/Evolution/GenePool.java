@@ -1,6 +1,7 @@
 package NEAT.Evolution;
 
 import Games.Game;
+import Interfaces.EvolutionEngine;
 import NEAT.NeuronType;
 import NEAT.Phenotype.Connection;
 import NEAT.Phenotype.Phenotype;
@@ -13,45 +14,53 @@ import java.util.function.Function;
 /**
  * The class holds all genes of population.
  */
-public class GenePool {
+public class GenePool implements EvolutionEngine {
     private int totalNumOfGenotypes;
     private int inputs;
     private int outputs;
+    private int neuronNames = 0;
+    private Function<Double, Double> hiddenLayerActivationFunc;
+    private Function<Double, Double> outputLayerActivationFunc;
+    private final Set<Integer> nodeGenes = new HashSet<>();
+    private final Set<Pair<Integer>> connections = new HashSet<>();
+    private List<Genotype> genotypes = new ArrayList<>();
 
-    protected Game game;
-    protected boolean verbose;
     protected int maxNumberOfMoves; // to stop AI moving in cycles
     protected int numOfTrials; // how many times NeuralNetwork plays the game
+    protected Game game;
+    protected boolean verbose;
 
-    public int neuronNames = 0;
-    public Function<Double, Double> hiddenLayerActivationFunc;
-    public Function<Double, Double> outputLayerActivationFunc;
-    public Set<Integer> nodeGenes = new HashSet<>();
-    public Set<Pair<Integer>> connections = new HashSet<>();
-    public List<Genotype> genotypes = new ArrayList<>();
+    @Override
+    public void calculateEvolution(int numOfGenerations) {
+        for (int i = 0; i < numOfGenerations; i++) {
+            makeNextGeneration();
+        }
+    }
 
+    @Override
     public void makeNextGeneration() {
         for (Genotype genotype : genotypes) {
             for (int i = 0; i < numOfTrials; i++) {
                 Phenotype phenotype = genotype.createPhenotype();
                 game.reset();
-                game.play(phenotype, maxNumberOfMoves);
-                genotype.score = phenotype.score;
+                genotype.score += game.play(phenotype, maxNumberOfMoves);
             }
         }
         genotypes.sort(Collections.reverseOrder());
 
         if (verbose)
             printScores();
-        resetGenotypes();
+        resetScores();
     }
 
-    public void resetGenotypes(){
+    @Override
+    public void resetScores() {
         for (Genotype genotype : genotypes) {
             genotype.score = 0;
         }
     }
 
+    @Override
     public void printScores() {
         for (Genotype genotype : genotypes) {
             System.out.print(genotype.name + ": " + genotype.score + ", ");
@@ -91,6 +100,10 @@ public class GenePool {
         if (from.size() > 0)
             return from.get(0);
         return neuronNames++;
+    }
+
+    public List<Genotype> getGenotypes() {
+        return genotypes;
     }
 
     public static class GenePoolBuilder {

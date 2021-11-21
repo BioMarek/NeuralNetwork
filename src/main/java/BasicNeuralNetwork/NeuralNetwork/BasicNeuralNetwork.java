@@ -10,8 +10,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * The {@link BasicNeuralNetwork} is composed of {@link Layer}. Hidden layers compute result based on input supplied into
- * first layer. Results of computations are propagated into subsequent layers up to last layer which output is final
+ * The {@link BasicNeuralNetwork} is composed of {@link Layer}. Hidden layers compute result based on input supplied
+ * into first layer. Results of computations are propagated into subsequent layers up to last layer which output is final
  * output of {@link BasicNeuralNetwork}.
  */
 @EqualsAndHashCode
@@ -23,12 +23,15 @@ public class BasicNeuralNetwork implements Comparable<BasicNeuralNetwork>, Seria
     public String name = "0";
 
     /**
-     * @param sizes                     Array of sizes, first number is number of {@link BasicNeuralNetwork} inputs. Numbers
-     *                                  size[1]...size[n] say how many {@link BasicNeuron} should be in n-th hidden {@link Layer}.
+     * @param sizes                     Array of sizes, first number is number of {@link BasicNeuralNetwork} inputs.
+     *                                  Numbers size[1]...size[n] say how many {@link BasicNeuron} should be in n-th
+     *                                  hidden {@link Layer}.
      * @param hiddenLayerActivationFunc activation function used in hidden layers
      * @param outputLayerActivationFunc activation function used in output layer
      */
-    public BasicNeuralNetwork(int[] sizes, Function<Double, Double> hiddenLayerActivationFunc, Function<Double, Double> outputLayerActivationFunc) {
+    public BasicNeuralNetwork(int[] sizes,
+                              Function<Double, Double> hiddenLayerActivationFunc,
+                              Function<Double, Double> outputLayerActivationFunc) {
         this.hiddenLayerActivationFunc = hiddenLayerActivationFunc;
         this.outputLayerActivationFunc = outputLayerActivationFunc;
 
@@ -62,8 +65,8 @@ public class BasicNeuralNetwork implements Comparable<BasicNeuralNetwork>, Seria
     }
 
     /**
-     * The function takes input vector and feeds it into {@link BasicNeuralNetwork}. Results of {@link Layer} is fed as input
-     * into next and result of last {@link Layer is presented as output of {@link BasicNeuralNetwork } computation.
+     * The function takes input vector and feeds it into {@link BasicNeuralNetwork}. Results of {@link Layer} is fed as
+     * input into next and result of last {@link Layer is presented as output of {@link BasicNeuralNetwork } computation.
      *
      * @param inputs to evaluate
      * @return vector of values copmuted by {@link BasicNeuralNetwork }
@@ -83,16 +86,6 @@ public class BasicNeuralNetwork implements Comparable<BasicNeuralNetwork>, Seria
                 outputLayerActivationFunc);
 
         return hiddenLayers.get(outputLayerIndex).layerOutputs;
-    }
-
-    /**
-     * Increases {@link BasicNeuralNetwork} score by given amount.
-     *
-     * @param amount number that will be added to score
-     */
-    @Override
-    public void increaseScore(int amount) {
-        score += amount;
     }
 
     /**
@@ -117,12 +110,12 @@ public class BasicNeuralNetwork implements Comparable<BasicNeuralNetwork>, Seria
     }
 
     /**
-     * Saves {@link BasicNeuralNetwork} into file. {@link NeuralNetworkDTO} is used as intermediate object which is actually
-     * saved into file. {@link NeuralNetworkDTO} is missing lambdas hiddenLayerActivationFunc, outputLayerActivationFunc
-     * which cannot be easily saved.
+     * Saves {@link BasicNeuralNetwork} into file. {@link NeuralNetworkDTO} is used as intermediate object which is
+     * actually saved into file. {@link NeuralNetworkDTO} is missing lambdas hiddenLayerActivationFunc,
+     * outputLayerActivationFunc which cannot be easily saved.
      *
-     * @param filePath path to file where the {@link BasicNeuralNetwork} will be saved. Name of the {@link BasicNeuralNetwork} is
-     *                 appended to file name.
+     * @param filePath path to file where the {@link BasicNeuralNetwork} will be saved. Name of the
+     *                 {@link BasicNeuralNetwork} is appended to file name.
      * @param info     string appended to file. It is used describe {@link NeuralNetworkDTO} saved in file.
      */
     public void saveToFile(String filePath, String info) {

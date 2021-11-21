@@ -26,7 +26,10 @@ public class Phenotype implements NeuralNetwork {
     public Function<Double, Double> outputLayerActivationFunc;
     public int score = 0;
 
-    public Phenotype(List<NEATNeuron> neurons, List<Connection> connections, Function<Double, Double> hiddenLayerActivationFunc, Function<Double, Double> outputLayerActivationFunc) {
+    public Phenotype(List<NEATNeuron> neurons,
+                     List<Connection> connections,
+                     Function<Double, Double> hiddenLayerActivationFunc,
+                     Function<Double, Double> outputLayerActivationFunc) {
         this.inputNeurons = neurons.stream().filter(neatNeuron -> neatNeuron.neuronType == NeuronType.INPUT).collect(Collectors.toList());
         this.hiddenNeurons = neurons.stream().filter(neatNeuron -> neatNeuron.neuronType == NeuronType.HIDDEN).collect(Collectors.toList());
         this.outputNeurons = neurons.stream().filter(neatNeuron -> neatNeuron.neuronType == NeuronType.OUTPUT).collect(Collectors.toList());
@@ -58,16 +61,6 @@ public class Phenotype implements NeuralNetwork {
                 outputNeurons.stream()
                         .map(neatNeuron -> neatNeuron.getOutput(outputLayerActivationFunc))
                         .collect(Collectors.toList()));
-    }
-
-    /**
-     * Increases {@link Phenotype} score by given amount.
-     *
-     * @param amount number that will be added to score
-     */
-    @Override
-    public void increaseScore(int amount) {
-        score += amount;
     }
 
     /**

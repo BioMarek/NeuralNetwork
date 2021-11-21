@@ -7,11 +7,11 @@ import org.junit.jupiter.api.Test;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-public class EvolutionEngineTest {
+public class BasicEvolutionEngineTest {
 
     @Test
     void EvolutionEngine_defaultBuild() {
-        EvolutionEngine evolutionEngine = new EvolutionEngine
+        BasicEvolutionEngine evolutionEngine = new BasicEvolutionEngine
                 .EvolutionEngineBuilder(new int[]{8, 10, 4}, Util.activationFunctionUnitStep(), new SnakeGame(20))
                 .build();
 

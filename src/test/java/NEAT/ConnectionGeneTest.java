@@ -3,7 +3,6 @@ package NEAT;
 import Games.Snake.SnakeGame;
 import NEAT.Evolution.ConnectionGene;
 import NEAT.Evolution.GenePool;
-import NEAT.Evolution.Genotype;
 import Utils.Util;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,11 +19,11 @@ public class ConnectionGeneTest {
     @BeforeEach
     void init() {
         genePool = genePoolBuilder.build();
-        connectionGene = genePool.genotypes.get(0).connectionGenes.get(0);
+        connectionGene = genePool.getGenotypes().get(0).connectionGenes.get(0);
     }
 
     @Test
-    void copy_CreatesCorrectCopy(){
+    void copy_CreatesCorrectCopy() {
         ConnectionGene copy = connectionGene.copy();
 
         assertThat(copy.equals(connectionGene), is(true));

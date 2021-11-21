@@ -28,8 +28,8 @@ public class GenePoolTest {
     @Test
     void initGenePool_afterBuildFirstGenotypeIsCorrect() {
         // PREPARE
-        var nodeGenes = genePool.genotypes.get(0).nodeGenes;
-        var connectionGenes = genePool.genotypes.get(0).connectionGenes;
+        var nodeGenes = genePool.getGenotypes().get(0).nodeGenes;
+        var connectionGenes = genePool.getGenotypes().get(0).connectionGenes;
 
         // VERIFY
         assertThat(nodeGenes.size(), is(4));
@@ -58,7 +58,7 @@ public class GenePoolTest {
     @Test
     void initGenePool_phenotypeIsCreatedFromGenotypeCorrectly() {
         // PREPARE
-        Genotype genotype = genePool.genotypes.get(0);
+        Genotype genotype = genePool.getGenotypes().get(0);
         Phenotype phenotype = genotype.createPhenotype();
         var connections = phenotype.connections;
 
@@ -81,7 +81,7 @@ public class GenePoolTest {
     @Test
     void splitConnection_correctlyCreatesNewConnections() {
         // PREPARE
-        Genotype genotype = genePool.genotypes.get(0);
+        Genotype genotype = genePool.getGenotypes().get(0);
         genotype.splitConnection(genotype.connectionGenes.get(0));
 
         // VERIFY
@@ -100,7 +100,7 @@ public class GenePoolTest {
     @Test
     void mutateWeight_changesWeight() {
         // PREPARE
-        Genotype genotype = genePool.genotypes.get(0);
+        Genotype genotype = genePool.getGenotypes().get(0);
         ConnectionGene connectionGene = genotype.connectionGenes.get(0);
         double oldWeight = connectionGene.weight;
         genotype.mutateWeight(connectionGene);
@@ -112,7 +112,7 @@ public class GenePoolTest {
     @Test
     void nodeNameOfSplitConnection_worksCorrectly() {
         // PREPARE
-        Genotype genotype = genePool.genotypes.get(0);
+        Genotype genotype = genePool.getGenotypes().get(0);
         ConnectionGene connectionGene = genotype.connectionGenes.get(0);
         genotype.splitConnection(connectionGene);
 
