@@ -4,12 +4,10 @@ import NEAT.NeuronType;
 import NEAT.Phenotype.Connection;
 import NEAT.Phenotype.NEATNeuron;
 import NEAT.Phenotype.Phenotype;
+import Utils.Pair;
 import Utils.Util;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 import java.util.function.Function;
 
 public class Genotype implements Comparable<Genotype> {
@@ -53,11 +51,13 @@ public class Genotype implements Comparable<Genotype> {
     /**
      * Mutates {@link Genotype} with chances set in {@link GenePool}.
      */
-    public void mutate() {
+    public void mutateGenotype() {
         if (Util.randomChance(genePool.chanceToMutateWeight))
             mutateWeight(getRandomConnection());
         if (Util.randomChance(genePool.chanceToAddNode))
             addNode(getRandomConnection());
+        if (Util.randomChance(genePool.chanceToAddConnection))
+            addConnection();
     }
 
     /**
@@ -82,6 +82,24 @@ public class Genotype implements Comparable<Genotype> {
 
         Collections.sort(nodeGenes);
         Collections.sort(connectionGenes);
+    }
+
+    /**
+     * Connects two, so far, unconnected nodes with new {@link ConnectionGene}.
+     */
+    void addConnection() {
+        Set<Pair<NodeGene>> allPossibleConnections = new HashSet<>();
+        for (NodeGene nodeGeneFrom : nodeGenes) {
+            for (NodeGene nodeGeneTo : nodeGenes) {
+                if (!(nodeGeneFrom.type == NeuronType.INPUT && nodeGeneTo.type == NeuronType.OUTPUT))
+                    allPossibleConnections.add(new Pair<>(nodeGeneFrom, nodeGeneTo));
+            }
+        }
+        List<Pair<NodeGene>> allPossibleConnectionsList = new ArrayList<>(allPossibleConnections);
+        Pair<NodeGene> chosen = allPossibleConnectionsList.get(Util.randomInt(0, allPossibleConnectionsList.size()));
+        ConnectionGene connectionGene = new ConnectionGene(chosen.getFirst(), chosen.getSecond(), Util.randomDouble(), true);
+        connectionGenes.add(connectionGene);
+        genePool.putConnectionGeneIntoGenePool(connectionGene);
     }
 
     /**

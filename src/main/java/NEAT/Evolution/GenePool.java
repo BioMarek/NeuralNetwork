@@ -30,6 +30,7 @@ public class GenePool implements EvolutionEngine {
     protected double chanceToMutateWeight; // chance that weight will be mutated
     protected double chanceToHardMutateWight; // chance to assign new value to weight when it is being mutated, small change otherwise
     protected double chanceToAddNode;
+    protected double chanceToAddConnection;
     protected int networksToKeep; // number of top scoring networks that are copied into next generation
     protected int networksToMutate; // number of top scoring networks copies that are mutated and copied into next generation
     protected int networksGenerated;
@@ -71,7 +72,7 @@ public class GenePool implements EvolutionEngine {
             // copies with one mutation
             if (i >= limit) {
                 Genotype genotype = genotypes.get(i - limit).copy();
-                genotype.mutate();
+                genotype.mutateGenotype();
                 genotype.name = Integer.toString(networksGenerated++);
                 genotypesNewGeneration.add(genotype);
             }
@@ -137,6 +138,8 @@ public class GenePool implements EvolutionEngine {
         private final int outputs;
         private final Game game;
         private final Function<Double, Double> hiddenLayerActivationFunc;
+
+        // default values
         private Function<Double, Double> outputLayerActivationFunc;
         private int totalNumOfGenotypes = 100;
         private int maxNeurons = 1000;
@@ -146,6 +149,7 @@ public class GenePool implements EvolutionEngine {
         private double chanceToMutateWeight = 0.8;
         private double chanceToHardMutateWight = 0.1;
         private double chanceToSplitConnection = 0.03;
+        protected double chanceToAddConnection = 0.03;
         private int networksToKeep = 40;
         private int networksToMutate = 40;
         private int networksGenerated = 0;
@@ -201,6 +205,11 @@ public class GenePool implements EvolutionEngine {
 
         public GenePoolBuilder setChanceToAddNode(double chanceToSplitConnection) {
             this.chanceToSplitConnection = chanceToSplitConnection;
+            return this;
+        }
+
+        public GenePoolBuilder setChanceToAddConnection(double chanceToAddConnection) {
+            this.chanceToAddConnection = chanceToAddConnection;
             return this;
         }
 
