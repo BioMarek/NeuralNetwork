@@ -50,25 +50,18 @@ public class Genotype implements Comparable<Genotype> {
      * Splits {@link ConnectionGene} into two new ones, the old {@link ConnectionGene} is removed. Weight of the first
      * {@link ConnectionGene} is 1 whereas weight of second one is same as weight of the old one.
      *
-     * @param oldConnectionGene to remove and split
+     * @param ConnectionGene to remove and split
      */
-    public void splitConnection(ConnectionGene oldConnectionGene) {
-        NodeGene nodeGene;
-        int nodeNameUsedInSplit = genePool.nodeNameOfSplitConnection(oldConnectionGene);
+    public void splitConnection(ConnectionGene ConnectionGene) {
+        NodeGene nodeGene = new NodeGene(NeuronType.HIDDEN, genePool.nodeNameOfSplitConnection(ConnectionGene));
 
-        if (nodeNameUsedInSplit == -1) {
-            nodeGene = new NodeGene(NeuronType.HIDDEN, genePool.neuronNames++);
-        } else {
-            nodeGene = new NodeGene(NeuronType.HIDDEN, nodeNameUsedInSplit);
-        }
-
-        ConnectionGene firstConnectionGene = new ConnectionGene(oldConnectionGene.from, nodeGene, 1.0, true);
-        ConnectionGene secondConnectionGene = new ConnectionGene(nodeGene, oldConnectionGene.to, oldConnectionGene.weight, true);
+        ConnectionGene firstConnectionGene = new ConnectionGene(ConnectionGene.from, nodeGene, 1.0, true);
+        ConnectionGene secondConnectionGene = new ConnectionGene(nodeGene, ConnectionGene.to, ConnectionGene.weight, true);
 
         nodeGenes.add(nodeGene);
         connectionGenes.add(firstConnectionGene);
         connectionGenes.add(secondConnectionGene);
-        connectionGenes.remove(oldConnectionGene);
+        connectionGenes.remove(ConnectionGene);
 
         genePool.putConnectionGeneIntoGenePool(firstConnectionGene);
         genePool.putConnectionGeneIntoGenePool(secondConnectionGene);
@@ -99,12 +92,6 @@ public class Genotype implements Comparable<Genotype> {
         genotype.score = this.score;
         return genotype;
     }
-
-//    public void play(){
-//        Phenotype phenotype = createPhenotype();
-//        genePool.game.play(phenotype, genePool.maxNumberOfMoves);
-//        score = phenotype.score;
-//    }
 
     public void printConnections() {
         for (ConnectionGene connection : connectionGenes) {

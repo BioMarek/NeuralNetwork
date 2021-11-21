@@ -1,7 +1,7 @@
 package Visualizations;
 
 import BasicNeuralNetwork.NeuralNetwork.Layer;
-import BasicNeuralNetwork.NeuralNetwork.NeuralNetwork;
+import BasicNeuralNetwork.NeuralNetwork.BasicNeuralNetwork;
 import BasicNeuralNetwork.NeuralNetwork.BasicNeuron;
 import Utils.Util;
 
@@ -36,7 +36,7 @@ public class NeuralNetworkPanel extends JPanel {
     }
 
     public void drawNeuralNetwork() {
-        NeuralNetwork neuralNetwork = new NeuralNetwork(new int[]{10, 2, 6, 5}, Util.activationFunctionUnitStep(), Util.activationFunctionIdentity());
+        BasicNeuralNetwork neuralNetwork = new BasicNeuralNetwork(new int[]{10, 2, 6, 5}, Util.activationFunctionUnitStep(), Util.activationFunctionIdentity());
 
         int[] yAxisOffsets = layersYAxisOffset(neuralNetwork);
         for (int i = 0; i < neuralNetwork.hiddenLayers.size(); i++) {
@@ -51,7 +51,7 @@ public class NeuralNetworkPanel extends JPanel {
      * The function draws one layer as column of neurons
      *
      * @param layer      {@link Layer} to draw
-     * @param layerIndex index of {@link Layer} in {@link NeuralNetwork}
+     * @param layerIndex index of {@link Layer} in {@link BasicNeuralNetwork}
      */
     protected void drawLayer(Layer layer, int layerIndex, int yAxisOffset) {
         graphics.setStroke(new BasicStroke(neuronStroke));
@@ -69,8 +69,8 @@ public class NeuralNetworkPanel extends JPanel {
      * Draws weights between Layer on the "left" the one with smaller index and layer on the "right" the one with
      * higher index.
      *
-     * @param leftLayer  {@link Layer} with the index 'i' in {@link NeuralNetwork}
-     * @param rightLayer {@link Layer} with the index 'i + 1' in {@link NeuralNetwork}
+     * @param leftLayer  {@link Layer} with the index 'i' in {@link BasicNeuralNetwork}
+     * @param rightLayer {@link Layer} with the index 'i + 1' in {@link BasicNeuralNetwork}
      */
     protected void drawWeights(Layer leftLayer, Layer rightLayer, int[] yAxisOffset) {
         graphics.setStroke(new BasicStroke(weightStroke));
@@ -138,7 +138,7 @@ public class NeuralNetworkPanel extends JPanel {
      * @param neuralNetwork which {@link Layer}s will be evaluated
      * @return array of offsets for each layer
      */
-    protected int[] layersYAxisOffset(NeuralNetwork neuralNetwork) {
+    protected int[] layersYAxisOffset(BasicNeuralNetwork neuralNetwork) {
         List<Integer> layerHeights = neuralNetwork.hiddenLayers.stream()
                 .map(layer -> (layer.length - 1) * neuronYAxisGap + neuronSize)
                 .collect(Collectors.toList());

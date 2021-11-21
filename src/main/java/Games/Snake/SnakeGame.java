@@ -1,14 +1,14 @@
 package Games.Snake;
 
 import Games.Game;
-import BasicNeuralNetwork.NeuralNetwork.NeuralNetwork;
-import Interfaces.INeuralNetwork;
+import BasicNeuralNetwork.NeuralNetwork.BasicNeuralNetwork;
+import Interfaces.NeuralNetwork;
 import Utils.Util;
 
 import java.util.*;
 
 /**
- * Games.Snake game it used check whether {@link NeuralNetwork} can play simple game.
+ * Games.Snake game it used check whether {@link BasicNeuralNetwork} can play simple game.
  */
 public class SnakeGame implements Game {
     private final int EMPTY = 0;
@@ -241,7 +241,7 @@ public class SnakeGame implements Game {
      * @param maxNumberOfMoves maximal number of snake moves so that snake won move in cycles
      */
     @Override
-    public void play(INeuralNetwork neuralNetwork, int maxNumberOfMoves) {
+    public void play(NeuralNetwork neuralNetwork, int maxNumberOfMoves) {
         double[] networkOutput;
 
         for (int i = 0; i < maxNumberOfMoves; i++) {
@@ -271,7 +271,6 @@ public class SnakeGame implements Game {
             if (isGameOver)
                 break;
         }
-        neuralNetwork.score = snakeScore;
     }
 
     /**

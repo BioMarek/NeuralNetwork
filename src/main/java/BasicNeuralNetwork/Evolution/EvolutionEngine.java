@@ -1,7 +1,7 @@
 package BasicNeuralNetwork.Evolution;
 
+import BasicNeuralNetwork.NeuralNetwork.BasicNeuralNetwork;
 import Games.Game;
-import BasicNeuralNetwork.NeuralNetwork.NeuralNetwork;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -16,7 +16,7 @@ public class EvolutionEngine {
     private Function<Double, Double> hiddenLayerActivationFunc;
     private Function<Double, Double> outputLayerActivationFunc;
 
-    protected List<NeuralNetwork> neuralNetworks = new ArrayList<>();
+    protected List<BasicNeuralNetwork> neuralNetworks = new ArrayList<>();
     protected int totalNumOfNetworks;
     protected int networksGenerated;
     protected int networksToKeep; // number of top scoring networks that are copied into next generation
@@ -36,7 +36,7 @@ public class EvolutionEngine {
     }
 
     public void makeNextGeneration() {
-        for (NeuralNetwork neuralNetwork : neuralNetworks) {
+        for (BasicNeuralNetwork neuralNetwork : neuralNetworks) {
             for (int i = 0; i < numOfTrials; i++) {
                 game.reset();
                 game.play(neuralNetwork, maxNumberOfMoves);
@@ -45,22 +45,22 @@ public class EvolutionEngine {
         neuralNetworks.sort(Collections.reverseOrder());
         if (verbose)
             printScores();
-        for (NeuralNetwork neuralNetwork : neuralNetworks) {
+        for (BasicNeuralNetwork neuralNetwork : neuralNetworks) {
             neuralNetwork.score = 0;
         }
-        List<NeuralNetwork> neuralNetworksNewGeneration = new ArrayList<>();
+        List<BasicNeuralNetwork> neuralNetworksNewGeneration = new ArrayList<>();
         for (int i = 0; i < totalNumOfNetworks; i++) {
             if (i < networksToKeep) {
                 neuralNetworksNewGeneration.add(neuralNetworks.get(i));
             }
             if (i >= networksToKeep && i < (networksToMutate + networksToKeep)) {
-                NeuralNetwork neuralNetwork = neuralNetworks.get(i - networksToMutate).copy();
+                BasicNeuralNetwork neuralNetwork = neuralNetworks.get(i - networksToMutate).copy();
                 neuralNetwork.mutateLayers(numOfNeuronsToMutate, numOfMutations);
                 neuralNetwork.name = Integer.toString(networksGenerated++);
                 neuralNetworksNewGeneration.add(neuralNetwork);
             }
             if (i >= networksToMutate + networksToKeep) {
-                NeuralNetwork neuralNetwork = new NeuralNetwork(neuralNetworkSettings, hiddenLayerActivationFunc, outputLayerActivationFunc);
+                BasicNeuralNetwork neuralNetwork = new BasicNeuralNetwork(neuralNetworkSettings, hiddenLayerActivationFunc, outputLayerActivationFunc);
                 neuralNetwork.name = Integer.toString(networksGenerated++);
                 neuralNetworksNewGeneration.add(neuralNetwork);
             }
@@ -69,13 +69,13 @@ public class EvolutionEngine {
     }
 
     public void printScores() {
-        for (NeuralNetwork neuralNetwork : neuralNetworks) {
+        for (BasicNeuralNetwork neuralNetwork : neuralNetworks) {
             System.out.print(neuralNetwork.name + ": " + neuralNetwork.score + ", ");
         }
         System.out.println();
     }
 
-    public NeuralNetwork getNeuralNetwork(int index) {
+    public BasicNeuralNetwork getNeuralNetwork(int index) {
         return neuralNetworks.get(index);
     }
 
@@ -146,7 +146,7 @@ public class EvolutionEngine {
         }
 
         /**
-         * Builds evolution engine. {@link NeuralNetwork} will get number names starting from 0 increasing by 1.
+         * Builds evolution engine. {@link BasicNeuralNetwork} will get number names starting from 0 increasing by 1.
          *
          * @return {@link EvolutionEngine}
          */
@@ -157,7 +157,7 @@ public class EvolutionEngine {
             evolutionEngine.currentGenerations = 0;
 
             for (int i = 0; i < totalNumOfNetworks; i++) {
-                NeuralNetwork neuralNetwork = new NeuralNetwork(neuralNetworkSettings, hiddenLayerActivationFunc, outputLayerActivationFunc);
+                BasicNeuralNetwork neuralNetwork = new BasicNeuralNetwork(neuralNetworkSettings, hiddenLayerActivationFunc, outputLayerActivationFunc);
                 neuralNetwork.name = Integer.toString(evolutionEngine.networksGenerated++);
                 evolutionEngine.neuralNetworks.add(neuralNetwork);
             }

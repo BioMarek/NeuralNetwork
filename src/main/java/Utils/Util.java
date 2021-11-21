@@ -101,4 +101,13 @@ public class Util {
             return (1.0D - eToNegativeIP) / (1.0D + eToNegativeIP);
         };
     }
+
+    public static double[] primitiveDoubleArrayFromList(List<Double> list){
+        int length = list.size();
+        double[] result = new double[length];
+        for (int i = 0; i < length; i++){
+            result[i] = list.get(i);
+        }
+        return result;
+    }
 }

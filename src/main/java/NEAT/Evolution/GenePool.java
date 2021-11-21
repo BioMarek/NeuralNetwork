@@ -2,6 +2,7 @@ package NEAT.Evolution;
 
 import Games.Game;
 import NEAT.NeuronType;
+import NEAT.Phenotype.Connection;
 import NEAT.Phenotype.Phenotype;
 import Utils.Pair;
 import Utils.Util;
@@ -13,19 +14,21 @@ import java.util.function.Function;
  * The class holds all genes of population.
  */
 public class GenePool {
-    private int totalNumOfGenotypes = 100;
-    public int neuronNames = 0;
+    private int totalNumOfGenotypes;
     private int inputs;
     private int outputs;
+
+    protected Game game;
+    protected boolean verbose;
+    protected int maxNumberOfMoves; // to stop AI moving in cycles
+    protected int numOfTrials; // how many times NeuralNetwork plays the game
+
+    public int neuronNames = 0;
     public Function<Double, Double> hiddenLayerActivationFunc;
     public Function<Double, Double> outputLayerActivationFunc;
     public Set<Integer> nodeGenes = new HashSet<>();
     public Set<Pair<Integer>> connections = new HashSet<>();
     public List<Genotype> genotypes = new ArrayList<>();
-    protected Game game;
-    protected boolean verbose;
-    protected int maxNumberOfMoves; // to stop AI moving in cycles
-    protected int numOfTrials; // how many times BasicNeuralNetwork.NeuralNetwork plays the game
 
     public void makeNextGeneration() {
         for (Genotype genotype : genotypes) {
@@ -40,6 +43,10 @@ public class GenePool {
 
         if (verbose)
             printScores();
+        resetGenotypes();
+    }
+
+    public void resetGenotypes(){
         for (Genotype genotype : genotypes) {
             genotype.score = 0;
         }
@@ -57,9 +64,18 @@ public class GenePool {
     }
 
     public void putConnectionGeneIntoGenePool(ConnectionGene connectionGene) {
-        connections.add(new Pair<>(connectionGene.from.name, connectionGene.to.name));
+        putConnectionGeneIntoGenePool(connectionGene.from.name, connectionGene.to.name);
     }
 
+    /**
+     * Returns name which should node of split {@link Connection} have. If there is a pair of {@link Connection} x -> z
+     * and z -> y it means that {@link Connection} x -> y was already split by some other genome. If genome wants to
+     * split its x -> y {@link Connection} nodeNameOfSplitConnection will either add new node name into {@link GenePool}
+     * or returns z such as {@link Connection} x -> z and z -> y exists.
+     *
+     * @param connectionGene to split
+     * @return name which split connection should have
+     */
     public int nodeNameOfSplitConnection(ConnectionGene connectionGene) {
         List<Integer> from = new ArrayList<>();
         List<Integer> to = new ArrayList<>();
@@ -74,7 +90,7 @@ public class GenePool {
 
         if (from.size() > 0)
             return from.get(0);
-        else return -1;
+        return neuronNames++;
     }
 
     public static class GenePoolBuilder {

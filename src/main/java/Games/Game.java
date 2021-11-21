@@ -1,9 +1,9 @@
 package Games;
 
-import Interfaces.INeuralNetwork;
+import Interfaces.NeuralNetwork;
 
 public interface Game {
-    void play(INeuralNetwork neuralNetwork, int maxNumberOfMoves);
+    void play(NeuralNetwork neuralNetwork, int maxNumberOfMoves);
 
     void reset();
 }

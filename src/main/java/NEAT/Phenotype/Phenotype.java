@@ -1,6 +1,6 @@
 package NEAT.Phenotype;
 
-import Interfaces.INeuralNetwork;
+import Interfaces.NeuralNetwork;
 import NEAT.Evolution.GenePool;
 import NEAT.NeuronType;
 import Utils.Util;
@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
  */
 @EqualsAndHashCode
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class Phenotype implements INeuralNetwork {
+public class Phenotype implements NeuralNetwork {
     public List<NEATNeuron> inputNeurons;
     public List<NEATNeuron> hiddenNeurons;
     public List<NEATNeuron> outputNeurons;
@@ -36,8 +36,8 @@ public class Phenotype implements INeuralNetwork {
     }
 
     /**
-     * Calculates output of phenotype using supplied activation function. Activation function used in input neurons is
-     * {@link Util#activationFunctionIdentity()}.
+     * Calculates output of {@link Phenotype} using supplied activation function. Activation function used in input
+     * neurons is {@link Util#activationFunctionIdentity()}.
      *
      * @param inputs double array of inputs
      * @return double array of outputs
@@ -54,12 +54,10 @@ public class Phenotype implements INeuralNetwork {
                 connection.to.innerPotential += connection.from.getOutput(hiddenLayerActivationFunc) * connection.weight;
         }
 
-        int outputs = outputNeurons.size(); // TODO refactor
-        double[] result = new double[outputs];
-        for (int i = 0; i < outputs; i++) {
-            result[i] = outputNeurons.get(i).getOutput(outputLayerActivationFunc);
-        }
-        return result;
+        return Util.primitiveDoubleArrayFromList(
+                outputNeurons.stream()
+                        .map(neatNeuron -> neatNeuron.getOutput(outputLayerActivationFunc))
+                        .collect(Collectors.toList()));
     }
 
     /**
@@ -72,7 +70,11 @@ public class Phenotype implements INeuralNetwork {
         score += amount;
     }
 
-    public void printConnections() {
+    /**
+     * Prints neural network in human-readable format.
+     */
+    @Override
+    public void printNetwork() {
         for (Connection connection : connections) {
             System.out.println(connection.from.name + " -> " + connection.to.name);
         }

@@ -98,7 +98,7 @@ public class GenePoolTest {
     }
 
     @Test
-    void mutateWeight_changesWeight(){
+    void mutateWeight_changesWeight() {
         // PREPARE
         Genotype genotype = genePool.genotypes.get(0);
         ConnectionGene connectionGene = genotype.connectionGenes.get(0);
@@ -110,12 +110,13 @@ public class GenePoolTest {
     }
 
     @Test
-    void nodeNameOfSplitConnection_worksCorrectly(){
+    void nodeNameOfSplitConnection_worksCorrectly() {
+        // PREPARE
         Genotype genotype = genePool.genotypes.get(0);
-        assertThat(genePool.nodeNameOfSplitConnection(genotype.connectionGenes.get(0)), is(-1));
-
         ConnectionGene connectionGene = genotype.connectionGenes.get(0);
         genotype.splitConnection(connectionGene);
+
+        // VERIFY
         assertThat(genePool.nodeNameOfSplitConnection(connectionGene), is(2));
     }
 }

@@ -1,5 +1,5 @@
 import BasicNeuralNetwork.Evolution.EvolutionEngine;
-import BasicNeuralNetwork.NeuralNetwork.NeuralNetwork;
+import BasicNeuralNetwork.NeuralNetwork.BasicNeuralNetwork;
 import Games.Snake.SnakeGame;
 import NEAT.Evolution.GenePool;
 import Utils.Util;
@@ -30,7 +30,7 @@ public class Main {
         System.out.println("It took: " + (stop - start) + "ms");
 
         SnakeGame snakeGame = new SnakeGame(20);
-        NeuralNetwork neuralNetwork = evolutionEngine.getNeuralNetwork(0);
+        BasicNeuralNetwork neuralNetwork = evolutionEngine.getNeuralNetwork(0);
         System.out.println(neuralNetwork.name);
         snakeGame.showSnakeMoves(neuralNetwork, 500);
     }

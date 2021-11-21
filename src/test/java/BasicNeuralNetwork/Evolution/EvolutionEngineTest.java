@@ -22,8 +22,8 @@ public class EvolutionEngineTest {
         assertThat(evolutionEngine.neuralNetworks.size(), is(100));
         assertThat(evolutionEngine.networksToKeep, is(40));
         assertThat(evolutionEngine.networksToMutate, is(40));
-        assertThat(evolutionEngine.numOfNeuronsToMutate, is("1"));
-        assertThat(evolutionEngine.numOfMutations, is("1"));
+        assertThat(evolutionEngine.numOfNeuronsToMutate, is(1));
+        assertThat(evolutionEngine.numOfMutations, is(1));
 
         assertThat(evolutionEngine.neuralNetworks.get(0).hiddenLayerActivationFunc, is(Util.activationFunctionUnitStep()));
         assertThat(evolutionEngine.neuralNetworks.get(0).outputLayerActivationFunc, is(Util.activationFunctionUnitStep()));

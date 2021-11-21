@@ -1,6 +1,6 @@
 package BasicNeuralNetwork.NeuralNetwork;
 
-import Interfaces.INeuralNetwork;
+import Interfaces.NeuralNetwork;
 import lombok.EqualsAndHashCode;
 
 import java.io.*;
@@ -10,12 +10,12 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * The {@link NeuralNetwork} is composed of {@link Layer}. Hidden layers compute result based on input supplied into
+ * The {@link BasicNeuralNetwork} is composed of {@link Layer}. Hidden layers compute result based on input supplied into
  * first layer. Results of computations are propagated into subsequent layers up to last layer which output is final
- * output of {@link NeuralNetwork}.
+ * output of {@link BasicNeuralNetwork}.
  */
 @EqualsAndHashCode
-public class NeuralNetwork implements Comparable<NeuralNetwork>, Serializable, INeuralNetwork {
+public class BasicNeuralNetwork implements Comparable<BasicNeuralNetwork>, Serializable, NeuralNetwork {
     public final List<Layer> hiddenLayers;
     public Function<Double, Double> hiddenLayerActivationFunc;
     public Function<Double, Double> outputLayerActivationFunc;
@@ -23,12 +23,12 @@ public class NeuralNetwork implements Comparable<NeuralNetwork>, Serializable, I
     public String name = "0";
 
     /**
-     * @param sizes                     Array of sizes, first number is number of {@link NeuralNetwork} inputs. Numbers
+     * @param sizes                     Array of sizes, first number is number of {@link BasicNeuralNetwork} inputs. Numbers
      *                                  size[1]...size[n] say how many {@link BasicNeuron} should be in n-th hidden {@link Layer}.
      * @param hiddenLayerActivationFunc activation function used in hidden layers
      * @param outputLayerActivationFunc activation function used in output layer
      */
-    public NeuralNetwork(int[] sizes, Function<Double, Double> hiddenLayerActivationFunc, Function<Double, Double> outputLayerActivationFunc) {
+    public BasicNeuralNetwork(int[] sizes, Function<Double, Double> hiddenLayerActivationFunc, Function<Double, Double> outputLayerActivationFunc) {
         this.hiddenLayerActivationFunc = hiddenLayerActivationFunc;
         this.outputLayerActivationFunc = outputLayerActivationFunc;
 
@@ -41,17 +41,17 @@ public class NeuralNetwork implements Comparable<NeuralNetwork>, Serializable, I
         }
     }
 
-    public NeuralNetwork(List<Layer> hiddenLayers, int score, String name) {
+    public BasicNeuralNetwork(List<Layer> hiddenLayers, int score, String name) {
         this.hiddenLayers = hiddenLayers;
         this.score = score;
         this.name = name;
     }
 
     /**
-     * @return deep copy of {@link NeuralNetwork}
+     * @return deep copy of {@link BasicNeuralNetwork}
      */
-    public NeuralNetwork copy() {
-        NeuralNetwork copy = new NeuralNetwork(
+    public BasicNeuralNetwork copy() {
+        BasicNeuralNetwork copy = new BasicNeuralNetwork(
                 hiddenLayers.stream()
                         .map(Layer::copy)
                         .collect(Collectors.toList()), score, name
@@ -62,11 +62,11 @@ public class NeuralNetwork implements Comparable<NeuralNetwork>, Serializable, I
     }
 
     /**
-     * The function takes input vector and feeds it into {@link NeuralNetwork}. Results of {@link Layer} is fed as input
-     * into next and result of last {@link Layer is presented as output of {@link NeuralNetwork} computation.
+     * The function takes input vector and feeds it into {@link BasicNeuralNetwork}. Results of {@link Layer} is fed as input
+     * into next and result of last {@link Layer is presented as output of {@link BasicNeuralNetwork } computation.
      *
      * @param inputs to evaluate
-     * @return vector of values copmuted by {@link NeuralNetwork}
+     * @return vector of values copmuted by {@link BasicNeuralNetwork }
      */
     @Override
     public double[] getNetworkOutput(double[] inputs) {
@@ -86,7 +86,7 @@ public class NeuralNetwork implements Comparable<NeuralNetwork>, Serializable, I
     }
 
     /**
-     * Increases {@link NeuralNetwork} score by given amount.
+     * Increases {@link BasicNeuralNetwork} score by given amount.
      *
      * @param amount number that will be added to score
      */
@@ -108,7 +108,8 @@ public class NeuralNetwork implements Comparable<NeuralNetwork>, Serializable, I
     /**
      * Prints neural network in human-readable format.
      */
-    public void printNeuralNetwork() {
+    @Override
+    public void printNetwork() {
         for (int i = 0; i < hiddenLayers.size(); i++) {
             System.out.println("Layer: " + i);
             hiddenLayers.get(i).printLayer();
@@ -116,11 +117,11 @@ public class NeuralNetwork implements Comparable<NeuralNetwork>, Serializable, I
     }
 
     /**
-     * Saves {@link NeuralNetwork} into file. {@link NeuralNetworkDTO} is used as intermediate object which is actually
+     * Saves {@link BasicNeuralNetwork} into file. {@link NeuralNetworkDTO} is used as intermediate object which is actually
      * saved into file. {@link NeuralNetworkDTO} is missing lambdas hiddenLayerActivationFunc, outputLayerActivationFunc
      * which cannot be easily saved.
      *
-     * @param filePath path to file where the {@link NeuralNetwork} will be saved. Name of the {@link NeuralNetwork} is
+     * @param filePath path to file where the {@link BasicNeuralNetwork} will be saved. Name of the {@link BasicNeuralNetwork} is
      *                 appended to file name.
      * @param info     string appended to file. It is used describe {@link NeuralNetworkDTO} saved in file.
      */
@@ -135,21 +136,21 @@ public class NeuralNetwork implements Comparable<NeuralNetwork>, Serializable, I
     }
 
     /**
-     * The function loads {@link NeuralNetworkDTO} from file and converts it into {@link NeuralNetwork}. Activation
+     * The function loads {@link NeuralNetworkDTO} from file and converts it into {@link BasicNeuralNetwork}. Activation
      * functions cannot be easily saved and loaded from file therefore they have to be supplied.
      *
-     * @param filePath                  path to file where {@link NeuralNetwork} is saved
+     * @param filePath                  path to file where {@link BasicNeuralNetwork} is saved
      * @param hiddenLayerActivationFunc activation function used in hidden layers
      * @param outputLayerActivationFunc activation function used in output layer
-     * @return {@link NeuralNetwork} loaded from file
+     * @return {@link BasicNeuralNetwork} loaded from file
      */
-    public NeuralNetwork loadFromFile(String filePath, Function<Double, Double> hiddenLayerActivationFunc, Function<Double, Double> outputLayerActivationFunc) {
+    public BasicNeuralNetwork loadFromFile(String filePath, Function<Double, Double> hiddenLayerActivationFunc, Function<Double, Double> outputLayerActivationFunc) {
         NeuralNetworkDTO neuralNetworkDTO;
         try {
             ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(filePath));
             neuralNetworkDTO = (NeuralNetworkDTO) objectInputStream.readObject();
 
-            NeuralNetwork neuralNetwork = new NeuralNetwork(neuralNetworkDTO.hiddenLayers, neuralNetworkDTO.score, neuralNetworkDTO.name);
+            BasicNeuralNetwork neuralNetwork = new BasicNeuralNetwork(neuralNetworkDTO.hiddenLayers, neuralNetworkDTO.score, neuralNetworkDTO.name);
             neuralNetwork.hiddenLayerActivationFunc = hiddenLayerActivationFunc;
             neuralNetwork.outputLayerActivationFunc = outputLayerActivationFunc;
 
@@ -162,7 +163,7 @@ public class NeuralNetwork implements Comparable<NeuralNetwork>, Serializable, I
     }
 
     @Override
-    public int compareTo(NeuralNetwork neuralNetwork) {
+    public int compareTo(BasicNeuralNetwork neuralNetwork) {
         if (this.score == neuralNetwork.score)
             return 0;
         return (this.score > neuralNetwork.score) ? 1 : -1;

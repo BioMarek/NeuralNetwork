@@ -9,19 +9,19 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class NeuralNetworkTest {
-    private NeuralNetwork neuralNetwork;
-    private NeuralNetwork copy;
+public class BasicNeuralNetworkTest {
+    private BasicNeuralNetwork neuralNetwork;
+    private BasicNeuralNetwork copy;
 
     @BeforeEach
     void init() {
-        neuralNetwork = new NeuralNetwork(new int[]{1, 1, 1}, Util.activationFunctionUnitStep(), Util.activationFunctionIdentity());
+        neuralNetwork = new BasicNeuralNetwork(new int[]{1, 1, 1}, Util.activationFunctionUnitStep(), Util.activationFunctionIdentity());
         copy = neuralNetwork.copy();
     }
 
     @Test
     void neuralNetwork_throwsErrorWhenWrongNumberOfHiddenLayersIsSupplied() {
-        assertThrows(IllegalArgumentException.class, () -> neuralNetwork = new NeuralNetwork(
+        assertThrows(IllegalArgumentException.class, () -> neuralNetwork = new BasicNeuralNetwork(
                 new int[]{},
                 Util.activationFunctionUnitStep(),
                 Util.activationFunctionIdentity()));
