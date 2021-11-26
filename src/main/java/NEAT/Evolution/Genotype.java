@@ -54,8 +54,6 @@ public class Genotype implements Comparable<Genotype> {
     public void mutateGenotype() {
         if (Util.randomChance(genePool.chanceToMutateWeight))
             mutateWeight(getRandomConnection());
-        if (Util.randomChance(genePool.chanceToAddNode))
-            addNode(getRandomConnection());
         if (Util.randomChance(genePool.chanceToAddConnection))
             addConnection();
     }
@@ -84,6 +82,10 @@ public class Genotype implements Comparable<Genotype> {
         Collections.sort(connectionGenes);
     }
 
+    public void addNode() {
+        addNode(getRandomConnection());
+    }
+
     /**
      * Connects two, so far, unconnected nodes with new {@link ConnectionGene}.
      */
@@ -95,11 +97,14 @@ public class Genotype implements Comparable<Genotype> {
                     allPossibleConnections.add(new Pair<>(nodeGeneFrom, nodeGeneTo));
             }
         }
-        List<Pair<NodeGene>> allPossibleConnectionsList = new ArrayList<>(allPossibleConnections);
-        Pair<NodeGene> chosen = allPossibleConnectionsList.get(Util.randomInt(0, allPossibleConnectionsList.size()));
-        ConnectionGene connectionGene = new ConnectionGene(chosen.getFirst(), chosen.getSecond(), Util.randomDouble(), true);
-        connectionGenes.add(connectionGene);
-        genePool.putConnectionGeneIntoGenePool(connectionGene);
+
+        if (allPossibleConnections.size() > 0) {
+            List<Pair<NodeGene>> allPossibleConnectionsList = new ArrayList<>(allPossibleConnections);
+            Pair<NodeGene> chosen = allPossibleConnectionsList.get(Util.randomInt(0, allPossibleConnectionsList.size()));
+            ConnectionGene connectionGene = new ConnectionGene(chosen.getFirst(), chosen.getSecond(), Util.randomDouble(), true);
+            connectionGenes.add(connectionGene);
+            genePool.putConnectionGeneIntoGenePool(connectionGene);
+        }
     }
 
     /**
@@ -140,6 +145,7 @@ public class Genotype implements Comparable<Genotype> {
         connectionGenes.forEach(connectionGene -> connectionGenesCopy.add(connectionGene.copy()));
         Genotype genotype = new Genotype(genePool, nodeGenes, connectionGenesCopy, hiddenLayerActivationFunc, outputLayerActivationFunc);
         genotype.score = this.score;
+        genotype.name = Integer.toString(genePool.networksGenerated++);
         return genotype;
     }
 

@@ -19,7 +19,7 @@ public class ConnectionGeneTest {
     @BeforeEach
     void init() {
         genePool = genePoolBuilder.build();
-        connectionGene = genePool.getGenotypes().get(0).connectionGenes.get(0);
+        connectionGene = genePool.getSpecies().get(0).genotypes.get(0).connectionGenes.get(0);
     }
 
     @Test

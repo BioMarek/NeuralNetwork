@@ -4,12 +4,12 @@ import Games.Game;
 import Interfaces.EvolutionEngine;
 import NEAT.NeuronType;
 import NEAT.Phenotype.Connection;
-import NEAT.Phenotype.Phenotype;
 import Utils.Pair;
 import Utils.Util;
 
 import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * The class holds all genes of population.
@@ -23,7 +23,7 @@ public class GenePool implements EvolutionEngine {
     private Function<Double, Double> outputLayerActivationFunc;
     private final Set<Integer> nodeGenes = new HashSet<>();
     private final Set<Pair<Integer>> connections = new HashSet<>();
-    private List<Genotype> genotypes = new ArrayList<>();
+    private List<Species> speciesList = new ArrayList<>();
 
     protected int maxNumberOfMoves; // to stop AI moving in cycles
     protected int numOfTrials; // how many times NeuralNetwork plays the game
@@ -31,66 +31,144 @@ public class GenePool implements EvolutionEngine {
     protected double chanceToHardMutateWight; // chance to assign new value to weight when it is being mutated, small change otherwise
     protected double chanceToAddNode;
     protected double chanceToAddConnection;
-    protected int networksToKeep; // number of top scoring networks that are copied into next generation
-    protected int networksToMutate; // number of top scoring networks copies that are mutated and copied into next generation
+    protected double networksToKeep; // portion of top scoring networks that are copied into next generation
+    protected double networksToMutate; // portion of top scoring networks copies that are mutated and copied into next generation
+    public double speciesReduction; // TODO refactor so it is accessible from test
+    protected int speciesMinimalReduction; // Minimal amount by which the size of underperforming species will be reduced
+    protected int protectedAge; // Age when species stops being protected and its size can be reevaluated
     protected int networksGenerated;
+    protected int speciesNames;
     protected Game game;
     protected boolean verbose;
 
     @Override
     public void calculateEvolution(int numOfGenerations) {
         for (int i = 0; i < numOfGenerations; i++) {
+            if (i % 10 == 0 && i > 0)
+                createSpecies();
+            resetScores();
             makeNextGeneration();
+            resizeSpecies();
+            printSpecies();
+            System.out.println("------------------------------------------------------------------------------------");
         }
     }
 
     @Override
     public void makeNextGeneration() {
-        System.out.println(connections.size() + " " + connections);
-        for (Genotype genotype : genotypes) {
-            for (int i = 0; i < numOfTrials; i++) {
-                Phenotype phenotype = genotype.createPhenotype();
-                game.reset();
-                genotype.score += game.play(phenotype, maxNumberOfMoves);
-            }
+        for (Species species : speciesList) {
+            species.calculateScores();
+
+            System.out.println("best " + species.genotypes.get(0).connectionGenes.size());
+            species.genotypes.get(0).createPhenotype().printNetwork();
+
+            species.mutateSpecies();
+            species.age += 1;
+            species.calculateAverage();
         }
-        genotypes.sort(Collections.reverseOrder());
-        System.out.println("best " + genotypes.get(0).connectionGenes.size());
-        genotypes.get(0).createPhenotype().printNetwork();
+        speciesList.sort(Collections.reverseOrder());
 
         if (verbose)
             printScores();
-        resetScores();
-
-        List<Genotype> genotypesNewGeneration = new ArrayList<>();
-        int limit = 20;
-        for (int i = 0; i < totalNumOfGenotypes; i++) {
-            // copies
-            if (i < limit) {
-                genotypesNewGeneration.add(genotypes.get(i));
-            }
-            // copies with one mutation
-            if (i >= limit) {
-                Genotype genotype = genotypes.get(i - limit).copy();
-                genotype.mutateGenotype();
-                genotype.name = Integer.toString(networksGenerated++);
-                genotypesNewGeneration.add(genotype);
-            }
-        }
-        genotypes = genotypesNewGeneration;
     }
 
+    public void createSpecies() {
+        int reduction = reduceSpeciesSizesUniformly();
+        List<Genotype> speciesGenotypes = new ArrayList<>();
+        Genotype genotype = speciesList.get(0).genotypes.get(0);
+        System.out.println("Species created from: " + genotype.name + " score: " + genotype.score);
+        genotype.addNode();
+
+        for (int i = 0; i < reduction; i++) {
+            speciesGenotypes.add(genotype.copy());
+        }
+
+        Species species = new Species(this, speciesGenotypes, speciesNames++);
+        speciesList.add(species);
+    }
+
+    /**
+     * Adjusts sizes of species based on their performance. Size of the best species are increased and the worst
+     * reduced.
+     */
+    public void resizeSpecies() {
+        // TODO maybe adjust, not percentage of species size
+
+        System.out.print("Old sizes: ");
+        for (Species species : speciesList)
+            System.out.print(species.size + " ");
+        System.out.println("");
+
+        List<Species> oldSpecies = speciesList.stream()
+                .filter(species -> species.age > protectedAge)
+                .collect(Collectors.toList());
+
+        if (oldSpecies.size() >= 2) {
+            oldSpecies.sort(Collections.reverseOrder());
+            // TODO when 4 species 2nd and 3rd dont change sizes
+            for (int i = 0; i < oldSpecies.size() / 2; i++) {
+                int change = oldSpecies.get(oldSpecies.size() - i - 1).reduceSize();
+                oldSpecies.get(i).increaseSize(change);
+            }
+            removeDeadSpecies();
+            System.out.print("New sizes: ");
+            for (Species species : speciesList)
+                System.out.print(species.size + " ");
+            System.out.println("");
+        }
+    }
+
+    /**
+     * Reduces sizes of all species by amount set in {@link GenePool}. Used for example when room for new species has to
+     * be done. Due to rounding errors number of actually removed {@link Genotype} is returned.
+     *
+     * @return Number of removed {@link Genotype}.
+     */
+    public int reduceSpeciesSizesUniformly() {
+        int reduction = 0;
+        for (Species species : speciesList) {
+            reduction += species.reduceSize();
+        }
+        removeDeadSpecies();
+        return reduction;
+    }
+
+    /**
+     * Deletes all species with size 0.
+     */
+    public void removeDeadSpecies() {
+        speciesList.removeIf(species -> species.size == 0);
+    }
+
+    /**
+     * Resets game scores in all {@link Genotype} in all {@link Species}.
+     */
     @Override
     public void resetScores() {
-        for (Genotype genotype : genotypes) {
-            genotype.score = 0;
+        for (Species species : speciesList) {
+            species.average = 0.0;
+            for (Genotype genotype : species.genotypes) {
+                genotype.score = 0;
+            }
         }
     }
 
     @Override
     public void printScores() {
-        for (Genotype genotype : genotypes) {
-            System.out.print(genotype.name + ": " + genotype.score + ", ");
+        for (Species species : speciesList) {
+            System.out.println(species.name);
+            for (Genotype genotype : species.genotypes) {
+                System.out.print(genotype.name + ": " + genotype.score + ", ");
+            }
+        }
+        System.out.println();
+    }
+
+
+    public void printSpecies() {
+        System.out.print("Species: ");
+        for (Species species : speciesList){
+            System.out.printf("\"%d\": %.4f, size: %d, age: %d | ", species.name, species.average, species.size, species.age);
         }
         System.out.println();
     }
@@ -129,8 +207,8 @@ public class GenePool implements EvolutionEngine {
         return neuronNames++;
     }
 
-    public List<Genotype> getGenotypes() {
-        return genotypes;
+    public List<Species> getSpecies() {
+        return speciesList;
     }
 
     public static class GenePoolBuilder {
@@ -149,10 +227,13 @@ public class GenePool implements EvolutionEngine {
         private double chanceToMutateWeight = 0.8;
         private double chanceToHardMutateWight = 0.1;
         private double chanceToSplitConnection = 0.03;
-        protected double chanceToAddConnection = 0.03;
-        private int networksToKeep = 40;
-        private int networksToMutate = 40;
+        private double chanceToAddConnection = 0.03;
+        private double networksToKeep = 0.3;
+        private double speciesReduction = 0.1;
+        private int speciesMinimalReduction = 2;
+        private int protectedAge = 15;
         private int networksGenerated = 0;
+        private int speciesNames = 0;
 
         public GenePoolBuilder(int inputs, int outputs, Function<Double, Double> hiddenLayerActivationFunc, Game game) {
             this.inputs = inputs;
@@ -213,13 +294,23 @@ public class GenePool implements EvolutionEngine {
             return this;
         }
 
-        public GenePoolBuilder setNetworksToKeep(int networksToKeep) {
+        public GenePoolBuilder setNetworksToKeep(double networksToKeep) {
             this.networksToKeep = networksToKeep;
             return this;
         }
 
-        public GenePoolBuilder setNetworksToMutate(int networksToMutate) {
-            this.networksToMutate = networksToMutate;
+        public GenePoolBuilder setSpeciesReduction(double speciesReduction) {
+            this.speciesReduction = speciesReduction;
+            return this;
+        }
+
+        public GenePoolBuilder setSpeciesMinimalReduction(int speciesMinimalReduction) {
+            this.speciesMinimalReduction = speciesMinimalReduction;
+            return this;
+        }
+
+        public GenePoolBuilder setProtectedAge(int protectedAge) {
+            this.protectedAge = protectedAge;
             return this;
         }
 
@@ -243,13 +334,21 @@ public class GenePool implements EvolutionEngine {
             genePool.chanceToHardMutateWight = chanceToHardMutateWight;
             genePool.chanceToAddNode = chanceToSplitConnection;
             genePool.networksToKeep = networksToKeep;
-            genePool.networksToMutate = networksToMutate;
+            genePool.speciesReduction = speciesReduction;
+            genePool.speciesMinimalReduction = speciesMinimalReduction;
+            genePool.protectedAge = protectedAge;
             genePool.networksGenerated = networksGenerated;
+            genePool.speciesNames = speciesNames;
 
-            initGenotype(genePool);
-            for (int i = 0; i < totalNumOfGenotypes - 1; i++) {
-                genePool.genotypes.add(genePool.genotypes.get(0).copy());
+            genePool.speciesList = new ArrayList<>();
+
+            Genotype genotype = initGenotype(genePool);
+            List<Genotype> genotypes = new ArrayList<>();
+            for (int i = 0; i < totalNumOfGenotypes; i++) {
+                genotypes.add(genotype.copy());
             }
+            Species species = new Species(genePool, genotypes, genePool.speciesNames++);
+            genePool.speciesList.add(species);
 
             return genePool;
         }
@@ -259,7 +358,7 @@ public class GenePool implements EvolutionEngine {
          *
          * @param genePool contains constants and settings.
          */
-        public void initGenotype(GenePool genePool) {
+        public Genotype initGenotype(GenePool genePool) {
             List<NodeGene> inputNodes = new ArrayList<>();
             List<NodeGene> outputNodes = new ArrayList<>();
             List<ConnectionGene> connectionGenes = new ArrayList<>();
@@ -284,7 +383,7 @@ public class GenePool implements EvolutionEngine {
             Collections.sort(connectionGenes);
             Genotype genotype = new Genotype(genePool, inputNodes, connectionGenes, hiddenLayerActivationFunc, outputLayerActivationFunc);
             genotype.name = Integer.toString(networksGenerated++);
-            genePool.genotypes.add(genotype);
+            return genotype;
         }
     }
 }

@@ -24,7 +24,7 @@ public class GenotypeTest {
     @BeforeEach
     void init() {
         genePool = genePoolBuilder.build();
-        genotype = genePool.getGenotypes().get(0);
+        genotype = genePool.getSpecies().get(0).genotypes.get(0);
     }
 
     @Test
