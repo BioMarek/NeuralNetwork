@@ -36,6 +36,7 @@ public class GenePool implements EvolutionEngine {
     public double speciesReduction; // TODO refactor so it is accessible from test
     protected int speciesMinimalReduction; // Minimal amount by which the size of underperforming species will be reduced
     protected int protectedAge; // Age when species stops being protected and its size can be reevaluated
+    protected int frequencyOfSpeciation;
     protected int networksGenerated;
     protected int speciesNames;
     protected Game game;
@@ -44,11 +45,12 @@ public class GenePool implements EvolutionEngine {
     @Override
     public void calculateEvolution(int numOfGenerations) {
         for (int i = 0; i < numOfGenerations; i++) {
-            if (i % 10 == 0 && i > 0)
+            if (i % frequencyOfSpeciation == 0 && i > 0)
                 createSpecies();
             resetScores();
             makeNextGeneration();
             resizeSpecies();
+            removeDeadSpecies();
             printSpecies();
             System.out.println("------------------------------------------------------------------------------------");
         }
@@ -57,14 +59,10 @@ public class GenePool implements EvolutionEngine {
     @Override
     public void makeNextGeneration() {
         for (Species species : speciesList) {
-            species.calculateScores();
-
-            System.out.println("best " + species.genotypes.get(0).connectionGenes.size());
-            species.genotypes.get(0).createPhenotype().printNetwork();
-
-            species.mutateSpecies();
-            species.age += 1;
+            species.calculateScores();  // rename
             species.calculateAverage();
+            species.mutateSpecies();
+            species.increaseAge();
         }
         speciesList.sort(Collections.reverseOrder());
 
@@ -73,18 +71,15 @@ public class GenePool implements EvolutionEngine {
     }
 
     public void createSpecies() {
-        int reduction = reduceSpeciesSizesUniformly();
         List<Genotype> speciesGenotypes = new ArrayList<>();
-        Genotype genotype = speciesList.get(0).genotypes.get(0);
-        System.out.println("Species created from: " + genotype.name + " score: " + genotype.score);
-        genotype.addNode();
+        Genotype genotypeToSpeciate = speciesList.get(0).genotypes.get(0);
+        genotypeToSpeciate.addNode();
 
-        for (int i = 0; i < reduction; i++) {
-            speciesGenotypes.add(genotype.copy());
-        }
+        int emptyPlaces = reduceSpeciesSizesUniformly();
+        removeDeadSpecies();
+        Util.repeat.accept(emptyPlaces, () -> speciesGenotypes.add(genotypeToSpeciate.copy()));
 
-        Species species = new Species(this, speciesGenotypes, speciesNames++);
-        speciesList.add(species);
+        speciesList.add(new Species(this, speciesGenotypes, speciesNames++));
     }
 
     /**
@@ -92,28 +87,23 @@ public class GenePool implements EvolutionEngine {
      * reduced.
      */
     public void resizeSpecies() {
-        // TODO maybe adjust, not percentage of species size
-
-        System.out.print("Old sizes: ");
-        for (Species species : speciesList)
-            System.out.print(species.size + " ");
-        System.out.println("");
-
         List<Species> oldSpecies = speciesList.stream()
                 .filter(species -> species.age > protectedAge)
                 .collect(Collectors.toList());
 
         if (oldSpecies.size() >= 2) {
+            System.out.print("Old sizes: ");
+            speciesList.forEach((species) -> System.out.print(species.getSize() + " "));
+            System.out.println("");
+
             oldSpecies.sort(Collections.reverseOrder());
-            // TODO when 4 species 2nd and 3rd dont change sizes
             for (int i = 0; i < oldSpecies.size() / 2; i++) {
                 int change = oldSpecies.get(oldSpecies.size() - i - 1).reduceSize();
                 oldSpecies.get(i).increaseSize(change);
             }
-            removeDeadSpecies();
+
             System.out.print("New sizes: ");
-            for (Species species : speciesList)
-                System.out.print(species.size + " ");
+            speciesList.forEach((species) -> System.out.print(species.getSize() + " "));
             System.out.println("");
         }
     }
@@ -125,19 +115,16 @@ public class GenePool implements EvolutionEngine {
      * @return Number of removed {@link Genotype}.
      */
     public int reduceSpeciesSizesUniformly() {
-        int reduction = 0;
-        for (Species species : speciesList) {
-            reduction += species.reduceSize();
-        }
-        removeDeadSpecies();
-        return reduction;
+        return speciesList.stream()
+                .map(Species::reduceSize)
+                .reduce(0, Integer::sum);
     }
 
     /**
      * Deletes all species with size 0.
      */
     public void removeDeadSpecies() {
-        speciesList.removeIf(species -> species.size == 0);
+        speciesList.removeIf(species -> species.getSize() == 0);
     }
 
     /**
@@ -147,9 +134,7 @@ public class GenePool implements EvolutionEngine {
     public void resetScores() {
         for (Species species : speciesList) {
             species.average = 0.0;
-            for (Genotype genotype : species.genotypes) {
-                genotype.score = 0;
-            }
+            species.genotypes.forEach((genotype -> genotype.score = 0));
         }
     }
 
@@ -157,9 +142,7 @@ public class GenePool implements EvolutionEngine {
     public void printScores() {
         for (Species species : speciesList) {
             System.out.println(species.name);
-            for (Genotype genotype : species.genotypes) {
-                System.out.print(genotype.name + ": " + genotype.score + ", ");
-            }
+            species.genotypes.forEach(genotype -> System.out.print(genotype.name + ": " + genotype.score + ", "));
         }
         System.out.println();
     }
@@ -167,8 +150,8 @@ public class GenePool implements EvolutionEngine {
 
     public void printSpecies() {
         System.out.print("Species: ");
-        for (Species species : speciesList){
-            System.out.printf("\"%d\": %.4f, size: %d, age: %d | ", species.name, species.average, species.size, species.age);
+        for (Species species : speciesList) {
+            System.out.printf("\"%d\": %.4f, size: %d, age: %d | ", species.name, species.average, species.getSize(), species.age);
         }
         System.out.println();
     }
@@ -232,6 +215,7 @@ public class GenePool implements EvolutionEngine {
         private double speciesReduction = 0.1;
         private int speciesMinimalReduction = 2;
         private int protectedAge = 15;
+        private int frequencyOfSpeciation = 10;
         private int networksGenerated = 0;
         private int speciesNames = 0;
 
@@ -314,6 +298,11 @@ public class GenePool implements EvolutionEngine {
             return this;
         }
 
+        public GenePoolBuilder setFrequencyOfSpeciation(int frequencyOfSpeciation) {
+            this.frequencyOfSpeciation = frequencyOfSpeciation;
+            return this;
+        }
+
         public GenePoolBuilder setNetworksGenerated(int networksGenerated) {
             this.networksGenerated = networksGenerated;
             return this;
@@ -339,6 +328,7 @@ public class GenePool implements EvolutionEngine {
             genePool.protectedAge = protectedAge;
             genePool.networksGenerated = networksGenerated;
             genePool.speciesNames = speciesNames;
+            genePool.frequencyOfSpeciation = frequencyOfSpeciation;
 
             genePool.speciesList = new ArrayList<>();
 

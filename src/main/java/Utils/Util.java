@@ -3,6 +3,7 @@ package Utils;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 public class Util {
@@ -120,4 +121,12 @@ public class Util {
         }
         return result;
     }
+
+    /**
+     * Repeats given function n times.
+     */
+    public static BiConsumer<Integer, Runnable> repeat = (n, function) -> {
+        for (int i = 1; i <= n; i++)
+            function.run();
+    };
 }

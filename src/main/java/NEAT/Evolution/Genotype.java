@@ -134,6 +134,10 @@ public class Genotype implements Comparable<Genotype> {
         return connectionGenes.get(Util.randomInt(0, connectionGenes.size()));
     }
 
+    public int getScore() {
+        return score;
+    }
+
     /**
      * Creates deep copy of {@link Genotype}. Only {@link ConnectionGene}s are deep copied other variables are referenced
      * as they don't change.
@@ -150,9 +154,7 @@ public class Genotype implements Comparable<Genotype> {
     }
 
     public void printConnections() {
-        for (ConnectionGene connection : connectionGenes) {
-            System.out.println(connection.from.name + " -> " + connection.to.name);
-        }
+        connectionGenes.forEach((connectionGene -> System.out.println(connectionGene.from.name + " -> " + connectionGene.to.name)));
     }
 
     @Override
