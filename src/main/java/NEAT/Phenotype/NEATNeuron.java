@@ -36,4 +36,14 @@ public class NEATNeuron {
     double getOutput(Function<Double, Double> activationFunction) {
         return activationFunction.apply(bias + innerPotential);
     }
+
+    @Override
+    public String toString() {
+        return "NEATNeuron{" +
+                "innerPotential=" + innerPotential +
+                ", bias=" + bias +
+                ", name=" + name +
+                ", neuronType=" + neuronType +
+                '}';
+    }
 }

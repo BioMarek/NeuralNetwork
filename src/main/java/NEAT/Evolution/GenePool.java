@@ -18,7 +18,7 @@ public class GenePool implements EvolutionEngine {
     private int totalNumOfGenotypes;
     private int inputs;
     private int outputs;
-    private int neuronNames = 0;
+    protected int neuronNames = 0;
     private Function<Double, Double> hiddenLayerActivationFunc;
     private Function<Double, Double> outputLayerActivationFunc;
     private final Set<Integer> nodeGenes = new HashSet<>();
@@ -151,7 +151,7 @@ public class GenePool implements EvolutionEngine {
     public void printSpecies() {
         System.out.print("Species: ");
         for (Species species : speciesList) {
-            System.out.printf("\"%d\": %.4f, size: %d, age: %d | ", species.name, species.average, species.getSize(), species.age);
+            System.out.printf("\"%d\": %.4f, size: %d, age: %d | ", species.name, species.average / numOfTrials, species.getSize(), species.age);
         }
         System.out.println();
     }
@@ -298,8 +298,8 @@ public class GenePool implements EvolutionEngine {
             return this;
         }
 
-        public GenePoolBuilder setFrequencyOfSpeciation(int frequencyOfSpeciation) {
-            this.frequencyOfSpeciation = frequencyOfSpeciation;
+        public GenePoolBuilder setAgeToMakeNewSpecies(int ageToMakeNewSpecies) {
+            this.frequencyOfSpeciation = ageToMakeNewSpecies;
             return this;
         }
 
@@ -333,6 +333,7 @@ public class GenePool implements EvolutionEngine {
             genePool.speciesList = new ArrayList<>();
 
             Genotype genotype = initGenotype(genePool);
+//            Genotype genotype = Genotype.referenceGenotype(genePool, hiddenLayerActivationFunc, outputLayerActivationFunc);
             List<Genotype> genotypes = new ArrayList<>();
             for (int i = 0; i < totalNumOfGenotypes; i++) {
                 genotypes.add(genotype.copy());

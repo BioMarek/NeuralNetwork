@@ -1,5 +1,6 @@
 package NEAT.Evolution;
 
+import BasicNeuralNetwork.NeuralNetwork.BasicNeuralNetwork;
 import NEAT.NeuronType;
 import NEAT.Phenotype.Connection;
 import NEAT.Phenotype.NEATNeuron;
@@ -162,5 +163,55 @@ public class Genotype implements Comparable<Genotype> {
         if (this.score == genotype.score)
             return 0;
         return this.score < genotype.score ? -1 : 1;
+    }
+
+    /**
+     * The function returns genotype which has reasonable performance in {@link BasicNeuralNetwork}, it is used as benchmark
+     * against networks produced by {@link GenePool}.
+     *
+     * @return {@link Genotype} with same topology that proved to be reasonably good
+     */
+    public static Genotype referenceGenotype(GenePool genePool, Function<Double, Double> hiddenLayerActivationFunc,
+                                             Function<Double, Double> outputLayerActivationFunc) {
+        List<NodeGene> inputNodes = new ArrayList<>();
+        List<NodeGene> hiddenNodes = new ArrayList<>();
+        List<NodeGene> outputNodes = new ArrayList<>();
+        List<ConnectionGene> referenceConnectionGenes = new ArrayList<>();
+        int maxNeurons = 1000;
+
+        for (int i = 0; i < 8; i++) {
+            NodeGene nodeGene = new NodeGene(NeuronType.INPUT, genePool.neuronNames++);
+            inputNodes.add(nodeGene);
+        }
+        for (int i = 0; i < 8; i++) {
+            NodeGene nodeGene = new NodeGene(NeuronType.HIDDEN, genePool.neuronNames++);
+            hiddenNodes.add(nodeGene);
+        }
+        for (int i = 0; i < 4; i++) {
+            NodeGene nodeGene = new NodeGene(NeuronType.OUTPUT, maxNeurons--);
+            outputNodes.add(nodeGene);
+        }
+        for (NodeGene input : inputNodes) {
+            for (NodeGene output : hiddenNodes) {
+                genePool.putConnectionGeneIntoGenePool(input.name, output.name);
+                referenceConnectionGenes.add(new ConnectionGene(input, output, Util.randomDouble(), true));
+            }
+        }
+        for (NodeGene input : hiddenNodes) {
+            for (NodeGene output : outputNodes) {
+                genePool.putConnectionGeneIntoGenePool(input.name, output.name);
+                referenceConnectionGenes.add(new ConnectionGene(input, output, Util.randomDouble(), true));
+            }
+        }
+
+        inputNodes.addAll(hiddenNodes);
+        inputNodes.addAll(outputNodes);
+
+        Collections.sort(inputNodes);
+        Collections.sort(referenceConnectionGenes);
+        Genotype genotype = new Genotype(genePool, inputNodes, referenceConnectionGenes, hiddenLayerActivationFunc, outputLayerActivationFunc);
+        genotype.name = Integer.toString(-1);
+
+        return genotype;
     }
 }

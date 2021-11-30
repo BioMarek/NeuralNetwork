@@ -6,7 +6,7 @@ import NEAT.Evolution.GenePool;
 import Utils.Util;
 
 public class Main {
-    private static final int NUM_OF_GENERATIONS = 100;
+    private static final int NUM_OF_GENERATIONS = 2000;
 
     public static void main(String[] args) {
         setupNeatNeuralNetwork();
@@ -14,6 +14,7 @@ public class Main {
 
     public static void setupNeatNeuralNetwork() {
         GenePool genePool = new GenePool.GenePoolBuilder(8, 4, Util.activationFunctionUnitStep(), new SnakeGame(20))
+                .setTotalNumOfGenotypes(100)
                 .setChanceToMutateWeight(1)
                 .setChanceToHardMutateWight(1)
                 .setChanceToAddNode(0.01)
@@ -42,7 +43,7 @@ public class Main {
         long start = System.currentTimeMillis();
         evolutionEngine.calculateEvolution(NUM_OF_GENERATIONS);
         long stop = System.currentTimeMillis();
-        System.out.println("It took: " + (stop - start) + "ms");
+        System.out.println("It took: " + (stop - start) / 1000 + "s");
 
         SnakeGame snakeGame = new SnakeGame(20);
         BasicNeuralNetwork neuralNetwork = evolutionEngine.getNeuralNetwork(0);

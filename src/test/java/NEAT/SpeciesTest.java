@@ -2,13 +2,18 @@ package NEAT;
 
 import Games.Snake.SnakeGame;
 import NEAT.Evolution.GenePool;
+import NEAT.Evolution.Genotype;
 import NEAT.Evolution.Species;
 import Utils.Util;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 
 public class SpeciesTest {
     private final GenePool.GenePoolBuilder genePoolBuilder = new GenePool.GenePoolBuilder(2, 2, Util.activationFunctionIdentity(), new SnakeGame(20));
@@ -17,47 +22,70 @@ public class SpeciesTest {
 
     @BeforeEach
     void init() {
-        genePool = genePoolBuilder.build();
+        genePool = genePoolBuilder
+                .setTotalNumOfGenotypes(100)
+                .setChanceToMutateWeight(1)
+                .setChanceToHardMutateWight(1)
+                .setChanceToAddNode(0)
+                .setNetworksToKeep(0.3)
+                .build();
         species = genePool.getSpecies().get(0);
     }
 
     @Test
-    void getAverage_returnsCorrectValues() {
-        species.size = 2;
-        species.genotypes.get(0).score = 10;
+    void calculateAverage_returnsCorrectValues() {
+        species.genotypes.get(0).score = 100;
         species.calculateAverage();
-        assertThat(species.average, is(5.0));
+        assertThat(species.average, is(1.0));
     }
 
     @Test
     void reduceSizeBy_returnsCorrectValues() {
         genePool.speciesReduction = 0.3;
         int reduction = species.reduceSize();
-        assertThat(species.size, is(70));
+        assertThat(species.genotypes.size(), is(70));
         assertThat(reduction, is(30));
 
         genePool.speciesReduction = 0.9;
-        species.size = 90;
         reduction = species.reduceSize();
-        assertThat(species.size, is(9));
-        assertThat(reduction, is(81));
+        assertThat(species.genotypes.size(), is(7));
+        assertThat(reduction, is(63));
 
         genePool.speciesReduction = 0.1;
-        species.size = 15;
         reduction = species.reduceSize();
-        assertThat(species.size, is(14));
-        assertThat(reduction, is(1));
-
-        genePool.speciesReduction = 0.1;
-        species.size = 29;
-        reduction = species.reduceSize();
-        assertThat(species.size, is(27));
+        assertThat(species.genotypes.size(), is(5));
         assertThat(reduction, is(2));
 
         genePool.speciesReduction = 0.1;
-        species.size = 71;
         reduction = species.reduceSize();
-        assertThat(species.size, is(64));
-        assertThat(reduction, is(7));
+        assertThat(species.genotypes.size(), is(3));
+        assertThat(reduction, is(2));
+    }
+
+    @Test
+    void increaseSize_sizeIsIncreasedCorrectly() {
+        species.increaseSize(20);
+        assertThat(species.genotypes.size(), is(120));
+    }
+
+    @Test
+    void mutateSpecies_mutatesSpeciesCorrectly() {
+        List<Genotype> oldGenotypes = new ArrayList<>();
+        for (Genotype genotype : species.genotypes)
+            oldGenotypes.add(genotype.copy());
+        species.mutateSpecies();
+
+        assertThat(species.genotypes.get(0).connectionGenes, is(oldGenotypes.get(0).connectionGenes));
+        assertThat(species.genotypes.get(0).nodeGenes, is(oldGenotypes.get(0).nodeGenes));
+        assertThat(species.genotypes.get(29).connectionGenes, is(oldGenotypes.get(29).connectionGenes));
+        assertThat(species.genotypes.get(29).nodeGenes, is(oldGenotypes.get(29).nodeGenes));
+        assertThat(species.genotypes.get(30).connectionGenes, is(not(oldGenotypes.get(30).connectionGenes)));
+        assertThat(species.genotypes.get(30).nodeGenes, is(oldGenotypes.get(30).nodeGenes));
+    }
+
+    @Test
+    void increaseAge_addsOne() {
+        species.increaseAge();
+        assertThat(species.age, is(1));
     }
 }
