@@ -21,6 +21,7 @@ public class BasicNeuralNetwork implements Comparable<BasicNeuralNetwork>, Seria
     public Function<Double, Double> outputLayerActivationFunc;
     public int score = 0;
     public String name = "0";
+    public int age = 0;
 
     /**
      * @param sizes                     Array of sizes, first number is number of {@link BasicNeuralNetwork} inputs.

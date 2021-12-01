@@ -3,6 +3,7 @@ package NEAT;
 import Games.Snake.SnakeGame;
 import NEAT.Evolution.GenePool;
 import NEAT.Evolution.Genotype;
+import NEAT.Phenotype.Connection;
 import NEAT.Phenotype.Phenotype;
 import Utils.Util;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,7 +20,9 @@ public class PhenotypeTest {
 
     @BeforeEach
     void init() {
-        genePool = genePoolBuilder.build();
+        genePool = genePoolBuilder
+                .setOutputLayerActivationFunc(Util.activationFunctionIdentity())
+                .build();
         genotype = genePool.getSpecies().get(0).genotypes.get(0);
         phenotype = genotype.createPhenotype();
     }
@@ -31,12 +34,11 @@ public class PhenotypeTest {
         phenotype.connections.get(2).weight = 1;
         phenotype.connections.get(3).weight = 1;
 
+        phenotype.reset();
         assertThat(phenotype.getNetworkOutput(new double[]{1, 0}), is(new double[]{1.0, 1.0}));
-        phenotype.outputNeurons.get(0).innerPotential = 0;
-        phenotype.outputNeurons.get(1).innerPotential = 0;
+        phenotype.reset();
         assertThat(phenotype.getNetworkOutput(new double[]{1, 1}), is(new double[]{2.0, 2.0}));
-        phenotype.outputNeurons.get(0).innerPotential = 0;
-        phenotype.outputNeurons.get(1).innerPotential = 0;
+        phenotype.reset();
         assertThat(phenotype.getNetworkOutput(new double[]{0, 0}), is(new double[]{0.0, 0.0}));
     }
 
@@ -48,11 +50,9 @@ public class PhenotypeTest {
         phenotype.connections.get(3).weight = 0;
 
         assertThat(phenotype.getNetworkOutput(new double[]{1, 0}), is(new double[]{1.0, 1.0}));
-        phenotype.outputNeurons.get(0).innerPotential = 0;
-        phenotype.outputNeurons.get(1).innerPotential = 0;
+        phenotype.reset();
         assertThat(phenotype.getNetworkOutput(new double[]{1, 1}), is(new double[]{1.0, 1.0}));
-        phenotype.outputNeurons.get(0).innerPotential = 0;
-        phenotype.outputNeurons.get(1).innerPotential = 0;
+        phenotype.reset();
         assertThat(phenotype.getNetworkOutput(new double[]{0, 0}), is(new double[]{0.0, 0.0}));
     }
 
@@ -64,11 +64,25 @@ public class PhenotypeTest {
         phenotype.connections.get(3).weight = 0;
 
         assertThat(phenotype.getNetworkOutput(new double[]{1, 0}), is(new double[]{0.0, 0.0}));
-        phenotype.outputNeurons.get(0).innerPotential = 0;
-        phenotype.outputNeurons.get(1).innerPotential = 0;
+        phenotype.reset();
         assertThat(phenotype.getNetworkOutput(new double[]{1, 1}), is(new double[]{0.0, 0.0}));
-        phenotype.outputNeurons.get(0).innerPotential = 0;
-        phenotype.outputNeurons.get(1).innerPotential = 0;
+        phenotype.reset();
         assertThat(phenotype.getNetworkOutput(new double[]{0, 0}), is(new double[]{0.0, 0.0}));
+    }
+
+    @Test
+    void referenceGenotype_createsCorrectPhenotype() {
+        Genotype genotype = Genotype.referenceGenotype(genePool, Util.activationFunctionIdentity(), Util.activationFunctionIdentity());
+        Phenotype phenotype = genotype.createPhenotype();
+        assertThat(phenotype.connections.size(), is(96));
+        assertThat(phenotype.inputNeurons.size(), is(8));
+        assertThat(phenotype.hiddenNeurons.size(), is(8));
+        assertThat(phenotype.outputNeurons.size(), is(4));
+
+        for (Connection connection : phenotype.connections) {
+            connection.weight = 1;
+        }
+
+        assertThat(phenotype.getNetworkOutput(new double[]{1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0}), is(new double[]{64.0, 64.0, 64.0, 64.0}));
     }
 }

@@ -19,8 +19,8 @@ public class GenePool implements EvolutionEngine {
     private int inputs;
     private int outputs;
     protected int neuronNames = 0;
-    private Function<Double, Double> hiddenLayerActivationFunc;
-    private Function<Double, Double> outputLayerActivationFunc;
+    public Function<Double, Double> hiddenLayerActivationFunc;
+    public Function<Double, Double> outputLayerActivationFunc;
     private final Set<Integer> nodeGenes = new HashSet<>();
     private final Set<Pair<Integer>> connections = new HashSet<>();
     private List<Species> speciesList = new ArrayList<>();
@@ -52,6 +52,8 @@ public class GenePool implements EvolutionEngine {
             resizeSpecies();
             removeDeadSpecies();
             printSpecies();
+//            speciesList.get(0).genotypes.get(0).printConnections();
+//            speciesList.get(0).genotypes.get(0).createPhenotype().printNetwork();
             System.out.println("------------------------------------------------------------------------------------");
         }
     }
@@ -142,7 +144,7 @@ public class GenePool implements EvolutionEngine {
     public void printScores() {
         for (Species species : speciesList) {
             System.out.println(species.name);
-            species.genotypes.forEach(genotype -> System.out.print(genotype.name + ": " + genotype.score + ", "));
+            species.genotypes.forEach(genotype -> System.out.print(genotype.name + " " + genotype.age + ": " + genotype.score + ", "));
         }
         System.out.println();
     }
@@ -372,7 +374,7 @@ public class GenePool implements EvolutionEngine {
 
             Collections.sort(inputNodes);
             Collections.sort(connectionGenes);
-            Genotype genotype = new Genotype(genePool, inputNodes, connectionGenes, hiddenLayerActivationFunc, outputLayerActivationFunc);
+            Genotype genotype = new Genotype(genePool, inputNodes, connectionGenes);
             genotype.name = Integer.toString(networksGenerated++);
             return genotype;
         }

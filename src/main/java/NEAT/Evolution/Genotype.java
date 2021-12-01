@@ -15,21 +15,14 @@ public class Genotype implements Comparable<Genotype> {
     public final GenePool genePool;
     public List<ConnectionGene> connectionGenes;
     public List<NodeGene> nodeGenes;
-    public Function<Double, Double> hiddenLayerActivationFunc;
-    public Function<Double, Double> outputLayerActivationFunc;
     public int score = 0;
     public String name = "0";
+    int age = 0;
 
-    public Genotype(GenePool genePool,
-                    List<NodeGene> nodeGenes,
-                    List<ConnectionGene> connectionGenes,
-                    Function<Double, Double> hiddenLayerActivationFunc,
-                    Function<Double, Double> outputLayerActivationFunc) {
+    public Genotype(GenePool genePool, List<NodeGene> nodeGenes, List<ConnectionGene> connectionGenes) {
         this.genePool = genePool;
         this.connectionGenes = connectionGenes;
         this.nodeGenes = nodeGenes;
-        this.hiddenLayerActivationFunc = hiddenLayerActivationFunc;
-        this.outputLayerActivationFunc = outputLayerActivationFunc;
     }
 
     /**
@@ -46,7 +39,7 @@ public class Genotype implements Comparable<Genotype> {
                 neurons.get(connectionGene.from.name),
                 neurons.get(connectionGene.to.name),
                 connectionGene.weight)));
-        return new Phenotype(new ArrayList<>(neurons.values()), connections, hiddenLayerActivationFunc, outputLayerActivationFunc);
+        return new Phenotype(genePool, new ArrayList<>(neurons.values()), connections);
     }
 
     /**
@@ -115,9 +108,11 @@ public class Genotype implements Comparable<Genotype> {
      * @param connectionGene of which weight should be changed
      */
     public void mutateWeight(ConnectionGene connectionGene) {
-        if (Util.randomChance(genePool.chanceToHardMutateWight))
+        if (Util.randomChance(genePool.chanceToHardMutateWight)) {
+//            System.out.print(connectionGene.from.name + " -> " + connectionGene.to.name + " old weight: " + connectionGene.weight);
             connectionGene.weight = Util.randomDouble();
-        else {
+//            System.out.println(" new weight " + connectionGene.weight);
+        } else {
             connectionGene.weight += Util.randomDouble() * 0.2;
             if (connectionGene.weight > 1.0)
                 connectionGene.weight = 1.0;
@@ -148,14 +143,15 @@ public class Genotype implements Comparable<Genotype> {
     public Genotype copy() {
         List<ConnectionGene> connectionGenesCopy = new ArrayList<>();
         connectionGenes.forEach(connectionGene -> connectionGenesCopy.add(connectionGene.copy()));
-        Genotype genotype = new Genotype(genePool, nodeGenes, connectionGenesCopy, hiddenLayerActivationFunc, outputLayerActivationFunc);
+        Genotype genotype = new Genotype(genePool, nodeGenes, connectionGenesCopy);
         genotype.score = this.score;
         genotype.name = Integer.toString(genePool.networksGenerated++);
+        genotype.age = 0;
         return genotype;
     }
 
     public void printConnections() {
-        connectionGenes.forEach((connectionGene -> System.out.println(connectionGene.from.name + " -> " + connectionGene.to.name)));
+        connectionGenes.forEach((connectionGene -> System.out.printf("%-3d -> %-4d %7.4f%n", connectionGene.from.name, connectionGene.to.name, connectionGene.weight)));
     }
 
     @Override
@@ -209,7 +205,7 @@ public class Genotype implements Comparable<Genotype> {
 
         Collections.sort(inputNodes);
         Collections.sort(referenceConnectionGenes);
-        Genotype genotype = new Genotype(genePool, inputNodes, referenceConnectionGenes, hiddenLayerActivationFunc, outputLayerActivationFunc);
+        Genotype genotype = new Genotype(genePool, inputNodes, referenceConnectionGenes);
         genotype.name = Integer.toString(-1);
 
         return genotype;

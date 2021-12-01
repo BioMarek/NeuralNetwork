@@ -4,6 +4,7 @@ import Games.Snake.SnakeGame;
 import NEAT.Evolution.ConnectionGene;
 import NEAT.Evolution.GenePool;
 import NEAT.Evolution.Genotype;
+import NEAT.Phenotype.Connection;
 import NEAT.Phenotype.Phenotype;
 import Utils.Util;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,7 +18,7 @@ import static org.hamcrest.Matchers.is;
 public class GenotypeTest {
     private final static double[] INPUT = new double[]{1.0, 1.0};
 
-    private final GenePool.GenePoolBuilder genePoolBuilder = new GenePool.GenePoolBuilder(2, 2, Util.activationFunctionIdentity(), new SnakeGame(20));
+    private GenePool.GenePoolBuilder genePoolBuilder = new GenePool.GenePoolBuilder(2, 2, Util.activationFunctionIdentity(), new SnakeGame(20));
     protected GenePool genePool;
     private Genotype genotype;
 
@@ -72,8 +73,15 @@ public class GenotypeTest {
             assertThat(copyConnectionGenes.get(i), is(genotypeConnectionGenes.get(i)));
         }
         assertThat(copy.nodeGenes, is(genotype.nodeGenes));
-        assertThat(copy.hiddenLayerActivationFunc, is(genotype.hiddenLayerActivationFunc));
-        assertThat(copy.outputLayerActivationFunc, is(genotype.outputLayerActivationFunc));
         assertThat(copy.score, is(genotype.score));
+    }
+
+    @Test
+    void referenceGenotype_providesCorrectGenotype() {
+        Genotype genotype = Genotype.referenceGenotype(genePool, Util.activationFunctionIdentity(), Util.activationFunctionIdentity());
+        assertThat(genotype.connectionGenes.size(), is(96));
+        assertThat((int) genotype.nodeGenes.stream().filter(nodeGene -> nodeGene.type == NeuronType.INPUT).count(), is(8));
+        assertThat((int) genotype.nodeGenes.stream().filter(nodeGene -> nodeGene.type == NeuronType.HIDDEN).count(), is(8));
+        assertThat((int) genotype.nodeGenes.stream().filter(nodeGene -> nodeGene.type == NeuronType.OUTPUT).count(), is(4));
     }
 }

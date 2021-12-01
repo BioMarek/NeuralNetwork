@@ -23,8 +23,9 @@ public class Species implements Comparable<Species> {
 
     public void calculateScores() {
         for (Genotype genotype : genotypes) {
+            Phenotype phenotype = genotype.createPhenotype();
             for (int i = 0; i < genePool.numOfTrials; i++) {
-                Phenotype phenotype = genotype.createPhenotype();
+                phenotype.reset();
                 genePool.game.reset();
                 genotype.score += genePool.game.play(phenotype, genePool.maxNumberOfMoves);
             }
@@ -72,11 +73,11 @@ public class Species implements Comparable<Species> {
 
     public void mutateSpecies() {
         List<Genotype> genotypesNewGeneration = new ArrayList<>();
-        System.out.println("genotypes: " + genotypes.size());
+        int limit = (int) Math.round(genotypes.size() * genePool.networksToKeep);
         for (int i = 0; i < genotypes.size(); i++) {
             // copies
-            int limit = (int) Math.round(genotypes.size() * genePool.networksToKeep);
             if (i < limit) {
+                genotypes.get(i).age++;
                 genotypesNewGeneration.add(genotypes.get(i));
             }
             // copies with one mutation

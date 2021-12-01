@@ -9,7 +9,6 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -18,24 +17,27 @@ import java.util.stream.Collectors;
 @EqualsAndHashCode
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Phenotype implements NeuralNetwork {
+    public GenePool genePool;
     public List<NEATNeuron> inputNeurons;
     public List<NEATNeuron> hiddenNeurons;
     public List<NEATNeuron> outputNeurons;
     public List<Connection> connections;
-    public Function<Double, Double> hiddenLayerActivationFunc;
-    public Function<Double, Double> outputLayerActivationFunc;
-    public int score = 0;
 
-    public Phenotype(List<NEATNeuron> neurons,
-                     List<Connection> connections,
-                     Function<Double, Double> hiddenLayerActivationFunc,
-                     Function<Double, Double> outputLayerActivationFunc) {
+    public Phenotype(GenePool genePool, List<NEATNeuron> neurons, List<Connection> connections) {
+        this.genePool = genePool;
         this.inputNeurons = neurons.stream().filter(neatNeuron -> neatNeuron.neuronType == NeuronType.INPUT).collect(Collectors.toList());
         this.hiddenNeurons = neurons.stream().filter(neatNeuron -> neatNeuron.neuronType == NeuronType.HIDDEN).collect(Collectors.toList());
         this.outputNeurons = neurons.stream().filter(neatNeuron -> neatNeuron.neuronType == NeuronType.OUTPUT).collect(Collectors.toList());
         this.connections = connections;
-        this.hiddenLayerActivationFunc = hiddenLayerActivationFunc;
-        this.outputLayerActivationFunc = outputLayerActivationFunc;
+    }
+
+    /**
+     * Resets inner potentials of all neurons.
+     */
+    public void reset() {
+        inputNeurons.forEach(NEATNeuron::reset);
+        hiddenNeurons.forEach(NEATNeuron::reset);
+        outputNeurons.forEach(NEATNeuron::reset);
     }
 
     /**
@@ -48,18 +50,18 @@ public class Phenotype implements NeuralNetwork {
     @Override
     public double[] getNetworkOutput(double[] inputs) {
         for (int i = 0; i < inputs.length; i++) {
-            inputNeurons.get(i).bias = inputs[i];
+            inputNeurons.get(i).innerPotential = inputs[i];
         }
         for (Connection connection : connections) {
             if (connection.from.neuronType == NeuronType.INPUT) {
                 connection.to.innerPotential += connection.from.getOutput(Util.activationFunctionIdentity()) * connection.weight;
             } else
-                connection.to.innerPotential += connection.from.getOutput(hiddenLayerActivationFunc) * connection.weight;
+                connection.to.innerPotential += connection.from.getOutput(genePool.hiddenLayerActivationFunc) * connection.weight;
         }
 
         return Util.primitiveDoubleArrayFromList(
                 outputNeurons.stream()
-                        .map(neatNeuron -> neatNeuron.getOutput(outputLayerActivationFunc))
+                        .map(neatNeuron -> neatNeuron.getOutput(genePool.outputLayerActivationFunc))
                         .collect(Collectors.toList()));
     }
 
@@ -68,8 +70,6 @@ public class Phenotype implements NeuralNetwork {
      */
     @Override
     public void printNetwork() {
-        for (Connection connection : connections) {
-            System.out.println(connection.from.name + " -> " + connection.to.name + ": " + connection.weight);
-        }
+        connections.forEach((connectionGene -> System.out.printf("%-3d -> %-4d %7.4f%n", connectionGene.from.name, connectionGene.to.name, connectionGene.weight)));
     }
 }

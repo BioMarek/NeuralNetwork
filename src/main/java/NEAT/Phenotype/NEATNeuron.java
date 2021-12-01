@@ -37,6 +37,10 @@ public class NEATNeuron {
         return activationFunction.apply(bias + innerPotential);
     }
 
+    public void reset() {
+        innerPotential = 0;
+    }
+
     @Override
     public String toString() {
         return "NEATNeuron{" +

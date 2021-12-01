@@ -23,7 +23,7 @@ public class BasicNeuron implements Serializable {
     public BasicNeuron(int numOfNeuronInPrevLayer) {
         weights = Util.randomDoubleArray(numOfNeuronInPrevLayer);
         innerPotential = Util.randomDouble();
-        bias = Util.randomDouble();
+        bias = 0;
     }
 
     /**

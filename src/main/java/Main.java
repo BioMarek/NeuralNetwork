@@ -6,7 +6,7 @@ import NEAT.Evolution.GenePool;
 import Utils.Util;
 
 public class Main {
-    private static final int NUM_OF_GENERATIONS = 2000;
+    private static final int NUM_OF_GENERATIONS = 1000;
 
     public static void main(String[] args) {
         setupNeatNeuralNetwork();
@@ -19,6 +19,8 @@ public class Main {
                 .setChanceToHardMutateWight(1)
                 .setChanceToAddNode(0.01)
                 .setNumOfTrials(10)
+                .setNetworksToKeep(0.4)
+                .setOutputLayerActivationFunc(Util.activationFunctionIdentity())
                 .build();
 
         long start = System.currentTimeMillis();

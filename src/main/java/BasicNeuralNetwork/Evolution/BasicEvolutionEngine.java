@@ -54,6 +54,7 @@ public class BasicEvolutionEngine implements EvolutionEngine {
         List<BasicNeuralNetwork> neuralNetworksNewGeneration = new ArrayList<>();
         for (int i = 0; i < totalNumOfNetworks; i++) {
             if (i < networksToKeep) {
+                neuralNetworks.get(i).age++;
                 neuralNetworksNewGeneration.add(neuralNetworks.get(i));
             }
             if (i >= networksToKeep && i < (networksToMutate + networksToKeep)) {
@@ -81,7 +82,7 @@ public class BasicEvolutionEngine implements EvolutionEngine {
     @Override
     public void printScores() {
         for (BasicNeuralNetwork neuralNetwork : neuralNetworks) {
-            System.out.print(neuralNetwork.name + ": " + neuralNetwork.score + ", ");
+            System.out.print(neuralNetwork.name + " " + neuralNetwork.age + ": " + neuralNetwork.score * 1.0 / numOfTrials  + ", ");
         }
         System.out.println();
     }
@@ -147,7 +148,7 @@ public class BasicEvolutionEngine implements EvolutionEngine {
         }
 
         public EvolutionEngineBuilder setNumOfTrials(int numOfTrials) {
-            this.numOfMutations = numOfTrials;
+            this.numOfTrials = numOfTrials;
             return this;
         }
 
