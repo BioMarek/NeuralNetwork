@@ -25,7 +25,6 @@ public class Species implements Comparable<Species> {
         for (Genotype genotype : genotypes) {
             Phenotype phenotype = genotype.createPhenotype();
             for (int i = 0; i < genePool.numOfTrials; i++) {
-                phenotype.reset();
                 genePool.game.reset();
                 genotype.score += genePool.game.play(phenotype, genePool.maxNumberOfMoves);
             }

@@ -72,7 +72,7 @@ public class PhenotypeTest {
 
     @Test
     void referenceGenotype_createsCorrectPhenotype() {
-        Genotype genotype = Genotype.referenceGenotype(genePool, Util.activationFunctionIdentity(), Util.activationFunctionIdentity());
+        Genotype genotype = Genotype.referenceGenotype(genePool);
         Phenotype phenotype = genotype.createPhenotype();
         assertThat(phenotype.connections.size(), is(96));
         assertThat(phenotype.inputNeurons.size(), is(8));

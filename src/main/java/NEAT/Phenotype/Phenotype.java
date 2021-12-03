@@ -49,14 +49,12 @@ public class Phenotype implements NeuralNetwork {
      */
     @Override
     public double[] getNetworkOutput(double[] inputs) {
+        reset();
         for (int i = 0; i < inputs.length; i++) {
             inputNeurons.get(i).innerPotential = inputs[i];
         }
         for (Connection connection : connections) {
-            if (connection.from.neuronType == NeuronType.INPUT) {
-                connection.to.innerPotential += connection.from.getOutput(Util.activationFunctionIdentity()) * connection.weight;
-            } else
-                connection.to.innerPotential += connection.from.getOutput(genePool.hiddenLayerActivationFunc) * connection.weight;
+            connection.to.innerPotential += connection.from.getOutput(genePool.hiddenLayerActivationFunc) * connection.weight;
         }
 
         return Util.primitiveDoubleArrayFromList(

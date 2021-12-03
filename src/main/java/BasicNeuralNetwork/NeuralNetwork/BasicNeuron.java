@@ -16,13 +16,11 @@ import java.util.function.Function;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class BasicNeuron implements Serializable {
     public double[] weights;
-    public double innerPotential;
     public double bias;
 
 
     public BasicNeuron(int numOfNeuronInPrevLayer) {
         weights = Util.randomDoubleArray(numOfNeuronInPrevLayer);
-        innerPotential = Util.randomDouble();
         bias = 0;
     }
 
@@ -32,7 +30,6 @@ public class BasicNeuron implements Serializable {
     public BasicNeuron copy() {
         BasicNeuron basicNeuron = new BasicNeuron();
         basicNeuron.weights = Arrays.copyOf(this.weights, this.weights.length);
-        basicNeuron.innerPotential = this.innerPotential;
         basicNeuron.bias = this.bias;
 
         return basicNeuron;

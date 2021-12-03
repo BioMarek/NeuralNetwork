@@ -58,7 +58,7 @@ public class BasicEvolutionEngine implements EvolutionEngine {
                 neuralNetworksNewGeneration.add(neuralNetworks.get(i));
             }
             if (i >= networksToKeep && i < (networksToMutate + networksToKeep)) {
-                BasicNeuralNetwork neuralNetwork = neuralNetworks.get(i - networksToMutate).copy();
+                BasicNeuralNetwork neuralNetwork = neuralNetworks.get(i - networksToMutate).copy(); // TODO i - networksToKeep?
                 neuralNetwork.mutateLayers(numOfNeuronsToMutate, numOfMutations);
                 neuralNetwork.name = Integer.toString(networksGenerated++);
                 neuralNetworksNewGeneration.add(neuralNetwork);

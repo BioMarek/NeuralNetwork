@@ -41,6 +41,6 @@ public class ConnectionGene implements Comparable<ConnectionGene> {
     }
 
     public void printConnectionGene() {
-        System.out.println(from.name + " -> " + to.name);
+        System.out.printf("%-3d -> %-4d %7.4f%n", from.name, to.name, weight);
     }
 }

@@ -4,7 +4,6 @@ import Games.Snake.SnakeGame;
 import NEAT.Evolution.ConnectionGene;
 import NEAT.Evolution.GenePool;
 import NEAT.Evolution.Genotype;
-import NEAT.Phenotype.Connection;
 import NEAT.Phenotype.Phenotype;
 import Utils.Util;
 import org.junit.jupiter.api.BeforeEach;
@@ -78,7 +77,7 @@ public class GenotypeTest {
 
     @Test
     void referenceGenotype_providesCorrectGenotype() {
-        Genotype genotype = Genotype.referenceGenotype(genePool, Util.activationFunctionIdentity(), Util.activationFunctionIdentity());
+        Genotype genotype = Genotype.referenceGenotype(genePool);
         assertThat(genotype.connectionGenes.size(), is(96));
         assertThat((int) genotype.nodeGenes.stream().filter(nodeGene -> nodeGene.type == NeuronType.INPUT).count(), is(8));
         assertThat((int) genotype.nodeGenes.stream().filter(nodeGene -> nodeGene.type == NeuronType.HIDDEN).count(), is(8));

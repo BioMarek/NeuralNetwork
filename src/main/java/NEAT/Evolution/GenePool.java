@@ -6,6 +6,8 @@ import NEAT.NeuronType;
 import NEAT.Phenotype.Connection;
 import Utils.Pair;
 import Utils.Util;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 import java.util.*;
 import java.util.function.Function;
@@ -14,6 +16,7 @@ import java.util.stream.Collectors;
 /**
  * The class holds all genes of population.
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class GenePool implements EvolutionEngine {
     private int totalNumOfGenotypes;
     private int inputs;
@@ -52,8 +55,6 @@ public class GenePool implements EvolutionEngine {
             resizeSpecies();
             removeDeadSpecies();
             printSpecies();
-//            speciesList.get(0).genotypes.get(0).printConnections();
-//            speciesList.get(0).genotypes.get(0).createPhenotype().printNetwork();
             System.out.println("------------------------------------------------------------------------------------");
         }
     }
@@ -63,13 +64,16 @@ public class GenePool implements EvolutionEngine {
         for (Species species : speciesList) {
             species.calculateScores();  // rename
             species.calculateAverage();
-            species.mutateSpecies();
-            species.increaseAge();
         }
         speciesList.sort(Collections.reverseOrder());
 
         if (verbose)
             printScores();
+
+        for (Species species : speciesList) {
+            species.mutateSpecies();
+            species.increaseAge();
+        }
     }
 
     public void createSpecies() {
@@ -335,7 +339,8 @@ public class GenePool implements EvolutionEngine {
             genePool.speciesList = new ArrayList<>();
 
             Genotype genotype = initGenotype(genePool);
-//            Genotype genotype = Genotype.referenceGenotype(genePool, hiddenLayerActivationFunc, outputLayerActivationFunc);
+//            Genotype genotype = Genotype.referenceGenotype(genePool);
+//            Genotype genotype = Genotype.workingGenotype(genePool);
             List<Genotype> genotypes = new ArrayList<>();
             for (int i = 0; i < totalNumOfGenotypes; i++) {
                 genotypes.add(genotype.copy());
