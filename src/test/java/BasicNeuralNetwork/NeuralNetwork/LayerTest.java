@@ -64,14 +64,14 @@ public class LayerTest {
         layer.calculateOutput(new double[]{first, second}, Util.activationFunctionUnitStep());
         for (int i = 0; i < TEST_REPEATS; i++) {
             double result1 = (layer.basicNeurons[0].bias +
-                            first * layer.basicNeurons[0].weights[0] +
-                            second * layer.basicNeurons[0].weights[1]
-            ) >= 0.0D ? 1.0D : 0.0D;
+                    first * layer.basicNeurons[0].weights[0] +
+                    second * layer.basicNeurons[0].weights[1]
+            ) >= 0.0d ? 1.0d : 0.0d;
 
             double result2 = (layer.basicNeurons[1].bias +
-                            first * layer.basicNeurons[1].weights[0] +
-                            second * layer.basicNeurons[1].weights[1]
-            ) >= 0.0D ? 1.0D : 0.0D;
+                    first * layer.basicNeurons[1].weights[0] +
+                    second * layer.basicNeurons[1].weights[1]
+            ) >= 0.0d ? 1.0d : 0.0d;
 
             assertThat(layer.layerOutputs[0], equalTo(result1));
             assertThat(layer.layerOutputs[1], equalTo(result2));

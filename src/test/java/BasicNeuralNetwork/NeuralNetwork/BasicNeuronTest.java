@@ -25,7 +25,6 @@ public class BasicNeuronTest {
     @Test
     void copy_createsCorrectCopy() {
         assertThat(basicNeuron.bias, equalTo(copy.bias));
-        assertThat(basicNeuron.innerPotential, equalTo(copy.innerPotential));
         assertThat(basicNeuron.weights, equalTo(copy.weights));
         assertThat(basicNeuron.equals(copy), is(true));
     }
@@ -61,7 +60,7 @@ public class BasicNeuronTest {
             double result = (basicNeuron.bias +
                             first * basicNeuron.weights[0] +
                             second * basicNeuron.weights[1]
-            ) >= 0.0D ? 1.0D : 0.0D;
+            ) >= 0.0d ? 1.0d : 0.0d;
             assertThat(basicNeuron.getOutput(new double[]{first, second}, Util.activationFunctionUnitStep()), equalTo(result));
         }
     }

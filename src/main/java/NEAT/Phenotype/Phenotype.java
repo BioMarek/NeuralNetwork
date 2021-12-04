@@ -34,7 +34,7 @@ public class Phenotype implements NeuralNetwork {
     /**
      * Resets inner potentials of all neurons.
      */
-    public void reset() {
+    public void resetPhenotype() {
         inputNeurons.forEach(NEATNeuron::reset);
         hiddenNeurons.forEach(NEATNeuron::reset);
         outputNeurons.forEach(NEATNeuron::reset);
@@ -49,13 +49,12 @@ public class Phenotype implements NeuralNetwork {
      */
     @Override
     public double[] getNetworkOutput(double[] inputs) {
-        reset();
+        resetPhenotype();
+
         for (int i = 0; i < inputs.length; i++) {
             inputNeurons.get(i).innerPotential = inputs[i];
         }
-        for (Connection connection : connections) {
-            connection.to.innerPotential += connection.from.getOutput(genePool.hiddenLayerActivationFunc) * connection.weight;
-        }
+        connections.forEach(connection -> connection.to.innerPotential += connection.from.getOutput(genePool.hiddenLayerActivationFunc) * connection.weight);
 
         return Util.primitiveDoubleArrayFromList(
                 outputNeurons.stream()
@@ -64,10 +63,10 @@ public class Phenotype implements NeuralNetwork {
     }
 
     /**
-     * Prints neural network in human-readable format.
+     * Prints {@link Phenotype} neural network in human-readable format.
      */
     @Override
     public void printNetwork() {
-        connections.forEach((connectionGene -> System.out.printf("%-3d -> %-4d %7.4f%n", connectionGene.from.name, connectionGene.to.name, connectionGene.weight)));
+        connections.forEach(connectionGene -> System.out.printf("%-3d -> %-4d %7.4f%n", connectionGene.from.name, connectionGene.to.name, connectionGene.weight));
     }
 }

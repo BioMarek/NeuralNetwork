@@ -15,9 +15,9 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 public class GenotypeTest {
-    private final static double[] INPUT = new double[]{1.0, 1.0};
+    private final static double[] INPUT = new double[]{1.0d, 1.0d};
 
-    private GenePool.GenePoolBuilder genePoolBuilder = new GenePool.GenePoolBuilder(2, 2, Util.activationFunctionIdentity(), new SnakeGame(20));
+    private final GenePool.GenePoolBuilder genePoolBuilder = new GenePool.GenePoolBuilder(2, 2, Util.activationFunctionIdentity(), new SnakeGame(20));
     protected GenePool genePool;
     private Genotype genotype;
 
@@ -36,7 +36,7 @@ public class GenotypeTest {
         connections.get(2).weight = 1;
         connections.get(3).weight = 0;
 
-        assertThat(phenotype.getNetworkOutput(INPUT), is(new double[]{2.0, 0.0}));
+        assertThat(phenotype.getNetworkOutput(INPUT), is(new double[]{2.0d, 0.0d}));
     }
 
     @Test
@@ -48,7 +48,7 @@ public class GenotypeTest {
         connections.get(2).weight = 1;
         connections.get(3).weight = 1;
 
-        assertThat(phenotype.getNetworkOutput(INPUT), is(new double[]{2.0, 2.0}));
+        assertThat(phenotype.getNetworkOutput(INPUT), is(new double[]{2.0d, 2.0d}));
     }
 
     @Test
@@ -60,7 +60,7 @@ public class GenotypeTest {
         connections.get(2).weight = 0;
         connections.get(3).weight = 0;
 
-        assertThat(phenotype.getNetworkOutput(INPUT), is(new double[]{0.0, 0.0}));
+        assertThat(phenotype.getNetworkOutput(INPUT), is(new double[]{0.0d, 0.0d}));
     }
 
     @Test

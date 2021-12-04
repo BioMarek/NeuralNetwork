@@ -47,8 +47,8 @@ public class Genotype implements Comparable<Genotype> {
     public void mutateGenotype() {
         if (Util.randomChance(genePool.chanceToMutateWeight))
             mutateWeight(getRandomConnection());
-        if (Util.randomChance(genePool.chanceToAddConnection))
-            addConnection();
+//        if (Util.randomChance(genePool.chanceToAddConnection)) // TODO bug here connections are added wrongly
+//            addConnection();
     }
 
     /**
@@ -110,11 +110,11 @@ public class Genotype implements Comparable<Genotype> {
         if (Util.randomChance(genePool.chanceToHardMutateWight)) {
             connectionGene.weight = Util.randomDouble();
         } else {
-            connectionGene.weight += Util.randomDouble() * 0.2;
-            if (connectionGene.weight > 1.0)
-                connectionGene.weight = 1.0;
-            if (connectionGene.weight < -1.0)
-                connectionGene.weight = -1.0;
+            connectionGene.weight += Util.randomDouble() * 0.2d;
+            if (connectionGene.weight > 1.0d)
+                connectionGene.weight = 1.0d;
+            if (connectionGene.weight < -1.0d)
+                connectionGene.weight = -1.0d;
         }
     }
 
@@ -129,6 +129,10 @@ public class Genotype implements Comparable<Genotype> {
 
     public int getScore() {
         return score;
+    }
+
+    public void resetScore() {
+        score = 0;
     }
 
     /**
@@ -158,16 +162,13 @@ public class Genotype implements Comparable<Genotype> {
         return this.score < genotype.score ? -1 : 1;
     }
 
-    NodeGene getNodeByName(int name) {
-        return nodeGenes.stream()
-                .filter(nodeGene -> nodeGene.name == name)
-                .findFirst()
-                .orElseThrow();
+    public void printScores() {
+        System.out.print("\"" + name + "\" " + age + ": " + score + ", ");
     }
 
     /**
-     * The function returns genotype which has reasonable performance in {@link BasicNeuralNetwork}, it is used as benchmark
-     * against networks produced by {@link GenePool}.
+     * The function returns genotype which has reasonable performance in {@link BasicNeuralNetwork}, it is used as
+     * benchmark against networks produced by {@link GenePool}.
      *
      * @return {@link Genotype} with same topology that proved to be reasonably good
      */
@@ -214,6 +215,13 @@ public class Genotype implements Comparable<Genotype> {
         return genotype;
     }
 
+    /**
+     * The function returns genotype which has reasonable performance in {@link BasicNeuralNetwork}, it is used as
+     * benchmark against networks produced by {@link GenePool}. Weights are set based on one particular
+     * {@link BasicNeuralNetwork} with good performance.
+     *
+     * @return {@link Genotype} with same topology that proved to be reasonably good
+     */
     public static Genotype workingGenotype(GenePool genePool) {
         List<NodeGene> inputNodes = new ArrayList<>();
         List<NodeGene> hiddenNodes = new ArrayList<>();

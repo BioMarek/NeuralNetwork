@@ -34,12 +34,12 @@ public class PhenotypeTest {
         phenotype.connections.get(2).weight = 1;
         phenotype.connections.get(3).weight = 1;
 
-        phenotype.reset();
-        assertThat(phenotype.getNetworkOutput(new double[]{1, 0}), is(new double[]{1.0, 1.0}));
-        phenotype.reset();
-        assertThat(phenotype.getNetworkOutput(new double[]{1, 1}), is(new double[]{2.0, 2.0}));
-        phenotype.reset();
-        assertThat(phenotype.getNetworkOutput(new double[]{0, 0}), is(new double[]{0.0, 0.0}));
+        phenotype.resetPhenotype();
+        assertThat(phenotype.getNetworkOutput(new double[]{1.0d, 0.0d}), is(new double[]{1.0d, 1.0d}));
+        phenotype.resetPhenotype();
+        assertThat(phenotype.getNetworkOutput(new double[]{1.0d, 1.0d}), is(new double[]{2.0d, 2.0d}));
+        phenotype.resetPhenotype();
+        assertThat(phenotype.getNetworkOutput(new double[]{0.0d, 0.0d}), is(new double[]{0.0d, 0.0d}));
     }
 
     @Test
@@ -49,11 +49,11 @@ public class PhenotypeTest {
         phenotype.connections.get(2).weight = 0;
         phenotype.connections.get(3).weight = 0;
 
-        assertThat(phenotype.getNetworkOutput(new double[]{1, 0}), is(new double[]{1.0, 1.0}));
-        phenotype.reset();
-        assertThat(phenotype.getNetworkOutput(new double[]{1, 1}), is(new double[]{1.0, 1.0}));
-        phenotype.reset();
-        assertThat(phenotype.getNetworkOutput(new double[]{0, 0}), is(new double[]{0.0, 0.0}));
+        assertThat(phenotype.getNetworkOutput(new double[]{1.0d, 0.0d}), is(new double[]{1.0d, 1.0d}));
+        phenotype.resetPhenotype();
+        assertThat(phenotype.getNetworkOutput(new double[]{1.0d, 1.0d}), is(new double[]{1.0d, 1.0d}));
+        phenotype.resetPhenotype();
+        assertThat(phenotype.getNetworkOutput(new double[]{0.0d, 0.0d}), is(new double[]{0.0d, 0.0d}));
     }
 
     @Test
@@ -63,11 +63,11 @@ public class PhenotypeTest {
         phenotype.connections.get(2).weight = 0;
         phenotype.connections.get(3).weight = 0;
 
-        assertThat(phenotype.getNetworkOutput(new double[]{1, 0}), is(new double[]{0.0, 0.0}));
-        phenotype.reset();
-        assertThat(phenotype.getNetworkOutput(new double[]{1, 1}), is(new double[]{0.0, 0.0}));
-        phenotype.reset();
-        assertThat(phenotype.getNetworkOutput(new double[]{0, 0}), is(new double[]{0.0, 0.0}));
+        assertThat(phenotype.getNetworkOutput(new double[]{1.0d, 0.0d}), is(new double[]{0.0d, 0.0d}));
+        phenotype.resetPhenotype();
+        assertThat(phenotype.getNetworkOutput(new double[]{1.0d, 1.0d}), is(new double[]{0.0d, 0.0d}));
+        phenotype.resetPhenotype();
+        assertThat(phenotype.getNetworkOutput(new double[]{0.0d, 0.0d}), is(new double[]{0.0d, 0.0d}));
     }
 
     @Test
@@ -83,6 +83,6 @@ public class PhenotypeTest {
             connection.weight = 1;
         }
 
-        assertThat(phenotype.getNetworkOutput(new double[]{1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0}), is(new double[]{64.0, 64.0, 64.0, 64.0}));
+        assertThat(phenotype.getNetworkOutput(new double[]{1.0d, 1.0d, 1.0d, 1.0d, 1.0d, 1.0d, 1.0d, 1.0d}), is(new double[]{64.0d, 64.0d, 64.0d, 64.0d}));
     }
 }

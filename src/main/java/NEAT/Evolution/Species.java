@@ -99,6 +99,14 @@ public class Species implements Comparable<Species> {
         age++;
     }
 
+    /**
+     * Checks whether {@link Species} does contain no {@link Genotype} and is therefore extinct.
+     * @return true if {@link Species} contains no genotypes, false otherwise.
+     */
+    public boolean isExtinct() {
+        return genotypes.size() == 0;
+    }
+
     @Override
     public int compareTo(Species species) {
         if (this.average == species.average)

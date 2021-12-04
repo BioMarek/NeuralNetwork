@@ -41,22 +41,22 @@ public class SpeciesTest {
 
     @Test
     void reduceSizeBy_returnsCorrectValues() {
-        genePool.speciesReduction = 0.3;
+        genePool.speciesReduction = 0.3d;
         int reduction = species.reduceSize();
         assertThat(species.genotypes.size(), is(70));
         assertThat(reduction, is(30));
 
-        genePool.speciesReduction = 0.9;
+        genePool.speciesReduction = 0.9d;
         reduction = species.reduceSize();
         assertThat(species.genotypes.size(), is(7));
         assertThat(reduction, is(63));
 
-        genePool.speciesReduction = 0.1;
+        genePool.speciesReduction = 0.1d;
         reduction = species.reduceSize();
         assertThat(species.genotypes.size(), is(5));
         assertThat(reduction, is(2));
 
-        genePool.speciesReduction = 0.1;
+        genePool.speciesReduction = 0.1d;
         reduction = species.reduceSize();
         assertThat(species.genotypes.size(), is(3));
         assertThat(reduction, is(2));

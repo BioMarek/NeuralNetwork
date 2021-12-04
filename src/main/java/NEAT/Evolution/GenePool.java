@@ -3,7 +3,6 @@ package NEAT.Evolution;
 import Games.Game;
 import Interfaces.EvolutionEngine;
 import NEAT.NeuronType;
-import NEAT.Phenotype.Connection;
 import Utils.Pair;
 import Utils.Util;
 import lombok.AccessLevel;
@@ -48,6 +47,7 @@ public class GenePool implements EvolutionEngine {
     @Override
     public void calculateEvolution(int numOfGenerations) {
         for (int i = 0; i < numOfGenerations; i++) {
+            System.out.println("Generation " + i + " ------------------------------------------------------------------------------------");
             if (i % frequencyOfSpeciation == 0 && i > 0)
                 createSpecies();
             resetScores();
@@ -55,7 +55,6 @@ public class GenePool implements EvolutionEngine {
             resizeSpecies();
             removeDeadSpecies();
             printSpecies();
-            System.out.println("------------------------------------------------------------------------------------");
         }
     }
 
@@ -76,6 +75,10 @@ public class GenePool implements EvolutionEngine {
         }
     }
 
+    /**
+     * Creates new {@link Species} by reducing size of existing species and filling space with new species
+     * {@link Genotype}. The new {@link Species} mutation adds new random node.
+     */
     public void createSpecies() {
         List<Genotype> speciesGenotypes = new ArrayList<>();
         Genotype genotypeToSpeciate = speciesList.get(0).genotypes.get(0);
@@ -89,23 +92,24 @@ public class GenePool implements EvolutionEngine {
     }
 
     /**
-     * Adjusts sizes of species based on their performance. Size of the best species are increased and the worst
-     * reduced.
+     * Adjusts sizes of {@link Species} based on their performance. Size of the best {@link Species} are increased and
+     * the worst reduced. Young species are protected, that is cannot be resized in order to give them time to optimize
+     * new mutations. How big adjustions are made is specified in {@link GenePool}.
      */
     public void resizeSpecies() {
-        List<Species> oldSpecies = speciesList.stream()
+        List<Species> oldSpeciesList = speciesList.stream()
                 .filter(species -> species.age > protectedAge)
                 .collect(Collectors.toList());
 
-        if (oldSpecies.size() >= 2) {
+        if (oldSpeciesList.size() >= 2) {
             System.out.print("Old sizes: ");
             speciesList.forEach((species) -> System.out.print(species.getSize() + " "));
             System.out.println("");
 
-            oldSpecies.sort(Collections.reverseOrder());
-            for (int i = 0; i < oldSpecies.size() / 2; i++) {
-                int change = oldSpecies.get(oldSpecies.size() - i - 1).reduceSize();
-                oldSpecies.get(i).increaseSize(change);
+            oldSpeciesList.sort(Collections.reverseOrder());
+            for (int i = 0; i < oldSpeciesList.size() / 2; i++) {
+                int change = oldSpeciesList.get(oldSpeciesList.size() - i - 1).reduceSize();
+                oldSpeciesList.get(i).increaseSize(change);
             }
 
             System.out.print("New sizes: ");
@@ -130,7 +134,7 @@ public class GenePool implements EvolutionEngine {
      * Deletes all species with size 0.
      */
     public void removeDeadSpecies() {
-        speciesList.removeIf(species -> species.getSize() == 0);
+        speciesList.removeIf(Species::isExtinct);
     }
 
     /**
@@ -138,19 +142,18 @@ public class GenePool implements EvolutionEngine {
      */
     @Override
     public void resetScores() {
-        for (Species species : speciesList) {
-            species.average = 0.0;
-            species.genotypes.forEach((genotype -> genotype.score = 0));
-        }
+        speciesList.forEach(species -> {
+            species.average = 0.0d;
+            species.genotypes.forEach(Genotype::resetScore);
+        });
     }
 
     @Override
     public void printScores() {
-        for (Species species : speciesList) {
+        speciesList.forEach(species -> {
             System.out.println(species.name);
-            species.genotypes.forEach(genotype -> System.out.print(genotype.name + " " + genotype.age + ": " + genotype.score + ", "));
-        }
-        System.out.println();
+            species.genotypes.forEach(Genotype::printScores);
+        });
     }
 
 
@@ -162,6 +165,16 @@ public class GenePool implements EvolutionEngine {
         System.out.println();
     }
 
+    /**
+     * Puts {@link ConnectionGene} from one {@link NodeGene} name to another {@link NodeGene} name into {@link GenePool}.
+     * There can be only one {@link ConnectionGene} from one particular name into another. {@link GenePool} holds
+     * {@link ConnectionGene}s. When {@link Genotype} tries to split {@link ConnectionGene} and such split was already
+     * performed by some other {@link Genotype} name of split {@link NodeGene} is fetched from {@link GenePool},
+     * otherwise new {@link NodeGene} and corresponding {@link ConnectionGene} are put into {@link GenePool}.
+     *
+     * @param from name of node where {@link ConnectionGene} starts
+     * @param to   name of node where {@link ConnectionGene} ends
+     */
     public void putConnectionGeneIntoGenePool(int from, int to) {
         connections.add(new Pair<>(from, to));
     }
@@ -171,10 +184,10 @@ public class GenePool implements EvolutionEngine {
     }
 
     /**
-     * Returns name which should node of split {@link Connection} have. If there is a pair of {@link Connection} x -> z
-     * and z -> y it means that {@link Connection} x -> y was already split by some other genome. If genome wants to
-     * split its x -> y {@link Connection} nodeNameOfSplitConnection will either add new node name into {@link GenePool}
-     * or returns z such as {@link Connection} x -> z and z -> y exists.
+     * Returns name, which should node of split {@link ConnectionGene} have. If there is a pair of {@link ConnectionGene}
+     * x -> z and z -> y it means that {@link ConnectionGene} x -> y was already split by some other genome. If genome
+     * wants to split its x -> y {@link ConnectionGene} nodeNameOfSplitConnection will either add new node name into
+     * {@link ConnectionGene} or returns z such as {@link ConnectionGene} x -> z and z -> y exists.
      *
      * @param connectionGene to split
      * @return name which split connection should have
@@ -213,12 +226,12 @@ public class GenePool implements EvolutionEngine {
         private boolean verbose = true;
         private int maxNumberOfMoves = 500;
         private int numOfTrials = 10;
-        private double chanceToMutateWeight = 0.8;
-        private double chanceToHardMutateWight = 0.1;
-        private double chanceToSplitConnection = 0.03;
-        private double chanceToAddConnection = 0.03;
-        private double networksToKeep = 0.3;
-        private double speciesReduction = 0.1;
+        private double chanceToMutateWeight = 0.8d;
+        private double chanceToHardMutateWight = 0.1d;
+        private double chanceToAddNode = 0.03d;
+        private double chanceToAddConnection = 0.03d;
+        private double networksToKeep = 0.3d;
+        private double speciesReduction = 0.1d;
         private int speciesMinimalReduction = 2;
         private int protectedAge = 15;
         private int frequencyOfSpeciation = 10;
@@ -275,7 +288,7 @@ public class GenePool implements EvolutionEngine {
         }
 
         public GenePoolBuilder setChanceToAddNode(double chanceToSplitConnection) {
-            this.chanceToSplitConnection = chanceToSplitConnection;
+            this.chanceToAddNode = chanceToSplitConnection;
             return this;
         }
 
@@ -327,7 +340,8 @@ public class GenePool implements EvolutionEngine {
             genePool.numOfTrials = numOfTrials;
             genePool.chanceToMutateWeight = chanceToMutateWeight;
             genePool.chanceToHardMutateWight = chanceToHardMutateWight;
-            genePool.chanceToAddNode = chanceToSplitConnection;
+            genePool.chanceToAddNode = chanceToAddNode;
+            genePool.chanceToAddConnection = chanceToAddConnection;
             genePool.networksToKeep = networksToKeep;
             genePool.speciesReduction = speciesReduction;
             genePool.speciesMinimalReduction = speciesMinimalReduction;
@@ -337,14 +351,10 @@ public class GenePool implements EvolutionEngine {
             genePool.frequencyOfSpeciation = frequencyOfSpeciation;
 
             genePool.speciesList = new ArrayList<>();
+            List<Genotype> genotypes = new ArrayList<>();
 
             Genotype genotype = initGenotype(genePool);
-//            Genotype genotype = Genotype.referenceGenotype(genePool);
-//            Genotype genotype = Genotype.workingGenotype(genePool);
-            List<Genotype> genotypes = new ArrayList<>();
-            for (int i = 0; i < totalNumOfGenotypes; i++) {
-                genotypes.add(genotype.copy());
-            }
+            Util.repeat.accept(totalNumOfGenotypes, () -> genotypes.add(genotype.copy()));
             Species species = new Species(genePool, genotypes, genePool.speciesNames++);
             genePool.speciesList.add(species);
 
