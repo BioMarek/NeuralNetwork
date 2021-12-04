@@ -160,7 +160,7 @@ public class GenePool implements EvolutionEngine {
     public void printSpecies() {
         System.out.print("Species: ");
         for (Species species : speciesList) {
-            System.out.printf("\"%d\": %.4f, size: %d, age: %d | ", species.name, species.average / numOfTrials, species.getSize(), species.age);
+            System.out.printf("\"%d\": %.2f, size: %d, age: %d | ", species.name, species.average / numOfTrials, species.getSize(), species.age);
         }
         System.out.println();
     }

@@ -4,7 +4,9 @@ import Games.Snake.SnakeGame;
 import NEAT.Evolution.ConnectionGene;
 import NEAT.Evolution.GenePool;
 import NEAT.Evolution.Genotype;
+import NEAT.Evolution.NodeGene;
 import NEAT.Phenotype.Phenotype;
+import Utils.Pair;
 import Utils.Util;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -82,5 +84,36 @@ public class GenotypeTest {
         assertThat((int) genotype.nodeGenes.stream().filter(nodeGene -> nodeGene.type == NeuronType.INPUT).count(), is(8));
         assertThat((int) genotype.nodeGenes.stream().filter(nodeGene -> nodeGene.type == NeuronType.HIDDEN).count(), is(8));
         assertThat((int) genotype.nodeGenes.stream().filter(nodeGene -> nodeGene.type == NeuronType.OUTPUT).count(), is(4));
+    }
+
+    @Test
+    void getPossibleConnections_afterOneConnectionIsAdded() {
+        genotype.addNode(genotype.connectionGenes.get(0));
+        List<Pair<NodeGene>> allPossibleConnections = genotype.getPossibleConnections();
+
+        assertThat(allPossibleConnections.size(), is(3));
+        assertThat(allPossibleConnections.get(0).getFirst().name, is(0));
+        assertThat(allPossibleConnections.get(0).getSecond().name, is(999));
+        assertThat(allPossibleConnections.get(1).getFirst().name, is(1));
+        assertThat(allPossibleConnections.get(1).getSecond().name, is(2));
+        assertThat(allPossibleConnections.get(2).getFirst().name, is(2));
+        assertThat(allPossibleConnections.get(2).getSecond().name, is(1000));
+    }
+
+    @Test
+    void getPossibleConnections_afterTwoConnectionsAreAdded() {
+        genotype.addNode(genotype.connectionGenes.get(0));
+        genotype.addNode(genotype.connectionGenes.get(0));
+        List<Pair<NodeGene>> allPossibleConnections = genotype.getPossibleConnections();
+
+        assertThat(allPossibleConnections.size(), is(7));
+        assertThat(allPossibleConnections.get(0).getFirst().name, is(0));
+        assertThat(allPossibleConnections.get(0).getSecond().name, is(2));
+        assertThat(allPossibleConnections.get(2).getFirst().name, is(1));
+        assertThat(allPossibleConnections.get(2).getSecond().name, is(2));
+        assertThat(allPossibleConnections.get(4).getFirst().name, is(2));
+        assertThat(allPossibleConnections.get(4).getSecond().name, is(1000));
+        assertThat(allPossibleConnections.get(5).getFirst().name, is(3));
+        assertThat(allPossibleConnections.get(5).getSecond().name, is(999));
     }
 }

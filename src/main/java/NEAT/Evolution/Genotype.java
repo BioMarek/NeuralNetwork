@@ -8,7 +8,10 @@ import NEAT.Phenotype.Phenotype;
 import Utils.Pair;
 import Utils.Util;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 public class Genotype implements Comparable<Genotype> {
     public final GenePool genePool;
@@ -47,8 +50,8 @@ public class Genotype implements Comparable<Genotype> {
     public void mutateGenotype() {
         if (Util.randomChance(genePool.chanceToMutateWeight))
             mutateWeight(getRandomConnection());
-//        if (Util.randomChance(genePool.chanceToAddConnection)) // TODO bug here connections are added wrongly
-//            addConnection();
+        if (Util.randomChance(genePool.chanceToAddConnection))
+            addConnection();
     }
 
     /**
@@ -82,14 +85,8 @@ public class Genotype implements Comparable<Genotype> {
     /**
      * Connects two, so far, unconnected nodes with new {@link ConnectionGene}.
      */
-    void addConnection() {
-        Set<Pair<NodeGene>> allPossibleConnections = new HashSet<>();
-        for (NodeGene nodeGeneFrom : nodeGenes) {
-            for (NodeGene nodeGeneTo : nodeGenes) {
-                if (!(nodeGeneFrom.type == NeuronType.INPUT && nodeGeneTo.type == NeuronType.OUTPUT))
-                    allPossibleConnections.add(new Pair<>(nodeGeneFrom, nodeGeneTo));
-            }
-        }
+    public void addConnection() {
+        List<Pair<NodeGene>> allPossibleConnections = getPossibleConnections();
 
         if (allPossibleConnections.size() > 0) {
             List<Pair<NodeGene>> allPossibleConnectionsList = new ArrayList<>(allPossibleConnections);
@@ -98,6 +95,26 @@ public class Genotype implements Comparable<Genotype> {
             connectionGenes.add(connectionGene);
             genePool.putConnectionGeneIntoGenePool(connectionGene);
         }
+    }
+
+    public List<Pair<NodeGene>> getPossibleConnections() {
+        List<Pair<NodeGene>> allExistingConnections = new ArrayList<>();
+        for (ConnectionGene connectionGene : connectionGenes) {
+            allExistingConnections.add(new Pair<>(connectionGene.from, connectionGene.to));
+            allExistingConnections.add(new Pair<>(connectionGene.to, connectionGene.from));
+        }
+
+        List<Pair<NodeGene>> allPossibleConnections = new ArrayList<>();
+        for (int from = 0; from < nodeGenes.size(); from++) {
+            for (int to = from + 1; to < nodeGenes.size(); to++) {
+                if (!((nodeGenes.get(from).type == NeuronType.INPUT && nodeGenes.get(to).type == NeuronType.INPUT) ||
+                        (nodeGenes.get(from).type == NeuronType.OUTPUT && nodeGenes.get(to).type == NeuronType.OUTPUT)))
+                    allPossibleConnections.add(new Pair<>(nodeGenes.get(from), nodeGenes.get(to)));
+            }
+        }
+        allPossibleConnections.removeAll(allExistingConnections);
+
+        return allPossibleConnections;
     }
 
     /**
