@@ -94,7 +94,7 @@ public class BasicEvolutionEngine implements EvolutionEngine {
     public static class EvolutionEngineBuilder {
         private final int[] neuralNetworkSettings;
         private final Game game;
-        private Function<Double, Double> hiddenLayerActivationFunc;
+        private final Function<Double, Double> hiddenLayerActivationFunc;
         private Function<Double, Double> outputLayerActivationFunc;
         private int totalNumOfNetworks = 100;
         private int networksToKeep = 40;

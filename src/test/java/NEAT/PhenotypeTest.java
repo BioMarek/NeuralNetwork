@@ -23,8 +23,7 @@ public class PhenotypeTest {
         genePool = genePoolBuilder
                 .setOutputLayerActivationFunc(Util.activationFunctionIdentity())
                 .build();
-        genotype = genePool.getSpecies().get(0).genotypes.get(0);
-        phenotype = genotype.createPhenotype();
+        phenotype = genePool.getSpecies().get(0).genotypes.get(0).createPhenotype();
     }
 
     @Test

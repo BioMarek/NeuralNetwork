@@ -104,7 +104,7 @@ public class GenePool implements EvolutionEngine {
         if (oldSpeciesList.size() >= 2) {
             System.out.print("Old sizes: ");
             speciesList.forEach((species) -> System.out.print(species.getSize() + " "));
-            System.out.println("");
+            System.out.println();
 
             oldSpeciesList.sort(Collections.reverseOrder());
             for (int i = 0; i < oldSpeciesList.size() / 2; i++) {
@@ -114,7 +114,7 @@ public class GenePool implements EvolutionEngine {
 
             System.out.print("New sizes: ");
             speciesList.forEach((species) -> System.out.print(species.getSize() + " "));
-            System.out.println("");
+            System.out.println();
         }
     }
 
