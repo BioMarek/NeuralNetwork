@@ -33,6 +33,5 @@ public class ConnectionGeneTest {
         assertThat(connectionGene.weight, is(not(-1)));
         copy.enabled = false;
         assertThat(connectionGene.enabled, is(not(false)));
-
     }
 }

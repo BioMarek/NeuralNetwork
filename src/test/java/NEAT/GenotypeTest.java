@@ -116,4 +116,43 @@ public class GenotypeTest {
         assertThat(allPossibleConnections.get(5).getFirst().name, is(3));
         assertThat(allPossibleConnections.get(5).getSecond().name, is(999));
     }
+
+    @Test
+    void addConnection_worksCorrectly() {
+        genotype.addNode(genotype.connectionGenes.get(0));
+        assertThat(genotype.connectionGenes.size(), is(5));
+
+        genotype.addConnection();
+        assertThat(genotype.getPossibleConnections().size(), is(2));
+        assertThat(genotype.connectionGenes.size(), is(6));
+
+        genotype.addConnection();
+        assertThat(genotype.getPossibleConnections().size(), is(1));
+        assertThat(genotype.connectionGenes.size(), is(7));
+
+        genotype.addConnection();
+        assertThat(genotype.getPossibleConnections().size(), is(0));
+        assertThat(genotype.connectionGenes.size(), is(8));
+    }
+
+    @Test
+    void resetScore_worksCorrectly() {
+        genotype.score = 10;
+        assertThat(genotype.score, is(10));
+        genotype.resetScore();
+        assertThat(genotype.score, is(0));
+    }
+
+    @Test
+    void compare_worksCorrectly() {
+        Genotype secondGenotype = genePool.getSpecies().get(0).genotypes.get(1);
+        assertThat(genotype.compareTo(secondGenotype), is(0));
+
+        secondGenotype.score = 1;
+        assertThat(genotype.compareTo(secondGenotype), is(-1));
+
+        secondGenotype.score = 1;
+        genotype.score = 2;
+        assertThat(genotype.compareTo(secondGenotype), is(1));
+    }
 }

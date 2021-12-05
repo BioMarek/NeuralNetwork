@@ -10,6 +10,8 @@ import Utils.Util;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -22,7 +24,9 @@ public class GenePoolTest {
 
     @BeforeEach
     void init() {
-        genePool = genePoolBuilder.build();
+        genePool = genePoolBuilder
+                .setSpeciesMinimalReduction(2)
+                .build();
     }
 
     @Test
@@ -53,6 +57,56 @@ public class GenePoolTest {
         assertThat(connectionGenes.get(3).from.name, is(1));
         assertThat(connectionGenes.get(3).to.name, is(MAX_NEURONS));
         assertThat(connectionGenes.get(3).enabled, is(true));
+    }
+
+    @Test
+    void createSpecies_correctlyCreatesSpecies() {
+        genePool.createSpecies();
+        assertThat(genePool.getSpecies().size(), is(2));
+        assertThat(genePool.getSpecies().get(0).getSize(), is(90));
+        assertThat(genePool.getSpecies().get(1).getSize(), is(10));
+
+        genePool.createSpecies();
+        assertThat(genePool.getSpecies().size(), is(3));
+        assertThat(genePool.getSpecies().get(0).getSize(), is(81));
+        assertThat(genePool.getSpecies().get(1).getSize(), is(8));
+        assertThat(genePool.getSpecies().get(2).getSize(), is(11));
+    }
+
+    @Test
+    void reduceSpeciesSizesUniformly_reducesSizesCorrectly() {
+        genePool.createSpecies();
+        genePool.createSpecies();
+        int reduction = genePool.reduceSpeciesSizesUniformly();
+        assertThat(reduction, is(12));
+        assertThat(genePool.getSpecies().get(0).getSize(), is(73));
+        assertThat(genePool.getSpecies().get(1).getSize(), is(6));
+        assertThat(genePool.getSpecies().get(2).getSize(), is(9));
+    }
+
+    @Test
+    void removeDeadSpecies_removesSpeciesWithSizeZero() {
+        genePool.createSpecies();
+        genePool.getSpecies().get(1).genotypes = new ArrayList<>();
+        genePool.removeDeadSpecies();
+        assertThat(genePool.getSpecies().size(), is(1));
+    }
+
+    @Test
+    void resetScores_resetsAllScores() {
+        genePool.createSpecies();
+        genePool.getSpecies().get(0).average = 10.0d;
+        genePool.getSpecies().get(1).average = 5.0d;
+        genePool.getSpecies().get(0).genotypes.get(0).score = 10;
+        genePool.getSpecies().get(0).genotypes.get(50).score = 10;
+        genePool.getSpecies().get(1).genotypes.get(1).score = 10;
+        genePool.resetScores();
+
+        assertThat(genePool.getSpecies().get(0).average, is(0.0d));
+        assertThat(genePool.getSpecies().get(1).average, is(0.0d));
+        assertThat(genePool.getSpecies().get(0).genotypes.get(0).score, is(0));
+        assertThat(genePool.getSpecies().get(0).genotypes.get(50).score, is(0));
+        assertThat(genePool.getSpecies().get(1).genotypes.get(1).score, is(0));
     }
 
     @Test

@@ -88,4 +88,23 @@ public class SpeciesTest {
         species.increaseAge();
         assertThat(species.age, is(1));
     }
+
+    @Test
+    void isExtinct_worksCorrectly () {
+        assertThat(species.isExtinct(), is(false));
+        species.genotypes = new ArrayList<>();
+        assertThat(species.isExtinct(), is(true));
+    }
+
+    @Test
+    void compare_worksCorrectly() {
+        Species speciesCopy = new Species(genePool, species.genotypes, 1);
+        assertThat(species.compareTo(speciesCopy), is(0));
+
+        speciesCopy.average = 1.0d;
+        assertThat(species.compareTo(speciesCopy), is(-1));
+
+        speciesCopy.average = -1.0d;
+        assertThat(species.compareTo(speciesCopy), is(1));
+    }
 }
