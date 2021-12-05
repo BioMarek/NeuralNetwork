@@ -86,23 +86,30 @@ public class Genotype implements Comparable<Genotype> {
      * Connects two, so far, unconnected nodes with new {@link ConnectionGene}.
      */
     public void addConnection() {
-        List<Pair<NodeGene>> allPossibleConnections = getPossibleConnections();
+        var allPossibleConnections = getPossibleConnections();
 
         if (allPossibleConnections.size() > 0) {
-            List<Pair<NodeGene>> allPossibleConnectionsList = new ArrayList<>(allPossibleConnections);
-            Pair<NodeGene> chosen = allPossibleConnectionsList.get(Util.randomInt(0, allPossibleConnectionsList.size()));
+            Pair<NodeGene> chosen = allPossibleConnections.get(Util.randomInt(0, allPossibleConnections.size()));
             ConnectionGene connectionGene = new ConnectionGene(chosen.getFirst(), chosen.getSecond(), Util.randomDouble(), true);
             connectionGenes.add(connectionGene);
             genePool.putConnectionGeneIntoGenePool(connectionGene);
         }
     }
 
+    /**
+     * {@link ConnectionGene} can lead from {@link NodeGene} with lower name to {@link NodeGene} with higher name,
+     * because node with lower name will be evaluated before it will receive output from node with higher name.
+     * Connections between inputs and outputs are not allowed. Existing connection a backward connections are also
+     * not allowed.
+     *
+     * @return {@link Pair}s of names of {@link NodeGene}s that can be connected.
+     */
     public List<Pair<NodeGene>> getPossibleConnections() {
         List<Pair<NodeGene>> allExistingConnections = new ArrayList<>();
-        for (ConnectionGene connectionGene : connectionGenes) {
+        connectionGenes.forEach(connectionGene -> {
             allExistingConnections.add(new Pair<>(connectionGene.from, connectionGene.to));
             allExistingConnections.add(new Pair<>(connectionGene.to, connectionGene.from));
-        }
+        });
 
         List<Pair<NodeGene>> allPossibleConnections = new ArrayList<>();
         for (int from = 0; from < nodeGenes.size(); from++) {
@@ -180,7 +187,7 @@ public class Genotype implements Comparable<Genotype> {
     }
 
     public void printScores() {
-        System.out.print("\"" + name + "\" " + age + ": " + score + ", ");
+        System.out.print("\"" + name + "\" " + age + ": " + score + " | ");
     }
 
     /**

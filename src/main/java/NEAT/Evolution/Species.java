@@ -1,6 +1,7 @@
 package NEAT.Evolution;
 
 import NEAT.Phenotype.Phenotype;
+import Utils.Util;
 import lombok.EqualsAndHashCode;
 
 import java.util.ArrayList;
@@ -24,10 +25,10 @@ public class Species implements Comparable<Species> {
     public void calculateScores() {
         for (Genotype genotype : genotypes) {
             Phenotype phenotype = genotype.createPhenotype();
-            for (int i = 0; i < genePool.numOfTrials; i++) {
-                genePool.game.reset();
+            Util.repeat.accept(genePool.numOfTrials, () -> {
                 genotype.score += genePool.game.play(phenotype, genePool.maxNumberOfMoves);
-            }
+                genePool.game.reset();
+            });
         }
         genotypes.sort(Collections.reverseOrder());
     }
@@ -47,8 +48,8 @@ public class Species implements Comparable<Species> {
      * @return returns number of removed genotypes.
      */
     public int reduceSize() {
-        int reduction = Math.max((int) Math.floor(genotypes.size() * genePool.speciesReduction), genePool.speciesMinimalReduction);
-        int actualReduction = Math.min(reduction, genotypes.size());
+        int potentialReduction = Math.max((int) Math.floor(genotypes.size() * genePool.speciesReduction), genePool.speciesMinimalReduction);
+        int actualReduction = Math.min(potentialReduction, genotypes.size());
         int oldSize = genotypes.size();
         for (int i = 0; i < actualReduction; i++) {
             genotypes.remove(oldSize - 1 - i);
@@ -69,7 +70,6 @@ public class Species implements Comparable<Species> {
         }
     }
 
-
     public void mutateSpecies() {
         List<Genotype> genotypesNewGeneration = new ArrayList<>();
         int limit = (int) Math.round(genotypes.size() * genePool.networksToKeep);
@@ -86,7 +86,7 @@ public class Species implements Comparable<Species> {
                 genotype.name = Integer.toString(genePool.networksGenerated++);
                 genotypesNewGeneration.add(genotype);
             }
-            // crossingOvers
+            // TODO crossingOvers
         }
         genotypes = genotypesNewGeneration;
     }
@@ -101,6 +101,7 @@ public class Species implements Comparable<Species> {
 
     /**
      * Checks whether {@link Species} does contain no {@link Genotype} and is therefore extinct.
+     *
      * @return true if {@link Species} contains no genotypes, false otherwise.
      */
     public boolean isExtinct() {

@@ -47,7 +47,7 @@ public class GenePool implements EvolutionEngine {
     @Override
     public void calculateEvolution(int numOfGenerations) {
         for (int i = 0; i < numOfGenerations; i++) {
-            System.out.println("Generation " + i + " ------------------------------------------------------------------------------------");
+            System.out.printf("\nGeneration %d %s\n", i, "-".repeat(200));
             if (i % frequencyOfSpeciation == 0 && i > 0)
                 createSpecies();
             resetScores();
@@ -151,8 +151,9 @@ public class GenePool implements EvolutionEngine {
     @Override
     public void printScores() {
         speciesList.forEach(species -> {
-            System.out.println(species.name);
+            System.out.printf("%-3d: ", species.name);
             species.genotypes.forEach(Genotype::printScores);
+            System.out.println();
         });
     }
 
@@ -160,7 +161,7 @@ public class GenePool implements EvolutionEngine {
     public void printSpecies() {
         System.out.print("Species: ");
         for (Species species : speciesList) {
-            System.out.printf("\"%d\": %.2f, size: %d, age: %d | ", species.name, species.average / numOfTrials, species.getSize(), species.age);
+            System.out.printf("\"%d\": %.2f size: %d, age: %d | ", species.name, species.average / numOfTrials, species.getSize(), species.age);
         }
         System.out.println();
     }
