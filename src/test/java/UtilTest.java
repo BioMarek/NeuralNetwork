@@ -73,4 +73,5 @@ public class UtilTest {
             assertThat(DoubleStream.of(array).allMatch(j -> j < 1.0D), is(true));
         }
     }
+
 }
