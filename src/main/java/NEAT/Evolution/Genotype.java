@@ -17,6 +17,7 @@ public class Genotype implements Comparable<Genotype> {
     public final GenePool genePool;
     public List<ConnectionGene> connectionGenes;
     public List<NodeGene> nodeGenes;
+    public int neuronNames;
     public int score = 0;
     public String name = "0";
     int age = 0;
@@ -25,6 +26,7 @@ public class Genotype implements Comparable<Genotype> {
         this.genePool = genePool;
         this.connectionGenes = connectionGenes;
         this.nodeGenes = nodeGenes;
+        this.neuronNames = genePool.neuronNames;
     }
 
     /**
@@ -54,32 +56,40 @@ public class Genotype implements Comparable<Genotype> {
             addConnection();
     }
 
+    public void addNode() {
+        addNode(getRandomConnection());
+    }
+
     /**
      * Splits {@link ConnectionGene} into two new ones, the old {@link ConnectionGene} is removed. Weight of the first
      * {@link ConnectionGene} is 1 whereas weight of second one is same as weight of the old one.
      *
-     * @param ConnectionGene to remove and split
+     * @param connectionGene to remove and split
      */
-    public void addNode(ConnectionGene ConnectionGene) {
-        NodeGene nodeGene = new NodeGene(NeuronType.HIDDEN, genePool.nodeNameOfSplitConnection(ConnectionGene));
+    public void addNode(ConnectionGene connectionGene) {
+        NodeGene nodeGene = new NodeGene(NeuronType.HIDDEN, neuronNames++);
 
-        ConnectionGene firstConnectionGene = new ConnectionGene(ConnectionGene.from, nodeGene, 1.0, true);
-        ConnectionGene secondConnectionGene = new ConnectionGene(nodeGene, ConnectionGene.to, ConnectionGene.weight, true);
+        ConnectionGene firstConnectionGene = new ConnectionGene(connectionGene.from, nodeGene, 1.0, true);
+        ConnectionGene secondConnectionGene = new ConnectionGene(nodeGene, connectionGene.to, connectionGene.weight, true);
 
         nodeGenes.add(nodeGene);
         connectionGenes.add(firstConnectionGene);
         connectionGenes.add(secondConnectionGene);
-        connectionGenes.remove(ConnectionGene);
-
-        genePool.putConnectionGeneIntoGenePool(firstConnectionGene);
-        genePool.putConnectionGeneIntoGenePool(secondConnectionGene);
+        connectionGenes.remove(connectionGene);
 
         Collections.sort(nodeGenes);
         Collections.sort(connectionGenes);
     }
 
-    public void addNode() {
-        addNode(getRandomConnection());
+    // TODO test this
+    public void updateLayerNumbers(ConnectionGene connection) {
+        NodeGene targetNode = connection.to;
+        if (targetNode.layer <= connection.from.layer) {
+            targetNode.layer++;
+            for (ConnectionGene connectionGene : targetNode.connectionGenes) {
+                updateLayerNumbers(connectionGene);
+            }
+        }
     }
 
     /**
@@ -92,7 +102,7 @@ public class Genotype implements Comparable<Genotype> {
             Pair<NodeGene> chosen = allPossibleConnections.get(Util.randomInt(0, allPossibleConnections.size()));
             ConnectionGene connectionGene = new ConnectionGene(chosen.getFirst(), chosen.getSecond(), Util.randomDouble(), true);
             connectionGenes.add(connectionGene);
-            genePool.putConnectionGeneIntoGenePool(connectionGene);
+            updateLayerNumbers(connectionGene);
         }
     }
 
@@ -105,6 +115,7 @@ public class Genotype implements Comparable<Genotype> {
      * @return {@link Pair}s of names of {@link NodeGene}s that can be connected.
      */
     public List<Pair<NodeGene>> getPossibleConnections() {
+        // TODO connections can exit multiple times, and x -> x can appear too
         List<Pair<NodeGene>> allExistingConnections = new ArrayList<>();
         connectionGenes.forEach(connectionGene -> {
             allExistingConnections.add(new Pair<>(connectionGene.from, connectionGene.to));
@@ -217,13 +228,11 @@ public class Genotype implements Comparable<Genotype> {
         }
         for (NodeGene input : inputNodes) {
             for (NodeGene output : hiddenNodes) {
-                genePool.putConnectionGeneIntoGenePool(input.name, output.name);
                 referenceConnectionGenes.add(new ConnectionGene(input, output, Util.randomDouble(), true));
             }
         }
         for (NodeGene input : hiddenNodes) {
             for (NodeGene output : outputNodes) {
-                genePool.putConnectionGeneIntoGenePool(input.name, output.name);
                 referenceConnectionGenes.add(new ConnectionGene(input, output, Util.randomDouble(), true));
             }
         }
@@ -285,13 +294,11 @@ public class Genotype implements Comparable<Genotype> {
 
         for (int from = 0; from < 8; from++) {
             for (int to = 8; to < 16; to++) {
-                genePool.putConnectionGeneIntoGenePool(inputNodes.get(from).name, inputNodes.get(to - 8).name);
                 referenceConnectionGenes.add(new ConnectionGene(inputNodes.get(from), hiddenNodes.get(to - 8), firstLayerWeights[to - 8][from], true));
             }
         }
         for (int from = 8; from < 16; from++) {
             for (int to = 0; to < 4; to++) {
-                genePool.putConnectionGeneIntoGenePool(inputNodes.get(from - 8).name, inputNodes.get(to).name);
                 referenceConnectionGenes.add(new ConnectionGene(hiddenNodes.get(from - 8), outputNodes.get(to), outputLayerWeights[to][from - 8], true));
             }
         }

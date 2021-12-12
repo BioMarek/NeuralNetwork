@@ -23,8 +23,6 @@ public class GenePool implements EvolutionEngine {
     protected int neuronNames = 0;
     public Function<Double, Double> hiddenLayerActivationFunc;
     public Function<Double, Double> outputLayerActivationFunc;
-    private final Set<Integer> nodeGenes = new HashSet<>();
-    private final Set<Pair<Integer>> connections = new HashSet<>();
     private List<Species> speciesList = new ArrayList<>();
 
     protected int maxNumberOfMoves; // to stop AI moving in cycles
@@ -164,50 +162,6 @@ public class GenePool implements EvolutionEngine {
             System.out.printf("\"%d\": %.2f size: %d, age: %d | ", species.name, species.average / numOfTrials, species.getSize(), species.age);
         }
         System.out.println();
-    }
-
-    /**
-     * Puts {@link ConnectionGene} from one {@link NodeGene} name to another {@link NodeGene} name into {@link GenePool}.
-     * There can be only one {@link ConnectionGene} from one particular name into another. {@link GenePool} holds
-     * {@link ConnectionGene}s. When {@link Genotype} tries to split {@link ConnectionGene} and such split was already
-     * performed by some other {@link Genotype} name of split {@link NodeGene} is fetched from {@link GenePool},
-     * otherwise new {@link NodeGene} and corresponding {@link ConnectionGene} are put into {@link GenePool}.
-     *
-     * @param from name of node where {@link ConnectionGene} starts
-     * @param to   name of node where {@link ConnectionGene} ends
-     */
-    public void putConnectionGeneIntoGenePool(int from, int to) {
-        connections.add(new Pair<>(from, to));
-    }
-
-    public void putConnectionGeneIntoGenePool(ConnectionGene connectionGene) {
-        putConnectionGeneIntoGenePool(connectionGene.from.name, connectionGene.to.name);
-    }
-
-    /**
-     * Returns name, which should node of split {@link ConnectionGene} have. If there is a pair of {@link ConnectionGene}
-     * x -> z and z -> y it means that {@link ConnectionGene} x -> y was already split by some other genome. If genome
-     * wants to split its x -> y {@link ConnectionGene} nodeNameOfSplitConnection will either add new node name into
-     * {@link ConnectionGene} or returns z such as {@link ConnectionGene} x -> z and z -> y exists.
-     *
-     * @param connectionGene to split
-     * @return name which split connection should have
-     */
-    public int nodeNameOfSplitConnection(ConnectionGene connectionGene) {
-        List<Integer> from = new ArrayList<>();
-        List<Integer> to = new ArrayList<>();
-
-        for (Pair<Integer> connection : connections) {
-            if (connectionGene.from.name == connection.getFirst())
-                from.add(connection.getSecond());
-            if (connectionGene.to.name == connection.getSecond())
-                to.add(connection.getFirst());
-        }
-        from.retainAll(to);
-
-        if (from.size() > 0)
-            return from.get(0);
-        return neuronNames++;
     }
 
     public List<Species> getSpecies() {
@@ -374,15 +328,16 @@ public class GenePool implements EvolutionEngine {
 
             for (int i = 0; i < inputs; i++) {
                 NodeGene nodeGene = new NodeGene(NeuronType.INPUT, genePool.neuronNames++);
+                nodeGene.layer = 0;
                 inputNodes.add(nodeGene);
             }
             for (int i = 0; i < outputs; i++) {
                 NodeGene nodeGene = new NodeGene(NeuronType.OUTPUT, maxNeurons--);
+                nodeGene.layer = 1000;
                 outputNodes.add(nodeGene);
             }
             for (NodeGene input : inputNodes) {
                 for (NodeGene output : outputNodes) {
-                    genePool.putConnectionGeneIntoGenePool(input.name, output.name);
                     connectionGenes.add(new ConnectionGene(input, output, Util.randomDouble(), true));
                 }
             }

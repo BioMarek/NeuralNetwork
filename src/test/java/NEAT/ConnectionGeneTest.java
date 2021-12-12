@@ -3,6 +3,7 @@ package NEAT;
 import Games.Snake.SnakeGame;
 import NEAT.Evolution.ConnectionGene;
 import NEAT.Evolution.GenePool;
+import NEAT.Evolution.Genotype;
 import Utils.Util;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,12 +15,14 @@ import static org.hamcrest.Matchers.not;
 public class ConnectionGeneTest {
     private final GenePool.GenePoolBuilder genePoolBuilder = new GenePool.GenePoolBuilder(2, 2, Util.activationFunctionIdentity(), new SnakeGame(20));
     protected GenePool genePool;
+    protected Genotype genotype;
     private ConnectionGene connectionGene;
 
     @BeforeEach
     void init() {
         genePool = genePoolBuilder.build();
-        connectionGene = genePool.getSpecies().get(0).genotypes.get(0).connectionGenes.get(0);
+        genotype = genePool.getSpecies().get(0).genotypes.get(0);
+        connectionGene = genotype.connectionGenes.get(0);
     }
 
     @Test
@@ -27,11 +30,7 @@ public class ConnectionGeneTest {
         ConnectionGene copy = connectionGene.copy();
 
         assertThat(copy.equals(connectionGene), is(true));
-
-        copy.weight = -1;
-        assertThat(copy.equals(connectionGene), is(false));
-        assertThat(connectionGene.weight, is(not(-1)));
-        copy.enabled = false;
-        assertThat(connectionGene.enabled, is(not(false)));
+        assertThat(copy.from, is(connectionGene.from));
+        assertThat(copy.to, is(connectionGene.to));
     }
 }

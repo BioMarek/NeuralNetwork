@@ -162,15 +162,4 @@ public class GenePoolTest {
         // VERIFY
         assertThat(connectionGene.weight, is(not(oldWeight)));
     }
-
-    @Test
-    void nodeNameOfSplitConnection_worksCorrectly() {
-        // PREPARE
-        Genotype genotype = genePool.getSpecies().get(0).genotypes.get(0);
-        ConnectionGene connectionGene = genotype.connectionGenes.get(0);
-        genotype.addNode(connectionGene);
-
-        // VERIFY
-        assertThat(genePool.nodeNameOfSplitConnection(connectionGene), is(2));
-    }
 }
