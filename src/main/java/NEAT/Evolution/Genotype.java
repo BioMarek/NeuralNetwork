@@ -8,10 +8,7 @@ import NEAT.Phenotype.Phenotype;
 import Utils.Pair;
 import Utils.Util;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 
 public class Genotype implements Comparable<Genotype> {
     public final GenePool genePool;
@@ -79,18 +76,22 @@ public class Genotype implements Comparable<Genotype> {
 
         Collections.sort(nodeGenes);
         Collections.sort(connectionGenes);
+
+        Set<NodeGene> nodegeneSet = new HashSet<>(nodeGenes);
+        if (nodegeneSet.size() != nodeGenes.size())
+            System.out.println("HERE");
     }
 
-    // TODO test this
-    public void updateLayerNumbers(ConnectionGene connection) {
-        NodeGene targetNode = connection.to;
-        if (targetNode.layer <= connection.from.layer) {
-            targetNode.layer++;
-            for (ConnectionGene connectionGene : targetNode.connectionGenes) {
-                updateLayerNumbers(connectionGene);
-            }
-        }
-    }
+//    // TODO test this
+//    public void updateLayerNumbers(ConnectionGene connection) {
+//        NodeGene targetNode = connection.to;
+//        if (targetNode.layer <= connection.from.layer) {
+//            targetNode.layer++;
+//            for (ConnectionGene connectionGene : targetNode.connectionGenes) {
+//                updateLayerNumbers(connectionGene);
+//            }
+//        }
+//    }
 
     /**
      * Connects two, so far, unconnected nodes with new {@link ConnectionGene}.
@@ -102,7 +103,7 @@ public class Genotype implements Comparable<Genotype> {
             Pair<NodeGene> chosen = allPossibleConnections.get(Util.randomInt(0, allPossibleConnections.size()));
             ConnectionGene connectionGene = new ConnectionGene(chosen.getFirst(), chosen.getSecond(), Util.randomDouble(), true);
             connectionGenes.add(connectionGene);
-            updateLayerNumbers(connectionGene);
+//            updateLayerNumbers(connectionGene);
         }
     }
 
@@ -131,6 +132,18 @@ public class Genotype implements Comparable<Genotype> {
             }
         }
         allPossibleConnections.removeAll(allExistingConnections);
+        System.out.println("nodes " + nodeGenes.size());
+        for (NodeGene nodeGene : nodeGenes) {
+            System.out.println(nodeGene.name);
+        }
+        System.out.println("allExistingConnections " + connectionGenes.size());
+        for (ConnectionGene connection : connectionGenes) {
+            System.out.println(connection.from.name + " -> " + connection.to.name);
+        }
+        System.out.println("allPossibleConnections " + allPossibleConnections.size());
+        for (Pair<NodeGene> connection : allPossibleConnections) {
+            System.out.println(connection.getFirst().name + " -> " + connection.getSecond().name);
+        }
 
         return allPossibleConnections;
     }
@@ -177,12 +190,18 @@ public class Genotype implements Comparable<Genotype> {
      * @return copied {@link Genotype} object
      */
     public Genotype copy() {
+        // TODO refactor, score is copied but other aren't?
         List<ConnectionGene> connectionGenesCopy = new ArrayList<>();
         connectionGenes.forEach(connectionGene -> connectionGenesCopy.add(connectionGene.copy()));
-        Genotype genotype = new Genotype(genePool, nodeGenes, connectionGenesCopy);
+        List<NodeGene> nodeGenesCopy = new ArrayList<>();
+        for (NodeGene nodeGene: nodeGenes)
+            nodeGenesCopy.add(nodeGene.copy());
+
+        Genotype genotype = new Genotype(genePool, nodeGenesCopy, connectionGenesCopy);
         genotype.score = this.score;
         genotype.name = Integer.toString(genePool.networksGenerated++);
         genotype.age = 0;
+        genotype.neuronNames = this.neuronNames;
         return genotype;
     }
 

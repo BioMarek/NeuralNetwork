@@ -9,13 +9,20 @@ import java.util.Objects;
 public class NodeGene implements Comparable<NodeGene> {
     public final NeuronType type;
     public final int name;
-    public List<ConnectionGene> connectionGenes;
+//    public List<ConnectionGene> connectionGenes;
     public int layer;
 
     public NodeGene(NeuronType type, int name) {
         this.type = type;
         this.name = name;
-        connectionGenes = new ArrayList<>();
+//        connectionGenes = new ArrayList<>();
+    }
+
+    public NodeGene copy(){
+        NodeGene nodeGene = new NodeGene(this.type, this.name);
+        nodeGene.layer = this.layer;
+
+        return nodeGene;
     }
 
     @Override
