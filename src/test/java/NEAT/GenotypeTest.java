@@ -5,6 +5,7 @@ import NEAT.Evolution.ConnectionGene;
 import NEAT.Evolution.GenePool;
 import NEAT.Evolution.Genotype;
 import NEAT.Evolution.NodeGene;
+import NEAT.Phenotype.Phenotype;
 import Utils.Pair;
 import Utils.Util;
 import org.junit.jupiter.api.BeforeEach;
@@ -57,44 +58,44 @@ public class GenotypeTest {
         assertThat(genotype.name, is("0"));
     }
 
-//    @Test
-//    void getOutput_phenotypeReturnsCorrectOutputWhenWeightsToLeftOutputAreOne() {
-//        Phenotype phenotype = genotype.createPhenotype();
-//        var connections = phenotype.connections;
-//        connections.get(0).weight = 1;
-//        connections.get(1).weight = 0;
-//        connections.get(2).weight = 1;
-//        connections.get(3).weight = 0;
-//
-//        assertThat(phenotype.getNetworkOutput(INPUT), is(new double[]{2.0d, 0.0d}));
-//    }
-//
-//    @Test
-//    void getOutput_phenotypeReturnsCorrectOutputWhenAllWeightsAreOne() {
-//        Phenotype phenotype = genotype.createPhenotype();
-//        var connections = phenotype.connections;
-//        connections.get(0).weight = 1;
-//        connections.get(1).weight = 1;
-//        connections.get(2).weight = 1;
-//        connections.get(3).weight = 1;
-//
-//        assertThat(phenotype.getNetworkOutput(INPUT), is(new double[]{2.0d, 2.0d}));
-//    }
-//
-//    @Test
-//    void getOutput_phenotypeReturnsCorrectOutputWhenAllWeightsAreZero() {
-//        Phenotype phenotype = genotype.createPhenotype();
-//        var connections = phenotype.connections;
-//        connections.get(0).weight = 0;
-//        connections.get(1).weight = 0;
-//        connections.get(2).weight = 0;
-//        connections.get(3).weight = 0;
-//
-//        assertThat(phenotype.getNetworkOutput(INPUT), is(new double[]{0.0d, 0.0d}));
-//    }
+    @Test
+    void getOutput_phenotypeReturnsCorrectOutputWhenWeightsToLeftOutputAreOne() {
+        Phenotype phenotype = genotype.createPhenotype();
+        var connections = phenotype.connections;
+        connections.get(0).weight = 1;
+        connections.get(1).weight = 0;
+        connections.get(2).weight = 1;
+        connections.get(3).weight = 0;
+
+        assertThat(phenotype.getNetworkOutput(INPUT), is(new double[]{2.0d, 0.0d}));
+    }
 
     @Test
-    void addNode_addingNodeWorksCorrectly(){
+    void getOutput_phenotypeReturnsCorrectOutputWhenAllWeightsAreOne() {
+        Phenotype phenotype = genotype.createPhenotype();
+        var connections = phenotype.connections;
+        connections.get(0).weight = 1;
+        connections.get(1).weight = 1;
+        connections.get(2).weight = 1;
+        connections.get(3).weight = 1;
+
+        assertThat(phenotype.getNetworkOutput(INPUT), is(new double[]{2.0d, 2.0d}));
+    }
+
+    @Test
+    void getOutput_phenotypeReturnsCorrectOutputWhenAllWeightsAreZero() {
+        Phenotype phenotype = genotype.createPhenotype();
+        var connections = phenotype.connections;
+        connections.get(0).weight = 0;
+        connections.get(1).weight = 0;
+        connections.get(2).weight = 0;
+        connections.get(3).weight = 0;
+
+        assertThat(phenotype.getNetworkOutput(INPUT), is(new double[]{0.0d, 0.0d}));
+    }
+
+    @Test
+    void addNode_addingNodeWorksCorrectly() {
         genotype.addNode(genotype.connectionGenes.get(0));
 
         assertThat(genotype.nodeGenes.size(), is(5));

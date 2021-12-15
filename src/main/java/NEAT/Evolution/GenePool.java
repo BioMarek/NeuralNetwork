@@ -2,13 +2,13 @@ package NEAT.Evolution;
 
 import Games.Game;
 import Interfaces.EvolutionEngine;
-import NEAT.NeuronType;
-import Utils.Pair;
 import Utils.Util;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 

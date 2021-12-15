@@ -18,6 +18,7 @@ public class Genotype implements Comparable<Genotype> {
     public List<NodeGene> nodeGenes = new ArrayList<>();
     public List<NodeGene> inputNodes = new ArrayList<>();
     public int neuronNames = 0;
+    public int maxNeurons;
     public int score = 0;
     public String name = "0";
     public int age = 0;
@@ -28,13 +29,14 @@ public class Genotype implements Comparable<Genotype> {
 
     public Genotype(GenePool genePool, int inputs, int outputs) {
         this.genePool = genePool;
+        maxNeurons = genePool.maxNeurons;
         List<NodeGene> outputNodes = new ArrayList<>();
 
         for (int i = 0; i < inputs; i++) {
             inputNodes.add(new NodeGene(NeuronType.INPUT, neuronNames++, 0));
         }
         for (int i = 0; i < outputs; i++) {
-            outputNodes.add(new NodeGene(NeuronType.OUTPUT, genePool.maxNeurons--, 1000));
+            outputNodes.add(new NodeGene(NeuronType.OUTPUT, maxNeurons--, 1000));
         }
         for (NodeGene input : inputNodes) {
             for (NodeGene output : outputNodes) {

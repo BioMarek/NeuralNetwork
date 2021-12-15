@@ -2,8 +2,6 @@ package NEAT;
 
 import Games.Snake.SnakeGame;
 import NEAT.Evolution.GenePool;
-import NEAT.Evolution.Genotype;
-import NEAT.Phenotype.Connection;
 import NEAT.Phenotype.Phenotype;
 import Utils.Util;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,7 +13,6 @@ import static org.hamcrest.Matchers.is;
 public class PhenotypeTest {
     private final GenePool.GenePoolBuilder genePoolBuilder = new GenePool.GenePoolBuilder(2, 2, Util.activationFunctionIdentity(), new SnakeGame(20));
     protected GenePool genePool;
-    private Genotype genotype;
     private Phenotype phenotype;
 
     @BeforeEach
