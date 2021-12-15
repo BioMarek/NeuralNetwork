@@ -68,20 +68,4 @@ public class PhenotypeTest {
         phenotype.resetPhenotype();
         assertThat(phenotype.getNetworkOutput(new double[]{0.0d, 0.0d}), is(new double[]{0.0d, 0.0d}));
     }
-
-    @Test
-    void referenceGenotype_createsCorrectPhenotype() {
-        Genotype genotype = Genotype.referenceGenotype(genePool);
-        Phenotype phenotype = genotype.createPhenotype();
-        assertThat(phenotype.connections.size(), is(96));
-        assertThat(phenotype.inputNeurons.size(), is(8));
-        assertThat(phenotype.hiddenNeurons.size(), is(8));
-        assertThat(phenotype.outputNeurons.size(), is(4));
-
-        for (Connection connection : phenotype.connections) {
-            connection.weight = 1;
-        }
-
-        assertThat(phenotype.getNetworkOutput(new double[]{1.0d, 1.0d, 1.0d, 1.0d, 1.0d, 1.0d, 1.0d, 1.0d}), is(new double[]{64.0d, 64.0d, 64.0d, 64.0d}));
-    }
 }

@@ -43,19 +43,23 @@ public class ConnectionGene implements Comparable<ConnectionGene> {
     }
 
     public void printConnectionGene() {
-        System.out.printf("%-3d -> %-4d %7.4f%n", from.name, to.name, weight);
+        System.out.printf("%-3d -> %-4d %d -> %d %7.4f%n", from.name, to.name, from.layer, to.layer, weight);
     }
 
+    /**
+     * {@link NodeGene}s in {@link Connection} are considered same if they have same names. Comparing whole objects
+     * would cause stack overflow because references are cyclic.
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ConnectionGene that = (ConnectionGene) o;
-        return Objects.equals(from, that.from) && Objects.equals(to, that.to);
+        return Double.compare(that.weight, weight) == 0 && enabled == that.enabled && from.name == that.from.name && to.name == that.to.name;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(from, to);
+        return Objects.hash(from.name, to.name, weight, enabled);
     }
 }

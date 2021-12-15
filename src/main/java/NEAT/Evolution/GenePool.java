@@ -21,6 +21,7 @@ public class GenePool implements EvolutionEngine {
     private int inputs;
     private int outputs;
     protected int neuronNames = 0;
+    protected int maxNeurons;
     public Function<Double, Double> hiddenLayerActivationFunc;
     public Function<Double, Double> outputLayerActivationFunc;
     private List<Species> speciesList = new ArrayList<>();
@@ -154,7 +155,6 @@ public class GenePool implements EvolutionEngine {
             System.out.println();
         });
     }
-
 
     public void printSpecies() {
         System.out.print("Species: ");
@@ -290,6 +290,7 @@ public class GenePool implements EvolutionEngine {
             genePool.hiddenLayerActivationFunc = hiddenLayerActivationFunc;
             genePool.outputLayerActivationFunc = outputLayerActivationFunc;
             genePool.totalNumOfGenotypes = totalNumOfGenotypes;
+            genePool.maxNeurons = maxNeurons;
             genePool.verbose = verbose;
             genePool.maxNumberOfMoves = maxNumberOfMoves;
             genePool.numOfTrials = numOfTrials;
@@ -307,47 +308,11 @@ public class GenePool implements EvolutionEngine {
 
             genePool.speciesList = new ArrayList<>();
             List<Genotype> genotypes = new ArrayList<>();
-
-            Genotype genotype = initGenotype(genePool);
-            Util.repeat.accept(totalNumOfGenotypes, () -> genotypes.add(genotype.copy()));
+            Util.repeat.accept(totalNumOfGenotypes, () -> genotypes.add(new Genotype(genePool, inputs, outputs)));
             Species species = new Species(genePool, genotypes, genePool.speciesNames++);
             genePool.speciesList.add(species);
 
             return genePool;
-        }
-
-        /**
-         * Creates first genotype for particular number of inputs and outputs.
-         *
-         * @param genePool contains constants and settings.
-         */
-        public Genotype initGenotype(GenePool genePool) {
-            List<NodeGene> inputNodes = new ArrayList<>();
-            List<NodeGene> outputNodes = new ArrayList<>();
-            List<ConnectionGene> connectionGenes = new ArrayList<>();
-
-            for (int i = 0; i < inputs; i++) {
-                NodeGene nodeGene = new NodeGene(NeuronType.INPUT, genePool.neuronNames++);
-                nodeGene.layer = 0;
-                inputNodes.add(nodeGene);
-            }
-            for (int i = 0; i < outputs; i++) {
-                NodeGene nodeGene = new NodeGene(NeuronType.OUTPUT, maxNeurons--);
-                nodeGene.layer = 1000;
-                outputNodes.add(nodeGene);
-            }
-            for (NodeGene input : inputNodes) {
-                for (NodeGene output : outputNodes) {
-                    connectionGenes.add(new ConnectionGene(input, output, Util.randomDouble(), true));
-                }
-            }
-            inputNodes.addAll(outputNodes);
-
-            Collections.sort(inputNodes);
-            Collections.sort(connectionGenes);
-            Genotype genotype = new Genotype(genePool, inputNodes, connectionGenes);
-            genotype.name = Integer.toString(networksGenerated++);
-            return genotype;
         }
     }
 }
