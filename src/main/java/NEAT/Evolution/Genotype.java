@@ -10,7 +10,6 @@ import Utils.Util;
 import java.util.*;
 import java.util.stream.Collectors;
 
-// TODO try to reduce number of sorts
 // TODO consolidate print and toString functions
 public class Genotype implements Comparable<Genotype> {
     public final GenePool genePool;
@@ -29,29 +28,22 @@ public class Genotype implements Comparable<Genotype> {
 
     public Genotype(GenePool genePool, int inputs, int outputs) {
         this.genePool = genePool;
-        maxNeurons = genePool.maxNeurons;
+        maxNeurons = genePool.maxNeurons - outputs + 1;
         List<NodeGene> outputNodes = new ArrayList<>();
 
-        for (int i = 0; i < inputs; i++) {
-            inputNodes.add(new NodeGene(NeuronType.INPUT, neuronNames++, 0));
-        }
-        for (int i = 0; i < outputs; i++) {
-            outputNodes.add(new NodeGene(NeuronType.OUTPUT, maxNeurons--, 1000));
-        }
+        Util.repeat.accept(inputs, () -> inputNodes.add(new NodeGene(NeuronType.INPUT, neuronNames++, 0)));
+        Util.repeat.accept(outputs, () -> outputNodes.add(new NodeGene(NeuronType.OUTPUT, maxNeurons++, 1000)));
+
         for (NodeGene input : inputNodes) {
             for (NodeGene output : outputNodes) {
                 ConnectionGene connectionGene = new ConnectionGene(input, output, Util.randomDouble(), true);
                 input.connectionGenes.add(connectionGene);
-                Collections.sort(input.connectionGenes);
                 connectionGenes.add(connectionGene);
             }
         }
+
         nodeGenes.addAll(inputNodes);
         nodeGenes.addAll(outputNodes);
-
-        Collections.sort(inputNodes);
-        Collections.sort(nodeGenes);
-        Collections.sort(connectionGenes);
         name = Integer.toString(genePool.networksGenerated++);
     }
 
@@ -88,14 +80,16 @@ public class Genotype implements Comparable<Genotype> {
 
     /**
      * Splits {@link ConnectionGene} into two new ones, the old {@link ConnectionGene} is removed. Weight of the first
-     * {@link ConnectionGene} is 1 whereas weight of second one is same as weight of the old one.
+     * {@link ConnectionGene} is 1 whereas weight of second one is same as weight of the old one. So from x -> y we will
+     * have x -> z and z -> y, z is newly added {@link NodeGene}. Layer of y is increased by one and layer of all n
+     * such as y -> n are updated accordingly.
      *
      * @param connectionGene to remove and split
      */
     public void addNode(ConnectionGene connectionGene) {
         NodeGene nodeGene = new NodeGene(NeuronType.HIDDEN, neuronNames++, connectionGene.from.layer + 1);
 
-        ConnectionGene firstConnectionGene = new ConnectionGene(connectionGene.from, nodeGene, 1.0, true);
+        ConnectionGene firstConnectionGene = new ConnectionGene(connectionGene.from, nodeGene, 1.0d, true);
         ConnectionGene secondConnectionGene = new ConnectionGene(nodeGene, connectionGene.to, connectionGene.weight, true);
         nodeGene.connectionGenes.add(secondConnectionGene);
 
@@ -112,19 +106,24 @@ public class Genotype implements Comparable<Genotype> {
         Collections.sort(connectionGenes);
     }
 
-    // TODO test this
+    /**
+     * Recalculates layers of {@link NodeGene}s if needed. When {@link ConnectionGene} is added its destination
+     * {@link NodeGene} has to be on higher layer than its source {@link NodeGene}. By inserting new {@link NodeGene}
+     * and {@link ConnectionGene} old {@link NodeGene} on upper layer which are connected are pushed up by one layer.
+     * That way in {@link Phenotype} {@link NEATNeuron}s can be updated from lower layers to upper ones deterministically.
+     *
+     * @param connection that was added and which destination {@link NodeGene} layer should be recalculated
+     */
     public void updateLayerNumbers(ConnectionGene connection) {
         NodeGene targetNode = connection.to;
         if (targetNode.layer <= connection.from.layer) {
             targetNode.layer++;
-            for (ConnectionGene connectionGene : targetNode.connectionGenes) {
-                updateLayerNumbers(connectionGene);
-            }
+            targetNode.connectionGenes.forEach(this::updateLayerNumbers);
         }
     }
 
     /**
-     * Connects two, so far, unconnected nodes with new {@link ConnectionGene}.
+     * Connects two, so far, unconnected nodes with new {@link ConnectionGene}, and updates layer numbers if necessary.
      */
     public void addConnection() {
         var allPossibleConnections = getPossibleConnections();
@@ -139,10 +138,10 @@ public class Genotype implements Comparable<Genotype> {
     }
 
     /**
-     * {@link ConnectionGene} can lead from {@link NodeGene} with lower name to {@link NodeGene} with higher name,
-     * because node with lower name will be evaluated before it will receive output from node with higher name.
-     * Connections between inputs and outputs are not allowed. Existing connection a backward connections are also
-     * not allowed.
+     * {@link ConnectionGene} can lead from {@link NodeGene} on lower layer to {@link NodeGene} on higher layer,
+     * because {@link NodeGene}s on lower layers will be evaluated before {@link NodeGene} on higher layer will need be
+     * evaluated. Connections between inputs and outputs are not allowed. Existing connection a backward connections
+     * are also not allowed.
      *
      * @return {@link Pair}s of names of {@link NodeGene}s that can be connected.
      */
@@ -167,8 +166,8 @@ public class Genotype implements Comparable<Genotype> {
     }
 
     /**
-     * With probability chanceToHardMutateWight assigns {@link ConnectionGene} new random weight or with probabilty
-     * 1-chanceToHardMutateWight changes weight slightly. chanceToHardMutateWight is set in {@link GenePool}.
+     * With probability chanceToHardMutateWight assigns {@link ConnectionGene} new random weight or with probability
+     * 1 - chanceToHardMutateWight changes weight slightly. chanceToHardMutateWight is set in {@link GenePool}.
      *
      * @param connectionGene of which weight should be changed
      */
@@ -203,7 +202,7 @@ public class Genotype implements Comparable<Genotype> {
 
     /**
      * Creates deep copy of {@link Genotype}. Copy has same topology of {@link NodeGene}s and {@link Connection}s as
-     * original and all values are same.
+     * original and all values are same. But all object in copy are created as new ones.
      *
      * @return copied {@link Genotype} object
      */

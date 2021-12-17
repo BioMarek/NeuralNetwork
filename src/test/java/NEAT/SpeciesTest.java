@@ -75,12 +75,12 @@ public class SpeciesTest {
             oldGenotypes.add(genotype.copy());
         species.mutateSpecies();
 
-//        assertThat(species.genotypes.get(0).connectionGenes, is(oldGenotypes.get(0).connectionGenes));
-//        assertThat(species.genotypes.get(0).nodeGenes, is(oldGenotypes.get(0).nodeGenes));
-//        assertThat(species.genotypes.get(29).connectionGenes, is(oldGenotypes.get(29).connectionGenes));
-//        assertThat(species.genotypes.get(29).nodeGenes, is(oldGenotypes.get(29).nodeGenes));
-//        assertThat(species.genotypes.get(30).connectionGenes.get(), is(not(oldGenotypes.get(30).connectionGenes)));
-//        assertThat(species.genotypes.get(30).nodeGenes, is(oldGenotypes.get(30).nodeGenes));
+        assertThat(species.genotypes.get(0).connectionGenes, is(oldGenotypes.get(0).connectionGenes));
+        assertThat(species.genotypes.get(0).nodeGenes, is(oldGenotypes.get(0).nodeGenes));
+        assertThat(species.genotypes.get(29).connectionGenes, is(oldGenotypes.get(29).connectionGenes));
+        assertThat(species.genotypes.get(29).nodeGenes, is(oldGenotypes.get(29).nodeGenes));
+        assertThat(species.genotypes.get(30).connectionGenes, is(not(oldGenotypes.get(30).connectionGenes)));
+        assertThat(species.genotypes.get(30).nodeGenes, is(not(oldGenotypes.get(30).nodeGenes)));
     }
 
     @Test

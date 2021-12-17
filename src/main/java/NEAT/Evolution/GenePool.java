@@ -17,15 +17,11 @@ import java.util.stream.Collectors;
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class GenePool implements EvolutionEngine {
-    private int totalNumOfGenotypes;
-    private int inputs;
-    private int outputs;
-    protected int neuronNames = 0;
-    protected int maxNeurons;
     public Function<Double, Double> hiddenLayerActivationFunc;
     public Function<Double, Double> outputLayerActivationFunc;
     private List<Species> speciesList = new ArrayList<>();
 
+    protected int maxNeurons;
     protected int maxNumberOfMoves; // to stop AI moving in cycles
     protected int numOfTrials; // how many times NeuralNetwork plays the game
     protected double chanceToMutateWeight; // chance that weight will be mutated
@@ -285,11 +281,8 @@ public class GenePool implements EvolutionEngine {
         public GenePool build() {
             GenePool genePool = new GenePool();
             genePool.game = game;
-            genePool.inputs = inputs;
-            genePool.outputs = outputs;
             genePool.hiddenLayerActivationFunc = hiddenLayerActivationFunc;
             genePool.outputLayerActivationFunc = outputLayerActivationFunc;
-            genePool.totalNumOfGenotypes = totalNumOfGenotypes;
             genePool.maxNeurons = maxNeurons;
             genePool.verbose = verbose;
             genePool.maxNumberOfMoves = maxNumberOfMoves;
