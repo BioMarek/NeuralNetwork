@@ -10,6 +10,8 @@ import Utils.Util;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static Utils.Util.repeat;
+
 // TODO consolidate print and toString functions
 public class Genotype implements Comparable<Genotype> {
     public final GenePool genePool;
@@ -31,8 +33,8 @@ public class Genotype implements Comparable<Genotype> {
         maxNeurons = genePool.maxNeurons - outputs + 1;
         List<NodeGene> outputNodes = new ArrayList<>();
 
-        Util.repeat.accept(inputs, () -> inputNodes.add(new NodeGene(NeuronType.INPUT, neuronNames++, 0)));
-        Util.repeat.accept(outputs, () -> outputNodes.add(new NodeGene(NeuronType.OUTPUT, maxNeurons++, 1000)));
+        repeat.accept(inputs, () -> inputNodes.add(new NodeGene(NeuronType.INPUT, neuronNames++, 0)));
+        repeat.accept(outputs, () -> outputNodes.add(new NodeGene(NeuronType.OUTPUT, maxNeurons++, 1000)));
 
         for (NodeGene input : inputNodes) {
             for (NodeGene output : outputNodes) {
@@ -56,7 +58,7 @@ public class Genotype implements Comparable<Genotype> {
         LinkedHashMap<Integer, NEATNeuron> neurons = new LinkedHashMap<>();
         List<Connection> connections = new ArrayList<>();
 
-        nodeGenes.forEach((nodeGene) -> neurons.put(nodeGene.name, new NEATNeuron(nodeGene.name, nodeGene.type)));
+        nodeGenes.forEach((nodeGene) -> neurons.put(nodeGene.name, new NEATNeuron(nodeGene.name, nodeGene.layer, nodeGene.type)));
         connectionGenes.forEach((connectionGene) -> connections.add(new Connection(
                 neurons.get(connectionGene.from.name),
                 neurons.get(connectionGene.to.name),

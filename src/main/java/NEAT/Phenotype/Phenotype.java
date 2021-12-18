@@ -4,12 +4,18 @@ import Interfaces.NeuralNetwork;
 import NEAT.Evolution.GenePool;
 import NEAT.NeuronType;
 import Utils.Util;
+import Visualizations.DTOs.VisConnectionDTO;
+import Visualizations.DTOs.VisLayerDTO;
+import Visualizations.DTOs.VisualizationDTO;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static Utils.Util.repeat;
 
 /**
  * The class represents properties of NEAT network derived particular genotype. Genotypes are stored in {@link GenePool}
@@ -60,6 +66,30 @@ public class Phenotype implements NeuralNetwork {
                 outputNeurons.stream()
                         .map(neatNeuron -> neatNeuron.getOutput(genePool.outputLayerActivationFunc))
                         .collect(Collectors.toList()));
+    }
+
+    public VisualizationDTO getVisualizationDTO() {
+        int numOfLayers = 2 + hiddenNeurons.stream()
+                .mapToInt(neatNeuron -> neatNeuron.layer)
+                .max()
+                .orElse(0);
+
+        VisualizationDTO visualizationDTO = new VisualizationDTO();
+        List<VisLayerDTO> layerDTOS = new ArrayList<>();
+        repeat.accept(numOfLayers, () -> layerDTOS.add(new VisLayerDTO()));
+
+        // TODO try better approach
+        for (Connection connection : connections) {
+            layerDTOS.get(connection.from.layer).connections.add(new VisConnectionDTO(connection.from.name, connection.to.name, connection.weight));
+            layerDTOS.get(connection.from.layer).addNeuron(connection.from.name);
+            if (connection.to.layer == 1000)
+                layerDTOS.get(numOfLayers - 1).addNeuron(connection.to.name);
+            else
+                layerDTOS.get(connection.to.layer).addNeuron(connection.to.name);
+        }
+        visualizationDTO.layers = layerDTOS;
+
+        return visualizationDTO.build();
     }
 
     /**

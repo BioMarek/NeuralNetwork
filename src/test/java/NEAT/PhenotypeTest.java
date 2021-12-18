@@ -2,8 +2,10 @@ package NEAT;
 
 import Games.Snake.SnakeGame;
 import NEAT.Evolution.GenePool;
+import NEAT.Evolution.Genotype;
 import NEAT.Phenotype.Phenotype;
 import Utils.Util;
+import Visualizations.DTOs.VisualizationDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -13,6 +15,7 @@ import static org.hamcrest.Matchers.is;
 public class PhenotypeTest {
     private final GenePool.GenePoolBuilder genePoolBuilder = new GenePool.GenePoolBuilder(2, 2, Util.activationFunctionIdentity(), new SnakeGame(20));
     protected GenePool genePool;
+    private Genotype genotype;
     private Phenotype phenotype;
 
     @BeforeEach
@@ -20,7 +23,8 @@ public class PhenotypeTest {
         genePool = genePoolBuilder
                 .setOutputLayerActivationFunc(Util.activationFunctionIdentity())
                 .build();
-        phenotype = genePool.getSpecies().get(0).genotypes.get(0).createPhenotype();
+        genotype = genePool.getSpecies().get(0).genotypes.get(0);
+        phenotype = genotype.createPhenotype();
     }
 
     @Test
@@ -64,5 +68,44 @@ public class PhenotypeTest {
         assertThat(phenotype.getNetworkOutput(new double[]{1.0d, 1.0d}), is(new double[]{0.0d, 0.0d}));
         phenotype.resetPhenotype();
         assertThat(phenotype.getNetworkOutput(new double[]{0.0d, 0.0d}), is(new double[]{0.0d, 0.0d}));
+    }
+
+    @Test
+    void getVisualizationDTO_phenotypeWithoutAddedConnections() {
+        VisualizationDTO visualizationDTO = phenotype.getVisualizationDTO();
+        assertThat(visualizationDTO.layers.size(), is(2));
+        assertThat(visualizationDTO.layers.get(0).neurons.get(0), is(0));
+        assertThat(visualizationDTO.layers.get(0).neurons.get(1), is(1));
+        assertThat(visualizationDTO.layers.get(1).neurons.get(0), is(999));
+        assertThat(visualizationDTO.layers.get(1).neurons.get(1), is(1000));
+    }
+
+    @Test
+    void getVisualizationDTO_phenotypeWithOneAddedConnection() {
+        genotype.addNode(genotype.connectionGenes.get(0));
+        phenotype = genotype.createPhenotype();
+        VisualizationDTO visualizationDTO = phenotype.getVisualizationDTO();
+        assertThat(visualizationDTO.layers.size(), is(3));
+        assertThat(visualizationDTO.layers.get(0).neurons.get(0), is(0));
+        assertThat(visualizationDTO.layers.get(0).neurons.get(1), is(1));
+        assertThat(visualizationDTO.layers.get(1).neurons.get(0), is(2));
+        assertThat(visualizationDTO.layers.get(2).neurons.get(0), is(999));
+        assertThat(visualizationDTO.layers.get(2).neurons.get(1), is(1000));
+    }
+
+    @Test
+    void getVisualizationDTO_phenotypeWithTwoAddedConnection() {
+        genotype.addNode(genotype.connectionGenes.get(0));
+        genotype.addNode(genotype.connectionGenes.get(0));
+
+        phenotype = genotype.createPhenotype();
+        VisualizationDTO visualizationDTO = phenotype.getVisualizationDTO();
+        assertThat(visualizationDTO.layers.size(), is(4));
+        assertThat(visualizationDTO.layers.get(0).neurons.get(0), is(0));
+        assertThat(visualizationDTO.layers.get(0).neurons.get(1), is(1));
+        assertThat(visualizationDTO.layers.get(1).neurons.get(0), is(3));
+        assertThat(visualizationDTO.layers.get(2).neurons.get(0), is(2));
+        assertThat(visualizationDTO.layers.get(3).neurons.get(0), is(999));
+        assertThat(visualizationDTO.layers.get(3).neurons.get(1), is(1000));
     }
 }

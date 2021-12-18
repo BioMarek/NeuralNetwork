@@ -2,7 +2,6 @@ package NEAT.Evolution;
 
 import Games.Game;
 import Interfaces.EvolutionEngine;
-import Utils.Util;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -11,6 +10,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import static Utils.Util.repeat;
 
 /**
  * The class holds all genes of population.
@@ -81,7 +82,7 @@ public class GenePool implements EvolutionEngine {
 
         int emptyPlaces = reduceSpeciesSizesUniformly();
         removeDeadSpecies();
-        Util.repeat.accept(emptyPlaces, () -> speciesGenotypes.add(genotypeToSpeciate.copy()));
+        repeat.accept(emptyPlaces, () -> speciesGenotypes.add(genotypeToSpeciate.copy()));
 
         speciesList.add(new Species(this, speciesGenotypes, speciesNames++));
     }
@@ -301,7 +302,7 @@ public class GenePool implements EvolutionEngine {
 
             genePool.speciesList = new ArrayList<>();
             List<Genotype> genotypes = new ArrayList<>();
-            Util.repeat.accept(totalNumOfGenotypes, () -> genotypes.add(new Genotype(genePool, inputs, outputs)));
+            repeat.accept(totalNumOfGenotypes, () -> genotypes.add(new Genotype(genePool, inputs, outputs)));
             Species species = new Species(genePool, genotypes, genePool.speciesNames++);
             genePool.speciesList.add(species);
 
