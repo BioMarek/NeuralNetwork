@@ -3,24 +3,29 @@ package Visualizations.DTOs;
 
 import Interfaces.NeuralNetwork;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * DTO representing layer for {@link NeuralNetwork} visualization.
  */
 public class VisLayerDTO {
-    private final Set<Integer> neuronSet = new HashSet<>();
-    public List<Integer> neurons = new ArrayList<>();
+    private final Set<VisNeuronDTO> visNeuronDTOSet = new HashSet<>();
+    public List<VisNeuronDTO> neurons = new ArrayList<>();
     public List<VisConnectionDTO> connections = new ArrayList<>();
 
-    public void addNeuron(Integer neuron) {
-        neuronSet.add(neuron);
+    public void addNeuron(VisNeuronDTO neuron) {
+        visNeuronDTOSet.add(neuron);
+    }
+
+    public void calculateNeuronPositions() {
+        for (int i = 0; i < neurons.size(); i++) {
+            neurons.get(i).layer = i;
+        }
     }
 
     public void build() {
-        neurons = new ArrayList<>(neuronSet);
+        calculateNeuronPositions();
+        neurons = new ArrayList<>(visNeuronDTOSet);
+        Collections.sort(neurons);
     }
 }

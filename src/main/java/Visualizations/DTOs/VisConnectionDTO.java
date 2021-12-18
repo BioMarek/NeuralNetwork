@@ -8,11 +8,11 @@ import lombok.Data;
  */
 @Data
 public class VisConnectionDTO {
-    public int from;
-    public int to;
+    public VisNeuronDTO from;
+    public VisNeuronDTO to;
     public double weight;
 
-    public VisConnectionDTO(int from, int to, double weight) {
+    public VisConnectionDTO(VisNeuronDTO from, VisNeuronDTO to, double weight) {
         this.from = from;
         this.to = to;
         this.weight = weight;

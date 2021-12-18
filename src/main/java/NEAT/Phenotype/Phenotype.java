@@ -6,6 +6,7 @@ import NEAT.NeuronType;
 import Utils.Util;
 import Visualizations.DTOs.VisConnectionDTO;
 import Visualizations.DTOs.VisLayerDTO;
+import Visualizations.DTOs.VisNeuronDTO;
 import Visualizations.DTOs.VisualizationDTO;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
@@ -68,6 +69,7 @@ public class Phenotype implements NeuralNetwork {
                         .collect(Collectors.toList()));
     }
 
+    @Override
     public VisualizationDTO getVisualizationDTO() {
         int numOfLayers = 2 + hiddenNeurons.stream()
                 .mapToInt(neatNeuron -> neatNeuron.layer)
@@ -80,12 +82,13 @@ public class Phenotype implements NeuralNetwork {
 
         // TODO try better approach
         for (Connection connection : connections) {
-            layerDTOS.get(connection.from.layer).connections.add(new VisConnectionDTO(connection.from.name, connection.to.name, connection.weight));
-            layerDTOS.get(connection.from.layer).addNeuron(connection.from.name);
-            if (connection.to.layer == 1000)
-                layerDTOS.get(numOfLayers - 1).addNeuron(connection.to.name);
-            else
-                layerDTOS.get(connection.to.layer).addNeuron(connection.to.name);
+            int toLayer = (connection.to.layer == 1000) ? numOfLayers - 1 : connection.to.layer;
+            VisNeuronDTO from = new VisNeuronDTO(connection.from.name, connection.from.layer);
+            VisNeuronDTO to = new VisNeuronDTO(connection.to.name, toLayer);
+
+            layerDTOS.get(connection.from.layer).connections.add(new VisConnectionDTO(from, to, connection.weight));
+            layerDTOS.get(connection.from.layer).addNeuron(from);
+            layerDTOS.get(toLayer).addNeuron(to);
         }
         visualizationDTO.layers = layerDTOS;
 

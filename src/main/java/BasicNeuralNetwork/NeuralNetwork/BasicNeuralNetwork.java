@@ -1,6 +1,8 @@
 package BasicNeuralNetwork.NeuralNetwork;
 
 import Interfaces.NeuralNetwork;
+import Visualizations.DTOs.VisLayerDTO;
+import Visualizations.DTOs.VisualizationDTO;
 import lombok.EqualsAndHashCode;
 
 import java.io.*;
@@ -87,6 +89,22 @@ public class BasicNeuralNetwork implements Comparable<BasicNeuralNetwork>, Seria
                 outputLayerActivationFunc);
 
         return hiddenLayers.get(outputLayerIndex).layerOutputs;
+    }
+
+    @Override
+    public VisualizationDTO getVisualizationDTO() {
+        int neuronNames = 0;
+        VisualizationDTO visualizationDTO = new VisualizationDTO();
+
+        for (int i = 0; i < hiddenLayers.size(); i++) {
+            VisLayerDTO visLayerDTO = visualizationDTO.layers.get(i);
+            for (BasicNeuron basicNeuron : hiddenLayers.get(i).basicNeurons) {
+//                visLayerDTO.addNeuron(neuronNames++);
+//                visLayerDTO.connections // TODO
+            }
+        }
+
+        return visualizationDTO.build();
     }
 
     /**
