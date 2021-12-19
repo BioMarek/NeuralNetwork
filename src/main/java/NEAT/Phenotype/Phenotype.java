@@ -83,12 +83,10 @@ public class Phenotype implements NeuralNetwork {
         // TODO try better approach
         for (Connection connection : connections) {
             int toLayer = (connection.to.layer == 1000) ? numOfLayers - 1 : connection.to.layer;
-            VisNeuronDTO from = new VisNeuronDTO(connection.from.name, connection.from.layer);
-            VisNeuronDTO to = new VisNeuronDTO(connection.to.name, toLayer);
+            VisNeuronDTO from = layerDTOS.get(connection.from.layer).checkNeuronExistence(new VisNeuronDTO(connection.from.name, connection.from.layer));
+            VisNeuronDTO to = layerDTOS.get(toLayer).checkNeuronExistence(new VisNeuronDTO(connection.to.name, toLayer));
 
-            layerDTOS.get(connection.from.layer).connections.add(new VisConnectionDTO(from, to, connection.weight));
-            layerDTOS.get(connection.from.layer).addNeuron(from);
-            layerDTOS.get(toLayer).addNeuron(to);
+            visualizationDTO.connections.add(new VisConnectionDTO(from, to, connection.weight));
         }
         visualizationDTO.layers = layerDTOS;
 

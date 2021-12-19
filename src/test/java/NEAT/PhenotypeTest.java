@@ -83,6 +83,11 @@ public class PhenotypeTest {
         assertThat(visualizationDTO.layers.get(0).neurons.get(1).layer, is(0));
         assertThat(visualizationDTO.layers.get(1).neurons.get(0).layer, is(1));
         assertThat(visualizationDTO.layers.get(1).neurons.get(1).layer, is(1));
+
+        assertThat(visualizationDTO.layers.get(0).neurons.get(0).position, is(0));
+        assertThat(visualizationDTO.layers.get(0).neurons.get(1).position, is(1));
+        assertThat(visualizationDTO.layers.get(1).neurons.get(0).position, is(0));
+        assertThat(visualizationDTO.layers.get(1).neurons.get(1).position, is(1));
     }
 
     @Test
@@ -102,6 +107,12 @@ public class PhenotypeTest {
         assertThat(visualizationDTO.layers.get(1).neurons.get(0).layer, is(1));
         assertThat(visualizationDTO.layers.get(2).neurons.get(0).layer, is(2));
         assertThat(visualizationDTO.layers.get(2).neurons.get(1).layer, is(2));
+
+        assertThat(visualizationDTO.layers.get(0).neurons.get(0).position, is(0));
+        assertThat(visualizationDTO.layers.get(0).neurons.get(1).position, is(1));
+        assertThat(visualizationDTO.layers.get(1).neurons.get(0).position, is(0));
+        assertThat(visualizationDTO.layers.get(2).neurons.get(0).position, is(0));
+        assertThat(visualizationDTO.layers.get(2).neurons.get(1).position, is(1));
     }
 
     @Test
@@ -119,12 +130,18 @@ public class PhenotypeTest {
         assertThat(visualizationDTO.layers.get(3).neurons.get(0).name, is(999));
         assertThat(visualizationDTO.layers.get(3).neurons.get(1).name, is(1000));
 
-        assertThat(visualizationDTO.layers.size(), is(4));
         assertThat(visualizationDTO.layers.get(0).neurons.get(0).layer, is(0));
         assertThat(visualizationDTO.layers.get(0).neurons.get(1).layer, is(0));
         assertThat(visualizationDTO.layers.get(1).neurons.get(0).layer, is(1));
         assertThat(visualizationDTO.layers.get(2).neurons.get(0).layer, is(2));
         assertThat(visualizationDTO.layers.get(3).neurons.get(0).layer, is(3));
         assertThat(visualizationDTO.layers.get(3).neurons.get(1).layer, is(3));
+
+        assertThat(visualizationDTO.layers.get(0).neurons.get(0).position, is(0));
+        assertThat(visualizationDTO.layers.get(0).neurons.get(1).position, is(1));
+        assertThat(visualizationDTO.layers.get(1).neurons.get(0).position, is(0));
+        assertThat(visualizationDTO.layers.get(2).neurons.get(0).position, is(0));
+        assertThat(visualizationDTO.layers.get(3).neurons.get(0).position, is(0));
+        assertThat(visualizationDTO.layers.get(3).neurons.get(1).position, is(1));
     }
 }

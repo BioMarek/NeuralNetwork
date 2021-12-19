@@ -11,8 +11,8 @@ public class Main {
     private static final int NUM_OF_GENERATIONS = 300;
 
     public static void main(String[] args) {
-//        setupNeatNeuralNetwork();
-        visualization();
+        setupNeatNeuralNetwork();
+//        visualization();
     }
 
     public static void visualization() {
@@ -20,6 +20,7 @@ public class Main {
         GenePool genePool = genePoolBuilder
                 .build();
         Genotype genotype = genePool.getSpecies().get(0).genotypes.get(0);
+        genotype.addNode(genotype.connectionGenes.get(0));
         genotype.addNode(genotype.connectionGenes.get(0));
         new MainFrame(genotype.createPhenotype().getVisualizationDTO());
     }
@@ -43,6 +44,7 @@ public class Main {
         SnakeGame snakeGame = new SnakeGame(20);
         NeuralNetwork neuralNetwork = genePool.getSpecies().get(0).genotypes.get(0).createPhenotype();
         neuralNetwork.printNetwork();
+        new MainFrame(neuralNetwork.getVisualizationDTO());
         snakeGame.showSnakeMoves(neuralNetwork, 500);
     }
 

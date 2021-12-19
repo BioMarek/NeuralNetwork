@@ -11,6 +11,7 @@ import java.util.Set;
  */
 public class VisualizationDTO {
     public List<VisLayerDTO> layers = new ArrayList<>();
+    public List<VisConnectionDTO> connections = new ArrayList<>();
 
     /**
      * Used to convert {@link Set<Integer>} of neuron names into {@link List<Integer>} of neuron names.

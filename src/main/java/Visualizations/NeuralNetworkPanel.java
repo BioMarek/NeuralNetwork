@@ -1,9 +1,8 @@
 package Visualizations;
 
-import BasicNeuralNetwork.NeuralNetwork.Layer;
 import BasicNeuralNetwork.NeuralNetwork.BasicNeuralNetwork;
 import BasicNeuralNetwork.NeuralNetwork.BasicNeuron;
-import Utils.Util;
+import BasicNeuralNetwork.NeuralNetwork.Layer;
 import Visualizations.DTOs.VisConnectionDTO;
 import Visualizations.DTOs.VisLayerDTO;
 import Visualizations.DTOs.VisualizationDTO;
@@ -45,9 +44,7 @@ public class NeuralNetworkPanel extends JPanel {
         for (int i = 0; i < visualizationDTO.layers.size(); i++) {
             drawLayer(visualizationDTO.layers.get(i), i, yAxisOffsets[i]);
         }
-        for (int i = 0; i < visualizationDTO.layers.size() - 1; i++) {
-            drawWeights(i, i + 1, yAxisOffsets);
-        }
+        drawWeights(yAxisOffsets);
     }
 
     /**
@@ -72,16 +69,17 @@ public class NeuralNetworkPanel extends JPanel {
      * Draws weights between Layer on the "left" the one with smaller index and layer on the "right" the one with
      * higher index.
      *
-     * @param leftLayer  {@link Layer} with the index 'i' in {@link BasicNeuralNetwork}
-     * @param rightLayer {@link Layer} with the index 'i + 1' in {@link BasicNeuralNetwork}
      */
-    protected void drawWeights(int leftLayer, int rightLayer, int[] yAxisOffset) {
+    protected void drawWeights(int[] yAxisOffset) {
         graphics.setStroke(new BasicStroke(weightStroke));
 
-        int leftNeuronY = neuronYAxisGap + yAxisOffset[leftLayer];
-        int leftLayerX = neuronXAxisGap + leftLayer * xAxisDistanceBetweenLayers;
-        int rightLayerX = leftLayerX + xAxisDistanceBetweenLayers;
-
+        for (VisConnectionDTO connection : visualizationDTO.connections) {
+            int fromNeuronX = neuronXAxisGap + connection.from.layer * xAxisDistanceBetweenLayers;
+            int fromNeuronY = neuronYAxisGap * (connection.from.position + 1) + yAxisOffset[connection.from.layer];
+            int toNeuronX = neuronXAxisGap + connection.to.layer * xAxisDistanceBetweenLayers;
+            int toNeuronY = neuronYAxisGap * (connection.to.position + 1) + yAxisOffset[connection.to.layer];
+            drawLine(weightStartingPoint(fromNeuronY, fromNeuronX), weightEndingPoint(toNeuronY, toNeuronX));
+        }
     }
 
     /**
