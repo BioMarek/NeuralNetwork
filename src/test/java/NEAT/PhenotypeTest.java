@@ -72,6 +72,7 @@ public class PhenotypeTest {
 
     @Test
     void getVisualizationDTO_phenotypeWithoutAddedConnections() {
+        // TODO parametrized tests
         VisualizationDTO visualizationDTO = phenotype.getVisualizationDTO();
         assertThat(visualizationDTO.layers.size(), is(2));
         assertThat(visualizationDTO.layers.get(0).neurons.get(0).name, is(0));

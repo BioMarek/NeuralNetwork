@@ -46,9 +46,9 @@ public class GenotypeTest {
         assertThat(genotype.inputNodes.get(1).connectionGenes.get(1).to.name, is(1000));
 
         assertThat(genotype.nodeGenes.get(2).name, is(999));
-        assertThat(genotype.nodeGenes.get(2).layer, is(1000));
+        assertThat(genotype.nodeGenes.get(2).layer, is(Integer.MAX_VALUE));
         assertThat(genotype.nodeGenes.get(3).name, is(1000));
-        assertThat(genotype.nodeGenes.get(3).layer, is(1000));
+        assertThat(genotype.nodeGenes.get(3).layer, is(Integer.MAX_VALUE));
 
         assertThat(genotype.nodeGenes.get(2).connectionGenes.size(), is(0));
         assertThat(genotype.nodeGenes.get(3).connectionGenes.size(), is(0));

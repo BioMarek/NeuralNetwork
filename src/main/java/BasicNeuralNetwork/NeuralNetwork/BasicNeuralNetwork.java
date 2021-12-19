@@ -94,7 +94,7 @@ public class BasicNeuralNetwork implements Comparable<BasicNeuralNetwork>, Seria
     @Override
     public VisualizationDTO getVisualizationDTO() {
         int neuronNames = 0;
-        VisualizationDTO visualizationDTO = new VisualizationDTO();
+        VisualizationDTO visualizationDTO = new VisualizationDTO(hiddenLayers.size());
 
         for (int i = 0; i < hiddenLayers.size(); i++) {
             VisLayerDTO visLayerDTO = visualizationDTO.layers.get(i);

@@ -42,8 +42,9 @@ public class ConnectionGene implements Comparable<ConnectionGene> {
         return (this.from.layer > connectionGene.from.layer) ? 1 : -1;
     }
 
-    public void printConnectionGene() {
-        System.out.printf("%-3d -> %-4d %d -> %d %7.4f%n", from.name, to.name, from.layer, to.layer, weight);
+    @Override
+    public String toString() {
+       return String.format("%-3d -> %-4d %d -> %d %7.4f%n", from.name, to.name, from.layer, to.layer, weight);
     }
 
     /**

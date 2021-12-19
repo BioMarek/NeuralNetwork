@@ -12,20 +12,32 @@ public class VisLayerDTO {
     private final Map<Integer, VisNeuronDTO> visNeuronDTOMap = new HashMap<>();
     public List<VisNeuronDTO> neurons = new ArrayList<>();
 
-    public VisNeuronDTO checkNeuronExistence(VisNeuronDTO neuron) {
-        // TODO refactor
-        if (visNeuronDTOMap.get(neuron.name) == null) {
-            visNeuronDTOMap.put(neuron.name, neuron);
-            return neuron;
-        } else return visNeuronDTOMap.get(neuron.name);
+    /**
+     * Adds {@link VisNeuronDTO} into layer and returns it. If {@link VisNeuronDTO} with such name exists then the
+     * existing one will be returned.
+     *
+     * @param neuron to be added
+     * @return correct neuron either new or the one already in {@link VisLayerDTO}
+     */
+    public VisNeuronDTO addNeuron(VisNeuronDTO neuron) {
+        visNeuronDTOMap.putIfAbsent(neuron.name, neuron);
+        return visNeuronDTOMap.get(neuron.name);
     }
 
+    /**
+     * Calculates {@link VisNeuronDTO} position, they are sorted by their name so {@link VisNeuronDTO} with lower name
+     * will above neuron with {@link VisNeuronDTO} name.
+     */
     public void calculateNeuronPositions() {
         for (int i = 0; i < neurons.size(); i++) {
             neurons.get(i).position = i;
         }
     }
 
+    /**
+     * After all neurons are this function creates {@link ArrayList<VisNeuronDTO>} from them, sorts them and calculates
+     * their positions.
+     */
     public void build() {
         neurons = new ArrayList<>(visNeuronDTOMap.values());
         Collections.sort(neurons);

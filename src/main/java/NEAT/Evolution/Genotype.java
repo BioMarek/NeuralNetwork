@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 
 import static Utils.Util.repeat;
 
-// TODO consolidate print and toString functions
 public class Genotype implements Comparable<Genotype> {
     public final GenePool genePool;
     public List<ConnectionGene> connectionGenes = new ArrayList<>();
@@ -34,7 +33,7 @@ public class Genotype implements Comparable<Genotype> {
         List<NodeGene> outputNodes = new ArrayList<>();
 
         repeat.accept(inputs, () -> inputNodes.add(new NodeGene(NeuronType.INPUT, neuronNames++, 0)));
-        repeat.accept(outputs, () -> outputNodes.add(new NodeGene(NeuronType.OUTPUT, maxNeurons++, 1000)));
+        repeat.accept(outputs, () -> outputNodes.add(new NodeGene(NeuronType.OUTPUT, maxNeurons++, Integer.MAX_VALUE)));
 
         for (NodeGene input : inputNodes) {
             for (NodeGene output : outputNodes) {
@@ -236,7 +235,7 @@ public class Genotype implements Comparable<Genotype> {
     }
 
     public void printConnections() {
-        connectionGenes.forEach(ConnectionGene::printConnectionGene);
+        connectionGenes.forEach(ConnectionGene::toString);
     }
 
     @Override
