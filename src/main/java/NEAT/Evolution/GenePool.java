@@ -5,6 +5,10 @@ import Interfaces.EvolutionEngine;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -42,7 +46,9 @@ public class GenePool implements EvolutionEngine {
 
     @Override
     public void calculateEvolution(int numOfGenerations) {
+        BufferedWriter speciesWriter = createFileWriter("/home/marek/marek/NeuralNetworkExports/species.csv");
         for (int i = 0; i < numOfGenerations; i++) {
+            writeSpecies(speciesWriter);
             System.out.printf("\nGeneration %d %s\n", i, "-".repeat(200));
             if (i % frequencyOfSpeciation == 0 && i > 0)
                 createSpecies();
@@ -52,12 +58,13 @@ public class GenePool implements EvolutionEngine {
             removeDeadSpecies();
             printSpecies();
         }
+        closeWriter(speciesWriter);
     }
 
     @Override
     public void makeNextGeneration() {
         for (Species species : speciesList) {
-            species.calculateScores();  // rename
+            species.calculateScores();  // TODO rename
             species.calculateAverage();
         }
         speciesList.sort(Collections.reverseOrder());
@@ -131,6 +138,41 @@ public class GenePool implements EvolutionEngine {
      */
     public void removeDeadSpecies() {
         speciesList.removeIf(Species::isExtinct);
+    }
+
+    public BufferedWriter createFileWriter(String filePath) {
+        try {
+            return Files.newBufferedWriter(Path.of(filePath));
+        } catch (IOException e) {
+            System.out.println("File could not be created\n" + e);
+        }
+        return null;
+    }
+
+    public void closeWriter(BufferedWriter writer) {
+        try {
+            writer.close();
+        } catch (IOException e) {
+            System.out.println("file could not be closed\n" + e);
+        }
+    }
+
+    public void writeSpecies(BufferedWriter writer) {
+        try {
+            writer.write(createSpeciesCsvString());
+        } catch (IOException e) {
+            System.out.println("Could not write species string");
+        }
+    }
+
+    public String createSpeciesCsvString() {
+        StringBuilder result = new StringBuilder("");
+        for (Species species : speciesList) {
+            result.append(species.name).append(":").append(species.getSize()).append(", ");
+        }
+        result.append("\n");
+        System.out.println("should write " + result.toString());
+        return result.toString();
     }
 
     /**
