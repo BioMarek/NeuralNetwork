@@ -8,7 +8,7 @@ import Utils.Util;
 import Visualizations.MainFrame;
 
 public class Main {
-    private static final int NUM_OF_GENERATIONS = 100;
+    private static final int NUM_OF_GENERATIONS = 300;
 
     public static void main(String[] args) {
         setupNeatNeuralNetwork();

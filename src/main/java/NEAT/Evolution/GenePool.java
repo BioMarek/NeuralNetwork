@@ -44,11 +44,13 @@ public class GenePool implements EvolutionEngine {
     protected Game game;
     protected boolean verbose;
 
+    protected int speciesCreated = 1;
+
     @Override
     public void calculateEvolution(int numOfGenerations) {
-        BufferedWriter speciesWriter = createFileWriter("/home/marek/marek/NeuralNetworkExports/species.csv");
+        StringBuilder speciesCsvString = new StringBuilder();
         for (int i = 0; i < numOfGenerations; i++) {
-            writeSpecies(speciesWriter);
+            addSpeciesCsvString(speciesCsvString);
             System.out.printf("\nGeneration %d %s\n", i, "-".repeat(200));
             if (i % frequencyOfSpeciation == 0 && i > 0)
                 createSpecies();
@@ -58,7 +60,8 @@ public class GenePool implements EvolutionEngine {
             removeDeadSpecies();
             printSpecies();
         }
-        closeWriter(speciesWriter);
+        addSpeciesMetadata(speciesCsvString, numOfGenerations);
+        saveSpeciesCsvFile("/home/marek/marek/NeuralNetworkExports/species.csv", speciesCsvString.toString());
     }
 
     @Override
@@ -92,6 +95,7 @@ public class GenePool implements EvolutionEngine {
         repeat.accept(emptyPlaces, () -> speciesGenotypes.add(genotypeToSpeciate.copy()));
 
         speciesList.add(new Species(this, speciesGenotypes, speciesNames++));
+        speciesCreated++;
     }
 
     /**
@@ -140,39 +144,42 @@ public class GenePool implements EvolutionEngine {
         speciesList.removeIf(Species::isExtinct);
     }
 
-    public BufferedWriter createFileWriter(String filePath) {
+    /**
+     * Creates *.csv file with information with evolution of species.
+     *
+     * @param filePath      where should file be created
+     * @param stringToWrite string containing information about species evolution
+     */
+    public void saveSpeciesCsvFile(String filePath, String stringToWrite) {
         try {
-            return Files.newBufferedWriter(Path.of(filePath));
+            BufferedWriter writer = Files.newBufferedWriter(Path.of(filePath));
+            writer.write(stringToWrite);
+            writer.close();
         } catch (IOException e) {
             System.out.println("File could not be created\n" + e);
         }
-        return null;
     }
 
-    public void closeWriter(BufferedWriter writer) {
-        try {
-            writer.close();
-        } catch (IOException e) {
-            System.out.println("file could not be closed\n" + e);
-        }
+    /**
+     * Adds line stating number of {@link  Species} and number of generations to {@link StringBuilder} csvString.
+     * This line is added as first line of the *.csv file.
+     *
+     * @param csvString {@link StringBuilder} to which line should be added
+     */
+    public void addSpeciesMetadata(StringBuilder csvString, int numOfGenerations) {
+        csvString.insert(0, speciesCreated + "," + numOfGenerations + "\n");
     }
 
-    public void writeSpecies(BufferedWriter writer) {
-        try {
-            writer.write(createSpeciesCsvString());
-        } catch (IOException e) {
-            System.out.println("Could not write species string");
-        }
-    }
-
-    public String createSpeciesCsvString() {
-        StringBuilder result = new StringBuilder("");
+    /**
+     * Adds line specifying species names and counts in current generation to {@link StringBuilder} csvString.
+     *
+     * @param csvString {@link StringBuilder} to which line should be added
+     */
+    public void addSpeciesCsvString(StringBuilder csvString) {
         for (Species species : speciesList) {
-            result.append(species.name).append(":").append(species.getSize()).append(", ");
+            csvString.append(species.name).append(":").append(species.getSize()).append(",");
         }
-        result.append("\n");
-        System.out.println("should write " + result.toString());
-        return result.toString();
+        csvString.append("\n");
     }
 
     /**
