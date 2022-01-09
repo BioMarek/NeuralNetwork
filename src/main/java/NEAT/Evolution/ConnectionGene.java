@@ -26,20 +26,20 @@ public class ConnectionGene implements Comparable<ConnectionGene> {
     }
 
     /**
-     * Orders {@link Connection}s both "from" names and "to" names are sorted in descending order.
+     * Orders {@link Connection}s "layer", "from" names and "to" names are sorted in descending order.
      *
      * @param connectionGene to compare with this {@link Connection}
      * @return 0 if connections are equal, 1 if this {@link Connection} has higher "from" or "to" name, -1 otherwise.
      */
-    @Override //TODO try better solution
+    @Override
     public int compareTo(ConnectionGene connectionGene) {
-        if (this.from.layer == connectionGene.from.layer && this.from.name == connectionGene.from.name && this.to.name == connectionGene.to.name)
-            return 0;
-        if (this.from.layer == connectionGene.from.layer && this.from.name == connectionGene.from.name)
-            return (this.to.name > connectionGene.to.name) ? 1 : -1;
-        if (this.from.layer == connectionGene.from.layer)
+        if (this.from.layer != connectionGene.from.layer)
+            return (this.from.layer > connectionGene.from.layer) ? 1 : -1;
+        if (this.from.name != connectionGene.from.name)
             return (this.from.name > connectionGene.from.name) ? 1 : -1;
-        return (this.from.layer > connectionGene.from.layer) ? 1 : -1;
+        if (this.to.name != connectionGene.to.name)
+            return (this.to.name > connectionGene.to.name) ? 1 : -1;
+        return 0;
     }
 
     @Override

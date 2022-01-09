@@ -4,6 +4,7 @@ import Games.Snake.SnakeGame;
 import NEAT.Evolution.ConnectionGene;
 import NEAT.Evolution.GenePool;
 import NEAT.Evolution.Genotype;
+import NEAT.Evolution.NodeGene;
 import Utils.Util;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,5 +32,24 @@ public class ConnectionGeneTest {
         assertThat(copy.equals(connectionGene), is(true));
         assertThat(copy.from, is(connectionGene.from));
         assertThat(copy.to, is(connectionGene.to));
+    }
+
+    @Test
+    void compareTo_worksCorrectly(){
+        NodeGene inputNode = new NodeGene(NeuronType.INPUT, 0, 0);
+        NodeGene hiddenLayer1First = new NodeGene(NeuronType.HIDDEN, 1, 1);
+        NodeGene hiddenLayer1Second = new NodeGene(NeuronType.HIDDEN, 3, 1);
+        NodeGene hiddenLayer2First = new NodeGene(NeuronType.HIDDEN, 2, 2);
+        NodeGene hiddenLayer2Second = new NodeGene(NeuronType.HIDDEN, 4, 2);
+        NodeGene hiddenLayer1Third = new NodeGene(NeuronType.HIDDEN, 3, 2);
+        NodeGene hiddenLayer2Copy = new NodeGene(NeuronType.HIDDEN, 4, 2);
+
+        assertThat(inputNode.compareTo(hiddenLayer1First), is(-1));
+        assertThat(hiddenLayer1First.compareTo(hiddenLayer1Second), is(-1));
+        assertThat(hiddenLayer1Second.compareTo(hiddenLayer1First), is(1));
+        assertThat(hiddenLayer1Second.compareTo(hiddenLayer2First), is(-1));
+        assertThat(hiddenLayer1Second.compareTo(hiddenLayer1Third), is(-1));
+        assertThat(hiddenLayer2Second.compareTo(inputNode), is(1));
+        assertThat(hiddenLayer2Second.compareTo(hiddenLayer2Copy), is(0));
     }
 }
