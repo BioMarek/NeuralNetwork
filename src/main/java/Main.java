@@ -43,7 +43,7 @@ public class Main {
 
         SnakeGame snakeGame = new SnakeGame(20);
         NeuralNetwork neuralNetwork = genePool.getSpecies().get(0).genotypes.get(0).createPhenotype();
-        neuralNetwork.printNetwork();
+        System.out.println(neuralNetwork);
         new MainFrame(neuralNetwork.getVisualizationDTO());
         snakeGame.showSnakeMoves(neuralNetwork, 500);
     }

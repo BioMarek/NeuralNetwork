@@ -235,10 +235,6 @@ public class Genotype implements Comparable<Genotype> {
         return genotype;
     }
 
-    public void printConnections() {
-        connectionGenes.forEach(ConnectionGene::toString);
-    }
-
     @Override
     public int compareTo(Genotype genotype) {
         if (this.score == genotype.score)
@@ -265,5 +261,12 @@ public class Genotype implements Comparable<Genotype> {
     @Override
     public int hashCode() {
         return Objects.hash(genePool, connectionGenes, nodeGenes, inputNodes, neuronNames, score, age);
+    }
+
+    @Override
+    public String toString(){
+        StringBuilder result = new StringBuilder();
+        connectionGenes.forEach((connectionGene -> result.append(connectionGene.toString())));
+        return result.toString();
     }
 }

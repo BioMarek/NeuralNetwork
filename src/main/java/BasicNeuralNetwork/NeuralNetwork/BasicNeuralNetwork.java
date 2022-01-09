@@ -120,7 +120,6 @@ public class BasicNeuralNetwork implements Comparable<BasicNeuralNetwork>, Seria
     /**
      * Prints neural network in human-readable format.
      */
-    @Override
     public void printNetwork() {
         for (int i = 0; i < hiddenLayers.size(); i++) {
             System.out.println("Layer: " + i);

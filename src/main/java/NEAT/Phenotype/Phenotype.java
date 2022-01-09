@@ -65,6 +65,11 @@ public class Phenotype implements NeuralNetwork {
                         .collect(Collectors.toList()));
     }
 
+    /**
+     * Creates {@link VisualizationDTO} that transfer necessary information for creation of visualization
+     *
+     * @return {@link VisualizationDTO}
+     */
     @Override
     public VisualizationDTO getVisualizationDTO() {
         // input and output layer will be always present hence "2 + ..."
@@ -86,7 +91,9 @@ public class Phenotype implements NeuralNetwork {
     }
 
     @Override
-    public void printNetwork() {
-        connections.forEach(connectionGene -> System.out.printf("%-3d -> %-4d %7.4f%n", connectionGene.from.name, connectionGene.to.name, connectionGene.weight));
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+        connections.forEach(connectionGene -> result.append(String.format("%-3d -> %-4d %7.4f%n", connectionGene.from.name, connectionGene.to.name, connectionGene.weight)));
+        return result.toString();
     }
 }

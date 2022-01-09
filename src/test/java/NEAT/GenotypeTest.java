@@ -35,7 +35,6 @@ public class GenotypeTest {
         assertThat(genotype.inputNodes.get(0).layer, is(0));
         assertThat(genotype.inputNodes.get(1).name, is(1));
         assertThat(genotype.inputNodes.get(1).layer, is(0));
-        genotype.printConnections();
 
         assertThat(genotype.inputNodes.get(0).connectionGenes.size(), is(2));
         assertThat(genotype.inputNodes.get(0).connectionGenes.get(0).to.name, is(999));
