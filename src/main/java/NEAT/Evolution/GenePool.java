@@ -30,6 +30,7 @@ public class GenePool implements EvolutionEngine {
     protected int maxNumberOfMoves; // to stop AI moving in cycles
     protected int numOfTrials; // how many times NeuralNetwork plays the game
     protected double chanceToMutateWeight; // chance that weight will be mutated
+    protected double chanceToSwitchConnectionEnabled;
     protected double chanceToHardMutateWight; // chance to assign new value to weight when it is being mutated, small change otherwise
     protected double chanceToAddNode;
     protected double chanceToAddConnection;
@@ -229,6 +230,7 @@ public class GenePool implements EvolutionEngine {
         private int numOfTrials = 10;
         private double chanceToMutateWeight = 0.8d;
         private double chanceToHardMutateWight = 0.1d;
+        private double chanceToSwitchConnectionEnabled = 0.2d;
         private double chanceToAddNode = 0.03d;
         private double chanceToAddConnection = 0.03d;
         private double networksToKeep = 0.3d;
@@ -288,6 +290,11 @@ public class GenePool implements EvolutionEngine {
             return this;
         }
 
+        public GenePoolBuilder setChanceToSwitchConnectionEnabled (double chanceToSwitchConnectionEnabled) {
+            this.chanceToSwitchConnectionEnabled = chanceToSwitchConnectionEnabled;
+            return this;
+        }
+
         public GenePoolBuilder setChanceToAddNode(double chanceToSplitConnection) {
             this.chanceToAddNode = chanceToSplitConnection;
             return this;
@@ -339,6 +346,7 @@ public class GenePool implements EvolutionEngine {
             genePool.numOfTrials = numOfTrials;
             genePool.chanceToMutateWeight = chanceToMutateWeight;
             genePool.chanceToHardMutateWight = chanceToHardMutateWight;
+            genePool.chanceToSwitchConnectionEnabled = chanceToSwitchConnectionEnabled;
             genePool.chanceToAddNode = chanceToAddNode;
             genePool.chanceToAddConnection = chanceToAddConnection;
             genePool.networksToKeep = networksToKeep;

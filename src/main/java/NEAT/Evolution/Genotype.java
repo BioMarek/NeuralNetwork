@@ -5,13 +5,11 @@ import NEAT.Phenotype.Connection;
 import NEAT.Phenotype.NEATNeuron;
 import NEAT.Phenotype.Phenotype;
 import Utils.Pair;
-import Utils.Util;
-import org.w3c.dom.ls.LSOutput;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static Utils.Util.repeat;
+import static Utils.Util.*;
 
 public class Genotype implements Comparable<Genotype> {
     public final GenePool genePool;
@@ -38,7 +36,7 @@ public class Genotype implements Comparable<Genotype> {
 
         for (NodeGene input : inputNodes) {
             for (NodeGene output : outputNodes) {
-                ConnectionGene connectionGene = new ConnectionGene(input, output, Util.randomDouble(), true);
+                ConnectionGene connectionGene = new ConnectionGene(input, output, randomDouble(), true);
                 input.connectionGenes.add(connectionGene);
                 connectionGenes.add(connectionGene);
             }
@@ -59,10 +57,12 @@ public class Genotype implements Comparable<Genotype> {
         List<Connection> connections = new ArrayList<>();
 
         nodeGenes.forEach((nodeGene) -> neurons.put(nodeGene.name, new NEATNeuron(nodeGene.name, nodeGene.layer, nodeGene.type)));
-        connectionGenes.forEach((connectionGene) -> connections.add(new Connection(
-                neurons.get(connectionGene.from.name),
-                neurons.get(connectionGene.to.name),
-                connectionGene.weight)));
+        connectionGenes.stream()
+                .filter(connectionGene -> connectionGene.enabled)
+                .forEach((connectionGene) -> connections.add(new Connection(
+                        neurons.get(connectionGene.from.name),
+                        neurons.get(connectionGene.to.name),
+                        connectionGene.weight)));
         return new Phenotype(genePool, new ArrayList<>(neurons.values()), connections);
     }
 
@@ -70,9 +70,11 @@ public class Genotype implements Comparable<Genotype> {
      * Mutates {@link Genotype} with chances set in {@link GenePool}.
      */
     public void mutateGenotype() {
-        if (Util.randomChance(genePool.chanceToMutateWeight))
+        if (isRandomChanceTrue(genePool.chanceToSwitchConnectionEnabled))
+            switchConnectionEnabled(getRandomConnection());
+        if (isRandomChanceTrue(genePool.chanceToMutateWeight))
             mutateWeight(getRandomConnection());
-        if (Util.randomChance(genePool.chanceToAddConnection))
+        if (isRandomChanceTrue(genePool.chanceToAddConnection))
             addConnection();
     }
 
@@ -131,8 +133,8 @@ public class Genotype implements Comparable<Genotype> {
         var allPossibleConnections = getPossibleConnections();
 
         if (allPossibleConnections.size() > 0) {
-            Pair<NodeGene> chosen = allPossibleConnections.get(Util.randomInt(0, allPossibleConnections.size()));
-            ConnectionGene connectionGene = new ConnectionGene(chosen.getFirst(), chosen.getSecond(), Util.randomDouble(), true);
+            Pair<NodeGene> chosen = allPossibleConnections.get(randomInt(0, allPossibleConnections.size()));
+            ConnectionGene connectionGene = new ConnectionGene(chosen.getFirst(), chosen.getSecond(), randomDouble(), true);
             connectionGenes.add(connectionGene);
             updateLayerNumbers(connectionGene);
             Collections.sort(connectionGenes);
@@ -174,10 +176,10 @@ public class Genotype implements Comparable<Genotype> {
      * @param connectionGene of which weight should be changed
      */
     public void mutateWeight(ConnectionGene connectionGene) {
-        if (Util.randomChance(genePool.chanceToHardMutateWight)) {
-            connectionGene.weight = Util.randomDouble();
+        if (isRandomChanceTrue(genePool.chanceToHardMutateWight)) {
+            connectionGene.weight = randomDouble();
         } else {
-            connectionGene.weight += Util.randomDouble() * 0.2d;
+            connectionGene.weight += randomDouble() * 0.2d;
             if (connectionGene.weight > 1.0d)
                 connectionGene.weight = 1.0d;
             if (connectionGene.weight < -1.0d)
@@ -186,12 +188,22 @@ public class Genotype implements Comparable<Genotype> {
     }
 
     /**
+     * Switches enabled field of {@link ConnectionGene}. It is possible to disable all {@link ConnectionGene} coming
+     * to or from {@link NodeGene}.
+     *
+     * @param connectionGene which should be enabled/disabled
+     */
+    public void switchConnectionEnabled(ConnectionGene connectionGene) {
+        connectionGene.enabled = !connectionGene.enabled;
+    }
+
+    /**
      * Chooses one {@link ConnectionGene} randomly from {@link Genotype} connections.
      *
      * @return picked {@link ConnectionGene}
      */
     public ConnectionGene getRandomConnection() {
-        return connectionGenes.get(Util.randomInt(0, connectionGenes.size()));
+        return connectionGenes.get(randomInt(0, connectionGenes.size()));
     }
 
     public int getScore() {
@@ -264,7 +276,7 @@ public class Genotype implements Comparable<Genotype> {
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         StringBuilder result = new StringBuilder();
         connectionGenes.forEach((connectionGene -> result.append(connectionGene.toString())));
         return result.toString();

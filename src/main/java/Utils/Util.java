@@ -50,7 +50,7 @@ public class Util {
      * @param chance that true will be returned
      * @return true if trial was success, false otherwise
      */
-    public static boolean randomChance(double chance) {
+    public static boolean isRandomChanceTrue(double chance) {
         return Util.random.nextDouble() < chance;
     }
 

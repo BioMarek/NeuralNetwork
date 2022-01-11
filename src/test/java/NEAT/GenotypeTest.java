@@ -94,6 +94,36 @@ public class GenotypeTest {
     }
 
     @Test
+    void createPhenotype_genotypeWithDisabledConnectionsCreatesCorrectPhenotype() {
+        genotype.switchConnectionEnabled(genotype.connectionGenes.get(0));
+        genotype.switchConnectionEnabled(genotype.connectionGenes.get(1));
+        Phenotype phenotype = genotype.createPhenotype();
+
+        assertThat(phenotype.connections.size(), is(2));
+        assertThat(phenotype.connections.get(0).from.name, is(1));
+        assertThat(phenotype.connections.get(1).from.name, is(1));
+    }
+
+    @Test
+    void createPhenotype_genotypeWithDisabledAndEnabledConnectionsCreatesCorrectPhenotype() {
+        genotype.switchConnectionEnabled(genotype.connectionGenes.get(0));
+        genotype.switchConnectionEnabled(genotype.connectionGenes.get(1));
+        Phenotype phenotype = genotype.createPhenotype();
+
+        assertThat(phenotype.connections.size(), is(2));
+        assertThat(phenotype.connections.get(0).from.name, is(1));
+        assertThat(phenotype.connections.get(1).from.name, is(1));
+
+        genotype.switchConnectionEnabled(genotype.connectionGenes.get(0));
+        phenotype = genotype.createPhenotype();
+
+        assertThat(phenotype.connections.size(), is(3));
+        assertThat(phenotype.connections.get(0).from.name, is(0));
+        assertThat(phenotype.connections.get(1).from.name, is(1));
+        assertThat(phenotype.connections.get(2).from.name, is(1));
+    }
+
+    @Test
     void addNode_addingNodeWorksCorrectly() {
         genotype.addNode(genotype.connectionGenes.get(0));
 
