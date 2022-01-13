@@ -4,6 +4,9 @@ import Interfaces.NeuralNetwork;
 import NEAT.Evolution.GenePool;
 import NEAT.NeuronType;
 import Utils.Util;
+import Visualizations.DTOs.VisConnectionDTO;
+import Visualizations.DTOs.VisNeuronDTO;
+import Visualizations.DTOs.VisualizationDTO;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -63,10 +66,34 @@ public class Phenotype implements NeuralNetwork {
     }
 
     /**
-     * Prints {@link Phenotype} neural network in human-readable format.
+     * Creates {@link VisualizationDTO} that transfer necessary information for creation of visualization
+     *
+     * @return {@link VisualizationDTO}
      */
     @Override
-    public void printNetwork() {
-        connections.forEach(connectionGene -> System.out.printf("%-3d -> %-4d %7.4f%n", connectionGene.from.name, connectionGene.to.name, connectionGene.weight));
+    public VisualizationDTO getVisualizationDTO() {
+        // input and output layer will be always present hence "2 + ..."
+        int numOfLayers = 2 + hiddenNeurons.stream()
+                .mapToInt(neatNeuron -> neatNeuron.layer)
+                .max()
+                .orElse(0);
+
+        VisualizationDTO visualizationDTO = new VisualizationDTO(numOfLayers);
+
+        for (Connection connection : connections) {
+            int toLayer = (connection.to.layer == Integer.MAX_VALUE) ? numOfLayers - 1 : connection.to.layer;
+            VisNeuronDTO from = visualizationDTO.layers.get(connection.from.layer).addNeuron(new VisNeuronDTO(connection.from.name, connection.from.layer));
+            VisNeuronDTO to = visualizationDTO.layers.get(toLayer).addNeuron(new VisNeuronDTO(connection.to.name, toLayer));
+
+            visualizationDTO.connections.add(new VisConnectionDTO(from, to, connection.weight));
+        }
+        return visualizationDTO.build();
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+        connections.forEach(connectionGene -> result.append(String.format("%-3d -> %-4d %7.4f%n", connectionGene.from.name, connectionGene.to.name, connectionGene.weight)));
+        return result.toString();
     }
 }

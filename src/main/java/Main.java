@@ -3,13 +3,26 @@ import BasicNeuralNetwork.NeuralNetwork.BasicNeuralNetwork;
 import Games.Snake.SnakeGame;
 import Interfaces.NeuralNetwork;
 import NEAT.Evolution.GenePool;
+import NEAT.Evolution.Genotype;
 import Utils.Util;
+import Visualizations.MainFrame;
 
 public class Main {
     private static final int NUM_OF_GENERATIONS = 300;
 
     public static void main(String[] args) {
         setupNeatNeuralNetwork();
+//        visualization();
+    }
+
+    public static void visualization() {
+        GenePool.GenePoolBuilder genePoolBuilder = new GenePool.GenePoolBuilder(2, 2, Util.activationFunctionIdentity(), new SnakeGame(20));
+        GenePool genePool = genePoolBuilder
+                .build();
+        Genotype genotype = genePool.getSpecies().get(0).genotypes.get(0);
+        genotype.addNode(genotype.connectionGenes.get(0));
+        genotype.addNode(genotype.connectionGenes.get(0));
+        new MainFrame(genotype.createPhenotype().getVisualizationDTO());
     }
 
     public static void setupNeatNeuralNetwork() {
@@ -31,6 +44,7 @@ public class Main {
         SnakeGame snakeGame = new SnakeGame(20);
         NeuralNetwork neuralNetwork = genePool.getSpecies().get(0).genotypes.get(0).createPhenotype();
         System.out.println(neuralNetwork);
+        new MainFrame(neuralNetwork.getVisualizationDTO());
         snakeGame.showSnakeMoves(neuralNetwork, 500);
     }
 

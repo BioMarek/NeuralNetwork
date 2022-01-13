@@ -30,6 +30,34 @@ public class GenotypeTest {
     }
 
     @Test
+    void genotype_isInitializedCorrectly() {
+        assertThat(genotype.inputNodes.get(0).name, is(0));
+        assertThat(genotype.inputNodes.get(0).layer, is(0));
+        assertThat(genotype.inputNodes.get(1).name, is(1));
+        assertThat(genotype.inputNodes.get(1).layer, is(0));
+
+        assertThat(genotype.inputNodes.get(0).connectionGenes.size(), is(2));
+        assertThat(genotype.inputNodes.get(0).connectionGenes.get(0).to.name, is(999));
+        assertThat(genotype.inputNodes.get(0).connectionGenes.get(1).to.name, is(1000));
+
+        assertThat(genotype.inputNodes.get(1).connectionGenes.size(), is(2));
+        assertThat(genotype.inputNodes.get(1).connectionGenes.get(0).to.name, is(999));
+        assertThat(genotype.inputNodes.get(1).connectionGenes.get(1).to.name, is(1000));
+
+        assertThat(genotype.nodeGenes.get(2).name, is(999));
+        assertThat(genotype.nodeGenes.get(2).layer, is(Integer.MAX_VALUE));
+        assertThat(genotype.nodeGenes.get(3).name, is(1000));
+        assertThat(genotype.nodeGenes.get(3).layer, is(Integer.MAX_VALUE));
+
+        assertThat(genotype.nodeGenes.get(2).connectionGenes.size(), is(0));
+        assertThat(genotype.nodeGenes.get(3).connectionGenes.size(), is(0));
+
+        assertThat(genotype.score, is(0));
+        assertThat(genotype.age, is(0));
+        assertThat(genotype.name, is("0"));
+    }
+
+    @Test
     void getOutput_phenotypeReturnsCorrectOutputWhenWeightsToLeftOutputAreOne() {
         Phenotype phenotype = genotype.createPhenotype();
         var connections = phenotype.connections;
@@ -66,6 +94,51 @@ public class GenotypeTest {
     }
 
     @Test
+    void createPhenotype_genotypeWithDisabledConnectionsCreatesCorrectPhenotype() {
+        genotype.switchConnectionEnabled(genotype.connectionGenes.get(0));
+        genotype.switchConnectionEnabled(genotype.connectionGenes.get(1));
+        Phenotype phenotype = genotype.createPhenotype();
+
+        assertThat(phenotype.connections.size(), is(2));
+        assertThat(phenotype.connections.get(0).from.name, is(1));
+        assertThat(phenotype.connections.get(1).from.name, is(1));
+    }
+
+    @Test
+    void createPhenotype_genotypeWithDisabledAndEnabledConnectionsCreatesCorrectPhenotype() {
+        genotype.switchConnectionEnabled(genotype.connectionGenes.get(0));
+        genotype.switchConnectionEnabled(genotype.connectionGenes.get(1));
+        Phenotype phenotype = genotype.createPhenotype();
+
+        assertThat(phenotype.connections.size(), is(2));
+        assertThat(phenotype.connections.get(0).from.name, is(1));
+        assertThat(phenotype.connections.get(1).from.name, is(1));
+
+        genotype.switchConnectionEnabled(genotype.connectionGenes.get(0));
+        phenotype = genotype.createPhenotype();
+
+        assertThat(phenotype.connections.size(), is(3));
+        assertThat(phenotype.connections.get(0).from.name, is(0));
+        assertThat(phenotype.connections.get(1).from.name, is(1));
+        assertThat(phenotype.connections.get(2).from.name, is(1));
+    }
+
+    @Test
+    void addNode_addingNodeWorksCorrectly() {
+        genotype.addNode(genotype.connectionGenes.get(0));
+
+        assertThat(genotype.nodeGenes.size(), is(5));
+        assertThat(genotype.connectionGenes.size(), is(5));
+
+        assertThat(genotype.nodeGenes.get(0).connectionGenes.size(), is(2));
+        assertThat(genotype.nodeGenes.get(0).connectionGenes.get(0).to, is(genotype.nodeGenes.get(4)));
+        assertThat(genotype.nodeGenes.get(0).connectionGenes.get(1).to, is(genotype.nodeGenes.get(2)));
+
+        assertThat(genotype.nodeGenes.get(2).connectionGenes.size(), is(1));
+        assertThat(genotype.nodeGenes.get(2).connectionGenes.get(0).to, is(genotype.nodeGenes.get(3)));
+    }
+
+    @Test
     void copy_createdCopyIsCorrect() {
         Genotype copy = genotype.copy();
         List<ConnectionGene> copyConnectionGenes = copy.connectionGenes;
@@ -75,15 +148,6 @@ public class GenotypeTest {
         }
         assertThat(copy.nodeGenes, is(genotype.nodeGenes));
         assertThat(copy.score, is(genotype.score));
-    }
-
-    @Test
-    void referenceGenotype_providesCorrectGenotype() {
-        Genotype genotype = Genotype.referenceGenotype(genePool);
-        assertThat(genotype.connectionGenes.size(), is(96));
-        assertThat((int) genotype.nodeGenes.stream().filter(nodeGene -> nodeGene.type == NeuronType.INPUT).count(), is(8));
-        assertThat((int) genotype.nodeGenes.stream().filter(nodeGene -> nodeGene.type == NeuronType.HIDDEN).count(), is(8));
-        assertThat((int) genotype.nodeGenes.stream().filter(nodeGene -> nodeGene.type == NeuronType.OUTPUT).count(), is(4));
     }
 
     @Test
@@ -110,11 +174,11 @@ public class GenotypeTest {
         assertThat(allPossibleConnections.get(0).getFirst().name, is(0));
         assertThat(allPossibleConnections.get(0).getSecond().name, is(2));
         assertThat(allPossibleConnections.get(2).getFirst().name, is(1));
-        assertThat(allPossibleConnections.get(2).getSecond().name, is(2));
-        assertThat(allPossibleConnections.get(4).getFirst().name, is(2));
-        assertThat(allPossibleConnections.get(4).getSecond().name, is(1000));
-        assertThat(allPossibleConnections.get(5).getFirst().name, is(3));
-        assertThat(allPossibleConnections.get(5).getSecond().name, is(999));
+        assertThat(allPossibleConnections.get(2).getSecond().name, is(3));
+        assertThat(allPossibleConnections.get(4).getFirst().name, is(3));
+        assertThat(allPossibleConnections.get(4).getSecond().name, is(999));
+        assertThat(allPossibleConnections.get(6).getFirst().name, is(2));
+        assertThat(allPossibleConnections.get(6).getSecond().name, is(1000));
     }
 
     @Test
@@ -129,6 +193,10 @@ public class GenotypeTest {
         genotype.addConnection();
         assertThat(genotype.getPossibleConnections().size(), is(1));
         assertThat(genotype.connectionGenes.size(), is(7));
+
+        genotype.addConnection();
+        assertThat(genotype.getPossibleConnections().size(), is(0));
+        assertThat(genotype.connectionGenes.size(), is(8));
 
         genotype.addConnection();
         assertThat(genotype.getPossibleConnections().size(), is(0));

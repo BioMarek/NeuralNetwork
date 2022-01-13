@@ -1,12 +1,13 @@
 package NEAT.Evolution;
 
 import NEAT.Phenotype.Phenotype;
-import Utils.Util;
 import lombok.EqualsAndHashCode;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import static Utils.Util.repeat;
 
 @EqualsAndHashCode
 public class Species implements Comparable<Species> {
@@ -25,7 +26,7 @@ public class Species implements Comparable<Species> {
     public void calculateScores() {
         for (Genotype genotype : genotypes) {
             Phenotype phenotype = genotype.createPhenotype();
-            Util.repeat.accept(genePool.numOfTrials, () -> {
+            repeat.accept(genePool.numOfTrials, () -> {
                 genotype.score += genePool.game.play(phenotype, genePool.maxNumberOfMoves);
                 genePool.game.reset();
             });

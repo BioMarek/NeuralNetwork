@@ -17,12 +17,14 @@ public class NEATNeuron {
     public double innerPotential;
     public double bias;
     public int name;
+    public int layer;
     public NeuronType neuronType;
 
-    public NEATNeuron(int name, NeuronType neuronType) {
+    public NEATNeuron(int name, int layer, NeuronType neuronType) {
         this.innerPotential = 0;
         this.bias = 0;
         this.name = name;
+        this.layer = layer;
         this.neuronType = neuronType;
     }
 

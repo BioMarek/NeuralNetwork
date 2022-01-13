@@ -2,34 +2,35 @@ package NEAT.Evolution;
 
 import Games.Game;
 import Interfaces.EvolutionEngine;
-import NEAT.NeuronType;
-import Utils.Pair;
-import Utils.Util;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
-import java.util.*;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import static Utils.Util.repeat;
 
 /**
  * The class holds all genes of population.
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class GenePool implements EvolutionEngine {
-    private int totalNumOfGenotypes;
-    private int inputs;
-    private int outputs;
-    protected int neuronNames = 0;
     public Function<Double, Double> hiddenLayerActivationFunc;
     public Function<Double, Double> outputLayerActivationFunc;
-    private final Set<Integer> nodeGenes = new HashSet<>();
-    private final Set<Pair<Integer>> connections = new HashSet<>();
     private List<Species> speciesList = new ArrayList<>();
 
+    protected int maxNeurons;
     protected int maxNumberOfMoves; // to stop AI moving in cycles
     protected int numOfTrials; // how many times NeuralNetwork plays the game
     protected double chanceToMutateWeight; // chance that weight will be mutated
+    protected double chanceToSwitchConnectionEnabled;
     protected double chanceToHardMutateWight; // chance to assign new value to weight when it is being mutated, small change otherwise
     protected double chanceToAddNode;
     protected double chanceToAddConnection;
@@ -44,9 +45,13 @@ public class GenePool implements EvolutionEngine {
     protected Game game;
     protected boolean verbose;
 
+    protected int speciesCreated = 1;
+
     @Override
     public void calculateEvolution(int numOfGenerations) {
+        StringBuilder speciesCsvString = new StringBuilder();
         for (int i = 0; i < numOfGenerations; i++) {
+            addSpeciesCsvString(speciesCsvString);
             System.out.printf("\nGeneration %d %s\n", i, "-".repeat(200));
             if (i % frequencyOfSpeciation == 0 && i > 0)
                 createSpecies();
@@ -56,12 +61,14 @@ public class GenePool implements EvolutionEngine {
             removeDeadSpecies();
             printSpecies();
         }
+        addSpeciesMetadata(speciesCsvString, numOfGenerations);
+        saveSpeciesCsvFile("/home/marek/marek/NeuralNetworkExports/species.csv", speciesCsvString.toString());
     }
 
     @Override
     public void makeNextGeneration() {
         for (Species species : speciesList) {
-            species.calculateScores();  // rename
+            species.calculateScores();  // TODO rename
             species.calculateAverage();
         }
         speciesList.sort(Collections.reverseOrder());
@@ -86,9 +93,10 @@ public class GenePool implements EvolutionEngine {
 
         int emptyPlaces = reduceSpeciesSizesUniformly();
         removeDeadSpecies();
-        Util.repeat.accept(emptyPlaces, () -> speciesGenotypes.add(genotypeToSpeciate.copy()));
+        repeat.accept(emptyPlaces, () -> speciesGenotypes.add(genotypeToSpeciate.copy()));
 
         speciesList.add(new Species(this, speciesGenotypes, speciesNames++));
+        speciesCreated++;
     }
 
     /**
@@ -138,6 +146,44 @@ public class GenePool implements EvolutionEngine {
     }
 
     /**
+     * Creates *.csv file with information with evolution of species.
+     *
+     * @param filePath      where should file be created
+     * @param stringToWrite string containing information about species evolution
+     */
+    public void saveSpeciesCsvFile(String filePath, String stringToWrite) {
+        try {
+            BufferedWriter writer = Files.newBufferedWriter(Path.of(filePath));
+            writer.write(stringToWrite);
+            writer.close();
+        } catch (IOException e) {
+            System.out.println("File could not be created\n" + e);
+        }
+    }
+
+    /**
+     * Adds line stating number of {@link  Species} and number of generations to {@link StringBuilder} csvString.
+     * This line is added as first line of the *.csv file.
+     *
+     * @param csvString {@link StringBuilder} to which line should be added
+     */
+    public void addSpeciesMetadata(StringBuilder csvString, int numOfGenerations) {
+        csvString.insert(0, speciesCreated + "," + numOfGenerations + "\n");
+    }
+
+    /**
+     * Adds line specifying species names and counts in current generation to {@link StringBuilder} csvString.
+     *
+     * @param csvString {@link StringBuilder} to which line should be added
+     */
+    public void addSpeciesCsvString(StringBuilder csvString) {
+        for (Species species : speciesList) {
+            csvString.append(species.name).append(":").append(species.getSize()).append(",");
+        }
+        csvString.append("\n");
+    }
+
+    /**
      * Resets game scores in all {@link Genotype} in all {@link Species}.
      */
     @Override
@@ -157,57 +203,12 @@ public class GenePool implements EvolutionEngine {
         });
     }
 
-
     public void printSpecies() {
         System.out.print("Species: ");
         for (Species species : speciesList) {
             System.out.printf("\"%d\": %.2f size: %d, age: %d | ", species.name, species.average / numOfTrials, species.getSize(), species.age);
         }
         System.out.println();
-    }
-
-    /**
-     * Puts {@link ConnectionGene} from one {@link NodeGene} name to another {@link NodeGene} name into {@link GenePool}.
-     * There can be only one {@link ConnectionGene} from one particular name into another. {@link GenePool} holds
-     * {@link ConnectionGene}s. When {@link Genotype} tries to split {@link ConnectionGene} and such split was already
-     * performed by some other {@link Genotype} name of split {@link NodeGene} is fetched from {@link GenePool},
-     * otherwise new {@link NodeGene} and corresponding {@link ConnectionGene} are put into {@link GenePool}.
-     *
-     * @param from name of node where {@link ConnectionGene} starts
-     * @param to   name of node where {@link ConnectionGene} ends
-     */
-    public void putConnectionGeneIntoGenePool(int from, int to) {
-        connections.add(new Pair<>(from, to));
-    }
-
-    public void putConnectionGeneIntoGenePool(ConnectionGene connectionGene) {
-        putConnectionGeneIntoGenePool(connectionGene.from.name, connectionGene.to.name);
-    }
-
-    /**
-     * Returns name, which should node of split {@link ConnectionGene} have. If there is a pair of {@link ConnectionGene}
-     * x -> z and z -> y it means that {@link ConnectionGene} x -> y was already split by some other genome. If genome
-     * wants to split its x -> y {@link ConnectionGene} nodeNameOfSplitConnection will either add new node name into
-     * {@link ConnectionGene} or returns z such as {@link ConnectionGene} x -> z and z -> y exists.
-     *
-     * @param connectionGene to split
-     * @return name which split connection should have
-     */
-    public int nodeNameOfSplitConnection(ConnectionGene connectionGene) {
-        List<Integer> from = new ArrayList<>();
-        List<Integer> to = new ArrayList<>();
-
-        for (Pair<Integer> connection : connections) {
-            if (connectionGene.from.name == connection.getFirst())
-                from.add(connection.getSecond());
-            if (connectionGene.to.name == connection.getSecond())
-                to.add(connection.getFirst());
-        }
-        from.retainAll(to);
-
-        if (from.size() > 0)
-            return from.get(0);
-        return neuronNames++;
     }
 
     public List<Species> getSpecies() {
@@ -229,6 +230,7 @@ public class GenePool implements EvolutionEngine {
         private int numOfTrials = 10;
         private double chanceToMutateWeight = 0.8d;
         private double chanceToHardMutateWight = 0.1d;
+        private double chanceToSwitchConnectionEnabled = 0.2d;
         private double chanceToAddNode = 0.03d;
         private double chanceToAddConnection = 0.03d;
         private double networksToKeep = 0.3d;
@@ -288,6 +290,11 @@ public class GenePool implements EvolutionEngine {
             return this;
         }
 
+        public GenePoolBuilder setChanceToSwitchConnectionEnabled (double chanceToSwitchConnectionEnabled) {
+            this.chanceToSwitchConnectionEnabled = chanceToSwitchConnectionEnabled;
+            return this;
+        }
+
         public GenePoolBuilder setChanceToAddNode(double chanceToSplitConnection) {
             this.chanceToAddNode = chanceToSplitConnection;
             return this;
@@ -331,16 +338,15 @@ public class GenePool implements EvolutionEngine {
         public GenePool build() {
             GenePool genePool = new GenePool();
             genePool.game = game;
-            genePool.inputs = inputs;
-            genePool.outputs = outputs;
             genePool.hiddenLayerActivationFunc = hiddenLayerActivationFunc;
             genePool.outputLayerActivationFunc = outputLayerActivationFunc;
-            genePool.totalNumOfGenotypes = totalNumOfGenotypes;
+            genePool.maxNeurons = maxNeurons;
             genePool.verbose = verbose;
             genePool.maxNumberOfMoves = maxNumberOfMoves;
             genePool.numOfTrials = numOfTrials;
             genePool.chanceToMutateWeight = chanceToMutateWeight;
             genePool.chanceToHardMutateWight = chanceToHardMutateWight;
+            genePool.chanceToSwitchConnectionEnabled = chanceToSwitchConnectionEnabled;
             genePool.chanceToAddNode = chanceToAddNode;
             genePool.chanceToAddConnection = chanceToAddConnection;
             genePool.networksToKeep = networksToKeep;
@@ -353,46 +359,11 @@ public class GenePool implements EvolutionEngine {
 
             genePool.speciesList = new ArrayList<>();
             List<Genotype> genotypes = new ArrayList<>();
-
-            Genotype genotype = initGenotype(genePool);
-            Util.repeat.accept(totalNumOfGenotypes, () -> genotypes.add(genotype.copy()));
+            repeat.accept(totalNumOfGenotypes, () -> genotypes.add(new Genotype(genePool, inputs, outputs)));
             Species species = new Species(genePool, genotypes, genePool.speciesNames++);
             genePool.speciesList.add(species);
 
             return genePool;
-        }
-
-        /**
-         * Creates first genotype for particular number of inputs and outputs.
-         *
-         * @param genePool contains constants and settings.
-         */
-        public Genotype initGenotype(GenePool genePool) {
-            List<NodeGene> inputNodes = new ArrayList<>();
-            List<NodeGene> outputNodes = new ArrayList<>();
-            List<ConnectionGene> connectionGenes = new ArrayList<>();
-
-            for (int i = 0; i < inputs; i++) {
-                NodeGene nodeGene = new NodeGene(NeuronType.INPUT, genePool.neuronNames++);
-                inputNodes.add(nodeGene);
-            }
-            for (int i = 0; i < outputs; i++) {
-                NodeGene nodeGene = new NodeGene(NeuronType.OUTPUT, maxNeurons--);
-                outputNodes.add(nodeGene);
-            }
-            for (NodeGene input : inputNodes) {
-                for (NodeGene output : outputNodes) {
-                    genePool.putConnectionGeneIntoGenePool(input.name, output.name);
-                    connectionGenes.add(new ConnectionGene(input, output, Util.randomDouble(), true));
-                }
-            }
-            inputNodes.addAll(outputNodes);
-
-            Collections.sort(inputNodes);
-            Collections.sort(connectionGenes);
-            Genotype genotype = new Genotype(genePool, inputNodes, connectionGenes);
-            genotype.name = Integer.toString(networksGenerated++);
-            return genotype;
         }
     }
 }

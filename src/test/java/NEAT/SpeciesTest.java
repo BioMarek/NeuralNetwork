@@ -80,7 +80,7 @@ public class SpeciesTest {
         assertThat(species.genotypes.get(29).connectionGenes, is(oldGenotypes.get(29).connectionGenes));
         assertThat(species.genotypes.get(29).nodeGenes, is(oldGenotypes.get(29).nodeGenes));
         assertThat(species.genotypes.get(30).connectionGenes, is(not(oldGenotypes.get(30).connectionGenes)));
-        assertThat(species.genotypes.get(30).nodeGenes, is(oldGenotypes.get(30).nodeGenes));
+        assertThat(species.genotypes.get(30).nodeGenes, is(not(oldGenotypes.get(30).nodeGenes)));
     }
 
     @Test

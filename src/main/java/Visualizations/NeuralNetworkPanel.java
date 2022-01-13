@@ -1,9 +1,11 @@
 package Visualizations;
 
-import BasicNeuralNetwork.NeuralNetwork.Layer;
 import BasicNeuralNetwork.NeuralNetwork.BasicNeuralNetwork;
 import BasicNeuralNetwork.NeuralNetwork.BasicNeuron;
-import Utils.Util;
+import BasicNeuralNetwork.NeuralNetwork.Layer;
+import Visualizations.DTOs.VisConnectionDTO;
+import Visualizations.DTOs.VisLayerDTO;
+import Visualizations.DTOs.VisualizationDTO;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,10 +20,12 @@ public class NeuralNetworkPanel extends JPanel {
     private final int xAxisDistanceBetweenLayers = 150;
     private final int weightStroke = 2;
     private final int neuronStroke = 3;
+    private final VisualizationDTO visualizationDTO;
 
     private Graphics2D graphics;
 
-    public NeuralNetworkPanel() {
+    public NeuralNetworkPanel(VisualizationDTO visualizationDTO) {
+        this.visualizationDTO = visualizationDTO;
         this.setPreferredSize(new Dimension(500, 500));
         this.setBackground(Color.WHITE);
         this.setVisible(true);
@@ -36,15 +40,11 @@ public class NeuralNetworkPanel extends JPanel {
     }
 
     public void drawNeuralNetwork() {
-        BasicNeuralNetwork neuralNetwork = new BasicNeuralNetwork(new int[]{10, 2, 6, 5}, Util.activationFunctionUnitStep(), Util.activationFunctionIdentity());
-
-        int[] yAxisOffsets = layersYAxisOffset(neuralNetwork);
-        for (int i = 0; i < neuralNetwork.hiddenLayers.size(); i++) {
-            drawLayer(neuralNetwork.hiddenLayers.get(i), i, yAxisOffsets[i]);
+        int[] yAxisOffsets = layersYAxisOffset(visualizationDTO);
+        for (int i = 0; i < visualizationDTO.layers.size(); i++) {
+            drawLayer(visualizationDTO.layers.get(i), i, yAxisOffsets[i]);
         }
-        for (int i = 0; i < neuralNetwork.hiddenLayers.size() - 1; i++) {
-            drawWeights(neuralNetwork.hiddenLayers.get(i), neuralNetwork.hiddenLayers.get(i + 1), yAxisOffsets);
-        }
+        drawWeights(yAxisOffsets);
     }
 
     /**
@@ -53,13 +53,13 @@ public class NeuralNetworkPanel extends JPanel {
      * @param layer      {@link Layer} to draw
      * @param layerIndex index of {@link Layer} in {@link BasicNeuralNetwork}
      */
-    protected void drawLayer(Layer layer, int layerIndex, int yAxisOffset) {
+    protected void drawLayer(VisLayerDTO layer, int layerIndex, int yAxisOffset) {
         graphics.setStroke(new BasicStroke(neuronStroke));
 
         int neuronYPosition = neuronYAxisGap + yAxisOffset;
         int layerXPosition = neuronXAxisGap + layerIndex * xAxisDistanceBetweenLayers;
 
-        for (int i = 0; i < layer.length; i++) {
+        for (int i = 0; i < layer.neurons.size(); i++) {
             graphics.drawOval(layerXPosition, neuronYPosition, neuronSize, neuronSize);
             neuronYPosition += neuronYAxisGap;
         }
@@ -69,24 +69,16 @@ public class NeuralNetworkPanel extends JPanel {
      * Draws weights between Layer on the "left" the one with smaller index and layer on the "right" the one with
      * higher index.
      *
-     * @param leftLayer  {@link Layer} with the index 'i' in {@link BasicNeuralNetwork}
-     * @param rightLayer {@link Layer} with the index 'i + 1' in {@link BasicNeuralNetwork}
      */
-    protected void drawWeights(Layer leftLayer, Layer rightLayer, int[] yAxisOffset) {
+    protected void drawWeights(int[] yAxisOffset) {
         graphics.setStroke(new BasicStroke(weightStroke));
 
-        int leftNeuronY = neuronYAxisGap + yAxisOffset[leftLayer.index];
-        int leftLayerX = neuronXAxisGap + leftLayer.index * xAxisDistanceBetweenLayers;
-        int rightLayerX = leftLayerX + xAxisDistanceBetweenLayers;
-
-        for (int leftNeuron = 0; leftNeuron < leftLayer.length; leftNeuron++) {
-            int rightNeuronY = neuronYAxisGap + yAxisOffset[rightLayer.index];
-            for (int rightNeuron = 0; rightNeuron < rightLayer.length; rightNeuron++) {
-                graphics.setColor(weightToColor(rightLayer.basicNeurons[rightNeuron].weights[leftNeuron]));
-                drawLine(weightStartingPoint(leftNeuronY, leftLayerX), weightEndingPoint(rightNeuronY, rightLayerX));
-                rightNeuronY += neuronYAxisGap;
-            }
-            leftNeuronY += neuronYAxisGap;
+        for (VisConnectionDTO connection : visualizationDTO.connections) {
+            int fromNeuronX = neuronXAxisGap + connection.from.layer * xAxisDistanceBetweenLayers;
+            int fromNeuronY = neuronYAxisGap * (connection.from.position + 1) + yAxisOffset[connection.from.layer];
+            int toNeuronX = neuronXAxisGap + connection.to.layer * xAxisDistanceBetweenLayers;
+            int toNeuronY = neuronYAxisGap * (connection.to.position + 1) + yAxisOffset[connection.to.layer];
+            drawLine(weightStartingPoint(fromNeuronY, fromNeuronX), weightEndingPoint(toNeuronY, toNeuronX));
         }
     }
 
@@ -133,14 +125,14 @@ public class NeuralNetworkPanel extends JPanel {
     }
 
     /**
-     * The function calculates offset on y axis so that {@link Layer}s with different number of {@link BasicNeuron} are centered.
+     * The function calculates offset on y axis so that layers with different number of {@link BasicNeuron} are centered.
      *
-     * @param neuralNetwork which {@link Layer}s will be evaluated
+     * @param visualizationDTO which {@link VisLayerDTO}s will be evaluated
      * @return array of offsets for each layer
      */
-    protected int[] layersYAxisOffset(BasicNeuralNetwork neuralNetwork) {
-        List<Integer> layerHeights = neuralNetwork.hiddenLayers.stream()
-                .map(layer -> (layer.length - 1) * neuronYAxisGap + neuronSize)
+    protected int[] layersYAxisOffset(VisualizationDTO visualizationDTO) {
+        List<Integer> layerHeights = visualizationDTO.layers.stream()
+                .map(layer -> (layer.neurons.size() - 1) * neuronYAxisGap + neuronSize)
                 .collect(Collectors.toList());
 
         return layerHeights.stream()

@@ -281,7 +281,6 @@ public class SnakeGame implements Game {
      * @param neuralNetworkOutput output of {@link NeuralNetwork}
      * @return direction where {@link NeuralNetwork decided to move
      */
-
     protected Direction outputToDirection(double[] neuralNetworkOutput) {
         Direction directionToMove = indexToDirection.get(maxValueIndex(neuralNetworkOutput));
         lastDirection = (lastDirection != Direction.opposite(directionToMove)) ? directionToMove : lastDirection;
@@ -294,7 +293,6 @@ public class SnakeGame implements Game {
      * @param array double array
      * @return index of max number in array
      */
-
     protected int maxValueIndex(double[] array) {
         int maxIndex = 0;
         double max = array[0];
