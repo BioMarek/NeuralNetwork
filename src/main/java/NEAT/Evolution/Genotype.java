@@ -135,6 +135,7 @@ public class Genotype implements Comparable<Genotype> {
         if (allPossibleConnections.size() > 0) {
             Pair<NodeGene> chosen = allPossibleConnections.get(randomInt(0, allPossibleConnections.size()));
             ConnectionGene connectionGene = new ConnectionGene(chosen.getFirst(), chosen.getSecond(), randomDouble(), true);
+            chosen.getFirst().connectionGenes.add(connectionGene);
             connectionGenes.add(connectionGene);
             updateLayerNumbers(connectionGene);
             Collections.sort(connectionGenes);

@@ -18,7 +18,6 @@ public class BasicNeuron implements Serializable {
     public double[] weights;
     public double bias;
 
-
     public BasicNeuron(int numOfNeuronInPrevLayer) {
         weights = Util.randomDoubleArray(numOfNeuronInPrevLayer);
         bias = 0;
