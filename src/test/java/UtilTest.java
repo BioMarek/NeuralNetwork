@@ -1,4 +1,4 @@
-import Utils.Util;
+import utils.Util;
 import org.junit.jupiter.api.Test;
 
 import java.util.stream.DoubleStream;
