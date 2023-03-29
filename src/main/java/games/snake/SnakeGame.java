@@ -5,20 +5,14 @@ import games.Game;
 import interfaces.NeuralNetwork;
 import utils.Util;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 /**
  * Games.Snake game it used check whether {@link BasicNeuralNetwork} can play simple game.
  */
 public class SnakeGame implements Game {
-    private final int EMPTY = 0;
-    private final int WALL = 1;
-    private final int BODY = 2;
-    private final int HEAD = 3;
-    private final int FOOD = 4;
-    private Map<Integer, String> tilesMap;
-    private Map<String, Direction> keyToDirection;
-    private Map<Integer, Direction> indexToDirection;
 
     private final int size;
     private int[][] grid;
@@ -33,7 +27,6 @@ public class SnakeGame implements Game {
 
     public SnakeGame(int size) {
         this.size = size;
-        initMaps();
         reset();
     }
 
@@ -45,27 +38,6 @@ public class SnakeGame implements Game {
         initSnake();
         placeFood();
         snakeToGrid();
-    }
-
-    protected void initMaps() {
-        tilesMap = new HashMap<>();
-        tilesMap.put(WALL, "X");
-        tilesMap.put(HEAD, "H");
-        tilesMap.put(BODY, "B");
-        tilesMap.put(FOOD, "O");
-        tilesMap.put(EMPTY, " ");
-
-        keyToDirection = new HashMap<>();
-        keyToDirection.put("w", Direction.UP);
-        keyToDirection.put("s", Direction.DOWN);
-        keyToDirection.put("a", Direction.LEFT);
-        keyToDirection.put("d", Direction.RIGHT);
-
-        indexToDirection = new HashMap<>();
-        indexToDirection.put(0, Direction.UP);
-        indexToDirection.put(1, Direction.DOWN);
-        indexToDirection.put(2, Direction.LEFT);
-        indexToDirection.put(3, Direction.RIGHT);
     }
 
     /**
@@ -84,7 +56,7 @@ public class SnakeGame implements Game {
         for (int row = 0; row < size; row++) {
             for (int column = 0; column < size; column++) {
                 if (row == 0 || row == size - 1 || column == 0 || column == size - 1)
-                    grid[row][column] = WALL;
+                    grid[row][column] = SnakeMap.WALL.value;
             }
         }
     }
@@ -96,13 +68,13 @@ public class SnakeGame implements Game {
         while (true) {
             int row = Util.randomInt(1, size - 1);
             int column = Util.randomInt(1, size - 1);
-            if (grid[row][column] != EMPTY) {
+            if (grid[row][column] != SnakeMap.EMPTY.value) {
                 row = Util.randomInt(1, size - 1);
                 column = Util.randomInt(1, size - 1);
             } else {
                 foodRow = row;
                 foodColumn = column;
-                grid[row][column] = FOOD;
+                grid[row][column] = SnakeMap.FOOD.value;
                 return;
             }
         }
@@ -112,16 +84,22 @@ public class SnakeGame implements Game {
      * Places snake into grid.
      */
     protected void snakeToGrid() {
-        snake.forEach((bodyPart) -> grid[bodyPart.row][bodyPart.column] = bodyPart.isHead ? HEAD : BODY);
+        snake.forEach((bodyPart) -> grid[bodyPart.row][bodyPart.column] = bodyPart.isHead ? SnakeMap.HEAD.value : SnakeMap.BODY.value);
     }
 
     /**
-     * Prints snakeGame using asci characters.
+     * Prints snakeGame using ascii characters.
      */
     public void printSnakeGame() {
         for (int row = 0; row < size; row++) {
             for (int column = 0; column < size; column++) {
-                System.out.print(tilesMap.get(grid[row][column]));
+                switch (grid[row][column]) {
+                    case 0 -> System.out.print(" ");
+                    case 1 -> System.out.print("X");
+                    case 2 -> System.out.print("B");
+                    case 3 -> System.out.print("H");
+                    case 4 -> System.out.print("O");
+                }
             }
             System.out.println();
         }
@@ -147,7 +125,13 @@ public class SnakeGame implements Game {
      * @return {@link Direction} corresponding to pressed key
      */
     protected Direction toDirection(String key) {
-        Direction directionToMove = keyToDirection.get(key);
+        Direction directionToMove = null;
+        switch (key) {
+            case "w" -> directionToMove = Direction.UP;
+            case "s" -> directionToMove = Direction.DOWN;
+            case "a" -> directionToMove = Direction.LEFT;
+            case "d" -> directionToMove = Direction.RIGHT;
+        }
         lastDirection = directionToMove == null || lastDirection == Direction.opposite(directionToMove) ? lastDirection : directionToMove;
         return lastDirection;
     }
@@ -161,18 +145,10 @@ public class SnakeGame implements Game {
         int headRow = snake.get(0).row;
         int headColumn = snake.get(0).column;
         switch (direction) {
-            case UP:
-                moveByOne(headRow - 1, headColumn);
-                break;
-            case DOWN:
-                moveByOne(headRow + 1, headColumn);
-                break;
-            case LEFT:
-                moveByOne(headRow, headColumn - 1);
-                break;
-            case RIGHT:
-                moveByOne(headRow, headColumn + 1);
-                break;
+            case UP -> moveByOne(headRow - 1, headColumn);
+            case DOWN -> moveByOne(headRow + 1, headColumn);
+            case LEFT -> moveByOne(headRow, headColumn - 1);
+            case RIGHT -> moveByOne(headRow, headColumn + 1);
         }
     }
 
@@ -183,17 +159,17 @@ public class SnakeGame implements Game {
      * @param column where to move head
      */
     protected void moveByOne(int row, int column) {
-        isGameOver = grid[row][column] == WALL || grid[row][column] == BODY;
+        isGameOver = grid[row][column] == SnakeMap.WALL.value || grid[row][column] == SnakeMap.BODY.value;
 
         snake.get(0).isHead = false;
         snake.add(0, new BodyPart(true, row, column));
 
-        if (grid[row][column] == FOOD) {
+        if (grid[row][column] == SnakeMap.FOOD.value) {
             placeFood();
             snakeScore += 1;
         } else {
             BodyPart toRemove = snake.get(snake.size() - 1);
-            grid[toRemove.row][toRemove.column] = EMPTY;
+            grid[toRemove.row][toRemove.column] = SnakeMap.EMPTY.value;
             snake.remove(toRemove);
         }
     }
@@ -228,10 +204,10 @@ public class SnakeGame implements Game {
         int headRow = snake.get(0).row;
         int headColumn = snake.get(0).column;
 
-        snakeDTO.leftSafe = (grid[headRow][headColumn - 1] == WALL || grid[headRow][headColumn - 1] == BODY) ? -1 : 1;
-        snakeDTO.rightSafe = (grid[headRow][headColumn + 1] == WALL || grid[headRow][headColumn + 1] == BODY) ? -1 : 1;
-        snakeDTO.upSafe = (grid[headRow - 1][headColumn] == WALL || grid[headRow - 1][headColumn] == BODY) ? -1 : 1;
-        snakeDTO.downSafe = (grid[headRow + 1][headColumn] == WALL || grid[headRow + 1][headColumn] == BODY) ? -1 : 1;
+        snakeDTO.leftSafe = (grid[headRow][headColumn - 1] == SnakeMap.WALL.value || grid[headRow][headColumn - 1] == SnakeMap.BODY.value) ? -1 : 1;
+        snakeDTO.rightSafe = (grid[headRow][headColumn + 1] == SnakeMap.WALL.value || grid[headRow][headColumn + 1] == SnakeMap.BODY.value) ? -1 : 1;
+        snakeDTO.upSafe = (grid[headRow - 1][headColumn] == SnakeMap.WALL.value || grid[headRow - 1][headColumn] == SnakeMap.BODY.value) ? -1 : 1;
+        snakeDTO.downSafe = (grid[headRow + 1][headColumn] == SnakeMap.WALL.value || grid[headRow + 1][headColumn] == SnakeMap.BODY.value) ? -1 : 1;
         return snakeDTO;
     }
 
@@ -282,7 +258,14 @@ public class SnakeGame implements Game {
      * @return direction where {@link NeuralNetwork decided to move
      */
     protected Direction outputToDirection(double[] neuralNetworkOutput) {
-        Direction directionToMove = indexToDirection.get(maxValueIndex(neuralNetworkOutput));
+        Direction directionToMove = lastDirection;
+        switch (maxValueIndex(neuralNetworkOutput)) {
+            case 0 -> directionToMove = Direction.UP;
+            case 1 -> directionToMove = Direction.DOWN;
+            case 2 -> directionToMove = Direction.LEFT;
+            case 3 -> directionToMove = Direction.RIGHT;
+
+        }
         lastDirection = (lastDirection != Direction.opposite(directionToMove)) ? directionToMove : lastDirection;
         return lastDirection;
     }

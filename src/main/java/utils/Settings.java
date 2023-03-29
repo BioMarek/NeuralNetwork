@@ -1,6 +1,7 @@
 package utils;
 
 public class Settings {
+    public static int numOfGenerations = 300;
     public static int totalNumOfGenotypes = 100;
     public static int maxNeurons = 1000;
     public static boolean verbose = true;

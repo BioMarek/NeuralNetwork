@@ -4,11 +4,11 @@ import games.snake.SnakeGame;
 import interfaces.NeuralNetwork;
 import neat.evolution.GenePool;
 import neat.evolution.Genotype;
+import utils.Settings;
 import utils.Util;
 import visualizations.MainFrame;
 
 public class Main {
-    private static final int NUM_OF_GENERATIONS = 300;
 
     public static void main(String[] args) {
         setupNeatNeuralNetwork();
@@ -27,7 +27,7 @@ public class Main {
         GenePool genePool = new GenePool(8, 4, Util.activationFunctionUnitStep(), new SnakeGame(20));
 
         long start = System.currentTimeMillis();
-        genePool.calculateEvolution(NUM_OF_GENERATIONS);
+        genePool.calculateEvolution(Settings.numOfGenerations);
         long stop = System.currentTimeMillis();
         System.out.println("It took: " + (stop - start) / 1000 + "s");
 
@@ -47,7 +47,7 @@ public class Main {
                 .build();
 
         long start = System.currentTimeMillis();
-        evolutionEngine.calculateEvolution(NUM_OF_GENERATIONS);
+        evolutionEngine.calculateEvolution(Settings.numOfGenerations);
         long stop = System.currentTimeMillis();
         System.out.println("It took: " + (stop - start) / 1000 + "s");
 
