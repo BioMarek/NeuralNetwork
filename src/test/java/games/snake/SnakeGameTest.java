@@ -6,7 +6,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 public class SnakeGameTest {
-    private final SnakeGame snakeGame = new SnakeGame(20);
+    private final SnakeGame snakeGame = new SnakeGame();
 
     @Test
     void keyToDirection_returnsCorrectDirectionWhenLastDirectionIsUp() {

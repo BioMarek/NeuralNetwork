@@ -19,7 +19,7 @@ public class PhenotypeTest {
 
     @BeforeEach
     void init() {
-        genePool = new GenePool(2, 2, Util.activationFunctionIdentity(), new SnakeGame(20));
+        genePool = new GenePool(2, 2, Util.activationFunctionIdentity(), new SnakeGame());
         genotype = genePool.getSpecies().get(0).genotypes.get(0);
         phenotype = genotype.createPhenotype();
     }

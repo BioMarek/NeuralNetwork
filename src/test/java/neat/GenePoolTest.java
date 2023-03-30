@@ -23,7 +23,7 @@ public class GenePoolTest {
     @BeforeEach
     void init() {
         Settings.speciesMinimalReduction = 2;
-        genePool = new GenePool(2, 2, Util.activationFunctionIdentity(), new SnakeGame(20));
+        genePool = new GenePool(2, 2, Util.activationFunctionIdentity(), new SnakeGame());
     }
 
     @Test

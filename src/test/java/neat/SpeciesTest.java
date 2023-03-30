@@ -26,7 +26,7 @@ public class SpeciesTest {
         Settings.chanceToHardMutateWight = 1;
         Settings.chanceToAddNode = 0;
         Settings.networksToKeep = 0.3;
-        genePool = new GenePool(2,2,  Util.activationFunctionIdentity(), new SnakeGame(20));
+        genePool = new GenePool(2,2,  Util.activationFunctionIdentity(), new SnakeGame());
         species = genePool.getSpecies().get(0);
     }
 

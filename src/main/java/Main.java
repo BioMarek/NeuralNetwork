@@ -16,7 +16,7 @@ public class Main {
     }
 
     public static void visualization() {
-        GenePool genePool = new GenePool(2, 2, Util.activationFunctionIdentity(), new SnakeGame(20));
+        GenePool genePool = new GenePool(2, 2, Util.activationFunctionIdentity(), new SnakeGame());
         Genotype genotype = genePool.getSpecies().get(0).genotypes.get(0);
         genotype.addNode(genotype.connectionGenes.get(0));
         genotype.addNode(genotype.connectionGenes.get(0));
@@ -24,14 +24,14 @@ public class Main {
     }
 
     public static void setupNeatNeuralNetwork() {
-        GenePool genePool = new GenePool(8, 4, Util.activationFunctionUnitStep(), new SnakeGame(20));
+        GenePool genePool = new GenePool(8, 4, Util.activationFunctionUnitStep(), new SnakeGame());
 
         long start = System.currentTimeMillis();
         genePool.calculateEvolution(Settings.numOfGenerations);
         long stop = System.currentTimeMillis();
         System.out.println("It took: " + (stop - start) / 1000 + "s");
 
-        SnakeGame snakeGame = new SnakeGame(20);
+        SnakeGame snakeGame = new SnakeGame();
         NeuralNetwork neuralNetwork = genePool.getSpecies().get(0).genotypes.get(0).createPhenotype();
         System.out.println(neuralNetwork);
         new MainFrame(neuralNetwork.getVisualizationDTO());
@@ -40,7 +40,7 @@ public class Main {
 
     public static void setupBasicNeuralNetwork() {
         BasicEvolutionEngine evolutionEngine = new BasicEvolutionEngine
-                .EvolutionEngineBuilder(new int[]{8, 8, 4}, Util.activationFunctionUnitStep(), new SnakeGame(20))
+                .EvolutionEngineBuilder(new int[]{8, 8, 4}, Util.activationFunctionUnitStep(), new SnakeGame())
                 .setOutputLayerActivationFunc(Util.activationFunctionIdentity())
                 .setNumOfNeuronsToMutate(2)
                 .setNumOfMutations(2)
@@ -51,7 +51,7 @@ public class Main {
         long stop = System.currentTimeMillis();
         System.out.println("It took: " + (stop - start) / 1000 + "s");
 
-        SnakeGame snakeGame = new SnakeGame(20);
+        SnakeGame snakeGame = new SnakeGame();
         BasicNeuralNetwork neuralNetwork = evolutionEngine.getNeuralNetwork(0);
         neuralNetwork.printNetwork();
         System.out.println(neuralNetwork.name);

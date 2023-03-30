@@ -12,7 +12,7 @@ public class BasicEvolutionEngineTest {
     @Test
     void EvolutionEngine_defaultBuild() {
         BasicEvolutionEngine evolutionEngine = new BasicEvolutionEngine
-                .EvolutionEngineBuilder(new int[]{8, 10, 4}, Util.activationFunctionUnitStep(), new SnakeGame(20))
+                .EvolutionEngineBuilder(new int[]{8, 10, 4}, Util.activationFunctionUnitStep(), new SnakeGame())
                 .build();
 
         assertThat(evolutionEngine.currentGenerations, is(0));

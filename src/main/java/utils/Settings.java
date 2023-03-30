@@ -18,4 +18,9 @@ public class Settings {
     public static int speciesMinimalReduction = 2; // Minimal amount by which the size of underperforming species will be reduced
     public static int protectedAge = 15; // Age when species stops being protected and its size can be reevaluated
     public static int frequencyOfSpeciation = 10;
+
+    // multiplayer game
+    public static boolean hasWalls = true;
+    public static int gridSize = 20;
+    public static int numOfPlayers = 2;
 }

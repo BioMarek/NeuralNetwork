@@ -3,6 +3,7 @@ package games.snake;
 import basic_neural_network.neural_network.BasicNeuralNetwork;
 import games.Game;
 import interfaces.NeuralNetwork;
+import utils.Settings;
 import utils.Util;
 
 import java.util.ArrayList;
@@ -25,8 +26,8 @@ public class SnakeGame implements Game {
     public int snakeScore;
     public boolean isGameOver = false;
 
-    public SnakeGame(int size) {
-        this.size = size;
+    public SnakeGame() {
+        this.size = Settings.gridSize;;
         reset();
     }
 
