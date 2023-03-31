@@ -1,6 +1,7 @@
 package games.snake;
 
 import org.junit.jupiter.api.Test;
+import utils.Direction;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;

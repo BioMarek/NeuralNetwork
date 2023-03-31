@@ -3,6 +3,7 @@ package games.snake;
 import basic_neural_network.neural_network.BasicNeuralNetwork;
 import games.Game;
 import interfaces.NeuralNetwork;
+import utils.Direction;
 import utils.Settings;
 import utils.Util;
 

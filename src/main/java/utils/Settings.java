@@ -23,4 +23,5 @@ public class Settings {
     public static boolean hasWalls = true;
     public static int gridSize = 20;
     public static int numOfPlayers = 2;
+    public static int numOfApples = 10;
 }
