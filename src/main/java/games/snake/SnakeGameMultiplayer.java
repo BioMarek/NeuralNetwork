@@ -14,7 +14,6 @@ import static utils.Util.repeat;
 public class SnakeGameMultiplayer implements MultiplayerGame {
     private final int size;
     protected int[][] grid;
-    private FreePosition freePosition;
     protected final List<Snake> snakes = new ArrayList<>();
 
     public SnakeGameMultiplayer() {
@@ -30,9 +29,7 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
     @Override
     public void reset() {
         initGrid();
-        freePosition = new FreePosition(grid);
         initSnakes();
-        placeSnakes();
         repeat.accept(Settings.numOfApples, this::placeApple);
     }
 
@@ -49,28 +46,28 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
 
     private void initSnakes() {
         for (int i = 0; i < Settings.numOfPlayers; i++) {
-            var coordinates = freePosition.removeRandomFreeCoordinate();
+            var coordinates = FreePosition.randomFreeCoordinate(grid);
             var snake = new Snake(coordinates.getFirst(), coordinates.getSecond(), Direction.randomDirection());
+            placeSnake(snake, i);
             snakes.add(snake);
         }
     }
 
-    private void placeSnakes() {
-        for (int i = 0; i < snakes.size(); i++) {
-            var bodyParts = snakes.get(i).bodyParts;
-            for (int j = bodyParts.size() - 1; j >= 0; j--) { // head will be always on top of other bodyparts
-                var bodyPart = bodyParts.get(j);
-                if (bodyPart.isHead)
-                    grid[bodyPart.row][bodyPart.column] = i + 200;
-                else
-                    grid[bodyPart.row][bodyPart.column] = i + 100;
-            }
+    private void placeSnake(Snake snake, int i) {
+        var bodyParts = snake.bodyParts;
+        for (int j = bodyParts.size() - 1; j >= 0; j--) { // head will be always on top of other bodyparts
+            var bodyPart = bodyParts.get(j);
+            if (bodyPart.isHead)
+                grid[bodyPart.row][bodyPart.column] = i + 200;
+            else
+                grid[bodyPart.row][bodyPart.column] = i + 100;
         }
+
     }
 
     private void placeApple() {
-        var position = freePosition.removeRandomFreeCoordinate();
-        grid[position.getFirst()][position.getSecond()] = SnakeMap.FOOD.value;
+        var coordinates = FreePosition.randomFreeCoordinate(grid);
+        grid[coordinates.getFirst()][coordinates.getSecond()] = SnakeMap.FOOD.value;
     }
 
     /**

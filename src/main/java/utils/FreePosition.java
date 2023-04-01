@@ -34,4 +34,17 @@ public class FreePosition {
         availableCoordinates.remove(coordinate);
         return coordinate;
     }
+
+    public static Pair<Integer> randomFreeCoordinate(int[][] grid) {
+        while (true) {
+            int row = Util.randomInt(1, grid.length - 1);
+            int column = Util.randomInt(1, grid.length - 1);
+            if (grid[row][column] != SnakeMap.EMPTY.value) {
+                row = Util.randomInt(1, grid.length - 1);
+                column = Util.randomInt(1, grid.length - 1);
+            } else {
+                return new Pair<>(row, column);
+            }
+        }
+    }
 }

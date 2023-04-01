@@ -22,6 +22,7 @@ public class SnakeGameMultiplayerTest {
         var snakeMultiplayerGame = new SnakeGameMultiplayer();
 
         assertThat(snakeMultiplayerGame.snakes.size(), is(2));
+        snakeMultiplayerGame.printSnakeGame();
         assertThat(snakeMultiplayerGame.grid[1][1], is(not(0)));
         assertThat(snakeMultiplayerGame.grid[1][2], is(not(0)));
         assertThat(snakeMultiplayerGame.grid[2][1], is(not(0)));
