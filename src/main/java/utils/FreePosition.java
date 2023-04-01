@@ -13,6 +13,7 @@ import java.util.List;
 public class FreePosition {
     public final List<Pair<Integer>> availableCoordinates;
 
+    // TODO refactor just size instead of grid
     public FreePosition(int[][] grid) {
         availableCoordinates = new ArrayList<>();
         for (int row = 0; row < grid.length; row++) {
