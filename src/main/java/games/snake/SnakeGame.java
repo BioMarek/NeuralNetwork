@@ -98,9 +98,9 @@ public class SnakeGame implements Game {
                 switch (grid[row][column]) {
                     case 0 -> System.out.print(" ");
                     case 1 -> System.out.print("X");
-                    case 2 -> System.out.print("B");
-                    case 3 -> System.out.print("H");
-                    case 4 -> System.out.print("O");
+                    case 2 -> System.out.print("O");
+                    case 3 -> System.out.print("B");
+                    case 4 -> System.out.print("H");
                 }
             }
             System.out.println();

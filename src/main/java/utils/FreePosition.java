@@ -13,6 +13,9 @@ import java.util.List;
 public class FreePosition {
     public final List<Pair<Integer>> availableCoordinates;
 
+    /**
+     * To slow to use every time snake dies or food needs to be replaced. Only useful for big and almost full grid.
+     */
     public FreePosition(int[][] grid) {
         availableCoordinates = new ArrayList<>();
         for (int row = 0; row < grid.length; row++) {
