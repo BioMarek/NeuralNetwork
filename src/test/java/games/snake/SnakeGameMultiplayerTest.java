@@ -1,5 +1,6 @@
 package games.snake;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import utils.Settings;
@@ -12,9 +13,7 @@ public class SnakeGameMultiplayerTest {
 
     @BeforeEach
     void setup() {
-        Settings.numOfPlayers = 2;
         Settings.numOfApples = 2;
-        Settings.hasWalls = true;
         Settings.gridSize = 4;
     }
 
@@ -27,5 +26,11 @@ public class SnakeGameMultiplayerTest {
         assertThat(snakeMultiplayerGame.grid[1][2], is(not(0)));
         assertThat(snakeMultiplayerGame.grid[2][1], is(not(0)));
         assertThat(snakeMultiplayerGame.grid[2][2], is(not(0)));
+    }
+
+    @AfterEach
+    void cleanup(){
+        Settings.numOfApples = 2;
+        Settings.gridSize = 20;
     }
 }
