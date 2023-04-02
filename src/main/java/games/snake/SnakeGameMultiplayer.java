@@ -101,6 +101,7 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
     protected void moveSnake(Snake snake, int row, int column) {
         if (snakeCollision(row, column)) {
             var coordinates = FreePosition.randomFreeCoordinate(grid);
+            removeSnake(snake);
             snake.resetSnake(coordinates.getFirst(), coordinates.getSecond(), Direction.randomDirection());
             placeSnake(snake);
         } else {
@@ -123,6 +124,7 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
         bodyParts.add(0, new BodyPart(true, row, column));
 
         if (grid[row][column] == SnakeMap.FOOD.value) {
+            placeSnake(snake);
             placeFood();
             snake.snakeScore += 1;
         } else {

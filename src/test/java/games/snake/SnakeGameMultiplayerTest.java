@@ -75,6 +75,58 @@ public class SnakeGameMultiplayerTest {
         Settings.numOfApples = 2;
     }
 
+    @Test
+    void moveSnake_works() {
+        Settings.numOfPlayers = 0;
+        Settings.numOfApples = 0;
+        var snakeMultiplayerGame = new SnakeGameMultiplayer();
+        var snake = new Snake(1, 1, Direction.DOWN, 1);
+        snakeMultiplayerGame.placeSnake(snake);
+        snakeMultiplayerGame.moveSnake(snake, 0, 1);
+
+        assertThat(snakeMultiplayerGame.grid[1][1], is(not(101)));
+        assertThat(snakeMultiplayerGame.grid[2][1], is(not(101)));
+        assertThat(snakeMultiplayerGame.grid[1][2], is(not(101)));
+        assertThat(snakeMultiplayerGame.grid[2][2], is(not(101)));
+
+        Settings.numOfPlayers = 2;
+        Settings.numOfApples = 2;
+    }
+
+    @Test
+    void moveSnakeToDirection_collision() {
+        Settings.numOfPlayers = 0;
+        Settings.numOfApples = 0;
+        var snakeMultiplayerGame = new SnakeGameMultiplayer();
+        var snake = new Snake(1, 1, Direction.DOWN, 1);
+        snakeMultiplayerGame.placeSnake(snake);
+        snakeMultiplayerGame.moveSnakeToDirection(snake, Direction.LEFT);
+
+        assertThat(snakeMultiplayerGame.grid[1][1], is(not(101)));
+        assertThat(snakeMultiplayerGame.grid[2][1], is(not(101)));
+        assertThat(snakeMultiplayerGame.grid[1][2], is(not(101)));
+        assertThat(snakeMultiplayerGame.grid[2][2], is(not(101)));
+
+        Settings.numOfPlayers = 2;
+        Settings.numOfApples = 2;
+    }
+
+    @Test
+    void moveSnakeToDirection_foodEaten() {
+        Settings.numOfPlayers = 0;
+        Settings.numOfApples = 0;
+        var snakeMultiplayerGame = new SnakeGameMultiplayer();
+        var snake = new Snake(1, 1, Direction.DOWN, 1);
+        snakeMultiplayerGame.placeSnake(snake);
+        snakeMultiplayerGame.grid[1][2] = 2;
+        snakeMultiplayerGame.moveSnakeToDirection(snake, Direction.RIGHT);
+
+        assertThat(snakeMultiplayerGame.grid[1][2], is(not(2)));
+
+        Settings.numOfPlayers = 2;
+        Settings.numOfApples = 2;
+    }
+
     @AfterEach
     void cleanup() {
         Settings.numOfApples = 2;
