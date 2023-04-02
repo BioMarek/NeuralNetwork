@@ -3,6 +3,7 @@ package games.snake;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import utils.Direction;
 import utils.Settings;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -22,15 +23,60 @@ public class SnakeGameMultiplayerTest {
         var snakeMultiplayerGame = new SnakeGameMultiplayer();
 
         assertThat(snakeMultiplayerGame.snakes.size(), is(2));
-        snakeMultiplayerGame.printSnakeGame();
         assertThat(snakeMultiplayerGame.grid[1][1], is(not(0)));
         assertThat(snakeMultiplayerGame.grid[1][2], is(not(0)));
         assertThat(snakeMultiplayerGame.grid[2][1], is(not(0)));
         assertThat(snakeMultiplayerGame.grid[2][2], is(not(0)));
     }
 
+    @Test
+    void snakeCollision_works() {
+        Settings.numOfPlayers = 0;
+        Settings.numOfApples = 0;
+
+        var snakeMultiplayerGame = new SnakeGameMultiplayer();
+        snakeMultiplayerGame.grid[1][1] = 100;
+        snakeMultiplayerGame.grid[2][1] = 2;
+
+        assertThat(snakeMultiplayerGame.snakeCollision(0, 0), is(true));
+        assertThat(snakeMultiplayerGame.snakeCollision(1, 1), is(true));
+        assertThat(snakeMultiplayerGame.snakeCollision(1, 2), is(false));
+        assertThat(snakeMultiplayerGame.snakeCollision(2, 1), is(false));
+
+        Settings.numOfPlayers = 2;
+        Settings.numOfApples = 2;
+    }
+
+    @Test
+    void moveSnakeByOne_works() {
+        Settings.numOfPlayers = 0;
+        Settings.numOfApples = 0;
+
+        var snakeMultiplayerGame = new SnakeGameMultiplayer();
+        var snake = new Snake(1, 1, Direction.DOWN, 1);
+        snakeMultiplayerGame.placeSnake(snake);
+
+        snakeMultiplayerGame.moveSnakeByOne(snake, 2, 1);
+        assertThat(snakeMultiplayerGame.grid[1][1], is(101));
+        assertThat(snakeMultiplayerGame.grid[2][1], is(201));
+
+        snakeMultiplayerGame.moveSnakeByOne(snake, 2, 2);
+        assertThat(snakeMultiplayerGame.grid[1][1], is(101));
+        assertThat(snakeMultiplayerGame.grid[2][1], is(101));
+        assertThat(snakeMultiplayerGame.grid[2][2], is(201));
+
+        snakeMultiplayerGame.moveSnakeByOne(snake, 1, 2);
+        assertThat(snakeMultiplayerGame.grid[1][1], is(0));
+        assertThat(snakeMultiplayerGame.grid[2][1], is(101));
+        assertThat(snakeMultiplayerGame.grid[2][2], is(101));
+        assertThat(snakeMultiplayerGame.grid[1][2], is(201));
+
+        Settings.numOfPlayers = 2;
+        Settings.numOfApples = 2;
+    }
+
     @AfterEach
-    void cleanup(){
+    void cleanup() {
         Settings.numOfApples = 2;
         Settings.gridSize = 20;
     }

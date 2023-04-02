@@ -11,16 +11,17 @@ import java.util.List;
 public class Snake {
     public List<BodyPart> bodyParts = new ArrayList<>();
     public Direction lastDirection;
+    public int name;
     public int snakeScore;
 
-    public Snake(int row, int column) {
-        bodyParts.add(new BodyPart(true, row, column));
-        bodyParts.add(new BodyPart(false, row, column));
-        bodyParts.add(new BodyPart(false, row, column));
-        lastDirection = Direction.randomDirection();
+
+    public Snake(int row, int column, Direction direction, int name) {
+        resetSnake(row, column, direction);
+        this.name = name;
     }
 
-    public Snake(int row, int column, Direction direction) {
+    public void resetSnake(int row, int column, Direction direction) {
+        bodyParts = new ArrayList<>();
         bodyParts.add(new BodyPart(true, row, column));
         bodyParts.add(new BodyPart(false, row, column));
         bodyParts.add(new BodyPart(false, row, column));

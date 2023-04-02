@@ -10,7 +10,7 @@ public class SnakeTest {
 
     @Test
     void snakeIsInitializedCorrectly() {
-        var snake = new Snake(1, 2, Direction.UP);
+        var snake = new Snake(1, 2, Direction.UP, 1);
         assertThat(snake.bodyParts.get(0).isHead, is(true));
         assertThat(snake.bodyParts.get(1).isHead, is(false));
         assertThat(snake.bodyParts.get(2).isHead, is(false));
@@ -26,5 +26,7 @@ public class SnakeTest {
         assertThat(snake.lastDirection, is(Direction.UP));
         assertThat(snake.lastDirection, is(Direction.UP));
         assertThat(snake.lastDirection, is(Direction.UP));
+
+        assertThat(snake.name, is(1));
     }
 }
