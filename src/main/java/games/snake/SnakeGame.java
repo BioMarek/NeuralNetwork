@@ -2,6 +2,7 @@ package games.snake;
 
 import basic_neural_network.neural_network.BasicNeuralNetwork;
 import games.Game;
+import games.snake.dtos.SnakeBasicDTO;
 import interfaces.NeuralNetwork;
 import utils.Direction;
 import utils.Settings;
@@ -17,15 +18,17 @@ import java.util.Scanner;
 public class SnakeGame implements Game {
 
     private final int size;
-    private int[][] grid;
+    public int[][] grid;
 
-    protected List<BodyPart> snake;
+    protected List<BodyPart> bodyParts;
     protected int foodRow;
     protected int foodColumn;
 
     public Direction lastDirection;
     public int snakeScore;
     public boolean isGameOver = false;
+
+    private SnakeBasicDTO snakeBasicDTO = new SnakeBasicDTO();
 
     public SnakeGame() {
         this.size = Settings.gridSize;;
@@ -50,10 +53,10 @@ public class SnakeGame implements Game {
         lastDirection = Direction.UP;
         this.grid = new int[size][size];
 
-        snake = new ArrayList<>();
-        snake.add(new BodyPart(true, size / 2, size / 2));
-        snake.add(new BodyPart(false, size / 2 + 1, size / 2));
-        snake.add(new BodyPart(false, size / 2 + 2, size / 2));
+        bodyParts = new ArrayList<>();
+        bodyParts.add(new BodyPart(true, size / 2, size / 2));
+        bodyParts.add(new BodyPart(false, size / 2 + 1, size / 2));
+        bodyParts.add(new BodyPart(false, size / 2 + 2, size / 2));
 
         for (int row = 0; row < size; row++) {
             for (int column = 0; column < size; column++) {
@@ -86,7 +89,7 @@ public class SnakeGame implements Game {
      * Places snake into grid.
      */
     protected void snakeToGrid() {
-        snake.forEach((bodyPart) -> grid[bodyPart.row][bodyPart.column] = bodyPart.isHead ? SnakeMap.HEAD.value : SnakeMap.BODY.value);
+        bodyParts.forEach((bodyPart) -> grid[bodyPart.row][bodyPart.column] = bodyPart.isHead ? SnakeMap.HEAD.value : SnakeMap.BODY.value);
     }
 
     /**
@@ -144,8 +147,8 @@ public class SnakeGame implements Game {
      * @param direction where to move snake
      */
     protected void moveSnake(Direction direction) {
-        int headRow = snake.get(0).row;
-        int headColumn = snake.get(0).column;
+        int headRow = bodyParts.get(0).row;
+        int headColumn = bodyParts.get(0).column;
         switch (direction) {
             case UP -> moveByOne(headRow - 1, headColumn);
             case DOWN -> moveByOne(headRow + 1, headColumn);
@@ -163,54 +166,17 @@ public class SnakeGame implements Game {
     protected void moveByOne(int row, int column) {
         isGameOver = grid[row][column] == SnakeMap.WALL.value || grid[row][column] == SnakeMap.BODY.value;
 
-        snake.get(0).isHead = false;
-        snake.add(0, new BodyPart(true, row, column));
+        bodyParts.get(0).isHead = false;
+        bodyParts.add(0, new BodyPart(true, row, column));
 
         if (grid[row][column] == SnakeMap.FOOD.value) {
             placeFood();
             snakeScore += 1;
         } else {
-            BodyPart toRemove = snake.get(snake.size() - 1);
+            BodyPart toRemove = bodyParts.get(bodyParts.size() - 1);
             grid[toRemove.row][toRemove.column] = SnakeMap.EMPTY.value;
-            snake.remove(toRemove);
+            bodyParts.remove(toRemove);
         }
-    }
-
-    /**
-     * Maps current snake state to {@link SnakeDTO} which is used to pass state to {@link NeuralNetwork}
-     *
-     * @return DTO describing state
-     */
-    protected SnakeDTO snakeMapper() {
-        SnakeDTO snakeDTO = new SnakeDTO();
-        int wrongDirection = -1 * size;
-
-        int rowDistance = snake.get(0).row - foodRow;
-        if (rowDistance >= 0) {
-            snakeDTO.upDistanceToFood = rowDistance;
-            snakeDTO.downDistanceToFood = wrongDirection;
-        } else {
-            snakeDTO.downDistanceToFood = -1 * rowDistance;
-            snakeDTO.upDistanceToFood = wrongDirection;
-        }
-
-        int columnDistance = snake.get(0).column - foodColumn;
-        if (columnDistance >= 0) {
-            snakeDTO.leftDistanceToFood = columnDistance;
-            snakeDTO.rightDistanceToFood = wrongDirection;
-        } else {
-            snakeDTO.rightDistanceToFood = -1 * columnDistance;
-            snakeDTO.leftDistanceToFood = wrongDirection;
-        }
-
-        int headRow = snake.get(0).row;
-        int headColumn = snake.get(0).column;
-
-        snakeDTO.leftSafe = (grid[headRow][headColumn - 1] == SnakeMap.WALL.value || grid[headRow][headColumn - 1] == SnakeMap.BODY.value) ? -1 : 1;
-        snakeDTO.rightSafe = (grid[headRow][headColumn + 1] == SnakeMap.WALL.value || grid[headRow][headColumn + 1] == SnakeMap.BODY.value) ? -1 : 1;
-        snakeDTO.upSafe = (grid[headRow - 1][headColumn] == SnakeMap.WALL.value || grid[headRow - 1][headColumn] == SnakeMap.BODY.value) ? -1 : 1;
-        snakeDTO.downSafe = (grid[headRow + 1][headColumn] == SnakeMap.WALL.value || grid[headRow + 1][headColumn] == SnakeMap.BODY.value) ? -1 : 1;
-        return snakeDTO;
     }
 
     /**
@@ -225,7 +191,7 @@ public class SnakeGame implements Game {
         double[] networkOutput;
 
         for (int i = 0; i < maxNumberOfMoves; i++) {
-            networkOutput = neuralNetwork.getNetworkOutput(snakeMapper().getInput());
+            networkOutput = neuralNetwork.getNetworkOutput(snakeBasicDTO.snakeMapper(bodyParts, grid, foodRow, foodColumn).getNeuralNetworkInput());
             moveSnake(outputToDirection(networkOutput));
             snakeToGrid();
             if (isGameOver)
@@ -244,7 +210,7 @@ public class SnakeGame implements Game {
         double[] networkOutput;
 
         for (int i = 0; i < maxNumberOfMoves; i++) {
-            networkOutput = neuralNetwork.getNetworkOutput(snakeMapper().getInput());
+            networkOutput = neuralNetwork.getNetworkOutput(snakeBasicDTO.snakeMapper(bodyParts, grid, foodRow, foodColumn).getNeuralNetworkInput());
             moveSnake(outputToDirection(networkOutput));
             snakeToGrid();
             printSnakeGame();

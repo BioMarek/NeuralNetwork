@@ -1,9 +1,9 @@
 package games.snake;
 
 public class BodyPart {
-    boolean isHead;
-    int row;
-    int column;
+    public boolean isHead;
+    public int row;
+    public int column;
 
     public BodyPart(boolean isHead, int row, int column) {
         this.isHead = isHead;

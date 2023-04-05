@@ -1,5 +1,6 @@
 package games.snake;
 
+import games.snake.dtos.SnakeBasicDTO;
 import org.junit.jupiter.api.Test;
 import utils.Direction;
 
@@ -8,6 +9,7 @@ import static org.hamcrest.Matchers.is;
 
 public class SnakeGameTest {
     private final SnakeGame snakeGame = new SnakeGame();
+    private SnakeBasicDTO snakeBasicDTO = new SnakeBasicDTO();
 
     @Test
     void keyToDirection_returnsCorrectDirectionWhenLastDirectionIsUp() {
@@ -62,10 +64,10 @@ public class SnakeGameTest {
         snakeGame.foodRow = 8;
         snakeGame.foodColumn = 8;
 
-        assertThat(snakeGame.snakeMapper().upDistanceToFood, is(2));
-        assertThat(snakeGame.snakeMapper().downDistanceToFood, is(-20));
-        assertThat(snakeGame.snakeMapper().leftDistanceToFood, is(2));
-        assertThat(snakeGame.snakeMapper().rightDistanceToFood, is(-20));
+        assertThat(snakeBasicDTO.snakeMapper(snakeGame.bodyParts, snakeGame.grid, snakeGame.foodRow, snakeGame.foodColumn).upDistanceToFood, is(2));
+        assertThat(snakeBasicDTO.snakeMapper(snakeGame.bodyParts, snakeGame.grid, snakeGame.foodRow, snakeGame.foodColumn).downDistanceToFood, is(-20));
+        assertThat(snakeBasicDTO.snakeMapper(snakeGame.bodyParts, snakeGame.grid, snakeGame.foodRow, snakeGame.foodColumn).leftDistanceToFood, is(2));
+        assertThat(snakeBasicDTO.snakeMapper(snakeGame.bodyParts, snakeGame.grid, snakeGame.foodRow, snakeGame.foodColumn).rightDistanceToFood, is(-20));
     }
 
     @Test
@@ -73,10 +75,10 @@ public class SnakeGameTest {
         snakeGame.foodRow = 8;
         snakeGame.foodColumn = 12;
 
-        assertThat(snakeGame.snakeMapper().upDistanceToFood, is(2));
-        assertThat(snakeGame.snakeMapper().downDistanceToFood, is(-20));
-        assertThat(snakeGame.snakeMapper().leftDistanceToFood, is(-20));
-        assertThat(snakeGame.snakeMapper().rightDistanceToFood, is(2));
+        assertThat(snakeBasicDTO.snakeMapper(snakeGame.bodyParts, snakeGame.grid, snakeGame.foodRow, snakeGame.foodColumn).upDistanceToFood, is(2));
+        assertThat(snakeBasicDTO.snakeMapper(snakeGame.bodyParts, snakeGame.grid, snakeGame.foodRow, snakeGame.foodColumn).downDistanceToFood, is(-20));
+        assertThat(snakeBasicDTO.snakeMapper(snakeGame.bodyParts, snakeGame.grid, snakeGame.foodRow, snakeGame.foodColumn).leftDistanceToFood, is(-20));
+        assertThat(snakeBasicDTO.snakeMapper(snakeGame.bodyParts, snakeGame.grid, snakeGame.foodRow, snakeGame.foodColumn).rightDistanceToFood, is(2));
     }
 
     @Test
@@ -84,10 +86,10 @@ public class SnakeGameTest {
         snakeGame.foodRow = 12;
         snakeGame.foodColumn = 8;
 
-        assertThat(snakeGame.snakeMapper().upDistanceToFood, is(-20));
-        assertThat(snakeGame.snakeMapper().downDistanceToFood, is(2));
-        assertThat(snakeGame.snakeMapper().leftDistanceToFood, is(2));
-        assertThat(snakeGame.snakeMapper().rightDistanceToFood, is(-20));
+        assertThat(snakeBasicDTO.snakeMapper(snakeGame.bodyParts, snakeGame.grid, snakeGame.foodRow, snakeGame.foodColumn).upDistanceToFood, is(-20));
+        assertThat(snakeBasicDTO.snakeMapper(snakeGame.bodyParts, snakeGame.grid, snakeGame.foodRow, snakeGame.foodColumn).downDistanceToFood, is(2));
+        assertThat(snakeBasicDTO.snakeMapper(snakeGame.bodyParts, snakeGame.grid, snakeGame.foodRow, snakeGame.foodColumn).leftDistanceToFood, is(2));
+        assertThat(snakeBasicDTO.snakeMapper(snakeGame.bodyParts, snakeGame.grid, snakeGame.foodRow, snakeGame.foodColumn).rightDistanceToFood, is(-20));
     }
 
     @Test
@@ -95,40 +97,40 @@ public class SnakeGameTest {
         snakeGame.foodRow = 12;
         snakeGame.foodColumn = 12;
 
-        assertThat(snakeGame.snakeMapper().upDistanceToFood, is(-20));
-        assertThat(snakeGame.snakeMapper().downDistanceToFood, is(2));
-        assertThat(snakeGame.snakeMapper().leftDistanceToFood, is(-20));
-        assertThat(snakeGame.snakeMapper().rightDistanceToFood, is(2));
+        assertThat(snakeBasicDTO.snakeMapper(snakeGame.bodyParts, snakeGame.grid, snakeGame.foodRow, snakeGame.foodColumn).upDistanceToFood, is(-20));
+        assertThat(snakeBasicDTO.snakeMapper(snakeGame.bodyParts, snakeGame.grid, snakeGame.foodRow, snakeGame.foodColumn).downDistanceToFood, is(2));
+        assertThat(snakeBasicDTO.snakeMapper(snakeGame.bodyParts, snakeGame.grid, snakeGame.foodRow, snakeGame.foodColumn).leftDistanceToFood, is(-20));
+        assertThat(snakeBasicDTO.snakeMapper(snakeGame.bodyParts, snakeGame.grid, snakeGame.foodRow, snakeGame.foodColumn).rightDistanceToFood, is(2));
     }
 
     @Test
     void snakeMapper_safeInStartPosition() {
-        assertThat(snakeGame.snakeMapper().leftSafe, is(1));
-        assertThat(snakeGame.snakeMapper().upSafe, is(1));
-        assertThat(snakeGame.snakeMapper().rightSafe, is(1));
-        assertThat(snakeGame.snakeMapper().downSafe, is(-1));
+        assertThat(snakeBasicDTO.snakeMapper(snakeGame.bodyParts, snakeGame.grid, snakeGame.foodRow, snakeGame.foodColumn).leftSafe, is(1));
+        assertThat(snakeBasicDTO.snakeMapper(snakeGame.bodyParts, snakeGame.grid, snakeGame.foodRow, snakeGame.foodColumn).upSafe, is(1));
+        assertThat(snakeBasicDTO.snakeMapper(snakeGame.bodyParts, snakeGame.grid, snakeGame.foodRow, snakeGame.foodColumn).rightSafe, is(1));
+        assertThat(snakeBasicDTO.snakeMapper(snakeGame.bodyParts, snakeGame.grid, snakeGame.foodRow, snakeGame.foodColumn).downSafe, is(-1));
     }
 
     @Test
     void snakeMapper_safeInTopLeftCorner() {
-        snakeGame.snake.get(0).row = 1;
-        snakeGame.snake.get(0).column = 1;
+        snakeGame.bodyParts.get(0).row = 1;
+        snakeGame.bodyParts.get(0).column = 1;
 
-        assertThat(snakeGame.snakeMapper().leftSafe, is(-1));
-        assertThat(snakeGame.snakeMapper().upSafe, is(-1));
-        assertThat(snakeGame.snakeMapper().rightSafe, is(1));
-        assertThat(snakeGame.snakeMapper().downSafe, is(1));
+        assertThat(snakeBasicDTO.snakeMapper(snakeGame.bodyParts, snakeGame.grid, snakeGame.foodRow, snakeGame.foodColumn).leftSafe, is(-1));
+        assertThat(snakeBasicDTO.snakeMapper(snakeGame.bodyParts, snakeGame.grid, snakeGame.foodRow, snakeGame.foodColumn).upSafe, is(-1));
+        assertThat(snakeBasicDTO.snakeMapper(snakeGame.bodyParts, snakeGame.grid, snakeGame.foodRow, snakeGame.foodColumn).rightSafe, is(1));
+        assertThat(snakeBasicDTO.snakeMapper(snakeGame.bodyParts, snakeGame.grid, snakeGame.foodRow, snakeGame.foodColumn).downSafe, is(1));
     }
 
     @Test
     void snakeMapper_safeInBottomRightCorner() {
-        snakeGame.snake.get(0).row = 18;
-        snakeGame.snake.get(0).column = 18;
+        snakeGame.bodyParts.get(0).row = 18;
+        snakeGame.bodyParts.get(0).column = 18;
 
-        assertThat(snakeGame.snakeMapper().leftSafe, is(1));
-        assertThat(snakeGame.snakeMapper().upSafe, is(1));
-        assertThat(snakeGame.snakeMapper().rightSafe, is(-1));
-        assertThat(snakeGame.snakeMapper().downSafe, is(-1));
+        assertThat(snakeBasicDTO.snakeMapper(snakeGame.bodyParts, snakeGame.grid, snakeGame.foodRow, snakeGame.foodColumn).leftSafe, is(1));
+        assertThat(snakeBasicDTO.snakeMapper(snakeGame.bodyParts, snakeGame.grid, snakeGame.foodRow, snakeGame.foodColumn).upSafe, is(1));
+        assertThat(snakeBasicDTO.snakeMapper(snakeGame.bodyParts, snakeGame.grid, snakeGame.foodRow, snakeGame.foodColumn).rightSafe, is(-1));
+        assertThat(snakeBasicDTO.snakeMapper(snakeGame.bodyParts, snakeGame.grid, snakeGame.foodRow, snakeGame.foodColumn).downSafe, is(-1));
     }
 
     @Test
