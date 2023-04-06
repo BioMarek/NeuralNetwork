@@ -43,11 +43,11 @@ public class SnakeBasicDTO {
      *
      * @return DTO describing state
      */
-    public SnakeBasicDTO snakeMapper(List<BodyPart> snake, int[][] grid, int foodRow, int foodColumn) {
+    public SnakeBasicDTO snakeMapper(List<BodyPart> bodyParts, int[][] grid, int foodRow, int foodColumn) {
         SnakeBasicDTO snakeBasicDTO = new SnakeBasicDTO();
         int wrongDirection = -1 * grid.length;
 
-        int rowDistance = snake.get(0).row - foodRow;
+        int rowDistance = bodyParts.get(0).row - foodRow;
         if (rowDistance >= 0) {
             snakeBasicDTO.upDistanceToFood = rowDistance;
             snakeBasicDTO.downDistanceToFood = wrongDirection;
@@ -56,7 +56,7 @@ public class SnakeBasicDTO {
             snakeBasicDTO.upDistanceToFood = wrongDirection;
         }
 
-        int columnDistance = snake.get(0).column - foodColumn;
+        int columnDistance = bodyParts.get(0).column - foodColumn;
         if (columnDistance >= 0) {
             snakeBasicDTO.leftDistanceToFood = columnDistance;
             snakeBasicDTO.rightDistanceToFood = wrongDirection;
@@ -65,8 +65,8 @@ public class SnakeBasicDTO {
             snakeBasicDTO.leftDistanceToFood = wrongDirection;
         }
 
-        int headRow = snake.get(0).row;
-        int headColumn = snake.get(0).column;
+        int headRow = bodyParts.get(0).row;
+        int headColumn = bodyParts.get(0).column;
 
         snakeBasicDTO.leftSafe = (grid[headRow][headColumn - 1] == SnakeMap.WALL.value || grid[headRow][headColumn - 1] == SnakeMap.BODY.value) ? -1 : 1;
         snakeBasicDTO.rightSafe = (grid[headRow][headColumn + 1] == SnakeMap.WALL.value || grid[headRow][headColumn + 1] == SnakeMap.BODY.value) ? -1 : 1;
