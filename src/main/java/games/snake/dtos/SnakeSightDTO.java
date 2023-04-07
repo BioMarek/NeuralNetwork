@@ -41,9 +41,8 @@ public class SnakeSightDTO {
                 result[index] = 1.0 * distanceCoefficient(i);
                 break;
             }
-            if ((grid[currentRow][currentColumn] >= 100 &&
-                    grid[currentRow][currentColumn] != snake.name + 100) ||
-                    grid[currentRow][currentColumn] == SnakeMap.WALL.value) {
+            if ((grid[currentRow][currentColumn] >= 100 && grid[currentRow][currentColumn] != snake.name + 100)
+                    || grid[currentRow][currentColumn] == SnakeMap.WALL.value) {
                 result[index] = -1.0 * distanceCoefficient(i);
                 break;
             }

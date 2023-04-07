@@ -1,6 +1,7 @@
 package games.snake;
 
 import games.MultiplayerGame;
+import games.snake.dtos.SnakeSightDTO;
 import interfaces.NeuralNetwork;
 import utils.Direction;
 import utils.FreePosition;
@@ -15,6 +16,7 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
     private final int size;
     protected int[][] grid;
     protected final List<Snake> snakes = new ArrayList<>();
+    private SnakeSightDTO snakeSightDTO;
 
     public SnakeGameMultiplayer() {
         this.size = Settings.gridSize;
@@ -22,14 +24,20 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
     }
 
     @Override
-    public int play(List<NeuralNetwork> neuralNetworks, int maxNumberOfMoves) {
-        return 0;
+    public void play(List<NeuralNetwork> neuralNetworks, int maxNumberOfMoves) {
+        for (int move = 0; move < maxNumberOfMoves; move++) {
+            for (int i = 0; i < neuralNetworks.size(); i++) {
+                var networkOutput = neuralNetworks.get(i).getNetworkOutput(snakeSightDTO.getInput_8(snakes.get(i)));
+                moveSnakeToDirection(snakes.get(i), outputToDirection(networkOutput));
+            }
+        }
     }
 
     @Override
     public void reset() {
         initGrid();
         initSnakes();
+        snakeSightDTO = new SnakeSightDTO(grid);
         repeat.accept(Settings.numOfApples, this::placeFood);
     }
 
@@ -81,8 +89,10 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
      * @param direction where to move snake
      */
     protected void moveSnakeToDirection(Snake snake, Direction direction) {
+        direction = direction == Direction.NONE ? snake.lastDirection : direction;
         int headRow = snake.bodyParts.get(0).row;
         int headColumn = snake.bodyParts.get(0).column;
+
         switch (direction) {
             case UP -> moveSnake(snake, headRow - 1, headColumn);
             case DOWN -> moveSnake(snake, headRow + 1, headColumn);
@@ -103,6 +113,7 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
             var coordinates = FreePosition.randomFreeCoordinate(grid);
             removeSnake(snake);
             snake.resetSnake(coordinates.getFirst(), coordinates.getSecond(), Direction.randomDirection());
+            snake.snakeScore += Settings.deathPenalty;
             placeSnake(snake);
         } else {
             moveSnakeByOne(snake, row, column);
@@ -141,6 +152,41 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
      */
     protected boolean snakeCollision(int row, int column) {
         return grid[row][column] == SnakeMap.WALL.value || grid[row][column] >= 100;
+    }
+
+    /**
+     * The function converts output of {@link NeuralNetwork} to direction where to move.
+     *
+     * @param neuralNetworkOutput output of {@link NeuralNetwork}
+     * @return direction where {@link NeuralNetwork decided to move
+     */
+    protected Direction outputToDirection(double[] neuralNetworkOutput) {
+        return switch (maxValueIndex(neuralNetworkOutput)) {
+            case 0 -> Direction.UP;
+            case 1 -> Direction.RIGHT;
+            case 2 -> Direction.DOWN;
+            case 3 -> Direction.LEFT;
+            default -> Direction.NONE;
+        };
+    }
+
+    /**
+     * The function returns index of max value in given array
+     *
+     * @param array double array
+     * @return index of max number in array
+     */
+    protected int maxValueIndex(double[] array) {
+        int maxIndex = 0;
+        double max = array[0];
+
+        for (int i = 0; i < array.length; i++) {
+            if (max < array[i]) {
+                max = array[i];
+                maxIndex = i;
+            }
+        }
+        return maxIndex;
     }
 
 

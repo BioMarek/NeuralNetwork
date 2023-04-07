@@ -127,6 +127,26 @@ public class SnakeGameMultiplayerTest {
         Settings.numOfApples = 2;
     }
 
+    @Test
+    void maxValueIndex_returnsCorrectValue() {
+        var snakeMultiplayerGame = new SnakeGameMultiplayer();
+
+        assertThat(snakeMultiplayerGame.maxValueIndex(new double[]{1.0, 0.5, -0.5, -1.0}), is(0));
+        assertThat(snakeMultiplayerGame.maxValueIndex(new double[]{-1.0, 0.5, -0.5, -1.0}), is(1));
+        assertThat(snakeMultiplayerGame.maxValueIndex(new double[]{-1.0, -0.5, -0.5, -1.0}), is(1));
+    }
+
+    @Test
+    void outputToDirection_returnsCorrectDirection() {
+        var snakeMultiplayerGame = new SnakeGameMultiplayer();
+
+        assertThat(snakeMultiplayerGame.outputToDirection(new double[]{1.0, 0.5, -0.5, -1.0}), is(Direction.UP));
+        assertThat(snakeMultiplayerGame.outputToDirection(new double[]{-1.0, 0.5, -0.5, -1.0}), is(Direction.RIGHT));
+        assertThat(snakeMultiplayerGame.outputToDirection(new double[]{-1.0, -0.5, 0.5, -1.0}), is(Direction.DOWN));
+        assertThat(snakeMultiplayerGame.outputToDirection(new double[]{-1.0, -0.5, -0.5, 1.0}), is(Direction.LEFT));
+    }
+
+
     @AfterEach
     void cleanup() {
         Settings.numOfApples = 2;
