@@ -27,7 +27,6 @@ public class SnakeGame implements Game {
     public Direction lastDirection;
     public int snakeScore;
     public boolean isGameOver = false;
-
     private SnakeBasicDTO snakeBasicDTO = new SnakeBasicDTO();
 
     public SnakeGame() {

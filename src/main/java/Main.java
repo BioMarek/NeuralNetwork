@@ -38,6 +38,16 @@ public class Main {
         snakeGame.showSnakeMoves(neuralNetwork, 500);
     }
 
+    public static void setupNeatNeuralNetworkMultiplayer() {
+        Settings.multiplayerSettings();
+        GenePool genePool = new GenePool(8, 4, Util.activationFunctionUnitStep(), new SnakeGame());
+
+        long start = System.currentTimeMillis();
+        genePool.calculateEvolutionMultiplayer(Settings.numOfGenerations);
+        long stop = System.currentTimeMillis();
+        System.out.println("It took: " + (stop - start) / 1000 + "s");
+    }
+
     public static void setupBasicNeuralNetwork() {
         BasicEvolutionEngine evolutionEngine = new BasicEvolutionEngine
                 .EvolutionEngineBuilder(new int[]{8, 8, 4}, Util.activationFunctionUnitStep(), new SnakeGame())

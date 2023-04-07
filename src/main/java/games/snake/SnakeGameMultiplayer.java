@@ -24,13 +24,19 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
     }
 
     @Override
-    public void play(List<NeuralNetwork> neuralNetworks, int maxNumberOfMoves) {
+    public int[] play(List<NeuralNetwork> neuralNetworks, int maxNumberOfMoves) {
         for (int move = 0; move < maxNumberOfMoves; move++) {
             for (int i = 0; i < neuralNetworks.size(); i++) {
                 var networkOutput = neuralNetworks.get(i).getNetworkOutput(snakeSightDTO.getInput_8(snakes.get(i)));
                 moveSnakeToDirection(snakes.get(i), outputToDirection(networkOutput));
             }
         }
+
+        int[] result = new int[neuralNetworks.size()];
+        for (int i = 0; i < snakes.size(); i++) {
+            result[i] = snakes.get(i).snakeScore;
+        }
+        return result;
     }
 
     @Override
@@ -188,7 +194,6 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
         }
         return maxIndex;
     }
-
 
     /**
      * Prints snakeGame using ascii characters.
