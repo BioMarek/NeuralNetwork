@@ -1,3 +1,5 @@
+package util;
+
 import utils.Util;
 import org.junit.jupiter.api.Test;
 

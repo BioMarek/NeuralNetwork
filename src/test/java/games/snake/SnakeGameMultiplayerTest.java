@@ -1,10 +1,14 @@
 package games.snake;
 
+import TestUtils.TestNeuralNetwork;
+import interfaces.NeuralNetwork;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import utils.Direction;
 import utils.Settings;
+
+import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -144,6 +148,53 @@ public class SnakeGameMultiplayerTest {
         assertThat(snakeMultiplayerGame.outputToDirection(new double[]{-1.0, 0.5, -0.5, -1.0}), is(Direction.RIGHT));
         assertThat(snakeMultiplayerGame.outputToDirection(new double[]{-1.0, -0.5, 0.5, -1.0}), is(Direction.DOWN));
         assertThat(snakeMultiplayerGame.outputToDirection(new double[]{-1.0, -0.5, -0.5, 1.0}), is(Direction.LEFT));
+    }
+
+    @Test
+    void play_worksWithCollisionAndSnakeRestart() {
+        Settings.numOfPlayers = 0;
+        Settings.numOfApples = 0;
+
+        var snakeMultiplayerGame = new SnakeGameMultiplayer();
+        var snake = new Snake(1, 1, Direction.DOWN, 1);
+        snakeMultiplayerGame.snakes.add(snake);
+        snakeMultiplayerGame.placeSnake(snake);
+
+        NeuralNetwork network = new TestNeuralNetwork();
+        var networks = List.of(network);
+        snakeMultiplayerGame.play(networks, 1);
+
+        assertThat(snakeMultiplayerGame.grid[1][1], is(0));
+        assertThat(snake.snakeScore, is(Settings.deathPenalty));
+
+        Settings.numOfPlayers = 2;
+        Settings.numOfApples = 2;
+    }
+
+    @Test
+    void play_worksWithFood() {
+        Settings.numOfPlayers = 0;
+        Settings.numOfApples = 0;
+
+        var snakeMultiplayerGame = new SnakeGameMultiplayer();
+        var snake = new Snake(2, 1, Direction.DOWN, 1);
+        snakeMultiplayerGame.grid[1][1] = SnakeMap.FOOD.value;
+        snakeMultiplayerGame.snakes.add(snake);
+        snakeMultiplayerGame.placeSnake(snake);
+        snakeMultiplayerGame.printSnakeGame();
+
+        NeuralNetwork network = new TestNeuralNetwork();
+        var networks = List.of(network);
+        snakeMultiplayerGame.play(networks, 1);
+        snakeMultiplayerGame.printSnakeGame();
+
+        assertThat(snakeMultiplayerGame.grid[1][1], is(201));
+        assertThat(snakeMultiplayerGame.grid[2][1], is(101));
+        assertThat(snakeMultiplayerGame.grid[1][2] + snakeMultiplayerGame.grid[2][2], is(2)); // one new food in two grid squares
+        assertThat(snake.snakeScore, is(1));
+
+        Settings.numOfPlayers = 2;
+        Settings.numOfApples = 2;
     }
 
 

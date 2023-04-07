@@ -1,7 +1,7 @@
 package interfaces;
 
-import visualizations.dtos.VisualizationDTO;
 import visualizations.NeuralNetworkPanel;
+import visualizations.dtos.VisualizationDTO;
 
 public interface NeuralNetwork {
     double[] getNetworkOutput(double[] inputs);
