@@ -4,11 +4,10 @@ import visualizations.dtos.VisualizationDTO;
 
 import javax.swing.*;
 
-public class MainFrame extends JFrame {
-    public MainFrame(VisualizationDTO visualizationDTO) {
-        JPanel panel = new NeuralNetworkPanel(visualizationDTO);
+public class NetworkVisualizationFrame extends JFrame {
+    public NetworkVisualizationFrame(VisualizationDTO visualizationDTO) {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.add(panel);
+        this.add(new NeuralNetworkPanel(visualizationDTO));
         this.setLocationRelativeTo(null);
         this.setVisible(true);
         this.pack();

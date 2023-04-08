@@ -26,6 +26,12 @@ public class Settings {
     public static int numOfApples = 10;
     public static int deathPenalty = -10;
 
+    // graphic
+    public static int timerDelay = 500;
+    public static int backgroundWidth = 1000;
+    public static int backgroundHeight = 1000;
+    public static int alpha = 255;
+
     public static void multiplayerSettings() {
         numOfPlayers = 10;
         gridSize = 50;
