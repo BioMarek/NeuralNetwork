@@ -1,8 +1,8 @@
 package neat.evolution;
 
+import lombok.EqualsAndHashCode;
 import neat.phenotype.Phenotype;
 import utils.Settings;
-import lombok.EqualsAndHashCode;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -99,6 +99,11 @@ public class Species implements Comparable<Species> {
 
     public void increaseAge() {
         age++;
+    }
+
+    public void mutateAndAge() {
+        mutateSpecies();
+        increaseAge();
     }
 
     /**

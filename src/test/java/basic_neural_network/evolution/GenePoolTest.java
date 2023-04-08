@@ -33,7 +33,7 @@ public class GenePoolTest {
     }
 
     @Test
-    void divideGenotypes_works() {
+    void divideGenotypes_dividesIntoCorrectNumberOfLists() {
         Settings.numOfPlayers = 2;
         Settings.totalNumOfGenotypes = 100;
         var genePool = new GenePool(8, 4, Util.activationFunctionIdentity(), new SnakeGameMultiplayer());
@@ -45,9 +45,30 @@ public class GenePoolTest {
         }
     }
 
+    @Test
+    void divideGenotypes_genotypesAreNotResetOrHardCopied() {
+        Settings.numOfPlayers = 2;
+        Settings.totalNumOfGenotypes = 100;
+        var genePool = new GenePool(8, 4, Util.activationFunctionIdentity(), new SnakeGameMultiplayer());
+        renameAllGenotypes(genePool, "xyz");
+        var dividedGenotypes = genePool.divideGenotypes(genePool.shuffleGenotypesFromSpecies());
+        renameAllGenotypes(genePool, "123");
+
+        assertThat(dividedGenotypes.get(0).get(0).name, is("123"));
+    }
+
+
     @AfterEach
     void cleanup() {
         Settings.numOfApples = 2;
         Settings.gridSize = 20;
+    }
+
+    private void renameAllGenotypes(GenePool genePool, String name) {
+        for (var species : genePool.getSpecies()) {
+            for (var genotype : species.genotypes) {
+                genotype.name = name;
+            }
+        }
     }
 }

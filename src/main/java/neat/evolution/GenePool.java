@@ -72,13 +72,8 @@ public class GenePool implements EvolutionEngine {
             species.calculateAverage();
         }
         speciesList.sort(Collections.reverseOrder());
-
         printScores();
-
-        for (Species species : speciesList) {
-            species.mutateSpecies();
-            species.increaseAge();
-        }
+        speciesList.forEach(Species::mutateAndAge);
     }
 
     public void makeNextGenerationMultiplayer() {
@@ -101,31 +96,26 @@ public class GenePool implements EvolutionEngine {
             species.calculateAverage();
         }
         speciesList.sort(Collections.reverseOrder());
-
         printScores();
-
-        for (Species species : speciesList) {
-            species.mutateSpecies();
-            species.increaseAge();
-        }
+        speciesList.forEach(Species::mutateAndAge);
     }
 
     public List<List<Genotype>> divideGenotypes(List<Genotype> allGenotypes) {
         // TODO try refactor
         List<List<Genotype>> result = new ArrayList<>();
         List<Genotype> listOfPlayers = new ArrayList<>();
-        int count = 0;
-        while (count < allGenotypes.size()) {
-            if (count % Settings.numOfPlayers != 0 || count == 0) {
-                listOfPlayers.add(allGenotypes.get(count));
+
+        for (int i = 0; i < allGenotypes.size(); i++) {
+            if (i % Settings.numOfPlayers != 0 || i == 0) {
+                listOfPlayers.add(allGenotypes.get(i));
             } else {
                 result.add(listOfPlayers);
                 listOfPlayers = new ArrayList<>();
-                listOfPlayers.add(allGenotypes.get(count));
+                listOfPlayers.add(allGenotypes.get(i));
             }
-            count++;
         }
         result.add(listOfPlayers);
+
         return result;
     }
 
