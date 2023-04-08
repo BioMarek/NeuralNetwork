@@ -181,12 +181,10 @@ public class SnakeGameMultiplayerTest {
         snakeMultiplayerGame.grid[1][1] = SnakeMap.FOOD.value;
         snakeMultiplayerGame.snakes.add(snake);
         snakeMultiplayerGame.placeSnake(snake);
-        snakeMultiplayerGame.printSnakeGame();
 
         NeuralNetwork network = new TestNeuralNetwork();
         var networks = List.of(network);
         snakeMultiplayerGame.play(networks, 1);
-        snakeMultiplayerGame.printSnakeGame();
 
         assertThat(snakeMultiplayerGame.grid[1][1], is(201));
         assertThat(snakeMultiplayerGame.grid[2][1], is(101));

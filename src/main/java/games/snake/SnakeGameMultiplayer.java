@@ -15,7 +15,7 @@ import static utils.Util.repeat;
 public class SnakeGameMultiplayer implements MultiplayerGame {
     private final int size;
     protected int[][] grid;
-    protected final List<Snake> snakes = new ArrayList<>();
+    protected List<Snake> snakes;
     private SnakeSightDTO snakeSightDTO;
 
     public SnakeGameMultiplayer() {
@@ -59,6 +59,7 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
     }
 
     private void initSnakes() {
+        snakes = new ArrayList<>();
         for (int i = 0; i < Settings.numOfPlayers; i++) {
             var coordinates = FreePosition.randomFreeCoordinate(grid);
             var snake = new Snake(coordinates.getFirst(), coordinates.getSecond(), Direction.randomDirection(), i);
