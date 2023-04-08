@@ -1,10 +1,12 @@
 package neat.evolution;
 
 import games.Game;
+import games.MultiplayerGame;
 import interfaces.EvolutionEngine;
-import utils.Settings;
+import interfaces.NeuralNetwork;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import utils.Settings;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -29,6 +31,7 @@ public class GenePool implements EvolutionEngine {
     protected int networksGenerated;
     protected int speciesNames;
     protected Game game;
+    private MultiplayerGame multiplayerGame;
     protected int speciesCreated = 1;
 
     @Override
@@ -49,6 +52,19 @@ public class GenePool implements EvolutionEngine {
         saveSpeciesCsvFile("/home/marek/marek/NeuralNetworkExports/species.csv", speciesCsvString.toString());
     }
 
+    public void calculateEvolutionMultiplayer(int numOfGenerations) {
+        for (int i = 0; i < numOfGenerations; i++) {
+            System.out.printf("\nGeneration %d %s\n", i, "-".repeat(200));
+            if (i % Settings.frequencyOfSpeciation == 0 && i > 0)
+                createSpecies();
+            resetScores();
+            makeNextGenerationMultiplayer();
+            resizeSpecies();
+            removeDeadSpecies();
+            printSpecies();
+        }
+    }
+
     @Override
     public void makeNextGeneration() {
         for (Species species : speciesList) {
@@ -56,13 +72,68 @@ public class GenePool implements EvolutionEngine {
             species.calculateAverage();
         }
         speciesList.sort(Collections.reverseOrder());
+        printScores();
+        speciesList.forEach(Species::mutateAndAge);
+    }
 
-        if (Settings.verbose)
-            printScores();
+    public void makeNextGenerationMultiplayer() {
+        List<List<Genotype>> allGenotypes = divideGenotypes(shuffleGenotypesFromSpecies());
+
+        for (var players : allGenotypes) {
+            var phenotypes = players.stream()
+                    .map(player -> (NeuralNetwork) player.createPhenotype())
+                    .toList();
+
+            for (int i = 0; i < Settings.numOfTrials; i++) {
+                var score = this.multiplayerGame.play(phenotypes, Settings.maxNumberOfMoves);
+                updateMultiplayerScore(score, players);
+                this.multiplayerGame.reset();
+            }
+        }
 
         for (Species species : speciesList) {
-            species.mutateSpecies();
-            species.increaseAge();
+            species.genotypes.sort(Collections.reverseOrder());
+            species.calculateAverage();
+        }
+        speciesList.sort(Collections.reverseOrder());
+        printScores();
+        speciesList.forEach(Species::mutateAndAge);
+    }
+
+    public List<List<Genotype>> divideGenotypes(List<Genotype> allGenotypes) {
+        // TODO try refactor
+        List<List<Genotype>> result = new ArrayList<>();
+        List<Genotype> listOfPlayers = new ArrayList<>();
+
+        for (int i = 0; i < allGenotypes.size(); i++) {
+            if (i % Settings.numOfPlayers != 0 || i == 0) {
+                listOfPlayers.add(allGenotypes.get(i));
+            } else {
+                result.add(listOfPlayers);
+                listOfPlayers = new ArrayList<>();
+                listOfPlayers.add(allGenotypes.get(i));
+            }
+        }
+        result.add(listOfPlayers);
+
+        return result;
+    }
+
+    /**
+     * Takes all {@link Genotype} from all {@link Species} and shuffles them
+     *
+     * @return list of all genotypes shuffled
+     */
+    public List<Genotype> shuffleGenotypesFromSpecies() {
+        List<Genotype> allGenotypes = new ArrayList<>();
+        speciesList.forEach(species -> allGenotypes.addAll(species.genotypes));
+        Collections.shuffle(allGenotypes);
+        return allGenotypes;
+    }
+
+    public void updateMultiplayerScore(int[] score, List<Genotype> players) {
+        for (var i = 0; i < players.size(); i++) {
+            players.get(i).score += score[i];
         }
     }
 
@@ -180,11 +251,13 @@ public class GenePool implements EvolutionEngine {
 
     @Override
     public void printScores() {
-        speciesList.forEach(species -> {
-            System.out.printf("%-3d: ", species.name);
-            species.genotypes.forEach(Genotype::printScores);
-            System.out.println();
-        });
+        if (Settings.verbose) {
+            speciesList.forEach(species -> {
+                System.out.printf("%-3d: ", species.name);
+                species.genotypes.forEach(Genotype::printScores);
+                System.out.println();
+            });
+        }
     }
 
     public void printSpecies() {
@@ -219,142 +292,13 @@ public class GenePool implements EvolutionEngine {
         this.game = game;
     }
 
-    public static class GenePoolBuilder {
-        private final int inputs;
-        private final int outputs;
-        private final Game game;
-        private final Function<Double, Double> hiddenLayerActivationFunc;
-
-        // default values
-        private Function<Double, Double> outputLayerActivationFunc;
-
-        private int networksGenerated = 0;
-        private int speciesNames = 0;
-
-
-        public GenePoolBuilder(int inputs, int outputs, Function<Double, Double> hiddenLayerActivationFunc, Game game) {
-            this.inputs = inputs;
-            this.outputs = outputs;
-            this.hiddenLayerActivationFunc = hiddenLayerActivationFunc;
-            this.game = game;
-
-            this.outputLayerActivationFunc = hiddenLayerActivationFunc;
-        }
-
-        public GenePoolBuilder setOutputLayerActivationFunc(Function<Double, Double> outputLayerActivationFunc) {
-            this.outputLayerActivationFunc = outputLayerActivationFunc;
-            return this;
-        }
-
-//        public GenePoolBuilder setTotalNumOfGenotypes(int totalNumOfGenotypes) {
-//            this.totalNumOfGenotypes = totalNumOfGenotypes;
-//            return this;
-//        }
-//
-//        public GenePoolBuilder setMaxNeurons(int maxNeurons) {
-//            this.maxNeurons = maxNeurons;
-//            return this;
-//        }
-//
-//        public GenePoolBuilder setVerbose(boolean verbose) {
-//            this.verbose = verbose;
-//            return this;
-//        }
-//
-//        public GenePoolBuilder setMaxNumberOfMoves(int maxNumberOfMoves) {
-//            this.maxNumberOfMoves = maxNumberOfMoves;
-//            return this;
-//        }
-//
-//        public GenePoolBuilder setNumOfTrials(int numOfTrials) {
-//            this.numOfTrials = numOfTrials;
-//            return this;
-//        }
-//
-//        public GenePoolBuilder setChanceToMutateWeight(double chanceToMutateWeight) {
-//            this.chanceToMutateWeight = chanceToMutateWeight;
-//            return this;
-//        }
-//
-//        public GenePoolBuilder setChanceToHardMutateWight(double chanceToHardMutateWight) {
-//            this.chanceToHardMutateWight = chanceToHardMutateWight;
-//            return this;
-//        }
-//
-//        public GenePoolBuilder setChanceToSwitchConnectionEnabled (double chanceToSwitchConnectionEnabled) {
-//            this.chanceToSwitchConnectionEnabled = chanceToSwitchConnectionEnabled;
-//            return this;
-//        }
-//
-//        public GenePoolBuilder setChanceToAddNode(double chanceToSplitConnection) {
-//            this.chanceToAddNode = chanceToSplitConnection;
-//            return this;
-//        }
-//
-//        public GenePoolBuilder setChanceToAddConnection(double chanceToAddConnection) {
-//            this.chanceToAddConnection = chanceToAddConnection;
-//            return this;
-//        }
-//
-//        public GenePoolBuilder setNetworksToKeep(double networksToKeep) {
-//            this.networksToKeep = networksToKeep;
-//            return this;
-//        }
-//
-//        public GenePoolBuilder setSpeciesReduction(double speciesReduction) {
-//            this.speciesReduction = speciesReduction;
-//            return this;
-//        }
-//
-//        public GenePoolBuilder setSpeciesMinimalReduction(int speciesMinimalReduction) {
-//            this.speciesMinimalReduction = speciesMinimalReduction;
-//            return this;
-//        }
-//
-//        public GenePoolBuilder setProtectedAge(int protectedAge) {
-//            this.protectedAge = protectedAge;
-//            return this;
-//        }
-//
-//        public GenePoolBuilder setAgeToMakeNewSpecies(int ageToMakeNewSpecies) {
-//            this.frequencyOfSpeciation = ageToMakeNewSpecies;
-//            return this;
-//        }
-//
-//        public GenePoolBuilder setNetworksGenerated(int networksGenerated) {
-//            this.networksGenerated = networksGenerated;
-//            return this;
-//        }
-
-//        public GenePool build() {
-//            GenePool genePool = new GenePool();
-//            genePool.game = game;
-//            genePool.hiddenLayerActivationFunc = hiddenLayerActivationFunc;
-//            genePool.outputLayerActivationFunc = outputLayerActivationFunc;
-//            genePool.maxNeurons = maxNeurons;
-//            genePool.verbose = verbose;
-//            genePool.maxNumberOfMoves = maxNumberOfMoves;
-//            genePool.numOfTrials = numOfTrials;
-//            genePool.chanceToMutateWeight = chanceToMutateWeight;
-//            genePool.chanceToHardMutateWight = chanceToHardMutateWight;
-//            genePool.chanceToSwitchConnectionEnabled = chanceToSwitchConnectionEnabled;
-//            genePool.chanceToAddNode = chanceToAddNode;
-//            genePool.chanceToAddConnection = chanceToAddConnection;
-//            genePool.networksToKeep = networksToKeep;
-//            genePool.speciesReduction = speciesReduction;
-//            genePool.speciesMinimalReduction = speciesMinimalReduction;
-//            genePool.protectedAge = protectedAge;
-//            genePool.networksGenerated = networksGenerated;
-//            genePool.speciesNames = speciesNames;
-//            genePool.frequencyOfSpeciation = frequencyOfSpeciation;
-//
-//            genePool.speciesList = new ArrayList<>();
-//            List<Genotype> genotypes = new ArrayList<>();
-//            repeat.accept(totalNumOfGenotypes, () -> genotypes.add(new Genotype(genePool, inputs, outputs)));
-//            Species species = new Species(genePool, genotypes, genePool.speciesNames++);
-//            genePool.speciesList.add(species);
-//
-//            return genePool;
-//        }
+    public GenePool(int inputs, int outputs, Function<Double, Double> hiddenLayerActivationFunc, MultiplayerGame game) {
+        List<Genotype> genotypes = new ArrayList<>();
+        repeat.accept(Settings.totalNumOfGenotypes, () -> genotypes.add(new Genotype(this, inputs, outputs)));
+        Species species = new Species(this, genotypes, this.speciesNames++);
+        this.speciesList.add(species);
+        this.hiddenLayerActivationFunc = hiddenLayerActivationFunc;
+        this.outputLayerActivationFunc = hiddenLayerActivationFunc;
+        this.multiplayerGame = game;
     }
 }

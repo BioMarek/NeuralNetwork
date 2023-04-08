@@ -5,7 +5,7 @@ import interfaces.NeuralNetwork;
 import java.util.List;
 
 public interface MultiplayerGame {
-    void play(List<NeuralNetwork> neuralNetworks, int maxNumberOfMoves);
+    int[] play(List<NeuralNetwork> neuralNetworks, int maxNumberOfMoves);
 
     void reset();
 }

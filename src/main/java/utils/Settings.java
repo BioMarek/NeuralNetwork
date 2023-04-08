@@ -25,4 +25,9 @@ public class Settings {
     public static int numOfPlayers = 2;
     public static int numOfApples = 10;
     public static int deathPenalty = -10;
+
+    public static void multiplayerSettings() {
+        numOfPlayers = 10;
+        gridSize = 50;
+    }
 }
