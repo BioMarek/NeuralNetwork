@@ -7,7 +7,6 @@ import interfaces.NeuralNetwork;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import utils.Settings;
-import utils.Util;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -74,8 +73,7 @@ public class GenePool implements EvolutionEngine {
         }
         speciesList.sort(Collections.reverseOrder());
 
-        if (Settings.verbose)
-            printScores();
+        printScores();
 
         for (Species species : speciesList) {
             species.mutateSpecies();
@@ -91,14 +89,10 @@ public class GenePool implements EvolutionEngine {
                     .map(player -> (NeuralNetwork) player.createPhenotype())
                     .toList();
 
-            int[] score = new int[players.size()];
             for (int i = 0; i < Settings.numOfTrials; i++) {
-                Util.addArrays(score, this.multiplayerGame.play(phenotypes, Settings.maxNumberOfMoves));
+                var score = this.multiplayerGame.play(phenotypes, Settings.maxNumberOfMoves);
+                updateMultiplayerScore(score, players);
                 this.multiplayerGame.reset();
-            }
-
-            for (var i = 0; i < players.size(); i++) {
-                players.get(i).score = score[i];
             }
         }
 
@@ -108,8 +102,7 @@ public class GenePool implements EvolutionEngine {
         }
         speciesList.sort(Collections.reverseOrder());
 
-        if (Settings.verbose)
-            printScores();
+        printScores();
 
         for (Species species : speciesList) {
             species.mutateSpecies();
@@ -146,6 +139,12 @@ public class GenePool implements EvolutionEngine {
         speciesList.forEach(species -> allGenotypes.addAll(species.genotypes));
         Collections.shuffle(allGenotypes);
         return allGenotypes;
+    }
+
+    public void updateMultiplayerScore(int[] score, List<Genotype> players) {
+        for (var i = 0; i < players.size(); i++) {
+            players.get(i).score += score[i];
+        }
     }
 
     /**
@@ -262,11 +261,13 @@ public class GenePool implements EvolutionEngine {
 
     @Override
     public void printScores() {
-        speciesList.forEach(species -> {
-            System.out.printf("%-3d: ", species.name);
-            species.genotypes.forEach(Genotype::printScores);
-            System.out.println();
-        });
+        if (Settings.verbose) {
+            speciesList.forEach(species -> {
+                System.out.printf("%-3d: ", species.name);
+                species.genotypes.forEach(Genotype::printScores);
+                System.out.println();
+            });
+        }
     }
 
     public void printSpecies() {

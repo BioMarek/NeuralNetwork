@@ -123,15 +123,6 @@ public class Util {
     }
 
     /**
-     * Adds elements of second array to the elements of first array.
-     */
-    public static void addArrays(int[] arr1, int[] arr2) {
-        for (int i = 0; i < arr1.length; i++) {
-            arr1[i] += arr2[i];
-        }
-    }
-
-    /**
      * Repeats given function n times.
      */
     public static BiConsumer<Integer, Runnable> repeat = (n, function) -> {
