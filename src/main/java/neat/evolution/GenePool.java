@@ -84,7 +84,7 @@ public class GenePool implements EvolutionEngine {
     }
 
     public void makeNextGenerationMultiplayer() {
-        List<List<Genotype>> allGenotypes = divideGenotypes();
+        List<List<Genotype>> allGenotypes = divideGenotypes(shuffleGenotypesFromSpecies());
 
         for (var players : allGenotypes) {
             var phenotypes = players.stream()
@@ -117,23 +117,35 @@ public class GenePool implements EvolutionEngine {
         }
     }
 
-    public List<List<Genotype>> divideGenotypes() {
-        List<Genotype> allGenotypes = new ArrayList<>();
-        speciesList.forEach(species -> allGenotypes.addAll(species.genotypes));
-        Collections.shuffle(allGenotypes);
-
+    public List<List<Genotype>> divideGenotypes(List<Genotype> allGenotypes) {
+        // TODO try refactor
         List<List<Genotype>> result = new ArrayList<>();
+        List<Genotype> listOfPlayers = new ArrayList<>();
         int count = 0;
         while (count < allGenotypes.size()) {
-            List<Genotype> listOfPlayers = new ArrayList<>();
-            if (count != 0 && count % Settings.numOfPlayers == 0) {
-                result.add(listOfPlayers);
+            if (count % Settings.numOfPlayers != 0 || count == 0) {
+                listOfPlayers.add(allGenotypes.get(count));
             } else {
+                result.add(listOfPlayers);
+                listOfPlayers = new ArrayList<>();
                 listOfPlayers.add(allGenotypes.get(count));
             }
             count++;
         }
+        result.add(listOfPlayers);
         return result;
+    }
+
+    /**
+     * Takes all {@link Genotype} from all {@link Species} and shuffles them
+     *
+     * @return list of all genotypes shuffled
+     */
+    public List<Genotype> shuffleGenotypesFromSpecies() {
+        List<Genotype> allGenotypes = new ArrayList<>();
+        speciesList.forEach(species -> allGenotypes.addAll(species.genotypes));
+        Collections.shuffle(allGenotypes);
+        return allGenotypes;
     }
 
     /**
@@ -287,5 +299,15 @@ public class GenePool implements EvolutionEngine {
         this.hiddenLayerActivationFunc = hiddenLayerActivationFunc;
         this.outputLayerActivationFunc = hiddenLayerActivationFunc;
         this.game = game;
+    }
+
+    public GenePool(int inputs, int outputs, Function<Double, Double> hiddenLayerActivationFunc, MultiplayerGame game) {
+        List<Genotype> genotypes = new ArrayList<>();
+        repeat.accept(Settings.totalNumOfGenotypes, () -> genotypes.add(new Genotype(this, inputs, outputs)));
+        Species species = new Species(this, genotypes, this.speciesNames++);
+        this.speciesList.add(species);
+        this.hiddenLayerActivationFunc = hiddenLayerActivationFunc;
+        this.outputLayerActivationFunc = hiddenLayerActivationFunc;
+        this.multiplayerGame = game;
     }
 }
