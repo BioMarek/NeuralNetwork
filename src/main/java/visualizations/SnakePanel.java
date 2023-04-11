@@ -1,5 +1,7 @@
 package visualizations;
 
+import games.snake.SnakeGameMultiplayer;
+import games.snake.dtos.SavedGameDTO;
 import interfaces.GridVisualization;
 import utils.Settings;
 
@@ -12,12 +14,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class SnakePanel extends JPanel implements ActionListener {
-    private GridVisualization gridVisualization = new SnakeVisualization();
+    private GridVisualization gridVisualization;
     private Timer timer;
+    private SavedGameDTO savedGameDTO;
 
-    public SnakePanel() {
+    public SnakePanel(SavedGameDTO savedGameDTO) {
         this.setPreferredSize(new Dimension(Settings.backgroundWidth, Settings.backgroundHeight));
         this.setFocusable(true);
+        this.savedGameDTO = savedGameDTO;
+        gridVisualization = new SnakeVisualization(savedGameDTO);
 
         startTimer();
     }

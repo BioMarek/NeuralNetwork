@@ -1,6 +1,7 @@
 package games.snake;
 
 import games.MultiplayerGame;
+import games.snake.dtos.SavedGameDTO;
 import games.snake.dtos.SnakeSightDTO;
 import interfaces.NeuralNetwork;
 import utils.Direction;
@@ -10,6 +11,7 @@ import utils.Settings;
 import java.util.ArrayList;
 import java.util.List;
 
+import static utils.Util.arrayCopy;
 import static utils.Util.repeat;
 
 public class SnakeGameMultiplayer implements MultiplayerGame {
@@ -195,6 +197,22 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
         }
         return maxIndex;
     }
+
+    /**
+     * Plays the game and saves grid arrangements so they can be used later e.g. for visualization.
+     */
+    public SavedGameDTO saveSnakeMoves(List<NeuralNetwork> neuralNetworks, int maxNumberOfMoves) {
+        SavedGameDTO savedGameDTO = new SavedGameDTO();
+        for (int move = 0; move < maxNumberOfMoves; move++) {
+            for (int i = 0; i < neuralNetworks.size(); i++) {
+                var networkOutput = neuralNetworks.get(i).getNetworkOutput(snakeSightDTO.getInput_8(snakes.get(i)));
+                moveSnakeToDirection(snakes.get(i), outputToDirection(networkOutput));
+            }
+            savedGameDTO.grid.add(arrayCopy(grid));
+        }
+        return savedGameDTO;
+    }
+
 
     /**
      * Prints snakeGame using ascii characters.

@@ -3,7 +3,7 @@ package utils;
 public class Settings {
     public static int gridSize = 20;
     public static boolean hasWalls = true;
-    public static int numOfGenerations = 300;
+    public static int numOfGenerations = 300; // 300
     public static int totalNumOfGenotypes = 100;
     public static int maxNeurons = 1000;
     public static boolean verbose = true;

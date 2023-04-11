@@ -2,6 +2,7 @@ import basic_neural_network.evolution.BasicEvolutionEngine;
 import basic_neural_network.neural_network.BasicNeuralNetwork;
 import games.snake.SnakeGame;
 import games.snake.SnakeGameMultiplayer;
+import games.snake.dtos.SavedGameDTO;
 import interfaces.NeuralNetwork;
 import neat.evolution.GenePool;
 import neat.evolution.Genotype;
@@ -73,6 +74,15 @@ public class Main {
     }
 
     public static void snakeVisualization() {
-        new SnakeFrame(new SnakePanel());
+        Settings.multiplayerSettings();
+        GenePool genePool = new GenePool(8, 4, Util.activationFunctionUnitStep(), new SnakeGameMultiplayer());
+
+        long start = System.currentTimeMillis();
+        genePool.calculateEvolutionMultiplayer(Settings.numOfGenerations);
+        long stop = System.currentTimeMillis();
+        System.out.println("It took: " + (stop - start) / 1000 + "s");
+
+        new SnakeFrame(new SnakePanel(genePool.savedGameDTO));
+
     }
 }
