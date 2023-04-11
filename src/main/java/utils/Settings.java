@@ -3,7 +3,7 @@ package utils;
 public class Settings {
     public static int gridSize = 20;
     public static boolean hasWalls = true;
-    public static int numOfGenerations = 300; // 300
+    public static int numOfGenerations = 10; // 300
     public static int totalNumOfGenotypes = 100;
     public static int maxNeurons = 1000;
     public static boolean verbose = true;
@@ -30,7 +30,6 @@ public class Settings {
     public static int timerDelay = 500;
     public static int backgroundWidth = 1000;
     public static int backgroundHeight = 1000;
-    public static int alpha = 255;
 
     public static void multiplayerSettings() {
         numOfPlayers = 10;

@@ -43,22 +43,18 @@ public class SnakeVisualization implements GridVisualization {
             for (int column = 0; column < size; column++) {
                 if (currentGrid[row][column] == 0)
                     continue;
-                Colors.setColor(graphics, numberToColor(currentGrid[row][column]));
+                numberToColor(currentGrid[row][column]);
                 graphics.fillRect(column * squareSizePixels, row * squareSizePixels, squareSizePixels, squareSizePixels);
             }
         }
     }
 
-    public int numberToColor(int num) {
-        // TODO refactor together with colors
-        if (num == 1)
-            return 0;
-        if (num == 2)
-            return 18;
+    public void numberToColor(int num) {
         if (num >= 200)
-            return num - 200;
-        if (num >= 100)
-            return num - 100;
-        throw new RuntimeException("wrong number in numberToColor");
+            Colors.setColor(graphics, num - 200 + 2, 255); // +2 because 1 is wall and 2 is food
+        else if (num >= 100)
+            Colors.setColor(graphics, num - 100 + 2, 150);
+        else
+            Colors.setColor(graphics, num, 255);
     }
 }
