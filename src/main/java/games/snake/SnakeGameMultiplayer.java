@@ -99,6 +99,7 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
      */
     protected void moveSnakeToDirection(Snake snake, Direction direction) {
         direction = direction == Direction.NONE ? snake.lastDirection : direction;
+        snake.lastDirection = direction;
         int headRow = snake.bodyParts.get(0).row;
         int headColumn = snake.bodyParts.get(0).column;
 
@@ -118,7 +119,7 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
      * @param column where to move
      */
     protected void moveSnake(Snake snake, int row, int column) {
-        if (snakeCollision(row, column)) {
+        if (snakeCollision(snake, row, column)) {
             var coordinates = FreePosition.randomFreeCoordinate(grid);
             removeSnake(snake);
             snake.resetSnake(coordinates.getFirst(), coordinates.getSecond(), Direction.randomDirection());
@@ -159,8 +160,8 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
      *
      * @return true moving to coordinates will result in death
      */
-    protected boolean snakeCollision(int row, int column) {
-        return grid[row][column] == SnakeMap.WALL.value || grid[row][column] >= 100;
+    protected boolean snakeCollision(Snake snake, int row, int column) {
+        return grid[row][column] == SnakeMap.WALL.value || (grid[row][column] != snake.name + 100 && grid[row][column] >= 100);
     }
 
     /**

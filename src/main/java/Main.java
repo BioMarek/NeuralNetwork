@@ -75,7 +75,7 @@ public class Main {
 
     public static void snakeVisualization() {
         Settings.multiplayerSettings();
-        GenePool genePool = new GenePool(8, 4, Util.activationFunctionUnitStep(), new SnakeGameMultiplayer());
+        GenePool genePool = new GenePool(8, 4, Util.activationFunctionUnitStep(), Util.activationFunctionHyperbolicTangent(), new SnakeGameMultiplayer());
 
         long start = System.currentTimeMillis();
         genePool.calculateEvolutionMultiplayer(Settings.numOfGenerations);

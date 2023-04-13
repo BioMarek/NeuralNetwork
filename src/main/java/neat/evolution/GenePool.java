@@ -308,4 +308,14 @@ public class GenePool implements EvolutionEngine {
         this.outputLayerActivationFunc = hiddenLayerActivationFunc;
         this.multiplayerGame = game;
     }
+
+    public GenePool(int inputs, int outputs, Function<Double, Double> hiddenLayerActivationFunc, Function<Double, Double> outputActivationFunc, MultiplayerGame game) {
+        List<Genotype> genotypes = new ArrayList<>();
+        repeat.accept(Settings.totalNumOfGenotypes, () -> genotypes.add(new Genotype(this, inputs, outputs)));
+        Species species = new Species(this, genotypes, this.speciesNames++);
+        this.speciesList.add(species);
+        this.hiddenLayerActivationFunc = hiddenLayerActivationFunc;
+        this.outputLayerActivationFunc = outputActivationFunc;
+        this.multiplayerGame = game;
+    }
 }
