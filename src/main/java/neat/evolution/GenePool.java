@@ -36,6 +36,46 @@ public class GenePool implements EvolutionEngine {
     protected int speciesCreated = 1;
     public SavedGameDTO savedGameDTO;
 
+    public GenePool(int inputs, int outputs, Function<Double, Double> hiddenLayerActivationFunc, Function<Double, Double> outputActivationFunc, Game game) {
+        List<Genotype> genotypes = new ArrayList<>();
+        repeat.accept(Settings.totalNumOfGenotypes, () -> genotypes.add(new Genotype(this, inputs, outputs)));
+        Species species = new Species(this, genotypes, this.speciesNames++);
+        this.speciesList.add(species);
+        this.hiddenLayerActivationFunc = hiddenLayerActivationFunc;
+        this.outputLayerActivationFunc = outputActivationFunc;
+        this.game = game;
+    }
+
+    public GenePool(int inputs, int outputs, Function<Double, Double> hiddenLayerActivationFunc, Game game) {
+        List<Genotype> genotypes = new ArrayList<>();
+        repeat.accept(Settings.totalNumOfGenotypes, () -> genotypes.add(new Genotype(this, inputs, outputs)));
+        Species species = new Species(this, genotypes, this.speciesNames++);
+        this.speciesList.add(species);
+        this.hiddenLayerActivationFunc = hiddenLayerActivationFunc;
+        this.outputLayerActivationFunc = hiddenLayerActivationFunc;
+        this.game = game;
+    }
+
+    public GenePool(int inputs, int outputs, Function<Double, Double> hiddenLayerActivationFunc, MultiplayerGame game) {
+        List<Genotype> genotypes = new ArrayList<>();
+        repeat.accept(Settings.totalNumOfGenotypes, () -> genotypes.add(new Genotype(this, inputs, outputs)));
+        Species species = new Species(this, genotypes, this.speciesNames++);
+        this.speciesList.add(species);
+        this.hiddenLayerActivationFunc = hiddenLayerActivationFunc;
+        this.outputLayerActivationFunc = hiddenLayerActivationFunc;
+        this.multiplayerGame = game;
+    }
+
+    public GenePool(int inputs, int outputs, Function<Double, Double> hiddenLayerActivationFunc, Function<Double, Double> outputActivationFunc, MultiplayerGame game) {
+        List<Genotype> genotypes = new ArrayList<>();
+        repeat.accept(Settings.totalNumOfGenotypes, () -> genotypes.add(new Genotype(this, inputs, outputs)));
+        Species species = new Species(this, genotypes, this.speciesNames++);
+        this.speciesList.add(species);
+        this.hiddenLayerActivationFunc = hiddenLayerActivationFunc;
+        this.outputLayerActivationFunc = outputActivationFunc;
+        this.multiplayerGame = game;
+    }
+
     @Override
     public void calculateEvolution(int numOfGenerations) {
         StringBuilder speciesCsvString = new StringBuilder();
@@ -277,45 +317,5 @@ public class GenePool implements EvolutionEngine {
 
     public List<Species> getSpecies() {
         return speciesList;
-    }
-
-    public GenePool(int inputs, int outputs, Function<Double, Double> hiddenLayerActivationFunc, Function<Double, Double> outputActivationFunc, Game game) {
-        List<Genotype> genotypes = new ArrayList<>();
-        repeat.accept(Settings.totalNumOfGenotypes, () -> genotypes.add(new Genotype(this, inputs, outputs)));
-        Species species = new Species(this, genotypes, this.speciesNames++);
-        this.speciesList.add(species);
-        this.hiddenLayerActivationFunc = hiddenLayerActivationFunc;
-        this.outputLayerActivationFunc = outputActivationFunc;
-        this.game = game;
-    }
-
-    public GenePool(int inputs, int outputs, Function<Double, Double> hiddenLayerActivationFunc, Game game) {
-        List<Genotype> genotypes = new ArrayList<>();
-        repeat.accept(Settings.totalNumOfGenotypes, () -> genotypes.add(new Genotype(this, inputs, outputs)));
-        Species species = new Species(this, genotypes, this.speciesNames++);
-        this.speciesList.add(species);
-        this.hiddenLayerActivationFunc = hiddenLayerActivationFunc;
-        this.outputLayerActivationFunc = hiddenLayerActivationFunc;
-        this.game = game;
-    }
-
-    public GenePool(int inputs, int outputs, Function<Double, Double> hiddenLayerActivationFunc, MultiplayerGame game) {
-        List<Genotype> genotypes = new ArrayList<>();
-        repeat.accept(Settings.totalNumOfGenotypes, () -> genotypes.add(new Genotype(this, inputs, outputs)));
-        Species species = new Species(this, genotypes, this.speciesNames++);
-        this.speciesList.add(species);
-        this.hiddenLayerActivationFunc = hiddenLayerActivationFunc;
-        this.outputLayerActivationFunc = hiddenLayerActivationFunc;
-        this.multiplayerGame = game;
-    }
-
-    public GenePool(int inputs, int outputs, Function<Double, Double> hiddenLayerActivationFunc, Function<Double, Double> outputActivationFunc, MultiplayerGame game) {
-        List<Genotype> genotypes = new ArrayList<>();
-        repeat.accept(Settings.totalNumOfGenotypes, () -> genotypes.add(new Genotype(this, inputs, outputs)));
-        Species species = new Species(this, genotypes, this.speciesNames++);
-        this.speciesList.add(species);
-        this.hiddenLayerActivationFunc = hiddenLayerActivationFunc;
-        this.outputLayerActivationFunc = outputActivationFunc;
-        this.multiplayerGame = game;
     }
 }

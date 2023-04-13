@@ -12,16 +12,15 @@ import static org.hamcrest.Matchers.is;
 public class SnakeSightDTOTest {
     private static int SIZE = 4;
     private int[][] grid;
-    private Snake snake;
     private SnakeSightDTO snakeSightDTO;
 
 
     @Test
     void calculateSightRay_isCorrectGridFour() {
+        Settings.snakeSight = 4;
         SIZE = 4;
         initGrid();
-        snake = new Snake(1, 1, Direction.UP, 1);
-        var input = snakeSightDTO.getInput_8(snake);
+        var input = snakeSightDTO.getInput_8(new Snake(1, 1, Direction.UP, 1));
         assertThat(input[0], is(closeTo(-1.0, 0.1)));
         assertThat(input[1], is(closeTo(-0.5, 0.1)));
         assertThat(input[2], is(closeTo(-0.5, 0.1)));
@@ -35,13 +34,13 @@ public class SnakeSightDTOTest {
 
     @Test
     void calculateSightRay_isCorrectGridFive() {
+        Settings.snakeSight = 4;
         SIZE = 5;
         initGrid();
-        snake = new Snake(2, 2, Direction.UP, 1);
         grid[3][3] = SnakeMap.FOOD.value;
         grid[2][3] = SnakeMap.FOOD.value;
         grid[1][3] = 301;
-        var input = snakeSightDTO.getInput_8(snake);
+        var input = snakeSightDTO.getInput_8(new Snake(2, 2, Direction.UP, 1));
         assertThat(input[0], is(closeTo(-0.5, 0.1)));
         assertThat(input[1], is(closeTo(1.0, 0.1)));
         assertThat(input[2], is(closeTo(-0.5, 0.1)));
@@ -55,15 +54,15 @@ public class SnakeSightDTOTest {
 
     @Test
     void calculateSightRay_isCorrectGridTen() {
+        Settings.snakeSight = 4;
         SIZE = 10;
         initGrid();
-        snake = new Snake(4, 4, Direction.UP, 1);
         grid[4][8] = SnakeMap.FOOD.value;
         grid[2][2] = SnakeMap.FOOD.value;
         grid[4][5] = 101;
         grid[7][1] = 102;
         grid[8][8] = 103;
-        var input = snakeSightDTO.getInput_8(snake);
+        var input = snakeSightDTO.getInput_8(new Snake(4, 4, Direction.UP, 1));
 
         assertThat(input[0], is(closeTo(-0.2, 0.1)));
         assertThat(input[1], is(closeTo(0.2, 0.1)));

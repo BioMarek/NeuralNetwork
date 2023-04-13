@@ -51,9 +51,9 @@ public class SnakeVisualization implements GridVisualization {
 
     public void numberToColor(int num) {
         if (num >= 200)
-            Colors.setColor(graphics, num - 200 + 2, 255); // +2 because 1 is wall and 2 is food
+            Colors.setColor(graphics, num - 200 + 3, 255); // +2 because 1 is wall and 2 is food
         else if (num >= 100)
-            Colors.setColor(graphics, num - 100 + 2, 150);
+            Colors.setColor(graphics, num - 100 + 3, 150);
         else
             Colors.setColor(graphics, num, 255);
     }

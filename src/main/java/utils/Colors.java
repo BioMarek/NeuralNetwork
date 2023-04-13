@@ -26,7 +26,7 @@ public enum Colors {
             case 5 -> new Color(255, 255, 0, alpha);
             case 6 -> new Color(255, 200, 0, alpha);
             case 7 -> new Color(255, 0, 255, alpha);
-            case 8 -> new Color(255, 0, 255, alpha);
+            case 8 -> new Color(127, 0, 255, alpha);
             case 9 -> new Color(0, 255, 255, alpha);
             case 10 -> new Color(255, 175, 175, alpha);
             case 11 -> new Color(139, 69, 19, alpha);

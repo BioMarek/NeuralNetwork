@@ -196,7 +196,6 @@ public class SnakeGameMultiplayerTest {
         Settings.numOfApples = 2;
     }
 
-
     @AfterEach
     void cleanup() {
         Settings.numOfApples = 2;

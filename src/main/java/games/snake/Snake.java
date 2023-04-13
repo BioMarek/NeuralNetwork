@@ -27,4 +27,8 @@ public class Snake {
         bodyParts.add(new BodyPart(false, row, column));
         this.lastDirection = direction;
     }
+
+    public boolean isAnotherSnake(int[][] grid, int row, int column) {
+        return grid[row][column] >= 100 && (grid[row][column] != name + 100 && grid[row][column] != name + 200);
+    }
 }
