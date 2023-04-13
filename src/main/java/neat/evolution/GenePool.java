@@ -2,6 +2,7 @@ package neat.evolution;
 
 import games.Game;
 import games.MultiplayerGame;
+import games.snake.dtos.SavedGameDTO;
 import interfaces.EvolutionEngine;
 import interfaces.NeuralNetwork;
 import lombok.AccessLevel;
@@ -33,6 +34,7 @@ public class GenePool implements EvolutionEngine {
     protected Game game;
     private MultiplayerGame multiplayerGame;
     protected int speciesCreated = 1;
+    public SavedGameDTO savedGameDTO;
 
     @Override
     public void calculateEvolution(int numOfGenerations) {
@@ -58,11 +60,12 @@ public class GenePool implements EvolutionEngine {
             if (i % Settings.frequencyOfSpeciation == 0 && i > 0)
                 createSpecies();
             resetScores();
-            makeNextGenerationMultiplayer();
+            makeNextGenerationMultiplayer(false);
             resizeSpecies();
             removeDeadSpecies();
             printSpecies();
         }
+        makeNextGenerationMultiplayer(true);
     }
 
     @Override
@@ -76,7 +79,7 @@ public class GenePool implements EvolutionEngine {
         speciesList.forEach(Species::mutateAndAge);
     }
 
-    public void makeNextGenerationMultiplayer() {
+    public void makeNextGenerationMultiplayer(boolean saveGame) {
         List<List<Genotype>> allGenotypes = divideGenotypes(shuffleGenotypesFromSpecies());
 
         for (var players : allGenotypes) {
@@ -85,6 +88,10 @@ public class GenePool implements EvolutionEngine {
                     .toList();
 
             for (int i = 0; i < Settings.numOfTrials; i++) {
+                if (saveGame) {
+                    savedGameDTO = this.multiplayerGame.saveSnakeMoves(phenotypes, Settings.maxNumberOfMoves);
+                    return;
+                }
                 var score = this.multiplayerGame.play(phenotypes, Settings.maxNumberOfMoves);
                 updateMultiplayerScore(score, players);
                 this.multiplayerGame.reset();
@@ -278,7 +285,7 @@ public class GenePool implements EvolutionEngine {
         Species species = new Species(this, genotypes, this.speciesNames++);
         this.speciesList.add(species);
         this.hiddenLayerActivationFunc = hiddenLayerActivationFunc;
-        this.outputLayerActivationFunc = outputLayerActivationFunc;
+        this.outputLayerActivationFunc = outputActivationFunc;
         this.game = game;
     }
 
@@ -299,6 +306,16 @@ public class GenePool implements EvolutionEngine {
         this.speciesList.add(species);
         this.hiddenLayerActivationFunc = hiddenLayerActivationFunc;
         this.outputLayerActivationFunc = hiddenLayerActivationFunc;
+        this.multiplayerGame = game;
+    }
+
+    public GenePool(int inputs, int outputs, Function<Double, Double> hiddenLayerActivationFunc, Function<Double, Double> outputActivationFunc, MultiplayerGame game) {
+        List<Genotype> genotypes = new ArrayList<>();
+        repeat.accept(Settings.totalNumOfGenotypes, () -> genotypes.add(new Genotype(this, inputs, outputs)));
+        Species species = new Species(this, genotypes, this.speciesNames++);
+        this.speciesList.add(species);
+        this.hiddenLayerActivationFunc = hiddenLayerActivationFunc;
+        this.outputLayerActivationFunc = outputActivationFunc;
         this.multiplayerGame = game;
     }
 }

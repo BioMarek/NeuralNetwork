@@ -122,6 +122,14 @@ public class Util {
         return result;
     }
 
+    public static int[][] arrayCopy(int[][] source) {
+        int[][] result = new int[source.length][source.length];
+        for (int row = 0; row < source.length; row++) {
+            System.arraycopy(source[row], 0, result[row], 0, source.length);
+        }
+        return result;
+    }
+
     /**
      * Repeats given function n times.
      */

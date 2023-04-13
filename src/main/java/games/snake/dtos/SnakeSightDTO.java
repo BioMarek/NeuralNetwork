@@ -3,9 +3,9 @@ package games.snake.dtos;
 import games.snake.BodyPart;
 import games.snake.Snake;
 import games.snake.SnakeMap;
+import utils.Settings;
 
 public class SnakeSightDTO {
-    private static final int SIGHT = 4;
     private final double[] result = new double[8];
     private final int[][] grid;
 
@@ -32,7 +32,7 @@ public class SnakeSightDTO {
 
     public void calculateSightRay(Snake snake, int rowIncrease, int columnIncrease, int index) {
         BodyPart head = snake.bodyParts.get(0);
-        for (int i = 1; i < SIGHT + 1; i++) {
+        for (int i = 1; i < Settings.snakeSight + 1; i++) {
             var currentRow = head.row + rowIncrease * i;
             var currentColumn = head.column + columnIncrease * i;
             if (isOutOfBounds(grid, currentRow, currentColumn))

@@ -2,17 +2,21 @@ import basic_neural_network.evolution.BasicEvolutionEngine;
 import basic_neural_network.neural_network.BasicNeuralNetwork;
 import games.snake.SnakeGame;
 import games.snake.SnakeGameMultiplayer;
+import games.snake.dtos.SavedGameDTO;
 import interfaces.NeuralNetwork;
 import neat.evolution.GenePool;
 import neat.evolution.Genotype;
 import utils.Settings;
 import utils.Util;
-import visualizations.MainFrame;
+import visualizations.NetworkVisualizationFrame;
+import visualizations.SnakeFrame;
+import visualizations.SnakePanel;
 
 public class Main {
 
     public static void main(String[] args) {
-        setupNeatNeuralNetworkMultiplayer();
+//        setupNeatNeuralNetworkMultiplayer();
+        snakeVisualization();
 //        visualization();
     }
 
@@ -21,7 +25,7 @@ public class Main {
         Genotype genotype = genePool.getSpecies().get(0).genotypes.get(0);
         genotype.addNode(genotype.connectionGenes.get(0));
         genotype.addNode(genotype.connectionGenes.get(0));
-        new MainFrame(genotype.createPhenotype().getVisualizationDTO());
+        new NetworkVisualizationFrame(genotype.createPhenotype().getVisualizationDTO());
     }
 
     public static void setupNeatNeuralNetwork() {
@@ -35,7 +39,7 @@ public class Main {
         SnakeGame snakeGame = new SnakeGame();
         NeuralNetwork neuralNetwork = genePool.getSpecies().get(0).genotypes.get(0).createPhenotype();
         System.out.println(neuralNetwork);
-        new MainFrame(neuralNetwork.getVisualizationDTO());
+        new NetworkVisualizationFrame(neuralNetwork.getVisualizationDTO());
         snakeGame.showSnakeMoves(neuralNetwork, 500);
     }
 
@@ -67,5 +71,18 @@ public class Main {
         neuralNetwork.printNetwork();
         System.out.println(neuralNetwork.name);
         snakeGame.showSnakeMoves(neuralNetwork, 500);
+    }
+
+    public static void snakeVisualization() {
+        Settings.multiplayerSettings();
+        GenePool genePool = new GenePool(8, 4, Util.activationFunctionUnitStep(), Util.activationFunctionHyperbolicTangent(), new SnakeGameMultiplayer());
+
+        long start = System.currentTimeMillis();
+        genePool.calculateEvolutionMultiplayer(Settings.numOfGenerations);
+        long stop = System.currentTimeMillis();
+        System.out.println("It took: " + (stop - start) / 1000 + "s");
+
+        new SnakeFrame(new SnakePanel(genePool.savedGameDTO));
+
     }
 }

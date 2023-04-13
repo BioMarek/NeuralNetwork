@@ -12,7 +12,7 @@ import java.awt.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-public class MainFrameTest {
+public class NetworkVisualizationFrameTest {
     protected GenePool genePool;
     protected Genotype genotype;
     protected NeuralNetworkPanel neuralNetworkPanel;

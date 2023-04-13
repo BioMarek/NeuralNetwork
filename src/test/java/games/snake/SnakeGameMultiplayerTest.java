@@ -40,12 +40,13 @@ public class SnakeGameMultiplayerTest {
 
         var snakeMultiplayerGame = new SnakeGameMultiplayer();
         snakeMultiplayerGame.grid[1][1] = 100;
+        snakeMultiplayerGame.grid[1][2] = 101;
         snakeMultiplayerGame.grid[2][1] = 2;
 
-        assertThat(snakeMultiplayerGame.snakeCollision(0, 0), is(true));
-        assertThat(snakeMultiplayerGame.snakeCollision(1, 1), is(true));
-        assertThat(snakeMultiplayerGame.snakeCollision(1, 2), is(false));
-        assertThat(snakeMultiplayerGame.snakeCollision(2, 1), is(false));
+        assertThat(snakeMultiplayerGame.snakeCollision(new Snake(2, 2, Direction.UP, 1), 3, 3), is(true));
+        assertThat(snakeMultiplayerGame.snakeCollision(new Snake(2, 2, Direction.UP, 1), 1, 1), is(true));
+        assertThat(snakeMultiplayerGame.snakeCollision(new Snake(2, 2, Direction.UP, 1), 1, 2), is(false));
+        assertThat(snakeMultiplayerGame.snakeCollision(new Snake(2, 2, Direction.UP, 1), 2, 1), is(false));
 
         Settings.numOfPlayers = 2;
         Settings.numOfApples = 2;

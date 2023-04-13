@@ -1,6 +1,7 @@
 package games.snake;
 
 import games.MultiplayerGame;
+import games.snake.dtos.SavedGameDTO;
 import games.snake.dtos.SnakeSightDTO;
 import interfaces.NeuralNetwork;
 import utils.Direction;
@@ -10,6 +11,7 @@ import utils.Settings;
 import java.util.ArrayList;
 import java.util.List;
 
+import static utils.Util.arrayCopy;
 import static utils.Util.repeat;
 
 public class SnakeGameMultiplayer implements MultiplayerGame {
@@ -97,6 +99,7 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
      */
     protected void moveSnakeToDirection(Snake snake, Direction direction) {
         direction = direction == Direction.NONE ? snake.lastDirection : direction;
+        snake.lastDirection = direction;
         int headRow = snake.bodyParts.get(0).row;
         int headColumn = snake.bodyParts.get(0).column;
 
@@ -116,7 +119,7 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
      * @param column where to move
      */
     protected void moveSnake(Snake snake, int row, int column) {
-        if (snakeCollision(row, column)) {
+        if (snakeCollision(snake, row, column)) {
             var coordinates = FreePosition.randomFreeCoordinate(grid);
             removeSnake(snake);
             snake.resetSnake(coordinates.getFirst(), coordinates.getSecond(), Direction.randomDirection());
@@ -157,8 +160,8 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
      *
      * @return true moving to coordinates will result in death
      */
-    protected boolean snakeCollision(int row, int column) {
-        return grid[row][column] == SnakeMap.WALL.value || grid[row][column] >= 100;
+    protected boolean snakeCollision(Snake snake, int row, int column) {
+        return grid[row][column] == SnakeMap.WALL.value || (grid[row][column] != snake.name + 100 && grid[row][column] >= 100);
     }
 
     /**
@@ -195,6 +198,22 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
         }
         return maxIndex;
     }
+
+    /**
+     * Plays the game and saves grid arrangements so they can be used later e.g. for visualization.
+     */
+    public SavedGameDTO saveSnakeMoves(List<NeuralNetwork> neuralNetworks, int maxNumberOfMoves) {
+        SavedGameDTO savedGameDTO = new SavedGameDTO();
+        for (int move = 0; move < maxNumberOfMoves; move++) {
+            for (int i = 0; i < neuralNetworks.size(); i++) {
+                var networkOutput = neuralNetworks.get(i).getNetworkOutput(snakeSightDTO.getInput_8(snakes.get(i)));
+                moveSnakeToDirection(snakes.get(i), outputToDirection(networkOutput));
+            }
+            savedGameDTO.grid.add(arrayCopy(grid));
+        }
+        return savedGameDTO;
+    }
+
 
     /**
      * Prints snakeGame using ascii characters.
