@@ -285,7 +285,7 @@ public class GenePool implements EvolutionEngine {
         Species species = new Species(this, genotypes, this.speciesNames++);
         this.speciesList.add(species);
         this.hiddenLayerActivationFunc = hiddenLayerActivationFunc;
-        this.outputLayerActivationFunc = outputLayerActivationFunc;
+        this.outputLayerActivationFunc = outputActivationFunc;
         this.game = game;
     }
 

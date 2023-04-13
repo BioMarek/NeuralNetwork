@@ -42,7 +42,6 @@ public class SnakeGameMultiplayerTest {
         snakeMultiplayerGame.grid[1][1] = 100;
         snakeMultiplayerGame.grid[1][2] = 101;
         snakeMultiplayerGame.grid[2][1] = 2;
-        snakeMultiplayerGame.printSnakeGame();
 
         assertThat(snakeMultiplayerGame.snakeCollision(new Snake(2, 2, Direction.UP, 1), 3, 3), is(true));
         assertThat(snakeMultiplayerGame.snakeCollision(new Snake(2, 2, Direction.UP, 1), 1, 1), is(true));
