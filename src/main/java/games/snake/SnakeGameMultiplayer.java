@@ -5,8 +5,9 @@ import games.snake.dtos.SavedGameDTO;
 import games.snake.dtos.SnakeSightDTO;
 import interfaces.NeuralNetwork;
 import utils.Direction;
-import utils.FreePosition;
+import utils.Pair;
 import utils.Settings;
+import utils.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +64,7 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
     private void initSnakes() {
         snakes = new ArrayList<>();
         for (int i = 0; i < Settings.numOfPlayers; i++) {
-            var coordinates = FreePosition.randomFreeCoordinate(grid);
+            var coordinates = randomFreeCoordinate(grid);
             var snake = new Snake(coordinates.getFirst(), coordinates.getSecond(), Direction.randomDirection(), i);
             placeSnake(snake);
             snakes.add(snake);
@@ -88,7 +89,7 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
     }
 
     private void placeFood() {
-        var coordinates = FreePosition.randomFreeCoordinate(grid);
+        var coordinates = randomFreeCoordinate(grid);
         grid[coordinates.getFirst()][coordinates.getSecond()] = SnakeMap.FOOD.value;
     }
 
@@ -120,7 +121,7 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
      */
     protected void moveSnake(Snake snake, int row, int column) {
         if (snakeCollision(snake, row, column)) {
-            var coordinates = FreePosition.randomFreeCoordinate(grid);
+            var coordinates = randomFreeCoordinate(grid);
             removeSnake(snake);
             snake.resetSnake(coordinates.getFirst(), coordinates.getSecond(), Direction.randomDirection());
             snake.snakeScore += Settings.deathPenalty;
@@ -212,6 +213,19 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
             savedGameDTO.grid.add(arrayCopy(grid));
         }
         return savedGameDTO;
+    }
+
+    public static Pair<Integer> randomFreeCoordinate(int[][] grid) {
+        while (true) {
+            int row = Util.randomInt(1, grid.length - 1);
+            int column = Util.randomInt(1, grid.length - 1);
+            if (grid[row][column] != SnakeMap.EMPTY.value) {
+                row = Util.randomInt(1, grid.length - 1);
+                column = Util.randomInt(1, grid.length - 1);
+            } else {
+                return new Pair<>(row, column);
+            }
+        }
     }
 
 
