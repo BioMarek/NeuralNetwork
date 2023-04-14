@@ -9,10 +9,10 @@ import java.awt.Graphics2D;
 
 public class SnakeVisualization implements GridVisualization {
     private Graphics2D graphics;
-    private SavedGameDTO savedGameDTO;
+    private final SavedGameDTO savedGameDTO;
     private int currentFrame = 0;
-    private int size;
-    private int squareSizePixels;
+    private final int size;
+    private final int squareSizePixels;
 
     public SnakeVisualization(SavedGameDTO savedGameDTO) {
         this.savedGameDTO = savedGameDTO;
@@ -22,7 +22,8 @@ public class SnakeVisualization implements GridVisualization {
 
     @Override
     public void createNextFrame() {
-        currentFrame++;
+        if (currentFrame < Settings.maxNumberOfMoves)
+            currentFrame++;
     }
 
     @Override
