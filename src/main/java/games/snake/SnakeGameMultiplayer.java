@@ -6,16 +6,21 @@ import games.snake.dtos.SnakeSightDTO;
 import interfaces.NeuralNetwork;
 import utils.Direction;
 import utils.Pair;
-import utils.Settings;
 import utils.Util;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static utils.Util.arrayCopy;
-import static utils.Util.repeat;
 import static games.snake.SnakeMap.BODY_MULTIPLAYER;
 import static games.snake.SnakeMap.HEAD_MULTIPLAYER;
+import static utils.Settings.DEATH_PENALTY;
+import static utils.Settings.GRID_SIZE;
+import static utils.Settings.HAS_WALL;
+import static utils.Settings.LEAVE_CORPSE;
+import static utils.Settings.MAX_NUM_OF_FOOD;
+import static utils.Settings.NUM_OF_PLAYERS;
+import static utils.Util.arrayCopy;
+import static utils.Util.repeat;
 
 public class SnakeGameMultiplayer implements MultiplayerGame {
     private final int size;
@@ -25,7 +30,7 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
     private int numOfFood;
 
     public SnakeGameMultiplayer() {
-        this.size = Settings.gridSize;
+        this.size = GRID_SIZE;
         reset();
     }
 
@@ -51,7 +56,7 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
         initSnakes();
         snakeSightDTO = new SnakeSightDTO(grid);
         numOfFood = 0;
-        repeat.accept(Settings.maxNumberOfFood, this::placeFood);
+        repeat.accept(MAX_NUM_OF_FOOD, this::placeFood);
     }
 
     private void initGrid() {
@@ -59,7 +64,7 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
 
         for (int row = 0; row < size; row++) {
             for (int column = 0; column < size; column++) {
-                if (Settings.hasWalls && (row == 0 || row == size - 1 || column == 0 || column == size - 1))
+                if (HAS_WALL && (row == 0 || row == size - 1 || column == 0 || column == size - 1))
                     grid[row][column] = SnakeMap.WALL.value;
             }
         }
@@ -67,7 +72,7 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
 
     private void initSnakes() {
         snakes = new ArrayList<>();
-        for (int i = 0; i < Settings.numOfPlayers; i++) {
+        for (int i = 0; i < NUM_OF_PLAYERS; i++) {
             var coordinates = randomFreeCoordinate(grid);
             var snake = new Snake(coordinates.getFirst(), coordinates.getSecond(), Direction.randomDirection(), i);
             placeSnake(snake);
@@ -103,7 +108,7 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
      * square.
      */
     private void placeFood() {
-        if (numOfFood < Settings.maxNumberOfFood) {
+        if (numOfFood < MAX_NUM_OF_FOOD) {
             var coordinates = randomFreeCoordinate(grid);
             grid[coordinates.getFirst()][coordinates.getSecond()] = SnakeMap.FOOD.value;
             numOfFood++;
@@ -139,13 +144,13 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
     protected void moveSnake(Snake snake, int row, int column) {
         if (snakeCollision(snake, row, column)) {
             var coordinates = randomFreeCoordinate(grid);
-            if (Settings.leaveCorpse) {
+            if (LEAVE_CORPSE) {
                 numOfFood += snake.bodyParts.size();
                 removeSnake(snake, SnakeMap.FOOD);
             } else
                 removeSnake(snake, SnakeMap.EMPTY);
             snake.resetSnake(coordinates.getFirst(), coordinates.getSecond(), Direction.randomDirection());
-            snake.snakeScore += Settings.deathPenalty;
+            snake.snakeScore += DEATH_PENALTY;
             placeSnake(snake);
         } else {
             moveSnakeByOne(snake, row, column);

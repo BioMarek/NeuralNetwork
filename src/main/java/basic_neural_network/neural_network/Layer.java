@@ -1,9 +1,9 @@
 package basic_neural_network.neural_network;
 
-import utils.Util;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import utils.Util;
 
 import java.io.Serializable;
 import java.util.Arrays;

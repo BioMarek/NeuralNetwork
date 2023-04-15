@@ -3,7 +3,11 @@ package visualizations.dtos;
 
 import interfaces.NeuralNetwork;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * DTO representing layer for {@link NeuralNetwork} visualization.

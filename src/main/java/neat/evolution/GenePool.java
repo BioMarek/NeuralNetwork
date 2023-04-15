@@ -7,7 +7,6 @@ import interfaces.EvolutionEngine;
 import interfaces.NeuralNetwork;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import utils.Settings;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -19,6 +18,13 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static utils.Settings.FREQUENCY_OF_SPECIATION;
+import static utils.Settings.MAX_NUM_OF_MOVES;
+import static utils.Settings.NUM_OF_PLAYERS;
+import static utils.Settings.NUM_OF_TRIALS;
+import static utils.Settings.PROTECTED_AGE;
+import static utils.Settings.TOTAL_NUM_OF_GENOTYPES;
+import static utils.Settings.VERBOSE;
 import static utils.Util.repeat;
 
 /**
@@ -38,7 +44,7 @@ public class GenePool implements EvolutionEngine {
 
     public GenePool(int inputs, int outputs, Function<Double, Double> hiddenLayerActivationFunc, Function<Double, Double> outputActivationFunc, Game game) {
         List<Genotype> genotypes = new ArrayList<>();
-        repeat.accept(Settings.totalNumOfGenotypes, () -> genotypes.add(new Genotype(this, inputs, outputs)));
+        repeat.accept(TOTAL_NUM_OF_GENOTYPES, () -> genotypes.add(new Genotype(this, inputs, outputs)));
         Species species = new Species(this, genotypes, this.speciesNames++);
         this.speciesList.add(species);
         this.hiddenLayerActivationFunc = hiddenLayerActivationFunc;
@@ -48,7 +54,7 @@ public class GenePool implements EvolutionEngine {
 
     public GenePool(int inputs, int outputs, Function<Double, Double> hiddenLayerActivationFunc, Game game) {
         List<Genotype> genotypes = new ArrayList<>();
-        repeat.accept(Settings.totalNumOfGenotypes, () -> genotypes.add(new Genotype(this, inputs, outputs)));
+        repeat.accept(TOTAL_NUM_OF_GENOTYPES, () -> genotypes.add(new Genotype(this, inputs, outputs)));
         Species species = new Species(this, genotypes, this.speciesNames++);
         this.speciesList.add(species);
         this.hiddenLayerActivationFunc = hiddenLayerActivationFunc;
@@ -58,7 +64,7 @@ public class GenePool implements EvolutionEngine {
 
     public GenePool(int inputs, int outputs, Function<Double, Double> hiddenLayerActivationFunc, MultiplayerGame game) {
         List<Genotype> genotypes = new ArrayList<>();
-        repeat.accept(Settings.totalNumOfGenotypes, () -> genotypes.add(new Genotype(this, inputs, outputs)));
+        repeat.accept(TOTAL_NUM_OF_GENOTYPES, () -> genotypes.add(new Genotype(this, inputs, outputs)));
         Species species = new Species(this, genotypes, this.speciesNames++);
         this.speciesList.add(species);
         this.hiddenLayerActivationFunc = hiddenLayerActivationFunc;
@@ -68,7 +74,7 @@ public class GenePool implements EvolutionEngine {
 
     public GenePool(int inputs, int outputs, Function<Double, Double> hiddenLayerActivationFunc, Function<Double, Double> outputActivationFunc, MultiplayerGame game) {
         List<Genotype> genotypes = new ArrayList<>();
-        repeat.accept(Settings.totalNumOfGenotypes, () -> genotypes.add(new Genotype(this, inputs, outputs)));
+        repeat.accept(TOTAL_NUM_OF_GENOTYPES, () -> genotypes.add(new Genotype(this, inputs, outputs)));
         Species species = new Species(this, genotypes, this.speciesNames++);
         this.speciesList.add(species);
         this.hiddenLayerActivationFunc = hiddenLayerActivationFunc;
@@ -82,7 +88,7 @@ public class GenePool implements EvolutionEngine {
         for (int i = 0; i < numOfGenerations; i++) {
             addSpeciesCsvString(speciesCsvString);
             System.out.printf("\nGeneration %d %s\n", i, "-".repeat(200));
-            if (i % Settings.frequencyOfSpeciation == 0 && i > 0)
+            if (i % FREQUENCY_OF_SPECIATION == 0 && i > 0)
                 createSpecies();
             resetScores();
             makeNextGeneration();
@@ -97,7 +103,7 @@ public class GenePool implements EvolutionEngine {
     public void calculateEvolutionMultiplayer(int numOfGenerations) {
         for (int i = 0; i < numOfGenerations; i++) {
             System.out.printf("\nGeneration %d %s\n", i, "-".repeat(200));
-            if (i % Settings.frequencyOfSpeciation == 0 && i > 0)
+            if (i % FREQUENCY_OF_SPECIATION == 0 && i > 0)
                 createSpecies();
             resetScores();
             makeNextGenerationMultiplayer(false);
@@ -127,12 +133,12 @@ public class GenePool implements EvolutionEngine {
                     .map(player -> (NeuralNetwork) player.createPhenotype())
                     .toList();
 
-            for (int i = 0; i < Settings.numOfTrials; i++) {
+            for (int i = 0; i < NUM_OF_TRIALS; i++) {
                 if (saveGame) {
-                    savedGameDTO = this.multiplayerGame.saveSnakeMoves(phenotypes, Settings.maxNumberOfMoves);
+                    savedGameDTO = this.multiplayerGame.saveSnakeMoves(phenotypes, MAX_NUM_OF_MOVES);
                     return;
                 }
-                var score = this.multiplayerGame.play(phenotypes, Settings.maxNumberOfMoves);
+                var score = this.multiplayerGame.play(phenotypes, MAX_NUM_OF_MOVES);
                 updateMultiplayerScore(score, players);
                 this.multiplayerGame.reset();
             }
@@ -153,7 +159,7 @@ public class GenePool implements EvolutionEngine {
         List<Genotype> listOfPlayers = new ArrayList<>();
 
         for (int i = 0; i < allGenotypes.size(); i++) {
-            if (i % Settings.numOfPlayers != 0 || i == 0) {
+            if (i % NUM_OF_PLAYERS != 0 || i == 0) {
                 listOfPlayers.add(allGenotypes.get(i));
             } else {
                 result.add(listOfPlayers);
@@ -208,7 +214,7 @@ public class GenePool implements EvolutionEngine {
      */
     public void resizeSpecies() {
         List<Species> oldSpeciesList = speciesList.stream()
-                .filter(species -> species.age > Settings.protectedAge)
+                .filter(species -> species.age > PROTECTED_AGE)
                 .collect(Collectors.toList());
 
         if (oldSpeciesList.size() >= 2) {
@@ -298,7 +304,7 @@ public class GenePool implements EvolutionEngine {
 
     @Override
     public void printScores() {
-        if (Settings.verbose) {
+        if (VERBOSE) {
             speciesList.forEach(species -> {
                 System.out.printf("%-3d: ", species.name);
                 species.genotypes.forEach(Genotype::printScores);
@@ -310,7 +316,7 @@ public class GenePool implements EvolutionEngine {
     public void printSpecies() {
         System.out.print("Species: ");
         for (Species species : speciesList) {
-            System.out.printf("\"%d\": %.2f size: %d, age: %d | ", species.name, species.average / Settings.numOfTrials, species.getSize(), species.age);
+            System.out.printf("\"%d\": %.2f size: %d, age: %d | ", species.name, species.average / NUM_OF_TRIALS, species.getSize(), species.age);
         }
         System.out.println();
     }

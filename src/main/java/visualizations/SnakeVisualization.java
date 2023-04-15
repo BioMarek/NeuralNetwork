@@ -3,12 +3,14 @@ package visualizations;
 import games.snake.dtos.SavedGameDTO;
 import interfaces.GridVisualization;
 import utils.Colors;
-import utils.Settings;
+
+import java.awt.Graphics2D;
 
 import static games.snake.SnakeMap.BODY_MULTIPLAYER;
 import static games.snake.SnakeMap.HEAD_MULTIPLAYER;
-
-import java.awt.Graphics2D;
+import static utils.Settings.BACKGROUND_WIDTH;
+import static utils.Settings.BACKGROUNG_HEIGHT;
+import static utils.Settings.MAX_NUM_OF_MOVES;
 
 public class SnakeVisualization implements GridVisualization {
     private Graphics2D graphics;
@@ -20,12 +22,12 @@ public class SnakeVisualization implements GridVisualization {
     public SnakeVisualization(SavedGameDTO savedGameDTO) {
         this.savedGameDTO = savedGameDTO;
         this.size = savedGameDTO.grid.get(0).length;
-        this.squareSizePixels = Settings.backgroundWidth / size;
+        this.squareSizePixels = BACKGROUND_WIDTH / size;
     }
 
     @Override
     public void createNextFrame() {
-        if (currentFrame < Settings.maxNumberOfMoves)
+        if (currentFrame < MAX_NUM_OF_MOVES)
             currentFrame++;
     }
 
@@ -38,7 +40,7 @@ public class SnakeVisualization implements GridVisualization {
 
     public void setBackground() {
         graphics.setColor(Colors.BACKGROUND.getColor());
-        graphics.fillRect(0, 0, Settings.backgroundWidth, Settings.backgroundHeight);
+        graphics.fillRect(0, 0, BACKGROUND_WIDTH, BACKGROUNG_HEIGHT);
     }
 
     public void drawGrid() {

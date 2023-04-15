@@ -1,9 +1,7 @@
 package visualizations;
 
-import games.snake.SnakeGameMultiplayer;
 import games.snake.dtos.SavedGameDTO;
 import interfaces.GridVisualization;
-import utils.Settings;
 
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -13,15 +11,16 @@ import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import static utils.Settings.BACKGROUND_WIDTH;
+import static utils.Settings.BACKGROUNG_HEIGHT;
+import static utils.Settings.TIMER_DELAY;
+
 public class SnakePanel extends JPanel implements ActionListener {
-    private GridVisualization gridVisualization;
-    private Timer timer;
-    private SavedGameDTO savedGameDTO;
+    private final GridVisualization gridVisualization;
 
     public SnakePanel(SavedGameDTO savedGameDTO) {
-        this.setPreferredSize(new Dimension(Settings.backgroundWidth, Settings.backgroundHeight));
+        this.setPreferredSize(new Dimension(BACKGROUND_WIDTH, BACKGROUNG_HEIGHT));
         this.setFocusable(true);
-        this.savedGameDTO = savedGameDTO;
         gridVisualization = new SnakeVisualization(savedGameDTO);
 
         startTimer();
@@ -44,7 +43,7 @@ public class SnakePanel extends JPanel implements ActionListener {
      * Starts timer, delay says how often {@link Graphics2D} is repainted.
      */
     public void startTimer() {
-        timer = new Timer(Settings.timerDelay, this);
+        Timer timer = new Timer(TIMER_DELAY, this);
         timer.start();
     }
 }

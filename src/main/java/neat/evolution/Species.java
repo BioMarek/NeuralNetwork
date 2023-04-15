@@ -2,12 +2,16 @@ package neat.evolution;
 
 import lombok.EqualsAndHashCode;
 import neat.phenotype.Phenotype;
-import utils.Settings;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static utils.Settings.MAX_NUM_OF_MOVES;
+import static utils.Settings.MIN_SPECIES_REDUCTION;
+import static utils.Settings.NETWORKS_TO_KEEP;
+import static utils.Settings.NUM_OF_TRIALS;
+import static utils.Settings.SPECIES_REDUCTION;
 import static utils.Util.repeat;
 
 @EqualsAndHashCode
@@ -27,8 +31,8 @@ public class Species implements Comparable<Species> {
     public void calculateScores() {
         for (Genotype genotype : genotypes) {
             Phenotype phenotype = genotype.createPhenotype();
-            repeat.accept(Settings.numOfTrials, () -> {
-                genotype.score += genePool.game.play(phenotype, Settings.maxNumberOfMoves);
+            repeat.accept(NUM_OF_TRIALS, () -> {
+                genotype.score += genePool.game.play(phenotype, MAX_NUM_OF_MOVES);
                 genePool.game.reset();
             });
         }
@@ -50,7 +54,7 @@ public class Species implements Comparable<Species> {
      * @return returns number of removed genotypes.
      */
     public int reduceSize() {
-        int potentialReduction = Math.max((int) Math.floor(genotypes.size() * Settings.speciesReduction), Settings.speciesMinimalReduction);
+        int potentialReduction = Math.max((int) Math.floor(genotypes.size() * SPECIES_REDUCTION), MIN_SPECIES_REDUCTION);
         int actualReduction = Math.min(potentialReduction, genotypes.size());
         int oldSize = genotypes.size();
         for (int i = 0; i < actualReduction; i++) {
@@ -74,7 +78,7 @@ public class Species implements Comparable<Species> {
 
     public void mutateSpecies() {
         List<Genotype> genotypesNewGeneration = new ArrayList<>();
-        int limit = (int) Math.round(genotypes.size() * Settings.networksToKeep);
+        int limit = (int) Math.round(genotypes.size() * NETWORKS_TO_KEEP);
         for (int i = 0; i < genotypes.size(); i++) {
             // copies
             if (i < limit) {
