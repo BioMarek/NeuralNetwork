@@ -15,7 +15,7 @@ public class GenePoolTest {
 
     @BeforeEach
     void setup() {
-        Settings.numOfApples = 2;
+        Settings.maxNumberOfFood = 2;
         Settings.gridSize = 4;
     }
 
@@ -60,7 +60,7 @@ public class GenePoolTest {
 
     @AfterEach
     void cleanup() {
-        Settings.numOfApples = 2;
+        Settings.maxNumberOfFood = 2;
         Settings.gridSize = 20;
     }
 

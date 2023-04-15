@@ -18,7 +18,7 @@ public class SnakeGameMultiplayerTest {
 
     @BeforeEach
     void setup() {
-        Settings.numOfApples = 2;
+        Settings.maxNumberOfFood = 2;
         Settings.gridSize = 4;
     }
 
@@ -36,7 +36,7 @@ public class SnakeGameMultiplayerTest {
     @Test
     void snakeCollision_works() {
         Settings.numOfPlayers = 0;
-        Settings.numOfApples = 0;
+        Settings.maxNumberOfFood = 0;
 
         var snakeMultiplayerGame = new SnakeGameMultiplayer();
         snakeMultiplayerGame.grid[1][1] = 100;
@@ -49,13 +49,13 @@ public class SnakeGameMultiplayerTest {
         assertThat(snakeMultiplayerGame.snakeCollision(new Snake(2, 2, Direction.UP, 1), 2, 1), is(false));
 
         Settings.numOfPlayers = 2;
-        Settings.numOfApples = 2;
+        Settings.maxNumberOfFood = 2;
     }
 
     @Test
     void moveSnakeByOne_works() {
         Settings.numOfPlayers = 0;
-        Settings.numOfApples = 0;
+        Settings.maxNumberOfFood = 0;
 
         var snakeMultiplayerGame = new SnakeGameMultiplayer();
         var snake = new Snake(1, 1, Direction.DOWN, 1);
@@ -77,13 +77,13 @@ public class SnakeGameMultiplayerTest {
         assertThat(snakeMultiplayerGame.grid[1][2], is(201));
 
         Settings.numOfPlayers = 2;
-        Settings.numOfApples = 2;
+        Settings.maxNumberOfFood = 2;
     }
 
     @Test
     void moveSnake_works() {
         Settings.numOfPlayers = 0;
-        Settings.numOfApples = 0;
+        Settings.maxNumberOfFood = 0;
         var snakeMultiplayerGame = new SnakeGameMultiplayer();
         var snake = new Snake(1, 1, Direction.DOWN, 1);
         snakeMultiplayerGame.placeSnake(snake);
@@ -95,13 +95,13 @@ public class SnakeGameMultiplayerTest {
         assertThat(snakeMultiplayerGame.grid[2][2], is(not(101)));
 
         Settings.numOfPlayers = 2;
-        Settings.numOfApples = 2;
+        Settings.maxNumberOfFood = 2;
     }
 
     @Test
     void moveSnakeToDirection_collision() {
         Settings.numOfPlayers = 0;
-        Settings.numOfApples = 0;
+        Settings.maxNumberOfFood = 0;
         var snakeMultiplayerGame = new SnakeGameMultiplayer();
         var snake = new Snake(1, 1, Direction.DOWN, 1);
         snakeMultiplayerGame.placeSnake(snake);
@@ -113,13 +113,13 @@ public class SnakeGameMultiplayerTest {
         assertThat(snakeMultiplayerGame.grid[2][2], is(not(101)));
 
         Settings.numOfPlayers = 2;
-        Settings.numOfApples = 2;
+        Settings.maxNumberOfFood = 2;
     }
 
     @Test
     void moveSnakeToDirection_foodEaten() {
         Settings.numOfPlayers = 0;
-        Settings.numOfApples = 0;
+        Settings.maxNumberOfFood = 0;
         var snakeMultiplayerGame = new SnakeGameMultiplayer();
         var snake = new Snake(1, 1, Direction.DOWN, 1);
         snakeMultiplayerGame.placeSnake(snake);
@@ -129,7 +129,7 @@ public class SnakeGameMultiplayerTest {
         assertThat(snakeMultiplayerGame.grid[1][2], is(not(2)));
 
         Settings.numOfPlayers = 2;
-        Settings.numOfApples = 2;
+        Settings.maxNumberOfFood = 2;
     }
 
     @Test
@@ -154,7 +154,7 @@ public class SnakeGameMultiplayerTest {
     @Test
     void play_worksWithCollisionAndSnakeRestart() {
         Settings.numOfPlayers = 0;
-        Settings.numOfApples = 0;
+        Settings.maxNumberOfFood = 0;
 
         var snakeMultiplayerGame = new SnakeGameMultiplayer();
         var snake = new Snake(1, 1, Direction.DOWN, 1);
@@ -169,13 +169,13 @@ public class SnakeGameMultiplayerTest {
         assertThat(snake.snakeScore, is(Settings.deathPenalty));
 
         Settings.numOfPlayers = 2;
-        Settings.numOfApples = 2;
+        Settings.maxNumberOfFood = 2;
     }
 
     @Test
     void play_worksWithFood() {
         Settings.numOfPlayers = 0;
-        Settings.numOfApples = 0;
+        Settings.maxNumberOfFood = 0;
 
         var snakeMultiplayerGame = new SnakeGameMultiplayer();
         var snake = new Snake(2, 1, Direction.DOWN, 1);
@@ -193,12 +193,12 @@ public class SnakeGameMultiplayerTest {
         assertThat(snake.snakeScore, is(1));
 
         Settings.numOfPlayers = 2;
-        Settings.numOfApples = 2;
+        Settings.maxNumberOfFood = 2;
     }
 
     @AfterEach
     void cleanup() {
-        Settings.numOfApples = 2;
+        Settings.maxNumberOfFood = 2;
         Settings.gridSize = 20;
     }
 }
