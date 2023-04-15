@@ -27,7 +27,7 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
     protected int[][] grid;
     protected List<Snake> snakes;
     private SnakeSightDTO snakeSightDTO;
-    private int numOfFood;
+    public int numOfFood;
 
     public SnakeGameMultiplayer() {
         this.size = GRID_SIZE;
@@ -145,7 +145,7 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
         if (snakeCollision(snake, row, column)) {
             var coordinates = randomFreeCoordinate(grid);
             if (LEAVE_CORPSE) {
-                numOfFood += snake.bodyParts.size();
+                numOfFood += snake.uniqueTilesOccupied();
                 removeSnake(snake, SnakeMap.FOOD);
             } else
                 removeSnake(snake, SnakeMap.EMPTY);

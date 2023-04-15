@@ -27,15 +27,16 @@ public class SnakeVisualization implements GridVisualization {
 
     @Override
     public void createNextFrame() {
-        if (currentFrame < MAX_NUM_OF_MOVES)
-            currentFrame++;
+        currentFrame++;
     }
 
     @Override
     public void drawPresentation(Graphics2D graphics) {
-        this.graphics = graphics;
-        setBackground();
-        drawGrid();
+        if (currentFrame < MAX_NUM_OF_MOVES) {
+            this.graphics = graphics;
+            setBackground();
+            drawGrid();
+        }
     }
 
     public void setBackground() {

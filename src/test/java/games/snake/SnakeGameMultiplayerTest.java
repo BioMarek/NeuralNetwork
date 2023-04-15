@@ -201,8 +201,33 @@ public class SnakeGameMultiplayerTest {
         MAX_NUM_OF_FOOD = 2;
     }
 
+    @Test
+    void play_deadSnakeLeavesCorpse() {
+        NUM_OF_PLAYERS = 0;
+        MAX_NUM_OF_FOOD = 0;
+        LEAVE_CORPSE = true;
+        var snakeMultiplayerGame = new SnakeGameMultiplayer();
+        var snake = new Snake(2, 1, Direction.DOWN, 1);
+        snakeMultiplayerGame.snakes.add(snake);
+        snakeMultiplayerGame.placeSnake(snake);
+
+        assertThat(snakeMultiplayerGame.numOfFood, is(0));
+
+        NeuralNetwork network = new TestNeuralNetwork();
+        var networks = List.of(network);
+        snakeMultiplayerGame.play(networks, 2);
+
+        assertThat(snakeMultiplayerGame.numOfFood, is(2));
+
+        NUM_OF_PLAYERS = 2;
+        MAX_NUM_OF_FOOD = 2;
+
+    }
+
+
     @AfterEach
     void cleanup() {
+        LEAVE_CORPSE = true;
         MAX_NUM_OF_FOOD = 2;
         GRID_SIZE = 20;
     }
