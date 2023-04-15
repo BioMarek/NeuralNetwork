@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 
 import static utils.Settings.FREQUENCY_OF_SPECIATION;
 import static utils.Settings.MAX_NUM_OF_MOVES;
+import static utils.Settings.NUM_OF_GENERATIONS;
 import static utils.Settings.NUM_OF_PLAYERS;
 import static utils.Settings.NUM_OF_TRIALS;
 import static utils.Settings.PROTECTED_AGE;
@@ -34,7 +35,7 @@ import static utils.Util.repeat;
 public class GenePool implements EvolutionEngine {
     public Function<Double, Double> hiddenLayerActivationFunc;
     public Function<Double, Double> outputLayerActivationFunc;
-    private List<Species> speciesList = new ArrayList<>();
+    private final List<Species> speciesList = new ArrayList<>();
     protected int networksGenerated;
     protected int speciesNames;
     protected Game game;
@@ -83,12 +84,12 @@ public class GenePool implements EvolutionEngine {
     }
 
     @Override
-    public void calculateEvolution(int numOfGenerations) {
+    public void calculateEvolution() {
         StringBuilder speciesCsvString = new StringBuilder();
-        for (int i = 0; i < numOfGenerations; i++) {
+        for (int generation = 0; generation < NUM_OF_GENERATIONS; generation++) {
             addSpeciesCsvString(speciesCsvString);
-            System.out.printf("\nGeneration %d %s\n", i, "-".repeat(200));
-            if (i % FREQUENCY_OF_SPECIATION == 0 && i > 0)
+            System.out.printf("\nGeneration %d %s\n", generation, "-".repeat(200));
+            if (generation % FREQUENCY_OF_SPECIATION == 0 && generation > 0)
                 createSpecies();
             resetScores();
             makeNextGeneration();
@@ -96,14 +97,14 @@ public class GenePool implements EvolutionEngine {
             removeDeadSpecies();
             printSpecies();
         }
-        addSpeciesMetadata(speciesCsvString, numOfGenerations);
+        addSpeciesMetadata(speciesCsvString, NUM_OF_GENERATIONS);
         saveSpeciesCsvFile("/home/marek/marek/NeuralNetworkExports/species.csv", speciesCsvString.toString());
     }
 
     public void calculateEvolutionMultiplayer(int numOfGenerations) {
-        for (int i = 0; i < numOfGenerations; i++) {
-            System.out.printf("\nGeneration %d %s\n", i, "-".repeat(200));
-            if (i % FREQUENCY_OF_SPECIATION == 0 && i > 0)
+        for (int generation = 0; generation < numOfGenerations; generation++) {
+            System.out.printf("\nGeneration %d %s\n", generation, "-".repeat(200));
+            if (generation % FREQUENCY_OF_SPECIATION == 0 && generation > 0)
                 createSpecies();
             resetScores();
             makeNextGenerationMultiplayer(false);

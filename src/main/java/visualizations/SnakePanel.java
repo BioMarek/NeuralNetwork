@@ -12,14 +12,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import static utils.Settings.BACKGROUND_WIDTH;
-import static utils.Settings.BACKGROUNG_HEIGHT;
+import static utils.Settings.BACKGROUND_HEIGHT;
 import static utils.Settings.TIMER_DELAY;
 
 public class SnakePanel extends JPanel implements ActionListener {
     private final GridVisualization gridVisualization;
 
     public SnakePanel(SavedGameDTO savedGameDTO) {
-        this.setPreferredSize(new Dimension(BACKGROUND_WIDTH, BACKGROUNG_HEIGHT));
+        this.setPreferredSize(new Dimension(BACKGROUND_WIDTH, BACKGROUND_HEIGHT));
         this.setFocusable(true);
         gridVisualization = new SnakeVisualization(savedGameDTO);
 

@@ -31,7 +31,7 @@ public class Main {
         GenePool genePool = new GenePool(8, 4, Util.activationFunctionUnitStep(), new SnakeGame());
 
         long start = System.currentTimeMillis();
-        genePool.calculateEvolution(Settings.NUM_OF_GENERATIONS);
+        genePool.calculateEvolution();
         long stop = System.currentTimeMillis();
         System.out.println("It took: " + (stop - start) / 1000 + "s");
 
@@ -61,7 +61,7 @@ public class Main {
                 .build();
 
         long start = System.currentTimeMillis();
-        evolutionEngine.calculateEvolution(Settings.NUM_OF_GENERATIONS);
+        evolutionEngine.calculateEvolution();
         long stop = System.currentTimeMillis();
         System.out.println("It took: " + (stop - start) / 1000 + "s");
 
@@ -73,7 +73,7 @@ public class Main {
     }
 
     public static void snakeVisualization() {
-        Settings.multiplayerSettings();
+        Settings.singlePlayerGame();
         GenePool genePool = new GenePool(8, 4, Util.activationFunctionUnitStep(), Util.activationFunctionHyperbolicTangent(), new SnakeGameMultiplayer());
 
         long start = System.currentTimeMillis();

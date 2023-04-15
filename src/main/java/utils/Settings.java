@@ -24,17 +24,32 @@ public class Settings {
     // multiplayer game
     public static int NUM_OF_PLAYERS = 2;
     public static int MAX_NUM_OF_FOOD = 30;
-    public static int DEATH_PENALTY = -3; // should be negative
+    public static int DEATH_PENALTY = -3; // should be negative or zero
     public static int SNAKE_SIGHT = 7;
     public static boolean LEAVE_CORPSE = true;
 
     // graphic
-    public static int TIMER_DELAY = 250;
+    public static int TIMER_DELAY = 50;
     public static int BACKGROUND_WIDTH = 1000;
-    public static int BACKGROUNG_HEIGHT = 1000;
+    public static int BACKGROUND_HEIGHT = 1000;
 
     public static void multiplayerSettings() {
         NUM_OF_PLAYERS = 10;
         GRID_SIZE = 50;
+        SNAKE_SIGHT = 7;
+        DEATH_PENALTY = -3;
+        MAX_NUM_OF_FOOD = 30;
+        LEAVE_CORPSE = true;
+        HAS_WALL = true;
+    }
+
+    public static void singlePlayerGame() {
+        NUM_OF_PLAYERS = 1;
+        GRID_SIZE = 20;
+        SNAKE_SIGHT = 7;
+        DEATH_PENALTY = 0;
+        MAX_NUM_OF_FOOD = 1;
+        LEAVE_CORPSE = false;
+        HAS_WALL = true;
     }
 }

@@ -28,6 +28,7 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
     protected List<Snake> snakes;
     private SnakeSightDTO snakeSightDTO;
     public int numOfFood;
+    public boolean isGameOver = false;
 
     public SnakeGameMultiplayer() {
         this.size = GRID_SIZE;

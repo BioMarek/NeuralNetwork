@@ -9,7 +9,7 @@ import java.awt.Graphics2D;
 import static games.snake.SnakeMap.BODY_MULTIPLAYER;
 import static games.snake.SnakeMap.HEAD_MULTIPLAYER;
 import static utils.Settings.BACKGROUND_WIDTH;
-import static utils.Settings.BACKGROUNG_HEIGHT;
+import static utils.Settings.BACKGROUND_HEIGHT;
 import static utils.Settings.MAX_NUM_OF_MOVES;
 
 public class SnakeVisualization implements GridVisualization {
@@ -41,7 +41,7 @@ public class SnakeVisualization implements GridVisualization {
 
     public void setBackground() {
         graphics.setColor(Colors.BACKGROUND.getColor());
-        graphics.fillRect(0, 0, BACKGROUND_WIDTH, BACKGROUNG_HEIGHT);
+        graphics.fillRect(0, 0, BACKGROUND_WIDTH, BACKGROUND_HEIGHT);
     }
 
     public void drawGrid() {

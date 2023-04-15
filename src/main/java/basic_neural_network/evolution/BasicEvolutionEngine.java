@@ -5,6 +5,7 @@ import games.Game;
 import interfaces.EvolutionEngine;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import utils.Settings;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,8 +32,8 @@ public class BasicEvolutionEngine implements EvolutionEngine {
     protected boolean verbose;
 
     @Override
-    public void calculateEvolution(int numOfGenerations) {
-        for (int i = 0; i < numOfGenerations; i++) {
+    public void calculateEvolution() {
+        for (int i = 0; i < Settings.NUM_OF_GENERATIONS; i++) {
             makeNextGeneration();
         }
     }
