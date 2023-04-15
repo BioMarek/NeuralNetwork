@@ -1,10 +1,10 @@
 package neat.phenotype;
 
 
-import neat.NeuronType;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import neat.NeuronType;
 
 import java.util.function.Function;
 

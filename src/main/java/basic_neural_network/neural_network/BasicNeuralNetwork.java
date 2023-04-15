@@ -1,11 +1,15 @@
 package basic_neural_network.neural_network;
 
 import interfaces.NeuralNetwork;
+import lombok.EqualsAndHashCode;
 import visualizations.dtos.VisLayerDTO;
 import visualizations.dtos.VisualizationDTO;
-import lombok.EqualsAndHashCode;
 
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;

@@ -7,8 +7,14 @@ import visualizations.dtos.VisConnectionDTO;
 import visualizations.dtos.VisLayerDTO;
 import visualizations.dtos.VisualizationDTO;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JPanel;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.RenderingHints;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;

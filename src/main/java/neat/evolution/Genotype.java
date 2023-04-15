@@ -5,12 +5,25 @@ import neat.phenotype.Connection;
 import neat.phenotype.NEATNeuron;
 import neat.phenotype.Phenotype;
 import utils.Pair;
-import utils.Settings;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static utils.Util.*;
+import static utils.Settings.CHANCE_ADD_CONNECTION;
+import static utils.Settings.CHANCE_HARD_MUTATE_WEIGHT;
+import static utils.Settings.CHANCE_MUTATE_WEIGHT;
+import static utils.Settings.CHANCE_SWITCH_CONNECTION_ENABLED;
+import static utils.Settings.MAX_NEURONS;
+import static utils.Util.isRandomChanceTrue;
+import static utils.Util.randomDouble;
+import static utils.Util.randomInt;
+import static utils.Util.repeat;
 
 public class Genotype implements Comparable<Genotype> {
     public final GenePool genePool;
@@ -29,7 +42,7 @@ public class Genotype implements Comparable<Genotype> {
 
     public Genotype(GenePool genePool, int inputs, int outputs) {
         this.genePool = genePool;
-        maxNeurons = Settings.maxNeurons - outputs + 1;
+        maxNeurons = MAX_NEURONS - outputs + 1;
         List<NodeGene> outputNodes = new ArrayList<>();
 
         repeat.accept(inputs, () -> inputNodes.add(new NodeGene(NeuronType.INPUT, neuronNames++, 0)));
@@ -71,11 +84,11 @@ public class Genotype implements Comparable<Genotype> {
      * Mutates {@link Genotype} with chances set in {@link GenePool}.
      */
     public void mutateGenotype() {
-        if (isRandomChanceTrue(Settings.chanceToSwitchConnectionEnabled))
+        if (isRandomChanceTrue(CHANCE_SWITCH_CONNECTION_ENABLED))
             switchConnectionEnabled(getRandomConnection());
-        if (isRandomChanceTrue(Settings.chanceToMutateWeight))
+        if (isRandomChanceTrue(CHANCE_MUTATE_WEIGHT))
             mutateWeight(getRandomConnection());
-        if (isRandomChanceTrue(Settings.chanceToAddConnection))
+        if (isRandomChanceTrue(CHANCE_ADD_CONNECTION))
             addConnection();
     }
 
@@ -178,7 +191,7 @@ public class Genotype implements Comparable<Genotype> {
      * @param connectionGene of which weight should be changed
      */
     public void mutateWeight(ConnectionGene connectionGene) {
-        if (isRandomChanceTrue(Settings.chanceToHardMutateWight)) {
+        if (isRandomChanceTrue(CHANCE_HARD_MUTATE_WEIGHT)) {
             connectionGene.weight = randomDouble();
         } else {
             connectionGene.weight += randomDouble() * 0.2d;

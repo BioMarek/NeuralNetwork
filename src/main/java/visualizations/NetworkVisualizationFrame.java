@@ -2,7 +2,7 @@ package visualizations;
 
 import visualizations.dtos.VisualizationDTO;
 
-import javax.swing.*;
+import javax.swing.JFrame;
 
 public class NetworkVisualizationFrame extends JFrame {
     public NetworkVisualizationFrame(VisualizationDTO visualizationDTO) {

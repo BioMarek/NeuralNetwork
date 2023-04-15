@@ -4,10 +4,9 @@ import games.snake.SnakeGame;
 import neat.evolution.GenePool;
 import neat.evolution.Genotype;
 import neat.evolution.Species;
-import utils.Settings;
-import utils.Util;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import utils.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +14,10 @@ import java.util.List;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
+import static utils.Settings.CHANCE_ADD_NODE;
+import static utils.Settings.CHANCE_HARD_MUTATE_WEIGHT;
+import static utils.Settings.NETWORKS_TO_KEEP;
+import static utils.Settings.SPECIES_REDUCTION;
 
 public class SpeciesTest {
     protected GenePool genePool;
@@ -22,11 +25,10 @@ public class SpeciesTest {
 
     @BeforeEach
     void init() {
-        Settings.chanceToHardMutateWight = 1;
-        Settings.chanceToHardMutateWight = 1;
-        Settings.chanceToAddNode = 0;
-        Settings.networksToKeep = 0.3;
-        genePool = new GenePool(2,2,  Util.activationFunctionIdentity(), new SnakeGame());
+        CHANCE_HARD_MUTATE_WEIGHT = 1;
+        CHANCE_ADD_NODE = 0;
+        NETWORKS_TO_KEEP = 0.3;
+        genePool = new GenePool(2, 2, Util.activationFunctionIdentity(), new SnakeGame());
         species = genePool.getSpecies().get(0);
     }
 
@@ -39,22 +41,22 @@ public class SpeciesTest {
 
     @Test
     void reduceSizeBy_returnsCorrectValues() {
-        Settings.speciesReduction = 0.3d;
+        SPECIES_REDUCTION = 0.3d;
         int reduction = species.reduceSize();
         assertThat(species.genotypes.size(), is(70));
         assertThat(reduction, is(30));
 
-        Settings.speciesReduction = 0.9d;
+        SPECIES_REDUCTION = 0.9d;
         reduction = species.reduceSize();
         assertThat(species.genotypes.size(), is(7));
         assertThat(reduction, is(63));
 
-        Settings.speciesReduction = 0.1d;
+        SPECIES_REDUCTION = 0.1d;
         reduction = species.reduceSize();
         assertThat(species.genotypes.size(), is(5));
         assertThat(reduction, is(2));
 
-        Settings.speciesReduction = 0.1d;
+        SPECIES_REDUCTION = 0.1d;
         reduction = species.reduceSize();
         assertThat(species.genotypes.size(), is(3));
         assertThat(reduction, is(2));
@@ -88,7 +90,7 @@ public class SpeciesTest {
     }
 
     @Test
-    void isExtinct_worksCorrectly () {
+    void isExtinct_worksCorrectly() {
         assertThat(species.isExtinct(), is(false));
         species.genotypes = new ArrayList<>();
         assertThat(species.isExtinct(), is(true));

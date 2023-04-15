@@ -5,12 +5,20 @@ import games.snake.dtos.SavedGameDTO;
 import games.snake.dtos.SnakeSightDTO;
 import interfaces.NeuralNetwork;
 import utils.Direction;
-import utils.FreePosition;
-import utils.Settings;
+import utils.Pair;
+import utils.Util;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static games.snake.SnakeMap.BODY_MULTIPLAYER;
+import static games.snake.SnakeMap.HEAD_MULTIPLAYER;
+import static utils.Settings.DEATH_PENALTY;
+import static utils.Settings.GRID_SIZE;
+import static utils.Settings.HAS_WALL;
+import static utils.Settings.LEAVE_CORPSE;
+import static utils.Settings.MAX_NUM_OF_FOOD;
+import static utils.Settings.NUM_OF_PLAYERS;
 import static utils.Util.arrayCopy;
 import static utils.Util.repeat;
 
@@ -19,9 +27,11 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
     protected int[][] grid;
     protected List<Snake> snakes;
     private SnakeSightDTO snakeSightDTO;
+    public int numOfFood;
+    public boolean isGameOver = false;
 
     public SnakeGameMultiplayer() {
-        this.size = Settings.gridSize;
+        this.size = GRID_SIZE;
         reset();
     }
 
@@ -46,7 +56,8 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
         initGrid();
         initSnakes();
         snakeSightDTO = new SnakeSightDTO(grid);
-        repeat.accept(Settings.numOfApples, this::placeFood);
+        numOfFood = 0;
+        repeat.accept(MAX_NUM_OF_FOOD, this::placeFood);
     }
 
     private void initGrid() {
@@ -54,7 +65,7 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
 
         for (int row = 0; row < size; row++) {
             for (int column = 0; column < size; column++) {
-                if (Settings.hasWalls && (row == 0 || row == size - 1 || column == 0 || column == size - 1))
+                if (HAS_WALL && (row == 0 || row == size - 1 || column == 0 || column == size - 1))
                     grid[row][column] = SnakeMap.WALL.value;
             }
         }
@@ -62,8 +73,8 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
 
     private void initSnakes() {
         snakes = new ArrayList<>();
-        for (int i = 0; i < Settings.numOfPlayers; i++) {
-            var coordinates = FreePosition.randomFreeCoordinate(grid);
+        for (int i = 0; i < NUM_OF_PLAYERS; i++) {
+            var coordinates = randomFreeCoordinate(grid);
             var snake = new Snake(coordinates.getFirst(), coordinates.getSecond(), Direction.randomDirection(), i);
             placeSnake(snake);
             snakes.add(snake);
@@ -71,25 +82,38 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
     }
 
     protected void placeSnake(Snake snake) {
-        var bodyParts = snake.bodyParts;
-        for (int j = bodyParts.size() - 1; j >= 0; j--) { // head will be always on top of other bodyparts
-            var bodyPart = bodyParts.get(j);
+        for (int j = snake.bodyParts.size() - 1; j >= 0; j--) { // head will be always on top of other bodyparts
+            var bodyPart = snake.bodyParts.get(j);
             if (bodyPart.isHead)
-                grid[bodyPart.row][bodyPart.column] = snake.name + 200;
+                grid[bodyPart.row][bodyPart.column] = snake.name + HEAD_MULTIPLAYER.value;
             else
-                grid[bodyPart.row][bodyPart.column] = snake.name + 100;
+                grid[bodyPart.row][bodyPart.column] = snake.name + BODY_MULTIPLAYER.value;
         }
     }
 
-    public void removeSnake(Snake snake) {
+    /**
+     * Removes {@link Snake} from grid. Grid squares that were occupied by snake {@link BodyPart}s will get new number
+     * based on whether we want to leave food in place of dead snake or just remove it.
+     *
+     * @param snake    to remove
+     * @param snakeMap value to place on grid squares where snake bodyparts were
+     */
+    public void removeSnake(Snake snake, SnakeMap snakeMap) {
         for (BodyPart bodyPart : snake.bodyParts) {
-            grid[bodyPart.row][bodyPart.column] = SnakeMap.EMPTY.value;
+            grid[bodyPart.row][bodyPart.column] = snakeMap.value;
         }
     }
 
+    /**
+     * If there is less food on the grid then Settings.maxNumberOfFood one additional food will be added on random grid
+     * square.
+     */
     private void placeFood() {
-        var coordinates = FreePosition.randomFreeCoordinate(grid);
-        grid[coordinates.getFirst()][coordinates.getSecond()] = SnakeMap.FOOD.value;
+        if (numOfFood < MAX_NUM_OF_FOOD) {
+            var coordinates = randomFreeCoordinate(grid);
+            grid[coordinates.getFirst()][coordinates.getSecond()] = SnakeMap.FOOD.value;
+            numOfFood++;
+        }
     }
 
     /**
@@ -120,10 +144,14 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
      */
     protected void moveSnake(Snake snake, int row, int column) {
         if (snakeCollision(snake, row, column)) {
-            var coordinates = FreePosition.randomFreeCoordinate(grid);
-            removeSnake(snake);
+            var coordinates = randomFreeCoordinate(grid);
+            if (LEAVE_CORPSE) {
+                numOfFood += snake.uniqueTilesOccupied();
+                removeSnake(snake, SnakeMap.FOOD);
+            } else
+                removeSnake(snake, SnakeMap.EMPTY);
             snake.resetSnake(coordinates.getFirst(), coordinates.getSecond(), Direction.randomDirection());
-            snake.snakeScore += Settings.deathPenalty;
+            snake.snakeScore += DEATH_PENALTY;
             placeSnake(snake);
         } else {
             moveSnakeByOne(snake, row, column);
@@ -146,10 +174,11 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
 
         if (grid[row][column] == SnakeMap.FOOD.value) {
             placeSnake(snake);
+            numOfFood--;
             placeFood();
             snake.snakeScore += 1;
         } else {
-            removeSnake(snake);
+            removeSnake(snake, SnakeMap.EMPTY);
             bodyParts.remove(bodyParts.size() - 1);
             placeSnake(snake);
         }
@@ -161,7 +190,7 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
      * @return true moving to coordinates will result in death
      */
     protected boolean snakeCollision(Snake snake, int row, int column) {
-        return grid[row][column] == SnakeMap.WALL.value || (grid[row][column] != snake.name + 100 && grid[row][column] >= 100);
+        return grid[row][column] == SnakeMap.WALL.value || (grid[row][column] != snake.name + BODY_MULTIPLAYER.value && grid[row][column] >= BODY_MULTIPLAYER.value);
     }
 
     /**
@@ -214,6 +243,18 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
         return savedGameDTO;
     }
 
+    public static Pair<Integer> randomFreeCoordinate(int[][] grid) {
+        while (true) {
+            int row = Util.randomInt(1, grid.length - 1);
+            int column = Util.randomInt(1, grid.length - 1);
+            if (grid[row][column] != SnakeMap.EMPTY.value) {
+                row = Util.randomInt(1, grid.length - 1);
+                column = Util.randomInt(1, grid.length - 1);
+            } else {
+                return new Pair<>(row, column);
+            }
+        }
+    }
 
     /**
      * Prints snakeGame using ascii characters.
@@ -221,7 +262,7 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
     public void printSnakeGame() {
         for (int row = 0; row < size; row++) {
             for (int column = 0; column < size; column++) {
-                if (grid[row][column] >= 100)
+                if (grid[row][column] >= BODY_MULTIPLAYER.value)
                     System.out.print(grid[row][column]);
                 else
                     System.out.print(" " + grid[row][column] + " ");
