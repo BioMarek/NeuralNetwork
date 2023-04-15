@@ -5,6 +5,9 @@ import interfaces.GridVisualization;
 import utils.Colors;
 import utils.Settings;
 
+import static games.snake.SnakeMap.BODY_MULTIPLAYER;
+import static games.snake.SnakeMap.HEAD_MULTIPLAYER;
+
 import java.awt.Graphics2D;
 
 public class SnakeVisualization implements GridVisualization {
@@ -51,10 +54,10 @@ public class SnakeVisualization implements GridVisualization {
     }
 
     public void numberToColor(int num) {
-        if (num >= 200)
-            Colors.setColor(graphics, num - 200 + 3, 255); // +2 because 1 is wall and 2 is food
-        else if (num >= 100)
-            Colors.setColor(graphics, num - 100 + 3, 150);
+        if (num >= HEAD_MULTIPLAYER.value)
+            Colors.setColor(graphics, num - HEAD_MULTIPLAYER.value + 3, 255); // +2 because 1 is wall and 2 is food
+        else if (num >= BODY_MULTIPLAYER.value)
+            Colors.setColor(graphics, num - BODY_MULTIPLAYER.value + 3, 150);
         else
             Colors.setColor(graphics, num, 255);
     }

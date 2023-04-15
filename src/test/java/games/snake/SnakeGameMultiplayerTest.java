@@ -20,6 +20,7 @@ public class SnakeGameMultiplayerTest {
     void setup() {
         Settings.maxNumberOfFood = 2;
         Settings.gridSize = 4;
+        Settings.leaveCorpse = false;
     }
 
     @Test

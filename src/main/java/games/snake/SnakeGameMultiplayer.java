@@ -14,13 +14,15 @@ import java.util.List;
 
 import static utils.Util.arrayCopy;
 import static utils.Util.repeat;
+import static games.snake.SnakeMap.BODY_MULTIPLAYER;
+import static games.snake.SnakeMap.HEAD_MULTIPLAYER;
 
 public class SnakeGameMultiplayer implements MultiplayerGame {
     private final int size;
     protected int[][] grid;
     protected List<Snake> snakes;
     private SnakeSightDTO snakeSightDTO;
-    private int numOfFood = 0;
+    private int numOfFood;
 
     public SnakeGameMultiplayer() {
         this.size = Settings.gridSize;
@@ -74,13 +76,12 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
     }
 
     protected void placeSnake(Snake snake) {
-        var bodyParts = snake.bodyParts;
-        for (int j = bodyParts.size() - 1; j >= 0; j--) { // head will be always on top of other bodyparts
-            var bodyPart = bodyParts.get(j);
+        for (int j = snake.bodyParts.size() - 1; j >= 0; j--) { // head will be always on top of other bodyparts
+            var bodyPart = snake.bodyParts.get(j);
             if (bodyPart.isHead)
-                grid[bodyPart.row][bodyPart.column] = snake.name + 200;
+                grid[bodyPart.row][bodyPart.column] = snake.name + HEAD_MULTIPLAYER.value;
             else
-                grid[bodyPart.row][bodyPart.column] = snake.name + 100;
+                grid[bodyPart.row][bodyPart.column] = snake.name + BODY_MULTIPLAYER.value;
         }
     }
 
@@ -183,7 +184,7 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
      * @return true moving to coordinates will result in death
      */
     protected boolean snakeCollision(Snake snake, int row, int column) {
-        return grid[row][column] == SnakeMap.WALL.value || (grid[row][column] != snake.name + 100 && grid[row][column] >= 100);
+        return grid[row][column] == SnakeMap.WALL.value || (grid[row][column] != snake.name + BODY_MULTIPLAYER.value && grid[row][column] >= BODY_MULTIPLAYER.value);
     }
 
     /**
@@ -255,7 +256,7 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
     public void printSnakeGame() {
         for (int row = 0; row < size; row++) {
             for (int column = 0; column < size; column++) {
-                if (grid[row][column] >= 100)
+                if (grid[row][column] >= BODY_MULTIPLAYER.value)
                     System.out.print(grid[row][column]);
                 else
                     System.out.print(" " + grid[row][column] + " ");

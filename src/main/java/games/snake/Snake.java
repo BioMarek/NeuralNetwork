@@ -5,6 +5,9 @@ import utils.Direction;
 import java.util.ArrayList;
 import java.util.List;
 
+import static games.snake.SnakeMap.BODY_MULTIPLAYER;
+import static games.snake.SnakeMap.HEAD_MULTIPLAYER;
+
 /**
  * Initializes snake, all body parts start on same position
  */
@@ -29,6 +32,6 @@ public class Snake {
     }
 
     public boolean isAnotherSnake(int[][] grid, int row, int column) {
-        return grid[row][column] >= 100 && (grid[row][column] != name + 100 && grid[row][column] != name + 200);
+        return grid[row][column] >= BODY_MULTIPLAYER.value && (grid[row][column] != name + BODY_MULTIPLAYER.value && grid[row][column] != name + HEAD_MULTIPLAYER.value);
     }
 }
