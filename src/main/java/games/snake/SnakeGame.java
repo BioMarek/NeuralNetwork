@@ -2,6 +2,7 @@ package games.snake;
 
 import basic_neural_network.neural_network.BasicNeuralNetwork;
 import games.Game;
+import games.snake.dtos.SavedGameDTO;
 import games.snake.dtos.SnakeBasicDTO;
 import interfaces.NeuralNetwork;
 import utils.Direction;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import static utils.Settings.GRID_SIZE;
+import static utils.Util.arrayCopy;
 
 /**
  * Games.Snake game it used check whether {@link BasicNeuralNetwork} can play simple game.
@@ -255,5 +257,22 @@ public class SnakeGame implements Game {
             }
         }
         return maxIndex;
+    }
+
+    @Override
+    public SavedGameDTO saveSnakeMoves(NeuralNetwork neuralNetwork, int maxNumberOfMoves) {
+        SavedGameDTO savedGameDTO = new SavedGameDTO();
+        double[] networkOutput;
+
+        for (int i = 0; i < maxNumberOfMoves; i++) {
+            networkOutput = neuralNetwork.getNetworkOutput(snakeBasicDTO.snakeMapper(bodyParts, grid, foodRow, foodColumn).getNeuralNetworkInput());
+            moveSnake(outputToDirection(networkOutput));
+            snakeToGrid();
+            savedGameDTO.grid.add(arrayCopy(grid));
+            if (isGameOver)
+                break;
+        }
+
+        return savedGameDTO;
     }
 }

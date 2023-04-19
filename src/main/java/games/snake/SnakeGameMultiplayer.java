@@ -11,8 +11,8 @@ import utils.Util;
 import java.util.ArrayList;
 import java.util.List;
 
-import static games.snake.SnakeMap.BODY_MULTIPLAYER;
-import static games.snake.SnakeMap.HEAD_MULTIPLAYER;
+import static games.snake.SnakeMap.BODY;
+import static games.snake.SnakeMap.HEAD;
 import static utils.Settings.DEATH_PENALTY;
 import static utils.Settings.GRID_SIZE;
 import static utils.Settings.HAS_WALL;
@@ -85,9 +85,9 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
         for (int j = snake.bodyParts.size() - 1; j >= 0; j--) { // head will be always on top of other bodyparts
             var bodyPart = snake.bodyParts.get(j);
             if (bodyPart.isHead)
-                grid[bodyPart.row][bodyPart.column] = snake.name + HEAD_MULTIPLAYER.value;
+                grid[bodyPart.row][bodyPart.column] = snake.name + HEAD.value;
             else
-                grid[bodyPart.row][bodyPart.column] = snake.name + BODY_MULTIPLAYER.value;
+                grid[bodyPart.row][bodyPart.column] = snake.name + BODY.value;
         }
     }
 
@@ -190,7 +190,7 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
      * @return true moving to coordinates will result in death
      */
     protected boolean snakeCollision(Snake snake, int row, int column) {
-        return grid[row][column] == SnakeMap.WALL.value || (grid[row][column] != snake.name + BODY_MULTIPLAYER.value && grid[row][column] >= BODY_MULTIPLAYER.value);
+        return grid[row][column] == SnakeMap.WALL.value || (grid[row][column] != snake.name + BODY.value && grid[row][column] >= BODY.value);
     }
 
     /**
@@ -262,7 +262,7 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
     public void printSnakeGame() {
         for (int row = 0; row < size; row++) {
             for (int column = 0; column < size; column++) {
-                if (grid[row][column] >= BODY_MULTIPLAYER.value)
+                if (grid[row][column] >= BODY.value)
                     System.out.print(grid[row][column]);
                 else
                     System.out.print(" " + grid[row][column] + " ");
