@@ -1,13 +1,13 @@
 package visualizations;
 
-import games.snake.dtos.SavedGameDTO;
+import games.snake.savegame.SavedGameDTO;
 import interfaces.GridVisualization;
 import utils.Colors;
 
 import java.awt.Graphics2D;
 
-import static games.snake.SnakeMap.BODY_MULTIPLAYER;
-import static games.snake.SnakeMap.HEAD_MULTIPLAYER;
+import static games.snake.SnakeMap.BODY;
+import static games.snake.SnakeMap.HEAD;
 import static utils.Settings.BACKGROUND_WIDTH;
 import static utils.Settings.BACKGROUND_HEIGHT;
 import static utils.Settings.MAX_NUM_OF_MOVES;
@@ -57,10 +57,10 @@ public class SnakeVisualization implements GridVisualization {
     }
 
     public void numberToColor(int num) {
-        if (num >= HEAD_MULTIPLAYER.value)
-            Colors.setColor(graphics, num - HEAD_MULTIPLAYER.value + 3, 255); // +2 because 1 is wall and 2 is food
-        else if (num >= BODY_MULTIPLAYER.value)
-            Colors.setColor(graphics, num - BODY_MULTIPLAYER.value + 3, 150);
+        if (num >= HEAD.value)
+            Colors.setColor(graphics, num - HEAD.value + 3, 255); // +2 because 1 is wall and 2 is food
+        else if (num >= BODY.value)
+            Colors.setColor(graphics, num - BODY.value + 3, 150);
         else
             Colors.setColor(graphics, num, 255);
     }

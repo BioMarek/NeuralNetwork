@@ -3,7 +3,7 @@ package utils;
 public class Settings {
     public static int GRID_SIZE = 20;
     public static boolean HAS_WALL = true;
-    public static int NUM_OF_GENERATIONS = 300; // 300
+    public static int NUM_OF_GENERATIONS = 200; // 300
     public static int TOTAL_NUM_OF_GENOTYPES = 100;
     public static int MAX_NEURONS = 1000;
     public static boolean VERBOSE = true;
@@ -20,6 +20,7 @@ public class Settings {
     public static int MIN_SPECIES_REDUCTION = 2; // Minimal amount by which the size of underperforming species will be reduced
     public static int PROTECTED_AGE = 15; // Age when species stops being protected and its size can be reevaluated
     public static int FREQUENCY_OF_SPECIATION = 10;
+    public static String SAVE_GAME_PATH = "savedGames/";
 
     // multiplayer game
     public static int NUM_OF_PLAYERS = 2;
@@ -47,7 +48,7 @@ public class Settings {
         NUM_OF_PLAYERS = 1;
         GRID_SIZE = 20;
         SNAKE_SIGHT = 7;
-        DEATH_PENALTY = 0;
+        DEATH_PENALTY = -1;
         MAX_NUM_OF_FOOD = 1;
         LEAVE_CORPSE = false;
         HAS_WALL = true;

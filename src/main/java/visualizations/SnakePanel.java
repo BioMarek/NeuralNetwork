@@ -1,6 +1,6 @@
 package visualizations;
 
-import games.snake.dtos.SavedGameDTO;
+import games.snake.savegame.SavedGameDTO;
 import interfaces.GridVisualization;
 
 import javax.swing.JPanel;
