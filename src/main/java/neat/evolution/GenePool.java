@@ -2,7 +2,7 @@ package neat.evolution;
 
 import games.Game;
 import games.MultiplayerGame;
-import games.snake.dtos.SavedGameDTO;
+import games.snake.savegame.SavedGameDTO;
 import interfaces.EvolutionEngine;
 import interfaces.NeuralNetwork;
 import lombok.AccessLevel;

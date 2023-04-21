@@ -1,12 +1,13 @@
-package games.snake.dtos;
+package games.snake.savegame;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Used to save information about game so it can be visualized later.
  */
-public class SavedGameDTO {
+public class SavedGameDTO implements Serializable {
     public List<int[][]> grid = new ArrayList<>();
     public List<Integer> scores;
 }

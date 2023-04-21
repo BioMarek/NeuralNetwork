@@ -2,7 +2,7 @@ package games.snake;
 
 import basic_neural_network.neural_network.BasicNeuralNetwork;
 import games.Game;
-import games.snake.dtos.SavedGameDTO;
+import games.snake.savegame.SavedGameDTO;
 import games.snake.dtos.SnakeBasicDTO;
 import interfaces.NeuralNetwork;
 import utils.Direction;

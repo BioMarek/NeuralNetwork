@@ -1,7 +1,7 @@
 package games.snake;
 
 import games.MultiplayerGame;
-import games.snake.dtos.SavedGameDTO;
+import games.snake.savegame.SavedGameDTO;
 import games.snake.dtos.SnakeSightDTO;
 import interfaces.NeuralNetwork;
 import utils.Direction;

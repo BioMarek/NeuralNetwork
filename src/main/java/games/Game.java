@@ -1,6 +1,6 @@
 package games;
 
-import games.snake.dtos.SavedGameDTO;
+import games.snake.savegame.SavedGameDTO;
 import interfaces.NeuralNetwork;
 
 public interface Game {

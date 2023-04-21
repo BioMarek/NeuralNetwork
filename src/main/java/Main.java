@@ -2,6 +2,7 @@ import basic_neural_network.evolution.BasicEvolutionEngine;
 import basic_neural_network.neural_network.BasicNeuralNetwork;
 import games.snake.SnakeGame;
 import games.snake.SnakeGameMultiplayer;
+import games.snake.savegame.SaveGameUtil;
 import interfaces.NeuralNetwork;
 import neat.evolution.GenePool;
 import utils.Settings;
@@ -12,8 +13,11 @@ import visualizations.SnakePanel;
 public class Main {
 
     public static void main(String[] args) {
-        setupNeatNeuralNetworkWithMultiplayer();
+//        setupNeatNeuralNetworkWithMultiplayer();
 //        setupNeatNeuralNetworkWithGame();
+
+        playSaveGame("savegame.sav");
+
     }
 
     /**
@@ -30,6 +34,7 @@ public class Main {
         long stop = System.currentTimeMillis();
         System.out.println("It took: " + (stop - start) / 1000 + "s");
 
+        SaveGameUtil.saveObjectToFile(genePool.savedGameDTO);
         new SnakeFrame(new SnakePanel(genePool.savedGameDTO));
     }
 
@@ -74,5 +79,11 @@ public class Main {
         neuralNetwork.printNetwork();
         System.out.println(neuralNetwork.name);
         snakeGame.showSnakeMoves(neuralNetwork, 500);
+    }
+
+    public static void playSaveGame(String filename) {
+        var path = Settings.SAVE_GAME_PATH + filename;
+        var savedGameDTO = SaveGameUtil.loadObjectFromFile(path);
+        new SnakeFrame(new SnakePanel(savedGameDTO));
     }
 }

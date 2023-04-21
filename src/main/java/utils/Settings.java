@@ -20,6 +20,7 @@ public class Settings {
     public static int MIN_SPECIES_REDUCTION = 2; // Minimal amount by which the size of underperforming species will be reduced
     public static int PROTECTED_AGE = 15; // Age when species stops being protected and its size can be reevaluated
     public static int FREQUENCY_OF_SPECIATION = 10;
+    public static String SAVE_GAME_PATH = "savedGames/";
 
     // multiplayer game
     public static int NUM_OF_PLAYERS = 2;
