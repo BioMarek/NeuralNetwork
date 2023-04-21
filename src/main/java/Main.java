@@ -55,6 +55,7 @@ public class Main {
         NeuralNetwork neuralNetwork = genePool.getSpecies().get(0).genotypes.get(0).createPhenotype();
         System.out.println(neuralNetwork);
         var savedGameDTO = snakeGame.saveSnakeMoves(neuralNetwork, Settings.MAX_NUM_OF_MOVES);
+        SaveGameUtil.saveObjectToFile(savedGameDTO);
         new SnakeFrame(new SnakePanel(savedGameDTO));
     }
 
