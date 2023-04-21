@@ -13,10 +13,10 @@ import visualizations.SnakePanel;
 public class Main {
 
     public static void main(String[] args) {
-//        setupNeatNeuralNetworkWithMultiplayer();
+        setupNeatNeuralNetworkWithMultiplayer();
 //        setupNeatNeuralNetworkWithGame();
 
-        playSaveGame("savegame.sav");
+//        playSaveGame("04-21-214845.sav");
 
     }
 
