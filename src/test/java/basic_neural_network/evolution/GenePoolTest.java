@@ -9,9 +9,11 @@ import utils.Util;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static utils.Settings.GRID_SQUARES_HEIGHT;
+import static utils.Settings.GRID_ROWS;
+import static utils.Settings.GRID_COLUMNS;
 import static utils.Settings.MAX_NUM_OF_FOOD;
 import static utils.Settings.NUM_OF_PLAYERS;
+import static utils.Settings.PIXELS_PER_SQUARE;
 import static utils.Settings.TOTAL_NUM_OF_GENOTYPES;
 
 public class GenePoolTest {
@@ -19,7 +21,9 @@ public class GenePoolTest {
     @BeforeEach
     void setup() {
         MAX_NUM_OF_FOOD = 2;
-        GRID_SQUARES_HEIGHT = 4;
+        GRID_ROWS = 4;
+        GRID_COLUMNS = 4;
+        PIXELS_PER_SQUARE = 1;
     }
 
     @Test
@@ -64,7 +68,9 @@ public class GenePoolTest {
     @AfterEach
     void cleanup() {
         MAX_NUM_OF_FOOD = 2;
-        GRID_SQUARES_HEIGHT = 20;
+        GRID_ROWS = 20;
+        GRID_COLUMNS = 20;
+        PIXELS_PER_SQUARE = 20;
     }
 
     private void renameAllGenotypes(GenePool genePool, String name) {

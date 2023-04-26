@@ -8,22 +8,22 @@ import java.awt.Graphics2D;
 
 import static games.snake.SnakeMap.BODY;
 import static games.snake.SnakeMap.HEAD;
-import static utils.Settings.GRID_WIDTH;
-import static utils.Settings.GRID_HEIGHT;
+import static utils.Settings.GRID_COLUMNS;
+import static utils.Settings.GRID_ROWS;
 import static utils.Settings.MAX_NUM_OF_MOVES;
 
 public class SnakeVisualization implements GridVisualization {
     private Graphics2D graphics;
     private final SavedGameDTO savedGameDTO;
     private int currentFrame = 0;
-    private final int width;
-    private final int height;
+    private final int columns;
+    private final int rows;
     private final int squareSizePixels;
 
     public SnakeVisualization(SavedGameDTO savedGameDTO) {
         this.savedGameDTO = savedGameDTO;
-        height = savedGameDTO.height;
-        width = savedGameDTO.width;
+        rows = savedGameDTO.rows;
+        columns = savedGameDTO.columns;
         this.squareSizePixels = 20;
     }
 
@@ -43,13 +43,13 @@ public class SnakeVisualization implements GridVisualization {
 
     public void setBackground() {
         graphics.setColor(Colors.BACKGROUND.getColor());
-        graphics.fillRect(0, 0, GRID_WIDTH, GRID_HEIGHT);
+        graphics.fillRect(0, 0, GRID_COLUMNS, GRID_ROWS);
     }
 
     public void drawGrid() {
         int[][] currentGrid = savedGameDTO.grid.get(currentFrame);
-        for (int row = 0; row < height; row++) {
-            for (int column = 0; column < width; column++) {
+        for (int row = 0; row < rows; row++) {
+            for (int column = 0; column < columns; column++) {
                 if (currentGrid[row][column] == 0)
                     continue;
                 numberToColor(currentGrid[row][column]);
