@@ -14,8 +14,8 @@ import java.util.List;
 import static games.snake.SnakeMap.BODY;
 import static games.snake.SnakeMap.HEAD;
 import static utils.Settings.DEATH_PENALTY;
-import static utils.Settings.GRID_ROWS;
 import static utils.Settings.GRID_COLUMNS;
+import static utils.Settings.GRID_ROWS;
 import static utils.Settings.HAS_WALL;
 import static utils.Settings.LEAVE_CORPSE;
 import static utils.Settings.MAX_NUM_OF_FOOD;
@@ -243,6 +243,11 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
                 var networkOutput = neuralNetworks.get(i).getNetworkOutput(snakeSightDTO.getInput_8(snakes.get(i)));
                 moveSnakeToDirection(snakes.get(i), outputToDirection(networkOutput));
             }
+            int[] scores = new int[snakes.size()];
+            for (int i = 0; i < neuralNetworks.size(); i++) {
+                scores[i] = snakes.get(i).snakeScore;
+            }
+            savedGameDTO.scores.add(scores);
             savedGameDTO.grid.add(arrayCopy(grid));
         }
         return savedGameDTO;

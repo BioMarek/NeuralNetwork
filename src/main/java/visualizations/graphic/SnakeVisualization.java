@@ -1,4 +1,4 @@
-package visualizations;
+package visualizations.graphic;
 
 import games.snake.savegame.SavedGameDTO;
 import interfaces.GridVisualization;
