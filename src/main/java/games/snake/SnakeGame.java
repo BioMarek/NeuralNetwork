@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import static utils.Settings.GRID_SIZE;
+import static utils.Settings.GRID_SQUARES_HEIGHT;
 import static utils.Util.arrayCopy;
 
 /**
@@ -33,7 +33,7 @@ public class SnakeGame implements Game {
     private final SnakeBasicDTO snakeBasicDTO = new SnakeBasicDTO();
 
     public SnakeGame() {
-        this.size = GRID_SIZE;
+        this.size = GRID_SQUARES_HEIGHT;
         reset();
     }
 

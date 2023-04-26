@@ -13,7 +13,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static utils.Settings.DEATH_PENALTY;
-import static utils.Settings.GRID_SIZE;
+import static utils.Settings.GRID_SQUARES_HEIGHT;
 import static utils.Settings.LEAVE_CORPSE;
 import static utils.Settings.MAX_NUM_OF_FOOD;
 import static utils.Settings.NUM_OF_PLAYERS;
@@ -23,7 +23,7 @@ public class SnakeGameMultiplayerTest {
     @BeforeEach
     void setup() {
         MAX_NUM_OF_FOOD = 2;
-        GRID_SIZE = 4;
+        GRID_SQUARES_HEIGHT = 4;
         LEAVE_CORPSE = false;
     }
 
@@ -229,6 +229,6 @@ public class SnakeGameMultiplayerTest {
     void cleanup() {
         LEAVE_CORPSE = true;
         MAX_NUM_OF_FOOD = 2;
-        GRID_SIZE = 20;
+        GRID_SQUARES_HEIGHT = 20;
     }
 }

@@ -14,7 +14,8 @@ import java.util.List;
 import static games.snake.SnakeMap.BODY;
 import static games.snake.SnakeMap.HEAD;
 import static utils.Settings.DEATH_PENALTY;
-import static utils.Settings.GRID_SIZE;
+import static utils.Settings.GRID_SQUARES_HEIGHT;
+import static utils.Settings.GRID_SQUARES_WIDTH;
 import static utils.Settings.HAS_WALL;
 import static utils.Settings.LEAVE_CORPSE;
 import static utils.Settings.MAX_NUM_OF_FOOD;
@@ -23,7 +24,8 @@ import static utils.Util.arrayCopy;
 import static utils.Util.repeat;
 
 public class SnakeGameMultiplayer implements MultiplayerGame {
-    private final int size;
+    private final int width;
+    private final int height;
     protected int[][] grid;
     protected List<Snake> snakes;
     private SnakeSightDTO snakeSightDTO;
@@ -31,7 +33,8 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
     public boolean isGameOver = false;
 
     public SnakeGameMultiplayer() {
-        this.size = GRID_SIZE;
+        this.height = GRID_SQUARES_HEIGHT;
+        this.width = GRID_SQUARES_WIDTH;
         reset();
     }
 
@@ -61,11 +64,11 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
     }
 
     private void initGrid() {
-        this.grid = new int[size][size];
+        this.grid = new int[height][width];
 
-        for (int row = 0; row < size; row++) {
-            for (int column = 0; column < size; column++) {
-                if (HAS_WALL && (row == 0 || row == size - 1 || column == 0 || column == size - 1))
+        for (int row = 0; row < height; row++) {
+            for (int column = 0; column < width; column++) {
+                if (HAS_WALL && (row == 0 || row == height - 1 || column == 0 || column == width - 1))
                     grid[row][column] = SnakeMap.WALL.value;
             }
         }
@@ -232,7 +235,9 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
      * Plays the game and saves grid arrangements so they can be used later e.g. for visualization.
      */
     public SavedGameDTO saveSnakeMoves(List<NeuralNetwork> neuralNetworks, int maxNumberOfMoves) {
-        SavedGameDTO savedGameDTO = new SavedGameDTO();
+        var savedGameDTO = new SavedGameDTO();
+        savedGameDTO.height = height;
+        savedGameDTO.width = width;
         for (int move = 0; move < maxNumberOfMoves; move++) {
             for (int i = 0; i < neuralNetworks.size(); i++) {
                 var networkOutput = neuralNetworks.get(i).getNetworkOutput(snakeSightDTO.getInput_8(snakes.get(i)));
@@ -246,7 +251,7 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
     public static Pair<Integer> randomFreeCoordinate(int[][] grid) {
         while (true) {
             int row = Util.randomInt(1, grid.length - 1);
-            int column = Util.randomInt(1, grid.length - 1);
+            int column = Util.randomInt(1, grid[0].length - 1);
             if (grid[row][column] != SnakeMap.EMPTY.value) {
                 row = Util.randomInt(1, grid.length - 1);
                 column = Util.randomInt(1, grid.length - 1);
@@ -260,8 +265,8 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
      * Prints snakeGame using ascii characters.
      */
     public void printSnakeGame() {
-        for (int row = 0; row < size; row++) {
-            for (int column = 0; column < size; column++) {
+        for (int row = 0; row < height; row++) {
+            for (int column = 0; column < width; column++) {
                 if (grid[row][column] >= BODY.value)
                     System.out.print(grid[row][column]);
                 else

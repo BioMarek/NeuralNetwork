@@ -16,13 +16,15 @@ public class SnakeVisualization implements GridVisualization {
     private Graphics2D graphics;
     private final SavedGameDTO savedGameDTO;
     private int currentFrame = 0;
-    private final int size;
+    private final int width;
+    private final int height;
     private final int squareSizePixels;
 
     public SnakeVisualization(SavedGameDTO savedGameDTO) {
         this.savedGameDTO = savedGameDTO;
-        this.size = savedGameDTO.grid.get(0).length;
-        this.squareSizePixels = GRID_WIDTH / size;
+        height = savedGameDTO.height;
+        width = savedGameDTO.width;
+        this.squareSizePixels = 20;
     }
 
     @Override
@@ -46,8 +48,8 @@ public class SnakeVisualization implements GridVisualization {
 
     public void drawGrid() {
         int[][] currentGrid = savedGameDTO.grid.get(currentFrame);
-        for (int row = 0; row < size; row++) {
-            for (int column = 0; column < size; column++) {
+        for (int row = 0; row < height; row++) {
+            for (int column = 0; column < width; column++) {
                 if (currentGrid[row][column] == 0)
                     continue;
                 numberToColor(currentGrid[row][column]);
