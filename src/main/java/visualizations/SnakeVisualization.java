@@ -8,8 +8,8 @@ import java.awt.Graphics2D;
 
 import static games.snake.SnakeMap.BODY;
 import static games.snake.SnakeMap.HEAD;
-import static utils.Settings.BACKGROUND_WIDTH;
-import static utils.Settings.BACKGROUND_HEIGHT;
+import static utils.Settings.GRID_WIDTH;
+import static utils.Settings.GRID_HEIGHT;
 import static utils.Settings.MAX_NUM_OF_MOVES;
 
 public class SnakeVisualization implements GridVisualization {
@@ -22,7 +22,7 @@ public class SnakeVisualization implements GridVisualization {
     public SnakeVisualization(SavedGameDTO savedGameDTO) {
         this.savedGameDTO = savedGameDTO;
         this.size = savedGameDTO.grid.get(0).length;
-        this.squareSizePixels = BACKGROUND_WIDTH / size;
+        this.squareSizePixels = GRID_WIDTH / size;
     }
 
     @Override
@@ -41,7 +41,7 @@ public class SnakeVisualization implements GridVisualization {
 
     public void setBackground() {
         graphics.setColor(Colors.BACKGROUND.getColor());
-        graphics.fillRect(0, 0, BACKGROUND_WIDTH, BACKGROUND_HEIGHT);
+        graphics.fillRect(0, 0, GRID_WIDTH, GRID_HEIGHT);
     }
 
     public void drawGrid() {
