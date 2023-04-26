@@ -1,8 +1,9 @@
 package utils;
 
 public class Settings {
-    public static int GRID_SQUARES_HEIGHT = 20;
-    public static int GRID_SQUARES_WIDTH = 75;
+    public static int GRID_SQUARES = 20; // For SingleplayerSnake
+    public static int GRID_SQUARES_HEIGHT = 20; // For MultiplayerSnake
+    public static int GRID_SQUARES_WIDTH = 20; // For MultiplayerSnake
     public static boolean HAS_WALL = true;
     public static int NUM_OF_GENERATIONS = 5; // 300
     public static int TOTAL_NUM_OF_GENOTYPES = 100;
@@ -50,7 +51,7 @@ public class Settings {
 
     public static void singlePlayerGame() {
         NUM_OF_PLAYERS = 1;
-        GRID_SQUARES_HEIGHT = 20;
+        GRID_SQUARES = 20;
         SNAKE_SIGHT = 7;
         DEATH_PENALTY = -1;
         MAX_NUM_OF_FOOD = 1;
