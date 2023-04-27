@@ -1,18 +1,12 @@
 package visualizations.graphic;
 
+import games.snake.SnakeMap;
 import games.snake.savegame.SavedGameDTO;
 import interfaces.GridVisualization;
 import utils.Colors;
+import utils.Settings;
 
 import java.awt.Graphics2D;
-
-import static games.snake.SnakeMap.BODY;
-import static games.snake.SnakeMap.HEAD;
-import static utils.Settings.GRID_COLUMNS;
-import static utils.Settings.GRID_ROWS;
-import static utils.Settings.MAX_NUM_OF_MOVES;
-import static utils.Settings.BACKGROUND_WIDTH;
-import static utils.Settings.BACKGROUND_HEIGHT;
 
 public class SnakeVisualization implements GridVisualization {
     private Graphics2D graphics;
@@ -38,7 +32,7 @@ public class SnakeVisualization implements GridVisualization {
 
     @Override
     public void drawPresentation(Graphics2D graphics) {
-        if (currentFrame < MAX_NUM_OF_MOVES) {
+        if (currentFrame < Settings.MAX_NUM_OF_MOVES) {
             this.graphics = graphics;
             snakeLegend.graphics = graphics;
             setBackground();
@@ -49,7 +43,7 @@ public class SnakeVisualization implements GridVisualization {
 
     public void setBackground() {
         graphics.setColor(Colors.BACKGROUND.getColor());
-        graphics.fillRect(0, 0, BACKGROUND_WIDTH, BACKGROUND_HEIGHT);
+        graphics.fillRect(0, 0, Settings.BACKGROUND_WIDTH, Settings.BACKGROUND_HEIGHT);
     }
 
     public void drawGrid() {
@@ -65,10 +59,10 @@ public class SnakeVisualization implements GridVisualization {
     }
 
     public void numberToColor(int num) {
-        if (num >= HEAD.value)
-            Colors.setColor(graphics, num - HEAD.value + 3, 255); // +2 because 1 is wall and 2 is food
-        else if (num >= BODY.value)
-            Colors.setColor(graphics, num - BODY.value + 3, 150);
+        if (num >= SnakeMap.HEAD.value)
+            Colors.setColor(graphics, num - SnakeMap.HEAD.value + 3, 255); // +2 because 1 is wall and 2 is food
+        else if (num >= SnakeMap.BODY.value)
+            Colors.setColor(graphics, num - SnakeMap.BODY.value + 3, 150);
         else
             Colors.setColor(graphics, num, 255);
     }
