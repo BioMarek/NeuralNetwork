@@ -1,34 +1,58 @@
 package visualizations.graphic;
 
-import java.awt.BasicStroke;
+import games.snake.savegame.SavedGameDTO;
+import utils.Colors;
+import utils.Settings;
+
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 
+import static utils.Settings.BACKGROUND_HEIGHT;
+
 
 public class SnakeLegend {
     public Graphics2D graphics;
+    private final int fontUnit = BACKGROUND_HEIGHT / 60;
+    private final SavedGameDTO savedGameDTO;
 
-    public void drawLegend() {
+    public SnakeLegend(Graphics2D graphics, SavedGameDTO savedGameDTO) {
+        this.graphics = graphics;
+        this.savedGameDTO = savedGameDTO;
+    }
+
+    public void drawLegend(int step) {
         switchAntiAliasing(graphics, true);
-        drawInfo();
+        drawInfo(step);
         switchAntiAliasing(graphics, false);
     }
 
     /**
-     * Displays information about ant rule being animated and the number of steps the ant has made.
+     * Displays information about snakes score and number of steps game went.
      */
-    public void drawInfo() {
-//        int ruleTextSize = hexAnt.ruleLength() > 17 ? (int) (fontUnit * 0.9) : fontUnit;
-//        graphics.setColor(Colors.TEXT.getColor());
-//        graphics.setFont(new Font("Arial", Font.BOLD, (int) (fontUnit * 1.1)));
-//        graphics.drawString("Rule: ", Settings.LEGEND_START_X + fontUnit, fontUnit * 2);
-//        graphics.drawString(hexAnt.rule.getAttributeString(ruleTextSize).getIterator(), Settings.LEGEND_START_X + (int) (fontUnit * 4.5), fontUnit * 2);
-//        graphics.drawString("Steps: " + Util.numberFormatter(hexAnt.steps), Settings.LEGEND_START_X + fontUnit, fontUnit * 4);
-//
-//
-//        graphics.setStroke(new BasicStroke(3f * Settings.HEX_MULTIPLIER));
-//        graphics.drawLine(Settings.LEGEND_START_X, 0, Settings.LEGEND_START_X, Settings.BACKGROUND_HEIGHT);
+    public void drawInfo(int step) {
+        graphics.setColor(Colors.TEXT.getColor());
+        graphics.setFont(new Font("Arial", Font.BOLD, (int) (fontUnit * 1.5)));
+        graphics.drawString("Steps: " + step, Settings.GRID_COLUMNS + fontUnit * 2, fontUnit * 4);
+        var scoresThisStep = savedGameDTO.scores.get(step);
+        for (int i = 0; i < scoresThisStep.length; i++) {
+            drawScoreInfo(step, i);
+        }
+    }
+
+    private void drawScoreInfo(int step, int i) {
+        drawFilledRect(Settings.GRID_COLUMNS + fontUnit * 2, fontUnit * 4 * i + fontUnit * 7, i);
+        graphics.setColor(Colors.TEXT.getColor());
+        graphics.setFont(new Font("Arial", Font.BOLD, (int) (fontUnit * 1.5)));
+        graphics.drawString(String.valueOf(savedGameDTO.scores.get(step)[i]), Settings.GRID_COLUMNS + fontUnit * 6, fontUnit * 4 * i + (int) (fontUnit * 8.7));
+    }
+
+    private void drawFilledRect(int x, int y, int i) {
+        int squareSize = Settings.BACKGROUND_HEIGHT / 25;
+        int fillSquareSize = squareSize - 1;
+        graphics.drawRect(x, y, squareSize, squareSize);
+        graphics.setColor(Colors.getColor(i + 3, 200)); // +3 because 1 is wall and 2 is food
+        graphics.fillRect(x + 1, y + 1, fillSquareSize, fillSquareSize);
     }
 
     /**

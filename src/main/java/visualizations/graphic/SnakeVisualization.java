@@ -11,9 +11,12 @@ import static games.snake.SnakeMap.HEAD;
 import static utils.Settings.GRID_COLUMNS;
 import static utils.Settings.GRID_ROWS;
 import static utils.Settings.MAX_NUM_OF_MOVES;
+import static utils.Settings.BACKGROUND_WIDTH;
+import static utils.Settings.BACKGROUND_HEIGHT;
 
 public class SnakeVisualization implements GridVisualization {
     private Graphics2D graphics;
+    private SnakeLegend snakeLegend;
     private final SavedGameDTO savedGameDTO;
     private int currentFrame = 0;
     private final int columns;
@@ -22,6 +25,7 @@ public class SnakeVisualization implements GridVisualization {
 
     public SnakeVisualization(SavedGameDTO savedGameDTO) {
         this.savedGameDTO = savedGameDTO;
+        this.snakeLegend = new SnakeLegend(graphics, savedGameDTO);
         rows = savedGameDTO.rows;
         columns = savedGameDTO.columns;
         this.squareSizePixels = 20;
@@ -36,14 +40,16 @@ public class SnakeVisualization implements GridVisualization {
     public void drawPresentation(Graphics2D graphics) {
         if (currentFrame < MAX_NUM_OF_MOVES) {
             this.graphics = graphics;
+            snakeLegend.graphics = graphics;
             setBackground();
             drawGrid();
+            snakeLegend.drawLegend(currentFrame);
         }
     }
 
     public void setBackground() {
         graphics.setColor(Colors.BACKGROUND.getColor());
-        graphics.fillRect(0, 0, GRID_COLUMNS, GRID_ROWS);
+        graphics.fillRect(0, 0, BACKGROUND_WIDTH, BACKGROUND_HEIGHT);
     }
 
     public void drawGrid() {
