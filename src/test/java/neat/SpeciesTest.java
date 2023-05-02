@@ -6,6 +6,7 @@ import neat.evolution.Genotype;
 import neat.evolution.Species;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import utils.Settings;
 import utils.Util;
 
 import java.util.ArrayList;
@@ -14,10 +15,6 @@ import java.util.List;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
-import static utils.Settings.CHANCE_ADD_NODE;
-import static utils.Settings.CHANCE_HARD_MUTATE_WEIGHT;
-import static utils.Settings.NETWORKS_TO_KEEP;
-import static utils.Settings.SPECIES_REDUCTION;
 
 public class SpeciesTest {
     protected GenePool genePool;
@@ -25,9 +22,9 @@ public class SpeciesTest {
 
     @BeforeEach
     void init() {
-        CHANCE_HARD_MUTATE_WEIGHT = 1;
-        CHANCE_ADD_NODE = 0;
-        NETWORKS_TO_KEEP = 0.3;
+        Settings.CHANCE_HARD_MUTATE_WEIGHT = 1;
+        Settings.CHANCE_ADD_NODE = 0;
+        Settings.NETWORKS_TO_KEEP = 0.3;
         genePool = new GenePool(2, 2, Util.activationFunctionIdentity(), new SnakeGame());
         species = genePool.getSpecies().get(0);
     }
@@ -41,22 +38,22 @@ public class SpeciesTest {
 
     @Test
     void reduceSizeBy_returnsCorrectValues() {
-        SPECIES_REDUCTION = 0.3d;
+        Settings.SPECIES_REDUCTION = 0.3d;
         int reduction = species.reduceSize();
         assertThat(species.genotypes.size(), is(70));
         assertThat(reduction, is(30));
 
-        SPECIES_REDUCTION = 0.9d;
+        Settings.SPECIES_REDUCTION = 0.9d;
         reduction = species.reduceSize();
         assertThat(species.genotypes.size(), is(7));
         assertThat(reduction, is(63));
 
-        SPECIES_REDUCTION = 0.1d;
+        Settings.SPECIES_REDUCTION = 0.1d;
         reduction = species.reduceSize();
         assertThat(species.genotypes.size(), is(5));
         assertThat(reduction, is(2));
 
-        SPECIES_REDUCTION = 0.1d;
+        Settings.SPECIES_REDUCTION = 0.1d;
         reduction = species.reduceSize();
         assertThat(species.genotypes.size(), is(3));
         assertThat(reduction, is(2));

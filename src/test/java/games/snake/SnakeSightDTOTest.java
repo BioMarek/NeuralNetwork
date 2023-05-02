@@ -3,12 +3,11 @@ package games.snake;
 import games.snake.dtos.SnakeSightDTO;
 import org.junit.jupiter.api.Test;
 import utils.Direction;
+import utils.Settings;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.closeTo;
 import static org.hamcrest.Matchers.is;
-import static utils.Settings.HAS_WALL;
-import static utils.Settings.SNAKE_SIGHT;
 
 public class SnakeSightDTOTest {
     private static int SIZE = 4;
@@ -18,7 +17,7 @@ public class SnakeSightDTOTest {
 
     @Test
     void calculateSightRay_isCorrectGridFour() {
-        SNAKE_SIGHT = 4;
+        Settings.SNAKE_SIGHT = 4;
         SIZE = 4;
         initGrid();
         var input = snakeSightDTO.getInput_8(new Snake(1, 1, Direction.UP, 1));
@@ -35,7 +34,7 @@ public class SnakeSightDTOTest {
 
     @Test
     void calculateSightRay_isCorrectGridFive() {
-        SNAKE_SIGHT = 4;
+        Settings.SNAKE_SIGHT = 4;
         SIZE = 5;
         initGrid();
         grid[3][3] = SnakeMap.FOOD.value;
@@ -55,7 +54,7 @@ public class SnakeSightDTOTest {
 
     @Test
     void calculateSightRay_isCorrectGridTen() {
-        SNAKE_SIGHT = 4;
+        Settings.SNAKE_SIGHT = 4;
         SIZE = 10;
         initGrid();
         grid[4][8] = SnakeMap.FOOD.value;
@@ -80,7 +79,7 @@ public class SnakeSightDTOTest {
         grid = new int[SIZE][SIZE];
         for (int row = 0; row < SIZE; row++) {
             for (int column = 0; column < SIZE; column++) {
-                if (HAS_WALL && (row == 0 || row == SIZE - 1 || column == 0 || column == SIZE - 1))
+                if (Settings.HAS_WALL && (row == 0 || row == SIZE - 1 || column == 0 || column == SIZE - 1))
                     grid[row][column] = SnakeMap.WALL.value;
             }
         }

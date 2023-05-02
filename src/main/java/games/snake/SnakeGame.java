@@ -2,17 +2,17 @@ package games.snake;
 
 import basic_neural_network.neural_network.BasicNeuralNetwork;
 import games.Game;
-import games.snake.savegame.SavedGameDTO;
 import games.snake.dtos.SnakeBasicDTO;
+import games.snake.savegame.SavedGameDTO;
 import interfaces.NeuralNetwork;
 import utils.Direction;
+import utils.Settings;
 import utils.Util;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import static utils.Settings.GRID_SQUARES;
 import static utils.Util.arrayCopy;
 
 /**
@@ -33,7 +33,7 @@ public class SnakeGame implements Game {
     private final SnakeBasicDTO snakeBasicDTO = new SnakeBasicDTO();
 
     public SnakeGame() {
-        this.size = GRID_SQUARES;
+        this.size = Settings.GRID_SQUARES;
         reset();
     }
 

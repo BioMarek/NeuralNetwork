@@ -32,7 +32,7 @@ public class SnakeLegend {
     public void drawInfo(int step) {
         graphics.setColor(Colors.TEXT.getColor());
         graphics.setFont(new Font(FONT_NAME, Font.BOLD, (int) (fontUnit * 1.5)));
-        graphics.drawString("Steps: " + step, Settings.GRID_COLUMNS + fontUnit * 2, fontUnit * 4);
+        graphics.drawString("Steps: " + step, Settings.GRID_COLUMNS + fontUnit * 4, fontUnit * 4);
         var scoresThisStep = savedGameDTO.scores.get(step);
         for (int i = 0; i < scoresThisStep.length; i++) {
             drawScoreInfo(step, i);
@@ -40,10 +40,10 @@ public class SnakeLegend {
     }
 
     private void drawScoreInfo(int step, int i) {
-        drawSquare(Settings.GRID_COLUMNS + fontUnit * 2, fontUnit * 4 * i + fontUnit * 7, i);
+        drawSquare(Settings.GRID_COLUMNS + fontUnit * 4, fontUnit * 4 * i + fontUnit * 7, i);
         graphics.setColor(Colors.TEXT.getColor());
         graphics.setFont(new Font(FONT_NAME, Font.BOLD, (int) (fontUnit * 1.5)));
-        graphics.drawString(String.valueOf(savedGameDTO.scores.get(step)[i]), Settings.GRID_COLUMNS + fontUnit * 6, fontUnit * 4 * i + (int) (fontUnit * 8.7));
+        graphics.drawString(String.valueOf(savedGameDTO.scores.get(step)[i]), Settings.GRID_COLUMNS + fontUnit * 8, fontUnit * 4 * i + (int) (fontUnit * 8.7));
     }
 
     private void drawSquare(int x, int y, int i) {

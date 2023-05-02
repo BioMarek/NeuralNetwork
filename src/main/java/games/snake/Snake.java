@@ -8,8 +8,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static games.snake.SnakeMap.BODY;
-import static games.snake.SnakeMap.HEAD;
 
 /**
  * Initializes snake, all body parts start on same position
@@ -35,7 +33,7 @@ public class Snake {
     }
 
     public boolean isAnotherSnake(int[][] grid, int row, int column) {
-        return grid[row][column] >= BODY.value && (grid[row][column] != name + BODY.value && grid[row][column] != name + HEAD.value);
+        return grid[row][column] >= SnakeMap.BODY.value && (grid[row][column] != name + SnakeMap.BODY.value && grid[row][column] != name + SnakeMap.HEAD.value);
     }
 
     public int uniqueTilesOccupied() {

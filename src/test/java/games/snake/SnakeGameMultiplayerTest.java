@@ -6,29 +6,23 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import utils.Direction;
+import utils.Settings;
 
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
-import static utils.Settings.DEATH_PENALTY;
-import static utils.Settings.GRID_ROWS;
-import static utils.Settings.GRID_COLUMNS;
-import static utils.Settings.LEAVE_CORPSE;
-import static utils.Settings.MAX_NUM_OF_FOOD;
-import static utils.Settings.NUM_OF_PLAYERS;
-import static utils.Settings.PIXELS_PER_SQUARE;
 
 public class SnakeGameMultiplayerTest {
 
     @BeforeEach
     void setup() {
-        MAX_NUM_OF_FOOD = 2;
-        GRID_ROWS = 4;
-        GRID_COLUMNS = 4;
-        PIXELS_PER_SQUARE = 1;
-        LEAVE_CORPSE = false;
+        Settings.MAX_NUM_OF_FOOD = 2;
+        Settings.GRID_ROWS = 4;
+        Settings.GRID_COLUMNS = 4;
+        Settings.PIXELS_PER_SQUARE = 1;
+        Settings.LEAVE_CORPSE = false;
     }
 
     @Test
@@ -44,8 +38,8 @@ public class SnakeGameMultiplayerTest {
 
     @Test
     void snakeCollision_works() {
-        NUM_OF_PLAYERS = 0;
-        MAX_NUM_OF_FOOD = 0;
+        Settings.NUM_OF_PLAYERS = 0;
+        Settings.MAX_NUM_OF_FOOD = 0;
 
         var snakeMultiplayerGame = new SnakeGameMultiplayer();
         snakeMultiplayerGame.grid[1][1] = 100;
@@ -57,14 +51,14 @@ public class SnakeGameMultiplayerTest {
         assertThat(snakeMultiplayerGame.snakeCollision(new Snake(2, 2, Direction.UP, 1), 1, 2), is(false));
         assertThat(snakeMultiplayerGame.snakeCollision(new Snake(2, 2, Direction.UP, 1), 2, 1), is(false));
 
-        NUM_OF_PLAYERS = 2;
-        MAX_NUM_OF_FOOD = 2;
+        Settings.NUM_OF_PLAYERS = 2;
+        Settings.MAX_NUM_OF_FOOD = 2;
     }
 
     @Test
     void moveSnakeByOne_works() {
-        NUM_OF_PLAYERS = 0;
-        MAX_NUM_OF_FOOD = 0;
+        Settings.NUM_OF_PLAYERS = 0;
+        Settings.MAX_NUM_OF_FOOD = 0;
 
         var snakeMultiplayerGame = new SnakeGameMultiplayer();
         var snake = new Snake(1, 1, Direction.DOWN, 1);
@@ -85,14 +79,14 @@ public class SnakeGameMultiplayerTest {
         assertThat(snakeMultiplayerGame.grid[2][2], is(101));
         assertThat(snakeMultiplayerGame.grid[1][2], is(201));
 
-        NUM_OF_PLAYERS = 2;
-        MAX_NUM_OF_FOOD = 2;
+        Settings.NUM_OF_PLAYERS = 2;
+        Settings.MAX_NUM_OF_FOOD = 2;
     }
 
     @Test
     void moveSnake_works() {
-        NUM_OF_PLAYERS = 0;
-        MAX_NUM_OF_FOOD = 0;
+        Settings.NUM_OF_PLAYERS = 0;
+        Settings.MAX_NUM_OF_FOOD = 0;
         var snakeMultiplayerGame = new SnakeGameMultiplayer();
         var snake = new Snake(1, 1, Direction.DOWN, 1);
         snakeMultiplayerGame.placeSnake(snake);
@@ -103,14 +97,14 @@ public class SnakeGameMultiplayerTest {
         assertThat(snakeMultiplayerGame.grid[1][2], is(not(101)));
         assertThat(snakeMultiplayerGame.grid[2][2], is(not(101)));
 
-        NUM_OF_PLAYERS = 2;
-        MAX_NUM_OF_FOOD = 2;
+        Settings.NUM_OF_PLAYERS = 2;
+        Settings.MAX_NUM_OF_FOOD = 2;
     }
 
     @Test
     void moveSnakeToDirection_collision() {
-        NUM_OF_PLAYERS = 0;
-        MAX_NUM_OF_FOOD = 0;
+        Settings.NUM_OF_PLAYERS = 0;
+        Settings.MAX_NUM_OF_FOOD = 0;
         var snakeMultiplayerGame = new SnakeGameMultiplayer();
         var snake = new Snake(1, 1, Direction.DOWN, 1);
         snakeMultiplayerGame.placeSnake(snake);
@@ -121,14 +115,14 @@ public class SnakeGameMultiplayerTest {
         assertThat(snakeMultiplayerGame.grid[1][2], is(not(101)));
         assertThat(snakeMultiplayerGame.grid[2][2], is(not(101)));
 
-        NUM_OF_PLAYERS = 2;
-        MAX_NUM_OF_FOOD = 2;
+        Settings.NUM_OF_PLAYERS = 2;
+        Settings.MAX_NUM_OF_FOOD = 2;
     }
 
     @Test
     void moveSnakeToDirection_foodEaten() {
-        NUM_OF_PLAYERS = 0;
-        MAX_NUM_OF_FOOD = 0;
+        Settings.NUM_OF_PLAYERS = 0;
+        Settings.MAX_NUM_OF_FOOD = 0;
         var snakeMultiplayerGame = new SnakeGameMultiplayer();
         var snake = new Snake(1, 1, Direction.DOWN, 1);
         snakeMultiplayerGame.placeSnake(snake);
@@ -137,8 +131,8 @@ public class SnakeGameMultiplayerTest {
 
         assertThat(snakeMultiplayerGame.grid[1][2], is(not(2)));
 
-        NUM_OF_PLAYERS = 2;
-        MAX_NUM_OF_FOOD = 2;
+        Settings.NUM_OF_PLAYERS = 2;
+        Settings.MAX_NUM_OF_FOOD = 2;
     }
 
     @Test
@@ -162,8 +156,8 @@ public class SnakeGameMultiplayerTest {
 
     @Test
     void play_worksWithCollisionAndSnakeRestart() {
-        NUM_OF_PLAYERS = 0;
-        MAX_NUM_OF_FOOD = 0;
+        Settings.NUM_OF_PLAYERS = 0;
+        Settings.MAX_NUM_OF_FOOD = 0;
 
         var snakeMultiplayerGame = new SnakeGameMultiplayer();
         var snake = new Snake(1, 1, Direction.DOWN, 1);
@@ -175,16 +169,16 @@ public class SnakeGameMultiplayerTest {
         snakeMultiplayerGame.play(networks, 1);
 
         assertThat(snakeMultiplayerGame.grid[1][1], is(0));
-        assertThat(snake.snakeScore, is(DEATH_PENALTY));
+        assertThat(snake.snakeScore, is(Settings.DEATH_PENALTY));
 
-        NUM_OF_PLAYERS = 2;
-        MAX_NUM_OF_FOOD = 2;
+        Settings.NUM_OF_PLAYERS = 2;
+        Settings.MAX_NUM_OF_FOOD = 2;
     }
 
     @Test
     void play_worksWithFood() {
-        NUM_OF_PLAYERS = 0;
-        MAX_NUM_OF_FOOD = 0;
+        Settings.NUM_OF_PLAYERS = 0;
+        Settings.MAX_NUM_OF_FOOD = 0;
 
         var snakeMultiplayerGame = new SnakeGameMultiplayer();
         var snake = new Snake(2, 1, Direction.DOWN, 1);
@@ -201,15 +195,15 @@ public class SnakeGameMultiplayerTest {
         assertThat(snakeMultiplayerGame.grid[1][2] + snakeMultiplayerGame.grid[2][2], is(2)); // one new food in two grid squares
         assertThat(snake.snakeScore, is(1));
 
-        NUM_OF_PLAYERS = 2;
-        MAX_NUM_OF_FOOD = 2;
+        Settings.NUM_OF_PLAYERS = 2;
+        Settings.MAX_NUM_OF_FOOD = 2;
     }
 
     @Test
     void play_deadSnakeLeavesCorpse() {
-        NUM_OF_PLAYERS = 0;
-        MAX_NUM_OF_FOOD = 0;
-        LEAVE_CORPSE = true;
+        Settings.NUM_OF_PLAYERS = 0;
+        Settings.MAX_NUM_OF_FOOD = 0;
+        Settings.LEAVE_CORPSE = true;
         var snakeMultiplayerGame = new SnakeGameMultiplayer();
         var snake = new Snake(2, 1, Direction.DOWN, 1);
         snakeMultiplayerGame.snakes.add(snake);
@@ -223,18 +217,17 @@ public class SnakeGameMultiplayerTest {
 
         assertThat(snakeMultiplayerGame.numOfFood, is(2));
 
-        NUM_OF_PLAYERS = 2;
-        MAX_NUM_OF_FOOD = 2;
-
+        Settings.NUM_OF_PLAYERS = 2;
+        Settings.MAX_NUM_OF_FOOD = 2;
     }
 
 
     @AfterEach
     void cleanup() {
-        LEAVE_CORPSE = true;
-        MAX_NUM_OF_FOOD = 2;
-        GRID_ROWS = 20;
-        GRID_COLUMNS = 20;
-        PIXELS_PER_SQUARE = 20;
+        Settings.LEAVE_CORPSE = true;
+        Settings.MAX_NUM_OF_FOOD = 2;
+        Settings.GRID_ROWS = 20;
+        Settings.GRID_COLUMNS = 20;
+        Settings.PIXELS_PER_SQUARE = 20;
     }
 }
