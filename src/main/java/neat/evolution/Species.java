@@ -85,7 +85,6 @@ public class Species implements Comparable<Species> {
             if (i >= limit) {
                 Genotype genotype = genotypes.get(i - limit).copy();
                 genotype.mutateGenotype();
-                genotype.name = Integer.toString(genePool.networksGenerated++);
                 genotypesNewGeneration.add(genotype);
             }
             // TODO crossingOvers
