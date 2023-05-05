@@ -9,5 +9,8 @@ import java.util.List;
  */
 public class SavedGameDTO implements Serializable {
     public List<int[][]> grid = new ArrayList<>();
-    public List<Integer> scores;
+    public List<int[]> scores = new ArrayList<>();
+    public int columns;
+    public int rows;
+
 }

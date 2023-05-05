@@ -1,9 +1,9 @@
 package utils;
 
 public class Settings {
-    public static int GRID_SIZE = 20;
+    public static int GRID_SQUARES = 20; // For SingleplayerSnake
     public static boolean HAS_WALL = true;
-    public static int NUM_OF_GENERATIONS = 200; // 300
+    public static int NUM_OF_GENERATIONS = 300; // 300
     public static int TOTAL_NUM_OF_GENOTYPES = 100;
     public static int MAX_NEURONS = 1000;
     public static boolean VERBOSE = true;
@@ -31,22 +31,27 @@ public class Settings {
 
     // graphic
     public static int TIMER_DELAY = 50;
-    public static int BACKGROUND_WIDTH = 1000;
-    public static int BACKGROUND_HEIGHT = 1000;
+    public static int GRID_COLUMNS = 1500;
+    public static int GRID_ROWS = 1080;
+    public static int BACKGROUND_WIDTH = 1920;
+    public static int BACKGROUND_HEIGHT = 1080;
+    public static int PIXELS_PER_SQUARE = 20;
 
     public static void multiplayerSettings() {
         NUM_OF_PLAYERS = 10;
-        GRID_SIZE = 50;
+        GRID_COLUMNS = 1500;
+        GRID_ROWS = 1080;
+        PIXELS_PER_SQUARE = 20;
         SNAKE_SIGHT = 7;
         DEATH_PENALTY = -3;
-        MAX_NUM_OF_FOOD = 30;
-        LEAVE_CORPSE = true;
+        MAX_NUM_OF_FOOD = 60;
+        LEAVE_CORPSE = false;
         HAS_WALL = true;
     }
 
     public static void singlePlayerGame() {
         NUM_OF_PLAYERS = 1;
-        GRID_SIZE = 20;
+        GRID_SQUARES = 20;
         SNAKE_SIGHT = 7;
         DEATH_PENALTY = -1;
         MAX_NUM_OF_FOOD = 1;

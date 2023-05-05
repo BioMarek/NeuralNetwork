@@ -25,7 +25,7 @@ public class Main {
      */
     public static void setupNeatNeuralNetworkWithMultiplayer() {
         Settings.multiplayerSettings();
-        GenePool genePool = new GenePool(8, 4, Util.activationFunctionUnitStep(), new SnakeGameMultiplayer());
+        GenePool genePool = new GenePool(8, 4, Util.activationFunctionUnitStep(), Util.activationFunctionIdentity(), new SnakeGameMultiplayer());
 //        Settings.singlePlayerGame();
 //        GenePool genePool = new GenePool(8, 4, Util.activationFunctionUnitStep(), Util.activationFunctionIdentity(), new SnakeGameMultiplayer());
 

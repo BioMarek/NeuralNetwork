@@ -123,9 +123,9 @@ public class Util {
     }
 
     public static int[][] arrayCopy(int[][] source) {
-        int[][] result = new int[source.length][source.length];
+        int[][] result = new int[source.length][source[0].length];
         for (int row = 0; row < source.length; row++) {
-            System.arraycopy(source[row], 0, result[row], 0, source.length);
+            System.arraycopy(source[row], 0, result[row], 0, source[0].length);
         }
         return result;
     }
