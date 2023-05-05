@@ -7,7 +7,7 @@ import utils.Settings;
 
 
 public class SnakeSightDTO {
-    private final double[] result = new double[8];
+    private double[] result = new double[8];
     private final int[][] grid;
 
     public SnakeSightDTO(int[][] grid) {
@@ -15,6 +15,7 @@ public class SnakeSightDTO {
     }
 
     public double[] getInput_8(Snake snake) {
+        result = new double[8];
         calculateSightRay(snake, -1, 0, 0); // up
         calculateSightRay(snake, 0, 1, 1); // right
         calculateSightRay(snake, 1, 0, 2); // down

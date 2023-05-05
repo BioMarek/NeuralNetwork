@@ -194,6 +194,8 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
      * @return direction where {@link NeuralNetwork decided to move
      */
     protected Direction outputToDirection(double[] neuralNetworkOutput) {
+        if (isZeroArray(neuralNetworkOutput))
+            return Direction.NONE;
         return switch (maxValueIndex(neuralNetworkOutput)) {
             case 0 -> Direction.UP;
             case 1 -> Direction.RIGHT;
@@ -222,13 +224,26 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
         return maxIndex;
     }
 
+    protected boolean isZeroArray(double[] array){
+        for (double i : array) {
+            if (i != 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     /**
      * Plays the game and saves grid arrangements so they can be used later e.g. for visualization.
      */
     public SavedGameDTO saveSnakeMoves(List<NeuralNetwork> neuralNetworks, int maxNumberOfMoves) {
+        //
         var savedGameDTO = new SavedGameDTO();
         savedGameDTO.rows = rows;
         savedGameDTO.columns = columns;
+        for (int i = 0; i < neuralNetworks.size(); i++) {
+            System.out.println(neuralNetworks.get(i));
+        }
         for (int move = 0; move < maxNumberOfMoves; move++) {
             for (int i = 0; i < neuralNetworks.size(); i++) {
                 var networkOutput = neuralNetworks.get(i).getNetworkOutput(snakeSightDTO.getInput_8(snakes.get(i)));
