@@ -2,11 +2,14 @@ package games.snake;
 
 import utils.Direction;
 import utils.Pair;
+import utils.Settings;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import static games.snake.SnakeGameMultiplayer.randomFreeCoordinate;
 
 
 /**
@@ -44,16 +47,17 @@ public class Snake {
         return usedCoordinates.size();
     }
 
-//    public void reduceSnakeByOne(int[][] grid, SnakeMap snakeMap) {
-//        if (bodyParts.size() == 1) {
-//            removeSnake(grid, snakeMap);
-//            var coordinates = randomFreeCoordinate(grid);
-//            resetSnake(coordinates.getFirst(), coordinates.getSecond(), Direction.randomDirection());
-//            snakeScore += Settings.DEATH_PENALTY;
-//        } else {
-//            bodyParts.remove(bodyParts.size() - 1);
-//        }
-//    }
+    public void reduceSnakeByOne(int[][] grid, SnakeMap snakeMap) {
+        removeSnake(grid, snakeMap);
+        if (bodyParts.size() == 1) {
+            var coordinates = randomFreeCoordinate(grid);
+            resetSnake(coordinates.getFirst(), coordinates.getSecond(), Direction.randomDirection());
+            snakeScore += Settings.DEATH_PENALTY;
+        } else {
+            bodyParts.remove(bodyParts.size() - 1);
+        }
+        placeSnake(grid);
+    }
 
     /**
      * Removes {@link Snake} from grid. Grid squares that were occupied by snake {@link BodyPart}s will get new number

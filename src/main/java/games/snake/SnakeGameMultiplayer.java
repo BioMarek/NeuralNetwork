@@ -75,16 +75,6 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
         }
     }
 
-//    protected void placeSnake(Snake snake) {
-//        for (int j = snake.bodyParts.size() - 1; j >= 0; j--) { // head will be always on top of other bodyparts
-//            var bodyPart = snake.bodyParts.get(j);
-//            if (bodyPart.isHead)
-//                grid[bodyPart.row][bodyPart.column] = snake.name + SnakeMap.HEAD.value;
-//            else
-//                grid[bodyPart.row][bodyPart.column] = snake.name + SnakeMap.BODY.value;
-//        }
-//    }
-
     /**
      * If there is less food on the grid then Settings.maxNumberOfFood one additional food will be added on random grid
      * square.
@@ -136,6 +126,10 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
             snake.placeSnake(grid);
         } else {
             moveSnakeByOne(snake, row, column);
+            if (snake.stepsMoved == Settings.STEPS_TO_REDUCTION) {
+                snake.stepsMoved = 0;
+                snake.reduceSnakeByOne(grid, SnakeMap.EMPTY);
+            }
         }
     }
 
