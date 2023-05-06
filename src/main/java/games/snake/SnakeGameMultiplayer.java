@@ -183,8 +183,6 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
      * @return direction where {@link NeuralNetwork decided to move
      */
     protected Direction outputToDirection(double[] neuralNetworkOutput) {
-        if (isZeroArray(neuralNetworkOutput))
-            return Direction.NONE;
         return switch (maxValueIndex(neuralNetworkOutput)) {
             case 0 -> Direction.UP;
             case 1 -> Direction.RIGHT;
@@ -211,15 +209,6 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
             }
         }
         return maxIndex;
-    }
-
-    protected boolean isZeroArray(double[] array) {
-        for (double i : array) {
-            if (i != 0) {
-                return false;
-            }
-        }
-        return true;
     }
 
     /**
