@@ -16,7 +16,7 @@ public class Main {
         setupNeatNeuralNetworkWithMultiplayer();
 //        setupNeatNeuralNetworkWithGame();
 
-//        playSaveGame("04-21-214845.sav");
+//        playSaveGame("05-06-202527.sav");
 
     }
 
@@ -25,9 +25,9 @@ public class Main {
      */
     public static void setupNeatNeuralNetworkWithMultiplayer() {
         Settings.multiplayerSettings();
-        GenePool genePool = new GenePool(8, 4, Util.activationFunctionUnitStep(), Util.activationFunctionIdentity(), new SnakeGameMultiplayer());
+        GenePool genePool = new GenePool(8, 4, Util.activationFunctionHyperbolicTangent(), Util.activationFunctionHyperbolicTangent(), new SnakeGameMultiplayer());
 //        Settings.singlePlayerGame();
-//        GenePool genePool = new GenePool(8, 4, Util.activationFunctionUnitStep(), Util.activationFunctionIdentity(), new SnakeGameMultiplayer());
+//        GenePool genePool = new GenePool(8, 4, Util.activationFunctionHyperbolicTangent(), Util.activationFunctionHyperbolicTangent(), new SnakeGameMultiplayer());
 
         long start = System.currentTimeMillis();
         genePool.calculateEvolutionMultiplayer(Settings.NUM_OF_GENERATIONS);

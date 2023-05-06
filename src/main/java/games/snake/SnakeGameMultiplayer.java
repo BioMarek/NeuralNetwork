@@ -70,31 +70,8 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
         for (int i = 0; i < Settings.NUM_OF_PLAYERS; i++) {
             var coordinates = randomFreeCoordinate(grid);
             var snake = new Snake(coordinates.getFirst(), coordinates.getSecond(), Direction.randomDirection(), i);
-            placeSnake(snake);
+            snake.placeSnake(grid);
             snakes.add(snake);
-        }
-    }
-
-    protected void placeSnake(Snake snake) {
-        for (int j = snake.bodyParts.size() - 1; j >= 0; j--) { // head will be always on top of other bodyparts
-            var bodyPart = snake.bodyParts.get(j);
-            if (bodyPart.isHead)
-                grid[bodyPart.row][bodyPart.column] = snake.name + SnakeMap.HEAD.value;
-            else
-                grid[bodyPart.row][bodyPart.column] = snake.name + SnakeMap.BODY.value;
-        }
-    }
-
-    /**
-     * Removes {@link Snake} from grid. Grid squares that were occupied by snake {@link BodyPart}s will get new number
-     * based on whether we want to leave food in place of dead snake or just remove it.
-     *
-     * @param snake    to remove
-     * @param snakeMap value to place on grid squares where snake bodyparts were
-     */
-    public void removeSnake(Snake snake, SnakeMap snakeMap) {
-        for (BodyPart bodyPart : snake.bodyParts) {
-            grid[bodyPart.row][bodyPart.column] = snakeMap.value;
         }
     }
 
@@ -141,14 +118,18 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
             var coordinates = randomFreeCoordinate(grid);
             if (Settings.LEAVE_CORPSE) {
                 numOfFood += snake.uniqueTilesOccupied();
-                removeSnake(snake, SnakeMap.FOOD);
+                snake.removeSnake(grid, SnakeMap.FOOD);
             } else
-                removeSnake(snake, SnakeMap.EMPTY);
+                snake.removeSnake(grid, SnakeMap.EMPTY);
             snake.resetSnake(coordinates.getFirst(), coordinates.getSecond(), Direction.randomDirection());
             snake.snakeScore += Settings.DEATH_PENALTY;
-            placeSnake(snake);
+            snake.placeSnake(grid);
         } else {
             moveSnakeByOne(snake, row, column);
+            if (snake.stepsMoved == Settings.STEPS_TO_REDUCTION) {
+                snake.stepsMoved = 0;
+                snake.reduceSnakeByOne(grid, SnakeMap.EMPTY);
+            }
         }
     }
 
@@ -167,15 +148,17 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
         bodyParts.add(0, new BodyPart(true, row, column));
 
         if (grid[row][column] == SnakeMap.FOOD.value) {
-            placeSnake(snake);
+            snake.placeSnake(grid);
             numOfFood--;
             placeFood();
             snake.snakeScore += 1;
         } else {
-            removeSnake(snake, SnakeMap.EMPTY);
+            snake.removeSnake(grid, SnakeMap.EMPTY);
             bodyParts.remove(bodyParts.size() - 1);
-            placeSnake(snake);
+            snake.placeSnake(grid);
         }
+
+        snake.stepsMoved++;
     }
 
     /**
@@ -194,8 +177,6 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
      * @return direction where {@link NeuralNetwork decided to move
      */
     protected Direction outputToDirection(double[] neuralNetworkOutput) {
-        if (isZeroArray(neuralNetworkOutput))
-            return Direction.NONE;
         return switch (maxValueIndex(neuralNetworkOutput)) {
             case 0 -> Direction.UP;
             case 1 -> Direction.RIGHT;
@@ -224,26 +205,13 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
         return maxIndex;
     }
 
-    protected boolean isZeroArray(double[] array){
-        for (double i : array) {
-            if (i != 0) {
-                return false;
-            }
-        }
-        return true;
-    }
-
     /**
      * Plays the game and saves grid arrangements so they can be used later e.g. for visualization.
      */
     public SavedGameDTO saveSnakeMoves(List<NeuralNetwork> neuralNetworks, int maxNumberOfMoves) {
-        //
         var savedGameDTO = new SavedGameDTO();
         savedGameDTO.rows = rows;
         savedGameDTO.columns = columns;
-        for (int i = 0; i < neuralNetworks.size(); i++) {
-            System.out.println(neuralNetworks.get(i));
-        }
         for (int move = 0; move < maxNumberOfMoves; move++) {
             for (int i = 0; i < neuralNetworks.size(); i++) {
                 var networkOutput = neuralNetworks.get(i).getNetworkOutput(snakeSightDTO.getInput_8(snakes.get(i)));

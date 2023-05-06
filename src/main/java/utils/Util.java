@@ -101,9 +101,11 @@ public class Util {
         return 1.0D / (1.0D + Math.exp(-steepness * innerPotential));
     }
 
-    public static double activationFunctionSigmoidPrime(double innerPotential) {
-        double sigmoid = activationFunctionSigmoid(innerPotential, 1.0D);
-        return sigmoid * (1.0D - sigmoid);
+    public static Function<Double, Double> activationFunctionSigmoidPrime() {
+        return (Double innerPotential) -> {
+            double sigmoid = activationFunctionSigmoid(innerPotential, 1.0D);
+            return sigmoid * (1.0D - sigmoid);
+        };
     }
 
     public static Function<Double, Double> activationFunctionHyperbolicTangent() {
