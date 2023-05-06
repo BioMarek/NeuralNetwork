@@ -3,7 +3,7 @@ package utils;
 public class Settings {
     public static int GRID_SQUARES = 20; // For SingleplayerSnake
     public static boolean HAS_WALL = true;
-    public static int NUM_OF_GENERATIONS = 300; // 300
+    public static int NUM_OF_GENERATIONS = 200; // 300
     public static int TOTAL_NUM_OF_GENOTYPES = 100;
     public static int MAX_NEURONS = 1000;
     public static boolean VERBOSE = true;
@@ -28,7 +28,7 @@ public class Settings {
     public static int DEATH_PENALTY = -3; // should be negative or zero
     public static int SNAKE_SIGHT = 7;
     public static boolean LEAVE_CORPSE = true;
-    public static int STEPS_TO_REDUCTION = 20;
+    public static int STEPS_TO_REDUCTION = 15;
 
     // graphic
     public static int TIMER_DELAY = 50;
@@ -43,7 +43,7 @@ public class Settings {
         GRID_COLUMNS = 1500;
         GRID_ROWS = 1080;
         PIXELS_PER_SQUARE = 20;
-        SNAKE_SIGHT = 10;
+        SNAKE_SIGHT = 7;
         DEATH_PENALTY = -5;
         MAX_NUM_OF_FOOD = 150;
         LEAVE_CORPSE = false;
