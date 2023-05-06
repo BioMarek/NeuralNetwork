@@ -62,7 +62,7 @@ public class SnakeGameMultiplayerTest {
 
         var snakeMultiplayerGame = new SnakeGameMultiplayer();
         var snake = new Snake(1, 1, Direction.DOWN, 1);
-        snakeMultiplayerGame.placeSnake(snake);
+        snake.placeSnake(snakeMultiplayerGame.grid);
 
         snakeMultiplayerGame.moveSnakeByOne(snake, 2, 1);
         assertThat(snakeMultiplayerGame.grid[1][1], is(101));
@@ -89,7 +89,7 @@ public class SnakeGameMultiplayerTest {
         Settings.MAX_NUM_OF_FOOD = 0;
         var snakeMultiplayerGame = new SnakeGameMultiplayer();
         var snake = new Snake(1, 1, Direction.DOWN, 1);
-        snakeMultiplayerGame.placeSnake(snake);
+        snake.placeSnake(snakeMultiplayerGame.grid);
         snakeMultiplayerGame.moveSnake(snake, 0, 1);
 
         assertThat(snakeMultiplayerGame.grid[1][1], is(not(101)));
@@ -107,7 +107,7 @@ public class SnakeGameMultiplayerTest {
         Settings.MAX_NUM_OF_FOOD = 0;
         var snakeMultiplayerGame = new SnakeGameMultiplayer();
         var snake = new Snake(1, 1, Direction.DOWN, 1);
-        snakeMultiplayerGame.placeSnake(snake);
+        snake.placeSnake(snakeMultiplayerGame.grid);
         snakeMultiplayerGame.moveSnakeToDirection(snake, Direction.LEFT);
 
         assertThat(snakeMultiplayerGame.grid[1][1], is(not(101)));
@@ -125,7 +125,7 @@ public class SnakeGameMultiplayerTest {
         Settings.MAX_NUM_OF_FOOD = 0;
         var snakeMultiplayerGame = new SnakeGameMultiplayer();
         var snake = new Snake(1, 1, Direction.DOWN, 1);
-        snakeMultiplayerGame.placeSnake(snake);
+        snake.placeSnake(snakeMultiplayerGame.grid);
         snakeMultiplayerGame.grid[1][2] = 2;
         snakeMultiplayerGame.moveSnakeToDirection(snake, Direction.RIGHT);
 
@@ -162,7 +162,7 @@ public class SnakeGameMultiplayerTest {
         var snakeMultiplayerGame = new SnakeGameMultiplayer();
         var snake = new Snake(1, 1, Direction.DOWN, 1);
         snakeMultiplayerGame.snakes.add(snake);
-        snakeMultiplayerGame.placeSnake(snake);
+        snake.placeSnake(snakeMultiplayerGame.grid);
 
         NeuralNetwork network = new TestNeuralNetwork();
         var networks = List.of(network);
@@ -184,7 +184,7 @@ public class SnakeGameMultiplayerTest {
         var snake = new Snake(2, 1, Direction.DOWN, 1);
         snakeMultiplayerGame.grid[1][1] = SnakeMap.FOOD.value;
         snakeMultiplayerGame.snakes.add(snake);
-        snakeMultiplayerGame.placeSnake(snake);
+        snake.placeSnake(snakeMultiplayerGame.grid);
 
         NeuralNetwork network = new TestNeuralNetwork();
         var networks = List.of(network);
@@ -207,7 +207,7 @@ public class SnakeGameMultiplayerTest {
         var snakeMultiplayerGame = new SnakeGameMultiplayer();
         var snake = new Snake(2, 1, Direction.DOWN, 1);
         snakeMultiplayerGame.snakes.add(snake);
-        snakeMultiplayerGame.placeSnake(snake);
+        snake.placeSnake(snakeMultiplayerGame.grid);
 
         assertThat(snakeMultiplayerGame.numOfFood, is(0));
 
