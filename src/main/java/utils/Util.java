@@ -103,20 +103,20 @@ public class Util {
 
     public static Function<Double, Double> activationFunctionSigmoidPrime() {
         return (Double innerPotential) -> {
-            double sigmoid = activationFunctionSigmoid(innerPotential, 1.0D);
+            var sigmoid = activationFunctionSigmoid(innerPotential, 1.0D);
             return sigmoid * (1.0D - sigmoid);
         };
     }
 
     public static Function<Double, Double> activationFunctionHyperbolicTangent() {
         return (Double innerPotential) -> {
-            double eToNegativeIP = Math.exp(-innerPotential);
+            var eToNegativeIP = Math.exp(-innerPotential);
             return (1.0D - eToNegativeIP) / (1.0D + eToNegativeIP);
         };
     }
 
     public static double[] primitiveDoubleArrayFromList(List<Double> list) {
-        int length = list.size();
+        var length = list.size();
         double[] result = new double[length];
         for (int i = 0; i < length; i++) {
             result[i] = list.get(i);

@@ -10,15 +10,17 @@ import java.awt.Graphics2D;
 
 public class SnakeVisualization implements GridVisualization {
     private Graphics2D graphics;
-    private SnakeLegend snakeLegend;
+    private final SnakeLegend snakeLegend;
     private final SavedGameDTO savedGameDTO;
     private int currentFrame = 0;
     private final int columns;
     private final int rows;
     private final int squareSizePixels;
+    private final int maxFrames;
 
     public SnakeVisualization(SavedGameDTO savedGameDTO) {
         this.savedGameDTO = savedGameDTO;
+        this.maxFrames = savedGameDTO.grid.size();
         this.snakeLegend = new SnakeLegend(graphics, savedGameDTO);
         rows = savedGameDTO.rows;
         columns = savedGameDTO.columns;
@@ -27,7 +29,8 @@ public class SnakeVisualization implements GridVisualization {
 
     @Override
     public void createNextFrame() {
-        currentFrame++;
+        if (currentFrame++ > maxFrames)
+            System.exit(0);
     }
 
     @Override
