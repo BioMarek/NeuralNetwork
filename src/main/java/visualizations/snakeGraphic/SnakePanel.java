@@ -1,9 +1,7 @@
-package visualizations;
+package visualizations.snakeGraphic;
 
 import games.snake.savegame.SavedGameDTO;
 import utils.Settings;
-import visualizations.graphic.GridVisualization;
-import visualizations.graphic.SnakeVisualization;
 
 import javax.swing.JPanel;
 import javax.swing.Timer;

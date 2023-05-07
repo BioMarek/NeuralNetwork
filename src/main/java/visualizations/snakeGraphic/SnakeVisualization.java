@@ -1,4 +1,4 @@
-package visualizations.graphic;
+package visualizations.snakeGraphic;
 
 import games.snake.SnakeMap;
 import games.snake.savegame.SavedGameDTO;

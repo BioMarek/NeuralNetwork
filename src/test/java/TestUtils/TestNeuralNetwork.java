@@ -1,7 +1,7 @@
 package TestUtils;
 
 import neat.phenotype.NeuralNetwork;
-import visualizations.dtos.VisualizationDTO;
+import visualizations.nnVisualization.VisualizationDTO;
 
 /**
  * Implementation of {@link NeuralNetwork} for testing purposes that returns predetermined values.

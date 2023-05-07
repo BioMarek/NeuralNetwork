@@ -3,8 +3,8 @@ import games.snake.savegame.SaveGameUtil;
 import neat.evolution.GenePool;
 import utils.Settings;
 import utils.Util;
-import visualizations.SnakeFrame;
-import visualizations.SnakePanel;
+import visualizations.snakeGraphic.SnakeFrame;
+import visualizations.snakeGraphic.SnakePanel;
 
 public class Main {
 

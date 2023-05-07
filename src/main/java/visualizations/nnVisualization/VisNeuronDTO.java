@@ -1,4 +1,4 @@
-package visualizations.dtos;
+package visualizations.nnVisualization;
 
 import lombok.Data;
 

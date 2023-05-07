@@ -1,4 +1,4 @@
-package visualizations;
+package visualizations.snakeGraphic;
 
 import javax.swing.JFrame;
 import java.awt.Toolkit;

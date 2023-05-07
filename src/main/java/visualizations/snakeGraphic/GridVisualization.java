@@ -1,4 +1,4 @@
-package visualizations.graphic;
+package visualizations.snakeGraphic;
 
 import java.awt.Graphics2D;
 

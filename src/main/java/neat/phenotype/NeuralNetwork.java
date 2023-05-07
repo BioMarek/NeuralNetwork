@@ -1,7 +1,7 @@
 package neat.phenotype;
 
-import visualizations.dtos.NeuralNetworkPanel;
-import visualizations.dtos.VisualizationDTO;
+import visualizations.nnVisualization.NeuralNetworkPanel;
+import visualizations.nnVisualization.VisualizationDTO;
 
 public interface NeuralNetwork {
     double[] getNetworkOutput(double[] inputs);

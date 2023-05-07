@@ -6,7 +6,7 @@ import neat.evolution.Genotype;
 import neat.phenotype.Phenotype;
 import utils.Settings;
 import utils.Util;
-import visualizations.dtos.VisualizationDTO;
+import visualizations.nnVisualization.VisualizationDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
