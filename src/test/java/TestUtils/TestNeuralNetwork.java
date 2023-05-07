@@ -1,6 +1,6 @@
 package TestUtils;
 
-import interfaces.NeuralNetwork;
+import neat.phenotype.NeuralNetwork;
 import visualizations.dtos.VisualizationDTO;
 
 /**

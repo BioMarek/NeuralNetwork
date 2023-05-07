@@ -1,7 +1,7 @@
 package games.snake;
 
 import TestUtils.TestNeuralNetwork;
-import interfaces.NeuralNetwork;
+import neat.phenotype.NeuralNetwork;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -1,8 +1,4 @@
-package visualizations;
-
-import visualizations.dtos.VisConnectionDTO;
-import visualizations.dtos.VisLayerDTO;
-import visualizations.dtos.VisualizationDTO;
+package visualizations.dtos;
 
 import javax.swing.JPanel;
 import java.awt.BasicStroke;
@@ -14,7 +10,6 @@ import java.awt.Point;
 import java.awt.RenderingHints;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class NeuralNetworkPanel extends JPanel {
     private final int neuronSize = 40;

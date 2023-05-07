@@ -1,7 +1,7 @@
 package visualizations.dtos;
 
 
-import interfaces.NeuralNetwork;
+import neat.phenotype.NeuralNetwork;
 
 import java.util.ArrayList;
 import java.util.Collections;

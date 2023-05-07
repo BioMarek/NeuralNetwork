@@ -1,6 +1,5 @@
 package neat.phenotype;
 
-import interfaces.NeuralNetwork;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;

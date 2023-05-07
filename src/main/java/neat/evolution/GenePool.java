@@ -2,10 +2,9 @@ package neat.evolution;
 
 import games.MultiplayerGame;
 import games.snake.savegame.SavedGameDTO;
-import interfaces.EvolutionEngine;
-import interfaces.NeuralNetwork;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import neat.phenotype.NeuralNetwork;
 import utils.Settings;
 
 import java.io.BufferedWriter;

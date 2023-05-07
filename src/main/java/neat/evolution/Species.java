@@ -1,14 +1,10 @@
 package neat.evolution;
 
 import lombok.EqualsAndHashCode;
-import neat.phenotype.Phenotype;
 import utils.Settings;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-
-import static utils.Util.repeat;
 
 @EqualsAndHashCode
 public class Species implements Comparable<Species> {

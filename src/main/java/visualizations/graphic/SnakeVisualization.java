@@ -2,7 +2,6 @@ package visualizations.graphic;
 
 import games.snake.SnakeMap;
 import games.snake.savegame.SavedGameDTO;
-import interfaces.GridVisualization;
 import utils.Colors;
 import utils.Settings;
 

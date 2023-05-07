@@ -1,8 +1,8 @@
 package visualizations;
 
 import games.snake.savegame.SavedGameDTO;
-import interfaces.GridVisualization;
 import utils.Settings;
+import visualizations.graphic.GridVisualization;
 import visualizations.graphic.SnakeVisualization;
 
 import javax.swing.JPanel;

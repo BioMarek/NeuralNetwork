@@ -1,4 +1,4 @@
-package interfaces;
+package neat.evolution;
 
 public interface EvolutionEngine {
     void calculateEvolution(int numOfGenerations);

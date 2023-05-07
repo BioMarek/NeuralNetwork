@@ -1,6 +1,6 @@
-package interfaces;
+package neat.phenotype;
 
-import visualizations.NeuralNetworkPanel;
+import visualizations.dtos.NeuralNetworkPanel;
 import visualizations.dtos.VisualizationDTO;
 
 public interface NeuralNetwork {

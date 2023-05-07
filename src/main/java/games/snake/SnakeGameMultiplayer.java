@@ -3,7 +3,7 @@ package games.snake;
 import games.MultiplayerGame;
 import games.snake.dtos.SnakeSightDTO;
 import games.snake.savegame.SavedGameDTO;
-import interfaces.NeuralNetwork;
+import neat.phenotype.NeuralNetwork;
 import utils.Direction;
 import utils.Pair;
 import utils.Settings;
