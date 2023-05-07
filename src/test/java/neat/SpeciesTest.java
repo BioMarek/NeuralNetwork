@@ -1,6 +1,6 @@
 package neat;
 
-import games.snake.SnakeGame;
+import games.snake.SnakeGameMultiplayer;
 import neat.evolution.GenePool;
 import neat.evolution.Genotype;
 import neat.evolution.Species;
@@ -25,7 +25,7 @@ public class SpeciesTest {
         Settings.CHANCE_HARD_MUTATE_WEIGHT = 1;
         Settings.CHANCE_ADD_NODE = 0;
         Settings.NETWORKS_TO_KEEP = 0.3;
-        genePool = new GenePool(2, 2, Util.activationFunctionIdentity(), new SnakeGame());
+        genePool = new GenePool(2, 2, Util.activationFunctionIdentity(), new SnakeGameMultiplayer());
         species = genePool.getSpecies().get(0);
     }
 

@@ -1,9 +1,9 @@
 package interfaces;
 
 public interface EvolutionEngine {
-    void calculateEvolution();
+    void calculateEvolution(int numOfGenerations);
 
-    void makeNextGeneration();
+    void makeNextGeneration(boolean saveGame);
 
     void resetScores();
 

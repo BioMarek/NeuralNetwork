@@ -1,8 +1,5 @@
 package visualizations;
 
-import basic_neural_network.neural_network.BasicNeuralNetwork;
-import basic_neural_network.neural_network.BasicNeuron;
-import basic_neural_network.neural_network.Layer;
 import visualizations.dtos.VisConnectionDTO;
 import visualizations.dtos.VisLayerDTO;
 import visualizations.dtos.VisualizationDTO;
@@ -56,8 +53,8 @@ public class NeuralNetworkPanel extends JPanel {
     /**
      * The function draws one layer as column of neurons
      *
-     * @param layer      {@link Layer} to draw
-     * @param layerIndex index of {@link Layer} in {@link BasicNeuralNetwork}
+     * @param layer      Layer to draw
+     * @param layerIndex index of Layer in BasicNeuralNetwork
      */
     protected void drawLayer(VisLayerDTO layer, int layerIndex, int yAxisOffset) {
         graphics.setStroke(new BasicStroke(neuronStroke));
@@ -89,10 +86,10 @@ public class NeuralNetworkPanel extends JPanel {
     }
 
     /**
-     * Calculates weight line starting point based on size of the {@link BasicNeuron} and its position within {@link Layer}.
+     * Calculates weight line starting point based on size of the BasicNeuron and its position within Layer.
      *
-     * @param leftNeuronY y index of {@link BasicNeuron} upper left corner
-     * @param leftLayerX  x index of {@link BasicNeuron} upper left corner
+     * @param leftNeuronY y index of BasicNeuron upper left corner
+     * @param leftLayerX  x index of BasicNeuron upper left corner
      * @return {@link Point}
      */
     protected Point weightStartingPoint(int leftNeuronY, int leftLayerX) {
@@ -100,10 +97,10 @@ public class NeuralNetworkPanel extends JPanel {
     }
 
     /**
-     * Calculates weight line starting point based on size of the {@link BasicNeuron} and its position within {@link Layer}.
+     * Calculates weight line starting point based on size of the BasicNeuron and its position within  Layer.
      *
-     * @param rightNeuronY y index of {@link BasicNeuron} upper left corner
-     * @param rightLayerX  x index of {@link BasicNeuron} upper left corner
+     * @param rightNeuronY y index of BasicNeuron upper left corner
+     * @param rightLayerX  x index of  BasicNeuron upper left corner
      * @return {@link Point}
      */
     protected Point weightEndingPoint(int rightNeuronY, int rightLayerX) {
@@ -123,7 +120,7 @@ public class NeuralNetworkPanel extends JPanel {
     /**
      * Converts weight to color.
      *
-     * @param weight weight of {@link BasicNeuron}
+     * @param weight weight of BasicNeuron
      * @return red if weight is negative blue otherwise
      */
     protected Color weightToColor(double weight) {
@@ -131,7 +128,7 @@ public class NeuralNetworkPanel extends JPanel {
     }
 
     /**
-     * The function calculates offset on y axis so that layers with different number of {@link BasicNeuron} are centered.
+     * The function calculates offset on y axis so that layers with different number of BasicNeuron are centered.
      *
      * @param visualizationDTO which {@link VisLayerDTO}s will be evaluated
      * @return array of offsets for each layer
@@ -139,7 +136,7 @@ public class NeuralNetworkPanel extends JPanel {
     protected int[] layersYAxisOffset(VisualizationDTO visualizationDTO) {
         List<Integer> layerHeights = visualizationDTO.layers.stream()
                 .map(layer -> (layer.neurons.size() - 1) * neuronYAxisGap + neuronSize)
-                .collect(Collectors.toList());
+                .toList();
 
         return layerHeights.stream()
                 .mapToInt(x -> (Collections.max(layerHeights) - x) / 2)

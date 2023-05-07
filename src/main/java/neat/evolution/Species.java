@@ -24,17 +24,6 @@ public class Species implements Comparable<Species> {
         this.name = name;
     }
 
-    public void calculateScores() {
-        for (Genotype genotype : genotypes) {
-            Phenotype phenotype = genotype.createPhenotype();
-            repeat.accept(Settings.NUM_OF_TRIALS, () -> {
-                genotype.score += genePool.game.play(phenotype, Settings.MAX_NUM_OF_MOVES);
-                genePool.game.reset();
-            });
-        }
-        genotypes.sort(Collections.reverseOrder());
-    }
-
     /**
      * Calculates average score os {@link Species} from scores of {@link Genotype}.
      */
