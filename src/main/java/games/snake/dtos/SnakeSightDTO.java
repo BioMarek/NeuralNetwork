@@ -39,20 +39,20 @@ public class SnakeSightDTO {
         for (int i = 1; i < Settings.SNAKE_SIGHT + 1; i++) {
             var currentRow = head.row + rowIncrease * i;
             var currentColumn = head.column + columnIncrease * i;
-            if (isOutOfBounds(grid, currentRow, currentColumn))
+            if (isOutOfBounds(currentRow, currentColumn))
                 break;
             if (grid[currentRow][currentColumn] == SnakeMap.FOOD.value) {
                 result[index] = distanceCoefficient(i);
                 break;
             }
-            if (snake.isAnotherSnake(grid, currentRow, currentColumn) || grid[currentRow][currentColumn] == SnakeMap.WALL.value) {
+            if (snake.isAnotherSnake(currentRow, currentColumn) || grid[currentRow][currentColumn] == SnakeMap.WALL.value) {
                 result[index] = -1.0 * distanceCoefficient(i);
                 break;
             }
         }
     }
 
-    public boolean isOutOfBounds(int[][] grid, int row, int column) {
+    public boolean isOutOfBounds(int row, int column) {
         return row < 0 || column < 0 || row >= grid.length || column >= grid.length;
     }
 }

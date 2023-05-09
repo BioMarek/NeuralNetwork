@@ -10,6 +10,7 @@ import utils.Settings;
 import utils.Util;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static utils.Util.arrayCopy;
@@ -31,18 +32,19 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
 
     @Override
     public int[] play(List<NeuralNetwork> neuralNetworks, int maxNumberOfMoves) {
+        for (int i = 0; i < snakes.size(); i++)
+            snakes.get(i).neuralNetwork = neuralNetworks.get(i);
+
         for (int move = 0; move < maxNumberOfMoves; move++) {
-            for (int i = 0; i < neuralNetworks.size(); i++) {
-                var networkOutput = neuralNetworks.get(i).getNetworkOutput(snakeSightDTO.getInput_8(snakes.get(i)));
-                moveSnakeToDirection(snakes.get(i), outputToDirection(networkOutput));
+            for (Snake snake : snakes) {
+                var networkOutput = snake.neuralNetwork.getNetworkOutput(snakeSightDTO.getInput_8(snake));
+                moveSnakeToDirection(snake, outputToDirection(networkOutput));
             }
         }
 
-        int[] result = new int[neuralNetworks.size()];
-        for (int i = 0; i < snakes.size(); i++) {
-            result[i] = snakes.get(i).snakeScore;
-        }
-        return result;
+        return snakes.stream()
+                .mapToInt(snake -> snake.snakeScore)
+                .toArray();
     }
 
     @Override
@@ -69,8 +71,8 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
         snakes = new ArrayList<>();
         for (int i = 0; i < Settings.NUM_OF_PLAYERS; i++) {
             var coordinates = randomFreeCoordinate(grid);
-            var snake = new Snake(coordinates.getFirst(), coordinates.getSecond(), Direction.randomDirection(), i);
-            snake.placeSnake(grid);
+            var snake = new Snake(grid, coordinates.getFirst(), coordinates.getSecond(), Direction.randomDirection(), i);
+            snake.placeSnake();
             snakes.add(snake);
         }
     }
@@ -118,17 +120,17 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
             var coordinates = randomFreeCoordinate(grid);
             if (Settings.LEAVE_CORPSE) {
                 numOfFood += snake.uniqueTilesOccupied();
-                snake.removeSnake(grid, SnakeMap.FOOD);
+                snake.removeSnake(SnakeMap.FOOD);
             } else
-                snake.removeSnake(grid, SnakeMap.EMPTY);
+                snake.removeSnake(SnakeMap.EMPTY);
             snake.resetSnake(coordinates.getFirst(), coordinates.getSecond(), Direction.randomDirection());
             snake.snakeScore += Settings.DEATH_PENALTY;
-            snake.placeSnake(grid);
+            snake.placeSnake();
         } else {
             moveSnakeByOne(snake, row, column);
             if (snake.stepsMoved == Settings.STEPS_TO_REDUCTION) {
                 snake.stepsMoved = 0;
-                snake.reduceSnakeByOne(grid, SnakeMap.EMPTY);
+                snake.reduceSnakeByOne(SnakeMap.EMPTY);
             }
         }
     }
@@ -148,14 +150,14 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
         bodyParts.add(0, new BodyPart(true, row, column));
 
         if (grid[row][column] == SnakeMap.FOOD.value) {
-            snake.placeSnake(grid);
+            snake.placeSnake();
             numOfFood--;
             placeFood();
             snake.snakeScore += 1;
         } else {
-            snake.removeSnake(grid, SnakeMap.EMPTY);
+            snake.removeSnake(SnakeMap.EMPTY);
             bodyParts.remove(bodyParts.size() - 1);
-            snake.placeSnake(grid);
+            snake.placeSnake();
         }
 
         snake.stepsMoved++;
@@ -228,9 +230,9 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
     }
 
     public static Pair<Integer> randomFreeCoordinate(int[][] grid) {
+        int row = Util.randomInt(1, grid.length - 1);
+        int column = Util.randomInt(1, grid[0].length - 1);
         while (true) {
-            int row = Util.randomInt(1, grid.length - 1);
-            int column = Util.randomInt(1, grid[0].length - 1);
             if (grid[row][column] != SnakeMap.EMPTY.value) {
                 row = Util.randomInt(1, grid.length - 1);
                 column = Util.randomInt(1, grid.length - 1);
