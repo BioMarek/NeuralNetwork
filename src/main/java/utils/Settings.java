@@ -3,7 +3,7 @@ package utils;
 public class Settings {
     public static int GRID_SQUARES = 20; // For SingleplayerSnake
     public static boolean HAS_WALL = true;
-    public static int NUM_OF_GENERATIONS = 1; // 300
+    public static int NUM_OF_GENERATIONS = 75; // 300
     public static int TOTAL_NUM_OF_GENOTYPES = 100;
     public static int MAX_NEURONS = 1000;
     public static boolean VERBOSE = true;

@@ -2,13 +2,10 @@ package games.snake;
 
 import neat.phenotype.NeuralNetwork;
 import utils.Direction;
-import utils.Pair;
 import utils.Settings;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static games.snake.SnakeGameMultiplayer.randomFreeCoordinate;
 
@@ -45,13 +42,7 @@ public class Snake {
         return grid[row][column] >= SnakeMap.BODY.value && (grid[row][column] != name + SnakeMap.BODY.value && grid[row][column] != name + SnakeMap.HEAD.value);
     }
 
-    public int uniqueTilesOccupied() {
-        Set<Pair<Integer>> usedCoordinates = new HashSet<>();
-        bodyParts.forEach(bodyPart -> usedCoordinates.add(new Pair<>(bodyPart.row, bodyPart.column)));
-        return usedCoordinates.size();
-    }
-
-    public void reduceSnakeByOne(SnakeMap snakeMap) {
+    public void reduceSnakeByOne() {
         removeSnake(false);
         if (bodyParts.size() == 1) {
             var coordinates = randomFreeCoordinate(grid);
@@ -67,14 +58,19 @@ public class Snake {
      * Removes {@link Snake} from grid. Grid squares that were occupied by snake {@link BodyPart}s will get new number
      * based on whether we want to leave food in place of dead snake or just remove it.
      */
-    public void removeSnake(boolean leaveCorpse) {
+    public int removeSnake(boolean leaveCorpse) {
+        int newFoodPlaced = 0;
         for (BodyPart bodyPart : bodyParts) {
             grid[bodyPart.row][bodyPart.column] = SnakeMap.EMPTY.value;
         }
         if (leaveCorpse)
             for (BodyPart bodyPart : bodyParts) {
-                grid[bodyPart.row][bodyPart.column] += 1;
+                if (grid[bodyPart.row][bodyPart.column] != SnakeMap.FOOD.value) {
+                    grid[bodyPart.row][bodyPart.column] = SnakeMap.FOOD.value;
+                    newFoodPlaced++;
+                }
             }
+        return newFoodPlaced;
     }
 
     protected void placeSnake() {
