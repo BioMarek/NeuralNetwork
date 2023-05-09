@@ -52,7 +52,7 @@ public class Snake {
     }
 
     public void reduceSnakeByOne(SnakeMap snakeMap) {
-        removeSnake(snakeMap);
+        removeSnake(false);
         if (bodyParts.size() == 1) {
             var coordinates = randomFreeCoordinate(grid);
             resetSnake(coordinates.getFirst(), coordinates.getSecond(), Direction.randomDirection());
@@ -66,13 +66,15 @@ public class Snake {
     /**
      * Removes {@link Snake} from grid. Grid squares that were occupied by snake {@link BodyPart}s will get new number
      * based on whether we want to leave food in place of dead snake or just remove it.
-     *
-     * @param snakeMap value to place on grid squares where snake bodyparts were
      */
-    public void removeSnake(SnakeMap snakeMap) {
+    public void removeSnake(boolean leaveCorpse) {
         for (BodyPart bodyPart : bodyParts) {
-            grid[bodyPart.row][bodyPart.column] = snakeMap.value;
+            grid[bodyPart.row][bodyPart.column] = SnakeMap.EMPTY.value;
         }
+        if (leaveCorpse)
+            for (BodyPart bodyPart : bodyParts) {
+                grid[bodyPart.row][bodyPart.column] += 1;
+            }
     }
 
     protected void placeSnake() {

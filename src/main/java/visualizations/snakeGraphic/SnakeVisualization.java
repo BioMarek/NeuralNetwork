@@ -5,6 +5,8 @@ import games.snake.savegame.SavedGameDTO;
 import utils.Colors;
 import utils.Settings;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 
 public class SnakeVisualization implements GridVisualization {
@@ -55,7 +57,16 @@ public class SnakeVisualization implements GridVisualization {
                 if (currentGrid[row][column] == 0)
                     continue;
                 numberToColor(currentGrid[row][column]);
-                graphics.fillRect(column * squareSizePixels, row * squareSizePixels, squareSizePixels, squareSizePixels);
+                if (isFood(currentGrid[row][column])) {
+                    graphics.fillOval(column * squareSizePixels, row * squareSizePixels, squareSizePixels, squareSizePixels);
+                    Colors.setColor(graphics, Colors.TEXT.getColor());
+                    graphics.setFont(new Font("Arial", Font.PLAIN, (int) (Settings.BACKGROUND_HEIGHT / 60 * 1.5)));
+                    graphics.drawString(String.valueOf(currentGrid[row][column]), column * squareSizePixels, (row + 1) * squareSizePixels);
+                } else{
+                    numberToColor(currentGrid[row][column]);
+                    graphics.fillRect(column * squareSizePixels, row * squareSizePixels, squareSizePixels, squareSizePixels);
+                }
+
             }
         }
     }
@@ -63,11 +74,15 @@ public class SnakeVisualization implements GridVisualization {
     public void numberToColor(int num) {
         if (num == -1)
             Colors.setColor(graphics, Colors.WALL.getColor());
-        else if (num > 0 && num < SnakeMap.BODY.value)
+        else if (isFood(num))
             Colors.setColor(graphics, Colors.FOOD.getColor());
         else if (num >= SnakeMap.HEAD.value)
             Colors.setColor(graphics, num - SnakeMap.HEAD.value, 255);
         else if (num >= SnakeMap.BODY.value)
             Colors.setColor(graphics, num - SnakeMap.BODY.value, 150);
+    }
+
+    public boolean isFood(int num) {
+        return num > 0 && num < SnakeMap.BODY.value;
     }
 }
