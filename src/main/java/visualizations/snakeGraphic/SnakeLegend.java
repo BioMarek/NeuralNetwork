@@ -52,7 +52,7 @@ public class SnakeLegend {
         int fillSquareSize = squareSize - fillSizeDecrease * 2;
 
         graphics.fillRect(x, y, squareSize, squareSize);
-        graphics.setColor(Colors.getColor(i + 3, 200)); // +3 because 1 is wall and 2 is food
+        graphics.setColor(Colors.getColor(i, 200));
         graphics.fillRect(x + fillSizeDecrease, y + fillSizeDecrease, fillSquareSize, fillSquareSize);
     }
 

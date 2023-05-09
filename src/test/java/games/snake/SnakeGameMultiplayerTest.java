@@ -192,7 +192,7 @@ public class SnakeGameMultiplayerTest {
 
         assertThat(snakeMultiplayerGame.grid[1][1], is(201));
         assertThat(snakeMultiplayerGame.grid[2][1], is(101));
-        assertThat(snakeMultiplayerGame.grid[1][2] + snakeMultiplayerGame.grid[2][2], is(2)); // one new food in two grid squares
+        assertThat(snakeMultiplayerGame.grid[1][2] + snakeMultiplayerGame.grid[2][2], is(1)); // one new food in two grid squares
         assertThat(snake.snakeScore, is(1));
 
         Settings.NUM_OF_PLAYERS = 2;

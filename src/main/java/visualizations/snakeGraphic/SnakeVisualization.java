@@ -61,11 +61,13 @@ public class SnakeVisualization implements GridVisualization {
     }
 
     public void numberToColor(int num) {
-        if (num >= SnakeMap.HEAD.value)
-            Colors.setColor(graphics, num - SnakeMap.HEAD.value + 3, 255); // +2 because 1 is wall and 2 is food
+        if (num == -1)
+            Colors.setColor(graphics, Colors.WALL.getColor());
+        else if (num > 0 && num < SnakeMap.BODY.value)
+            Colors.setColor(graphics, Colors.FOOD.getColor());
+        else if (num >= SnakeMap.HEAD.value)
+            Colors.setColor(graphics, num - SnakeMap.HEAD.value, 255);
         else if (num >= SnakeMap.BODY.value)
-            Colors.setColor(graphics, num - SnakeMap.BODY.value + 3, 150);
-        else
-            Colors.setColor(graphics, num, 255);
+            Colors.setColor(graphics, num - SnakeMap.BODY.value, 150);
     }
 }
