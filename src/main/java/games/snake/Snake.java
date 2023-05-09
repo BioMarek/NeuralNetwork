@@ -38,10 +38,20 @@ public class Snake {
         this.lastDirection = direction;
     }
 
+    /**
+     * Checks whether on particular row and column of grid is or is not Snake different from this one.
+     *
+     * @param row    of grid where to check
+     * @param column of grid where to check
+     * @return true if there is different snake false otherwise
+     */
     public boolean isAnotherSnake(int row, int column) {
         return grid[row][column] >= SnakeMap.BODY.value && (grid[row][column] != name + SnakeMap.BODY.value && grid[row][column] != name + SnakeMap.HEAD.value);
     }
 
+    /**
+     * Removes one {@link BodyPart}. Used to simulate starvation
+     */
     public void reduceSnakeByOne() {
         removeSnake(false);
         if (bodyParts.size() == 1) {
@@ -57,6 +67,9 @@ public class Snake {
     /**
      * Removes {@link Snake} from grid. Grid squares that were occupied by snake {@link BodyPart}s will get new number
      * based on whether we want to leave food in place of dead snake or just remove it.
+     *
+     * @param leaveCorpse whether to leave food on dead {@link BodyPart}s
+     * @return how much food was placed on the grid
      */
     public int removeSnake(boolean leaveCorpse) {
         int newFoodPlaced = 0;
@@ -73,6 +86,9 @@ public class Snake {
         return newFoodPlaced;
     }
 
+    /**
+     * Places Snakes {@link BodyPart}s onto grid.
+     */
     protected void placeSnake() {
         for (int j = bodyParts.size() - 1; j >= 0; j--) { // head will be always on top of other bodyparts
             var bodyPart = bodyParts.get(j);

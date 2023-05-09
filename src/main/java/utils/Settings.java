@@ -27,8 +27,8 @@ public class Settings {
     public static int MAX_NUM_OF_FOOD = 30;
     public static int DEATH_PENALTY = -3; // should be negative or zero
     public static int SNAKE_SIGHT = 7;
-    public static boolean LEAVE_CORPSE = true;
-    public static int STEPS_TO_REDUCTION = 15;
+    public static boolean LEAVE_CORPSE = true; // leaves food in place of dead snake BodyParts
+    public static int STEPS_TO_REDUCTION = 15; // simulates starvation, snakes running in circles will be eliminated
 
     // graphic
     public static int TIMER_DELAY = 50;
