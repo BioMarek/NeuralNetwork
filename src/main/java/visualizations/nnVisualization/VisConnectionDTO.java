@@ -1,7 +1,7 @@
-package visualizations.dtos;
+package visualizations.nnVisualization;
 
-import interfaces.NeuralNetwork;
 import lombok.Data;
+import neat.phenotype.NeuralNetwork;
 
 /**
  * DTO representing connection of two neurons for {@link NeuralNetwork} visualization.

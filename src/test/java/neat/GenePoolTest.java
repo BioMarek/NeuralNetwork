@@ -1,12 +1,13 @@
 package neat;
 
-import games.snake.SnakeGame;
+import games.snake.SnakeGameMultiplayer;
 import neat.evolution.ConnectionGene;
 import neat.evolution.GenePool;
 import neat.evolution.Genotype;
 import neat.phenotype.Phenotype;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import utils.Settings;
 import utils.Util;
 
 import java.util.ArrayList;
@@ -14,7 +15,6 @@ import java.util.ArrayList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
-import static utils.Settings.MIN_SPECIES_REDUCTION;
 
 public class GenePoolTest {
     private final static int MAX_NEURONS = 1000;
@@ -22,8 +22,13 @@ public class GenePoolTest {
 
     @BeforeEach
     void init() {
-        MIN_SPECIES_REDUCTION = 2;
-        genePool = new GenePool(2, 2, Util.activationFunctionIdentity(), new SnakeGame());
+        Settings.MAX_NUM_OF_FOOD = 2;
+        Settings.GRID_ROWS = 4;
+        Settings.GRID_COLUMNS = 4;
+        Settings.PIXELS_PER_SQUARE = 1;
+        Settings.LEAVE_CORPSE = false;
+        Settings.MIN_SPECIES_REDUCTION = 2;
+        genePool = new GenePool(2, 2, Util.activationFunctionIdentity(), new SnakeGameMultiplayer());
     }
 
     @Test

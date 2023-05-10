@@ -1,4 +1,4 @@
-package basic_neural_network.evolution;
+package neural_network.evolution;
 
 import games.snake.SnakeGameMultiplayer;
 import neat.evolution.GenePool;

@@ -1,12 +1,10 @@
 package neat.evolution;
 
-import games.Game;
 import games.MultiplayerGame;
 import games.snake.savegame.SavedGameDTO;
-import interfaces.EvolutionEngine;
-import interfaces.NeuralNetwork;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import neat.phenotype.NeuralNetwork;
 import utils.Settings;
 
 import java.io.BufferedWriter;
@@ -31,30 +29,9 @@ public class GenePool implements EvolutionEngine {
     private final List<Species> speciesList = new ArrayList<>();
     protected int networksGenerated;
     protected int speciesNames;
-    protected Game game;
     private MultiplayerGame multiplayerGame;
     protected int speciesCreated = 1;
     public SavedGameDTO savedGameDTO;
-
-    public GenePool(int inputs, int outputs, Function<Double, Double> hiddenLayerActivationFunc, Function<Double, Double> outputActivationFunc, Game game) {
-        List<Genotype> genotypes = new ArrayList<>();
-        repeat.accept(Settings.TOTAL_NUM_OF_GENOTYPES, () -> genotypes.add(new Genotype(this, inputs, outputs)));
-        Species species = new Species(this, genotypes, this.speciesNames++);
-        this.speciesList.add(species);
-        this.hiddenLayerActivationFunc = hiddenLayerActivationFunc;
-        this.outputLayerActivationFunc = outputActivationFunc;
-        this.game = game;
-    }
-
-    public GenePool(int inputs, int outputs, Function<Double, Double> hiddenLayerActivationFunc, Game game) {
-        List<Genotype> genotypes = new ArrayList<>();
-        repeat.accept(Settings.TOTAL_NUM_OF_GENOTYPES, () -> genotypes.add(new Genotype(this, inputs, outputs)));
-        Species species = new Species(this, genotypes, this.speciesNames++);
-        this.speciesList.add(species);
-        this.hiddenLayerActivationFunc = hiddenLayerActivationFunc;
-        this.outputLayerActivationFunc = hiddenLayerActivationFunc;
-        this.game = game;
-    }
 
     public GenePool(int inputs, int outputs, Function<Double, Double> hiddenLayerActivationFunc, MultiplayerGame game) {
         List<Genotype> genotypes = new ArrayList<>();
@@ -76,50 +53,24 @@ public class GenePool implements EvolutionEngine {
         this.multiplayerGame = game;
     }
 
-    @Override
-    public void calculateEvolution() {
-        StringBuilder speciesCsvString = new StringBuilder();
-        for (int generation = 0; generation < Settings.NUM_OF_GENERATIONS; generation++) {
-            addSpeciesCsvString(speciesCsvString);
-            System.out.printf("\nGeneration %d %s\n", generation, "-".repeat(200));
-            if (generation % Settings.FREQUENCY_OF_SPECIATION == 0 && generation > 0)
-                createSpecies();
-            resetScores();
-            makeNextGeneration();
-            resizeSpecies();
-            removeDeadSpecies();
-            printSpecies();
-        }
-        addSpeciesMetadata(speciesCsvString, Settings.NUM_OF_GENERATIONS);
-        saveSpeciesCsvFile("/home/marek/marek/NeuralNetworkExports/species.csv", speciesCsvString.toString());
-    }
 
-    public void calculateEvolutionMultiplayer(int numOfGenerations) {
+    @Override
+    public void calculateEvolution(int numOfGenerations) {
         for (int generation = 0; generation < numOfGenerations; generation++) {
             System.out.printf("\nGeneration %d %s\n", generation, "-".repeat(200));
             if (generation % Settings.FREQUENCY_OF_SPECIATION == 0 && generation > 0)
                 createSpecies();
             resetScores();
-            makeNextGenerationMultiplayer(false);
+            makeNextGeneration(false);
             resizeSpecies();
             removeDeadSpecies();
             printSpecies();
         }
-        makeNextGenerationMultiplayer(true);
+        makeNextGeneration(true);
     }
 
     @Override
-    public void makeNextGeneration() {
-        for (Species species : speciesList) {
-            species.calculateScores();  // TODO rename
-            species.calculateAverage();
-        }
-        speciesList.sort(Collections.reverseOrder());
-        printScores();
-        speciesList.forEach(Species::mutateAndAge);
-    }
-
-    public void makeNextGenerationMultiplayer(boolean saveGame) {
+    public void makeNextGeneration(boolean saveGame) {
         List<List<Genotype>> allGenotypes = divideGenotypes(shuffleGenotypesFromSpecies());
 
         for (var players : allGenotypes) {
@@ -148,7 +99,6 @@ public class GenePool implements EvolutionEngine {
     }
 
     public List<List<Genotype>> divideGenotypes(List<Genotype> allGenotypes) {
-        // TODO try refactor
         List<List<Genotype>> result = new ArrayList<>();
         List<Genotype> listOfPlayers = new ArrayList<>();
 

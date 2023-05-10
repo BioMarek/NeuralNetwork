@@ -1,7 +1,7 @@
 package games;
 
 import games.snake.savegame.SavedGameDTO;
-import interfaces.NeuralNetwork;
+import neat.phenotype.NeuralNetwork;
 
 import java.util.List;
 

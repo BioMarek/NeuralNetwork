@@ -1,15 +1,14 @@
 package neat.phenotype;
 
-import interfaces.NeuralNetwork;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import neat.NeuronType;
 import neat.evolution.GenePool;
 import utils.Util;
-import visualizations.dtos.VisConnectionDTO;
-import visualizations.dtos.VisNeuronDTO;
-import visualizations.dtos.VisualizationDTO;
+import visualizations.nnVisualization.VisConnectionDTO;
+import visualizations.nnVisualization.VisNeuronDTO;
+import visualizations.nnVisualization.VisualizationDTO;
 
 import java.util.List;
 import java.util.stream.Collectors;

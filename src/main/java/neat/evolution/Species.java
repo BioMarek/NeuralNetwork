@@ -1,14 +1,10 @@
 package neat.evolution;
 
 import lombok.EqualsAndHashCode;
-import neat.phenotype.Phenotype;
 import utils.Settings;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-
-import static utils.Util.repeat;
 
 @EqualsAndHashCode
 public class Species implements Comparable<Species> {
@@ -22,17 +18,6 @@ public class Species implements Comparable<Species> {
         this.genePool = genePool;
         this.genotypes = genotypes;
         this.name = name;
-    }
-
-    public void calculateScores() {
-        for (Genotype genotype : genotypes) {
-            Phenotype phenotype = genotype.createPhenotype();
-            repeat.accept(Settings.NUM_OF_TRIALS, () -> {
-                genotype.score += genePool.game.play(phenotype, Settings.MAX_NUM_OF_MOVES);
-                genePool.game.reset();
-            });
-        }
-        genotypes.sort(Collections.reverseOrder());
     }
 
     /**

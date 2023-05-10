@@ -5,9 +5,11 @@ import games.snake.Snake;
 import games.snake.SnakeMap;
 import utils.Settings;
 
+import java.util.Arrays;
+
 
 public class SnakeSightDTO {
-    private double[] result = new double[8];
+    private final double[] result = new double[8];
     private final int[][] grid;
 
     public SnakeSightDTO(int[][] grid) {
@@ -15,7 +17,7 @@ public class SnakeSightDTO {
     }
 
     public double[] getInput_8(Snake snake) {
-        result = new double[8];
+        Arrays.fill(result, 0);
         calculateSightRay(snake, -1, 0, 0); // up
         calculateSightRay(snake, 0, 1, 1); // right
         calculateSightRay(snake, 1, 0, 2); // down
@@ -28,8 +30,8 @@ public class SnakeSightDTO {
         return result;
     }
 
-    public float distanceCoefficient(int distance) {
-        return 1.0f / distance;
+    public double distanceCoefficient(int distance) {
+        return 1.0d / distance;
     }
 
     public void calculateSightRay(Snake snake, int rowIncrease, int columnIncrease, int index) {
@@ -37,20 +39,20 @@ public class SnakeSightDTO {
         for (int i = 1; i < Settings.SNAKE_SIGHT + 1; i++) {
             var currentRow = head.row + rowIncrease * i;
             var currentColumn = head.column + columnIncrease * i;
-            if (isOutOfBounds(grid, currentRow, currentColumn))
+            if (isOutOfBounds(currentRow, currentColumn))
                 break;
             if (grid[currentRow][currentColumn] == SnakeMap.FOOD.value) {
-                result[index] = 1.0 * distanceCoefficient(i);
+                result[index] = distanceCoefficient(i);
                 break;
             }
-            if (snake.isAnotherSnake(grid, currentRow, currentColumn) || grid[currentRow][currentColumn] == SnakeMap.WALL.value) {
+            if (snake.isAnotherSnake(currentRow, currentColumn) || grid[currentRow][currentColumn] == SnakeMap.WALL.value) {
                 result[index] = -1.0 * distanceCoefficient(i);
                 break;
             }
         }
     }
 
-    public boolean isOutOfBounds(int[][] grid, int row, int column) {
+    public boolean isOutOfBounds(int row, int column) {
         return row < 0 || column < 0 || row >= grid.length || column >= grid.length;
     }
 }

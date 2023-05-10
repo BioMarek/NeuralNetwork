@@ -1,11 +1,12 @@
 package neat;
 
-import games.snake.SnakeGame;
+import games.snake.SnakeGameMultiplayer;
 import neat.evolution.GenePool;
 import neat.evolution.Genotype;
 import neat.phenotype.Phenotype;
+import utils.Settings;
 import utils.Util;
-import visualizations.dtos.VisualizationDTO;
+import visualizations.nnVisualization.VisualizationDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -19,7 +20,12 @@ public class PhenotypeTest {
 
     @BeforeEach
     void init() {
-        genePool = new GenePool(2, 2, Util.activationFunctionIdentity(), new SnakeGame());
+        Settings.MAX_NUM_OF_FOOD = 2;
+        Settings.GRID_ROWS = 4;
+        Settings.GRID_COLUMNS = 4;
+        Settings.PIXELS_PER_SQUARE = 1;
+        Settings.LEAVE_CORPSE = false;
+        genePool = new GenePool(2, 2, Util.activationFunctionIdentity(), new SnakeGameMultiplayer());
         genotype = genePool.getSpecies().get(0).genotypes.get(0);
         phenotype = genotype.createPhenotype();
     }

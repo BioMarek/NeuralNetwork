@@ -1,6 +1,6 @@
 package neat;
 
-import games.snake.SnakeGame;
+import games.snake.SnakeGameMultiplayer;
 import neat.evolution.ConnectionGene;
 import neat.evolution.GenePool;
 import neat.evolution.Genotype;
@@ -23,7 +23,7 @@ public class GenotypeTest {
 
     @BeforeEach
     void init() {
-        genePool = new GenePool(2, 2, Util.activationFunctionIdentity(), new SnakeGame());
+        genePool = new GenePool(2, 2, Util.activationFunctionIdentity(), new SnakeGameMultiplayer());
         genotype = genePool.getSpecies().get(0).genotypes.get(0);
     }
 

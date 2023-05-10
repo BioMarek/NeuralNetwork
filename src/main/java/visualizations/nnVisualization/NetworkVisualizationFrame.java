@@ -1,6 +1,4 @@
-package visualizations;
-
-import visualizations.dtos.VisualizationDTO;
+package visualizations.nnVisualization;
 
 import javax.swing.JFrame;
 

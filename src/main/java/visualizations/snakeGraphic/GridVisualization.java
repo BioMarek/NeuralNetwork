@@ -1,4 +1,4 @@
-package interfaces;
+package visualizations.snakeGraphic;
 
 import java.awt.Graphics2D;
 
