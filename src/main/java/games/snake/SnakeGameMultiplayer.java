@@ -5,15 +5,13 @@ import games.snake.dtos.SnakeSightDTO;
 import games.snake.savegame.SavedGameDTO;
 import neat.phenotype.NeuralNetwork;
 import utils.Direction;
-import utils.Pair;
 import utils.Settings;
-import utils.Util;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static utils.Util.arrayCopy;
+import static utils.Util.randomFreeCoordinate;
 import static utils.Util.repeat;
 
 public class SnakeGameMultiplayer implements MultiplayerGame {
@@ -224,19 +222,6 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
             savedGameDTO.grid.add(arrayCopy(grid));
         }
         return savedGameDTO;
-    }
-
-    public static Pair<Integer> randomFreeCoordinate(int[][] grid) {
-        int row = Util.randomInt(1, grid.length - 1);
-        int column = Util.randomInt(1, grid[0].length - 1);
-        while (true) {
-            if (grid[row][column] != SnakeMap.EMPTY.value) {
-                row = Util.randomInt(1, grid.length - 1);
-                column = Util.randomInt(1, grid.length - 1);
-            } else {
-                return new Pair<>(row, column);
-            }
-        }
     }
 
     /**

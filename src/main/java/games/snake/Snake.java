@@ -7,7 +7,7 @@ import utils.Settings;
 import java.util.ArrayList;
 import java.util.List;
 
-import static games.snake.SnakeGameMultiplayer.randomFreeCoordinate;
+import static utils.Util.randomFreeCoordinate;
 
 
 /**

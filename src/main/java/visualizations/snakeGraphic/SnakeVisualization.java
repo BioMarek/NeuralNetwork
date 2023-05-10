@@ -5,8 +5,6 @@ import games.snake.savegame.SavedGameDTO;
 import utils.Colors;
 import utils.Settings;
 
-import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics2D;
 
 public class SnakeVisualization implements GridVisualization {
@@ -59,7 +57,7 @@ public class SnakeVisualization implements GridVisualization {
                 numberToColor(currentGrid[row][column]);
                 if (currentGrid[row][column] == SnakeMap.FOOD.value) {
                     graphics.fillOval(column * squareSizePixels, row * squareSizePixels, squareSizePixels, squareSizePixels);
-                } else{
+                } else {
                     graphics.fillRect(column * squareSizePixels, row * squareSizePixels, squareSizePixels, squareSizePixels);
                 }
             }

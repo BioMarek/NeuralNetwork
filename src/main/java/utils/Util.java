@@ -1,5 +1,7 @@
 package utils;
 
+import games.snake.SnakeMap;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -139,4 +141,19 @@ public class Util {
         for (int i = 1; i <= n; i++)
             function.run();
     };
+
+    /**
+     * Finds random row and column of grid that is ot occupied e.i. doesn't have snake or food.
+     *
+     * @param grid on which to find coordinates
+     * @return pair with unoccupied row and column
+     */
+    public static Pair<Integer> randomFreeCoordinate(int[][] grid) {
+        int row, column;
+        do {
+            row = Util.randomInt(1, grid.length - 1);
+            column = Util.randomInt(1, grid[0].length - 1);
+        } while (grid[row][column] != SnakeMap.EMPTY.value);
+        return new Pair<>(row, column);
+    }
 }

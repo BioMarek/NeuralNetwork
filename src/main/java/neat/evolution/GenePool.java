@@ -71,7 +71,6 @@ public class GenePool implements EvolutionEngine {
 
     @Override
     public void makeNextGeneration(boolean saveGame) {
-        //TODO try to remove boolean saveGame argument
         List<List<Genotype>> allGenotypes = divideGenotypes(shuffleGenotypesFromSpecies());
 
         for (var players : allGenotypes) {
@@ -100,7 +99,6 @@ public class GenePool implements EvolutionEngine {
     }
 
     public List<List<Genotype>> divideGenotypes(List<Genotype> allGenotypes) {
-        // TODO try refactor
         List<List<Genotype>> result = new ArrayList<>();
         List<Genotype> listOfPlayers = new ArrayList<>();
 
