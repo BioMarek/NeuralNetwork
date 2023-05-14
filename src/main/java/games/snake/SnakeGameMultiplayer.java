@@ -106,6 +106,15 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
         }
     }
 
+    protected int wrapAroundCoordinates(int coordinate, int max) {
+        if (coordinate == -1) {
+            return max - 1;
+        }
+        if (coordinate == max)
+            return 0;
+        return coordinate;
+    }
+
     /**
      * Moves snake if there is collision with other snake or wall, snake will be reset.
      *
@@ -114,6 +123,10 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
      * @param column where to move
      */
     protected void moveSnake(Snake snake, int row, int column) {
+        if (!Settings.HAS_WALL) {
+            row = wrapAroundCoordinates(row, rows);
+            column = wrapAroundCoordinates(column, columns);
+        }
         if (snakeCollision(snake, row, column)) {
             var coordinates = randomFreeCoordinate(grid);
             var foodPlaced = snake.removeSnake(Settings.LEAVE_CORPSE);
@@ -164,7 +177,9 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
      * @return true moving to coordinates will result in death
      */
     protected boolean snakeCollision(Snake snake, int row, int column) {
-        return grid[row][column] == SnakeMap.WALL.value || (grid[row][column] != snake.name + SnakeMap.BODY.value && grid[row][column] >= SnakeMap.BODY.value);
+        if (Settings.HAS_WALL)
+            return grid[row][column] == SnakeMap.WALL.value || (grid[row][column] != snake.name + SnakeMap.BODY.value && grid[row][column] >= SnakeMap.BODY.value);
+        else return grid[row][column] != snake.name + SnakeMap.BODY.value && grid[row][column] >= SnakeMap.BODY.value;
     }
 
     /**

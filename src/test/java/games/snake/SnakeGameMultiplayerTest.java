@@ -23,6 +23,7 @@ public class SnakeGameMultiplayerTest {
         Settings.GRID_COLUMNS = 4;
         Settings.PIXELS_PER_SQUARE = 1;
         Settings.LEAVE_CORPSE = false;
+        Settings.HAS_WALL = true;
     }
 
     @Test
