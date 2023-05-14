@@ -11,9 +11,13 @@ import java.util.Arrays;
 public class SnakeSightDTO {
     private final double[] result = new double[8];
     private final int[][] grid;
+    private final int rows;
+    private final int columns;
 
     public SnakeSightDTO(int[][] grid) {
         this.grid = grid;
+        this.rows = grid.length;
+        this.columns = grid[0].length;
     }
 
     public double[] getInput_8(Snake snake) {
@@ -39,8 +43,12 @@ public class SnakeSightDTO {
         for (int i = 1; i < Settings.SNAKE_SIGHT + 1; i++) {
             var currentRow = head.row + rowIncrease * i;
             var currentColumn = head.column + columnIncrease * i;
-            if (isOutOfBounds(currentRow, currentColumn))
+            if (Settings.HAS_WALL && isOutOfBounds(currentRow, currentColumn))
                 break;
+            else {
+                currentRow = wrapAroundCoordinates(currentRow, rows);
+                currentColumn = wrapAroundCoordinates(currentColumn, columns);
+            }
             if (grid[currentRow][currentColumn] == SnakeMap.FOOD.value) {
                 result[index] = distanceCoefficient(i);
                 break;
@@ -52,7 +60,16 @@ public class SnakeSightDTO {
         }
     }
 
+    protected int wrapAroundCoordinates(int coordinate, int max) {
+        if (coordinate < 0) {
+            return max + coordinate;
+        }
+        if (coordinate >= max)
+            return coordinate - max;
+        return coordinate;
+    }
+
     public boolean isOutOfBounds(int row, int column) {
-        return row < 0 || column < 0 || row >= grid.length || column >= grid.length;
+        return row < 0 || column < 0 || row >= rows || column >= columns;
     }
 }
