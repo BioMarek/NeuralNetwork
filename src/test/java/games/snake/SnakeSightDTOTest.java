@@ -75,6 +75,18 @@ public class SnakeSightDTOTest {
         assertThat(input[7], is(closeTo(0.5, 0.1)));
     }
 
+    @Test
+    void wrapAroundCoordinates_isCorrect() {
+        initGrid();
+        snakeSightDTO = new SnakeSightDTO(grid);
+        assertThat(snakeSightDTO.wrapAroundCoordinates(4, 5), is(4));
+        assertThat(snakeSightDTO.wrapAroundCoordinates(5, 5), is(0));
+        assertThat(snakeSightDTO.wrapAroundCoordinates(6, 5), is(1));
+        assertThat(snakeSightDTO.wrapAroundCoordinates(0, 5), is(0));
+        assertThat(snakeSightDTO.wrapAroundCoordinates(-1, 5), is(4));
+        assertThat(snakeSightDTO.wrapAroundCoordinates(-2, 5), is(3));
+    }
+
     private void initGrid() {
         grid = new int[SIZE][SIZE];
         for (int row = 0; row < SIZE; row++) {

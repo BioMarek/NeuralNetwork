@@ -43,9 +43,10 @@ public class SnakeSightDTO {
         for (int i = 1; i < Settings.SNAKE_SIGHT + 1; i++) {
             var currentRow = head.row + rowIncrease * i;
             var currentColumn = head.column + columnIncrease * i;
-            if (Settings.HAS_WALL && isOutOfBounds(currentRow, currentColumn))
-                break;
-            else {
+            if (Settings.HAS_WALL) {
+                if (isOutOfBounds(currentRow, currentColumn))
+                    break;
+            } else {
                 currentRow = wrapAroundCoordinates(currentRow, rows);
                 currentColumn = wrapAroundCoordinates(currentColumn, columns);
             }
@@ -60,7 +61,7 @@ public class SnakeSightDTO {
         }
     }
 
-    protected int wrapAroundCoordinates(int coordinate, int max) {
+    public int wrapAroundCoordinates(int coordinate, int max) {
         if (coordinate < 0) {
             return max + coordinate;
         }
