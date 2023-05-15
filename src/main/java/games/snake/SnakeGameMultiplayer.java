@@ -69,7 +69,7 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
         snakes = new ArrayList<>();
         for (int i = 0; i < Settings.NUM_OF_PLAYERS; i++) {
             var coordinates = randomFreeCoordinate(grid);
-            var snake = new Snake(grid, coordinates.getFirst(), coordinates.getSecond(), Direction.randomDirection(), i);
+            var snake = new Snake(grid, coordinates.getFirst(), coordinates.getSecond(), Direction.NONE, i);
             snake.placeSnake();
             snakes.add(snake);
         }
@@ -93,8 +93,14 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
      * @param direction where to move snake
      */
     protected void moveSnakeToDirection(Snake snake, Direction direction) {
-        direction = direction == Direction.NONE ? snake.lastDirection : direction;
-        snake.lastDirection = direction;
+        if (Settings.SELF_COLLISION) {
+            // If SELF_COLLISION is enabled than snake that is longer than on body part cannot go opposite to its last direction because it would hit its tail
+            if (snake.size() > 1 && direction == Direction.opposite(snake.lastDirection) || direction == Direction.NONE)
+                direction = snake.lastDirection;
+        } else {
+            snake.lastDirection = direction;
+        }
+
         int headRow = snake.bodyParts.get(0).row;
         int headColumn = snake.bodyParts.get(0).column;
 
@@ -177,9 +183,7 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
      * @return true moving to coordinates will result in death
      */
     protected boolean snakeCollision(Snake snake, int row, int column) {
-        if (Settings.HAS_WALL)
-            return grid[row][column] == SnakeMap.WALL.value || (grid[row][column] != snake.name + SnakeMap.BODY.value && grid[row][column] >= SnakeMap.BODY.value);
-        else return grid[row][column] != snake.name + SnakeMap.BODY.value && grid[row][column] >= SnakeMap.BODY.value;
+        return grid[row][column] == SnakeMap.WALL.value || snake.isSnakeCollision(row, column);
     }
 
     /**

@@ -24,6 +24,7 @@ public class SnakeGameMultiplayerTest {
         Settings.PIXELS_PER_SQUARE = 1;
         Settings.LEAVE_CORPSE = false;
         Settings.HAS_WALL = true;
+        Settings.SELF_COLLISION = false;
     }
 
     @Test
@@ -49,7 +50,7 @@ public class SnakeGameMultiplayerTest {
 
         assertThat(snakeMultiplayerGame.snakeCollision(new Snake(snakeMultiplayerGame.grid, 2, 2, Direction.UP, 1), 3, 3), is(true));
         assertThat(snakeMultiplayerGame.snakeCollision(new Snake(snakeMultiplayerGame.grid, 2, 2, Direction.UP, 1), 1, 1), is(true));
-        assertThat(snakeMultiplayerGame.snakeCollision(new Snake(snakeMultiplayerGame.grid,2, 2, Direction.UP, 1), 1, 2), is(false));
+        assertThat(snakeMultiplayerGame.snakeCollision(new Snake(snakeMultiplayerGame.grid, 2, 2, Direction.UP, 1), 1, 2), is(false));
         assertThat(snakeMultiplayerGame.snakeCollision(new Snake(snakeMultiplayerGame.grid, 2, 2, Direction.UP, 1), 2, 1), is(false));
 
         Settings.NUM_OF_PLAYERS = 2;
@@ -223,12 +224,30 @@ public class SnakeGameMultiplayerTest {
     }
 
     @Test
-    void wrapAroundCoordinates_works(){
+    void wrapAroundCoordinates_works() {
         var snakeMultiplayerGame = new SnakeGameMultiplayer();
         assertThat(snakeMultiplayerGame.wrapAroundCoordinates(4, 5), is(4));
         assertThat(snakeMultiplayerGame.wrapAroundCoordinates(5, 5), is(0));
         assertThat(snakeMultiplayerGame.wrapAroundCoordinates(0, 5), is(0));
         assertThat(snakeMultiplayerGame.wrapAroundCoordinates(-1, 5), is(4));
+    }
+
+    @Test
+    void isSnakeCollision_works() {
+        Settings.NUM_OF_PLAYERS = 0;
+        Settings.MAX_NUM_OF_FOOD = 0;
+        var snakeMultiplayerGame = new SnakeGameMultiplayer();
+        var snake = new Snake(snakeMultiplayerGame.grid, 2, 1, Direction.NONE, 1);
+        snakeMultiplayerGame.snakes.add(snake);
+        snake.placeSnake();
+        snakeMultiplayerGame.moveSnakeToDirection(snake, Direction.UP);
+        snakeMultiplayerGame.grid[1][2] = 202;
+
+        assertThat(snake.isSnakeCollision(2, 1), is(false));
+        assertThat(snake.isSnakeCollision(1, 2), is(true));
+        Settings.SELF_COLLISION = true;
+        assertThat(snake.isSnakeCollision(2, 1), is(true));
+        Settings.SELF_COLLISION = false;
     }
 
     @AfterEach
@@ -239,5 +258,6 @@ public class SnakeGameMultiplayerTest {
         Settings.GRID_COLUMNS = 20;
         Settings.PIXELS_PER_SQUARE = 20;
         Settings.HAS_WALL = false;
+        Settings.SELF_COLLISION = false;
     }
 }

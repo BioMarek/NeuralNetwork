@@ -54,7 +54,7 @@ public class SnakeSightDTO {
                 result[index] = distanceCoefficient(i);
                 break;
             }
-            if (snake.isAnotherSnake(currentRow, currentColumn) || grid[currentRow][currentColumn] == SnakeMap.WALL.value) {
+            if (snake.isSnakeCollision(currentRow, currentColumn) || grid[currentRow][currentColumn] == SnakeMap.WALL.value) {
                 result[index] = -1.0 * distanceCoefficient(i);
                 break;
             }
