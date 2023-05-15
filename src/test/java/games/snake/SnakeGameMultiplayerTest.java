@@ -23,6 +23,7 @@ public class SnakeGameMultiplayerTest {
         Settings.GRID_COLUMNS = 4;
         Settings.PIXELS_PER_SQUARE = 1;
         Settings.LEAVE_CORPSE = false;
+        Settings.HAS_WALL = true;
     }
 
     @Test
@@ -221,6 +222,14 @@ public class SnakeGameMultiplayerTest {
         Settings.MAX_NUM_OF_FOOD = 2;
     }
 
+    @Test
+    void wrapAroundCoordinates_works(){
+        var snakeMultiplayerGame = new SnakeGameMultiplayer();
+        assertThat(snakeMultiplayerGame.wrapAroundCoordinates(4, 5), is(4));
+        assertThat(snakeMultiplayerGame.wrapAroundCoordinates(5, 5), is(0));
+        assertThat(snakeMultiplayerGame.wrapAroundCoordinates(0, 5), is(0));
+        assertThat(snakeMultiplayerGame.wrapAroundCoordinates(-1, 5), is(4));
+    }
 
     @AfterEach
     void cleanup() {
@@ -229,5 +238,6 @@ public class SnakeGameMultiplayerTest {
         Settings.GRID_ROWS = 20;
         Settings.GRID_COLUMNS = 20;
         Settings.PIXELS_PER_SQUARE = 20;
+        Settings.HAS_WALL = false;
     }
 }
