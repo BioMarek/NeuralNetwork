@@ -101,4 +101,8 @@ public class Snake {
                 grid[bodyPart.row][bodyPart.column] = name + SnakeMap.BODY.value;
         }
     }
+
+    public int size() {
+        return bodyParts.size();
+    }
 }

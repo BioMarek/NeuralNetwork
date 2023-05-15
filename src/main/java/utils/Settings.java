@@ -21,7 +21,7 @@ public class Settings {
     public static int PROTECTED_AGE = 15; // Age when species stops being protected and its size can be reevaluated
     public static int FREQUENCY_OF_SPECIATION = 10;
     public static String SAVE_GAME_PATH = "savedGames/";
-    public static boolean SELF_COLLISION = true;
+    public static boolean SELF_COLLISION = false;
 
     // multiplayer game
     public static int NUM_OF_PLAYERS = 2;
@@ -49,6 +49,7 @@ public class Settings {
         MAX_NUM_OF_FOOD = 150;
         LEAVE_CORPSE = true;
         HAS_WALL = false;
+        SELF_COLLISION = false;
     }
 
     public static void singlePlayerGame() {
@@ -59,5 +60,6 @@ public class Settings {
         MAX_NUM_OF_FOOD = 1;
         LEAVE_CORPSE = false;
         HAS_WALL = true;
+        SELF_COLLISION = true;
     }
 }

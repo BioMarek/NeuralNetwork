@@ -69,6 +69,7 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
         snakes = new ArrayList<>();
         for (int i = 0; i < Settings.NUM_OF_PLAYERS; i++) {
             var coordinates = randomFreeCoordinate(grid);
+            // TODO snake that was just spawned should be able to go in any direction
             var snake = new Snake(grid, coordinates.getFirst(), coordinates.getSecond(), Direction.randomDirection(), i);
             snake.placeSnake();
             snakes.add(snake);
@@ -94,7 +95,8 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
      */
     protected void moveSnakeToDirection(Snake snake, Direction direction) {
         if (Settings.SELF_COLLISION) {
-            if (direction == Direction.opposite(snake.lastDirection) || direction == Direction.NONE)
+            // If SELF_COLLISION is enabled than snake that is longer than on body part cannot go opposite to its last direction because it would hit its tail
+            if (snake.size() > 1 && direction == Direction.opposite(snake.lastDirection) || direction == Direction.NONE)
                 direction = snake.lastDirection;
         } else {
             snake.lastDirection = direction;
