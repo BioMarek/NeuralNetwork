@@ -5,14 +5,17 @@ import utils.Settings;
 import utils.Util;
 import visualizations.snakeGraphic.SnakeFrame;
 import visualizations.snakeGraphic.SnakePanel;
+import visualizations.snakeGraphic.videoGeneration.VideoGenerator;
 
 public class Main {
 
     public static void main(String[] args) {
         setupNeatNeuralNetworkWithMultiplayer();
-//        setupNeatNeuralNetworkWithGame();
 
 //        playSaveGame("05-06-202527.sav");
+
+//        var videoGenerator = new VideoGenerator();
+//        videoGenerator.generateSavedGameVideo("05-15-195741.sav");
 
     }
 

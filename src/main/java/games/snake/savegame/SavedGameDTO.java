@@ -12,5 +12,6 @@ public class SavedGameDTO implements Serializable {
     public List<int[]> scores = new ArrayList<>();
     public int columns;
     public int rows;
-
+    public int totalFrames;
+    public String fileName;
 }
