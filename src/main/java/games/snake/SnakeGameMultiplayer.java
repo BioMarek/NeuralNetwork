@@ -69,8 +69,7 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
         snakes = new ArrayList<>();
         for (int i = 0; i < Settings.NUM_OF_PLAYERS; i++) {
             var coordinates = randomFreeCoordinate(grid);
-            // TODO snake that was just spawned should be able to go in any direction
-            var snake = new Snake(grid, coordinates.getFirst(), coordinates.getSecond(), Direction.randomDirection(), i);
+            var snake = new Snake(grid, coordinates.getFirst(), coordinates.getSecond(), Direction.NONE, i);
             snake.placeSnake();
             snakes.add(snake);
         }
