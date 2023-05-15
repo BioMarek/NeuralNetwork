@@ -2,6 +2,7 @@ package games.snake;
 
 import games.MultiplayerGame;
 import games.snake.dtos.SnakeSightDTO;
+import games.snake.savegame.SaveGameUtil;
 import games.snake.savegame.SavedGameDTO;
 import neat.phenotype.NeuralNetwork;
 import utils.Direction;
@@ -240,6 +241,8 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
             savedGameDTO.scores.add(scores);
             savedGameDTO.grid.add(arrayCopy(grid));
         }
+        savedGameDTO.fileName = SaveGameUtil.getCurrentDateTimeAsString() + ".sav";
+        savedGameDTO.totalFrames = maxNumberOfMoves;
         return savedGameDTO;
     }
 

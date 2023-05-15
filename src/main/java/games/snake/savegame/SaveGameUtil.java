@@ -12,7 +12,7 @@ import java.time.format.DateTimeFormatter;
 
 public class SaveGameUtil {
     public static void saveObjectToFile(SavedGameDTO savedGameDTO) {
-        String filename = Settings.SAVE_GAME_PATH + getCurrentDateTimeAsString() + ".sav";
+        String filename = Settings.SAVE_GAME_PATH + savedGameDTO.fileName;
         try (FileOutputStream fileOut = new FileOutputStream(filename); ObjectOutputStream out = new ObjectOutputStream(fileOut)) {
             out.writeObject(savedGameDTO);
             System.out.println("save game created");

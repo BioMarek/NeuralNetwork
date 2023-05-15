@@ -6,6 +6,7 @@ import utils.Colors;
 import utils.Settings;
 
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 
 public class SnakeVisualization implements GridVisualization {
     private Graphics2D graphics;
@@ -15,11 +16,9 @@ public class SnakeVisualization implements GridVisualization {
     private final int columns;
     private final int rows;
     private final int squareSizePixels;
-    private final int maxFrames;
 
     public SnakeVisualization(SavedGameDTO savedGameDTO) {
         this.savedGameDTO = savedGameDTO;
-        this.maxFrames = savedGameDTO.grid.size();
         this.snakeLegend = new SnakeLegend(graphics, savedGameDTO);
         rows = savedGameDTO.rows;
         columns = savedGameDTO.columns;
@@ -28,7 +27,8 @@ public class SnakeVisualization implements GridVisualization {
 
     @Override
     public void createNextFrame() {
-        if (currentFrame++ > maxFrames)
+        System.out.println("creating frame " + currentFrame);
+        if (currentFrame++ > savedGameDTO.totalFrames)
             System.exit(0);
     }
 
@@ -36,11 +36,22 @@ public class SnakeVisualization implements GridVisualization {
     public void drawPresentation(Graphics2D graphics) {
         if (currentFrame < Settings.MAX_NUM_OF_MOVES) {
             this.graphics = graphics;
+            turnAntialiasingOn();
             snakeLegend.graphics = graphics;
             setBackground();
             drawGrid();
             snakeLegend.drawLegend(currentFrame);
         }
+    }
+
+    @Override
+    public boolean stopped() {
+        return currentFrame >= savedGameDTO.totalFrames;
+    }
+
+    @Override
+    public String name() {
+        return savedGameDTO.fileName;
     }
 
     public void setBackground() {
@@ -73,5 +84,10 @@ public class SnakeVisualization implements GridVisualization {
             Colors.setColor(graphics, num - SnakeMap.HEAD.value, 255);
         else if (num >= SnakeMap.BODY.value)
             Colors.setColor(graphics, num - SnakeMap.BODY.value, 150);
+    }
+
+    public void turnAntialiasingOn() {
+            graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            graphics.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
     }
 }

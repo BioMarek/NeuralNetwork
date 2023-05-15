@@ -23,7 +23,9 @@ public class Settings {
     public static String SAVE_GAME_PATH = "savedGames/";
     public static boolean SELF_COLLISION = false;
 
-    // multiplayer game
+    /**
+     * multiplayer game
+     */
     public static int NUM_OF_PLAYERS = 2;
     public static int MAX_NUM_OF_FOOD = 30;
     public static int DEATH_PENALTY = -3; // should be negative or zero
@@ -31,13 +33,23 @@ public class Settings {
     public static boolean LEAVE_CORPSE = true; // leaves food in place of dead snake BodyParts
     public static int STEPS_TO_REDUCTION = 15; // simulates starvation, snakes running in circles will be eliminated
 
-    // graphic
+    /**
+     * graphic
+     */
     public static int TIMER_DELAY = 50;
     public static int GRID_COLUMNS = 1500;
     public static int GRID_ROWS = 1080;
     public static int BACKGROUND_WIDTH = 1920;
     public static int BACKGROUND_HEIGHT = 1080;
     public static int PIXELS_PER_SQUARE = 20;
+
+    /**
+     * Settings for mp4 generation
+     */
+    public static int VIDEO_FPS = 30; // frames per second for mp4
+    public static String VIDEO_BASE_PATH = "./movies/"; // where to save generated videos
+    public static int VIDEO_REPEAT_LAST_FRAME = 0; // how many times the last image should be repeated in video, 30 is one second
+
 
     public static void multiplayerSettings() {
         NUM_OF_PLAYERS = 10;

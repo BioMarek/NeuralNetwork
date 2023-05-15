@@ -6,7 +6,6 @@ import utils.Settings;
 
 import java.awt.Font;
 import java.awt.Graphics2D;
-import java.awt.RenderingHints;
 
 
 public class SnakeLegend {
@@ -21,9 +20,7 @@ public class SnakeLegend {
     }
 
     public void drawLegend(int step) {
-        switchAntiAliasing(true);
         drawInfo(step);
-        switchAntiAliasing(false);
     }
 
     /**
@@ -54,20 +51,5 @@ public class SnakeLegend {
         graphics.fillRect(x, y, squareSize, squareSize);
         graphics.setColor(Colors.getColor(i, 200));
         graphics.fillRect(x + fillSizeDecrease, y + fillSizeDecrease, fillSquareSize, fillSquareSize);
-    }
-
-    /**
-     * Switches anti-aliasing on or off.
-     *
-     * @param isOn whether AA should be turned on
-     */
-    public void switchAntiAliasing(boolean isOn) {
-        if (isOn) {
-            graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            graphics.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-        } else {
-            graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
-            graphics.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
-        }
     }
 }
