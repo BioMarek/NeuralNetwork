@@ -45,8 +45,11 @@ public class Snake {
      * @param column of grid where to check
      * @return true if there is different snake false otherwise
      */
-    public boolean isAnotherSnake(int row, int column) {
-        return grid[row][column] >= SnakeMap.BODY.value && (grid[row][column] != name + SnakeMap.BODY.value && grid[row][column] != name + SnakeMap.HEAD.value);
+    public boolean isSnakeCollision(int row, int column) {
+        if (Settings.SELF_COLLISION)
+            return grid[row][column] >= SnakeMap.BODY.value;
+        else
+            return grid[row][column] >= SnakeMap.BODY.value && (grid[row][column] != name + SnakeMap.BODY.value && grid[row][column] != name + SnakeMap.HEAD.value);
     }
 
     /**

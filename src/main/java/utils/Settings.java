@@ -21,6 +21,7 @@ public class Settings {
     public static int PROTECTED_AGE = 15; // Age when species stops being protected and its size can be reevaluated
     public static int FREQUENCY_OF_SPECIATION = 10;
     public static String SAVE_GAME_PATH = "savedGames/";
+    public static boolean SELF_COLLISION = true;
 
     // multiplayer game
     public static int NUM_OF_PLAYERS = 2;
