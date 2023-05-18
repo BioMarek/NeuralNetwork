@@ -40,8 +40,8 @@ public class GenePool implements EvolutionEngine {
 
 
     @Override
-    public void calculateEvolution(int numOfGenerations) {
-        for (int generation = 0; generation < numOfGenerations; generation++) {
+    public void calculateEvolution() {
+        for (int generation = 0; generation < Settings.NUM_OF_GENERATIONS; generation++) {
             System.out.printf("\nGeneration %d %s\n", generation, "-".repeat(200));
             if (generation % Settings.FREQUENCY_OF_SPECIATION == 0 && generation > 0)
                 createSpecies();

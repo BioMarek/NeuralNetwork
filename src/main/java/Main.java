@@ -29,7 +29,7 @@ public class Main {
 //        GenePool genePool = new GenePool(8, 4, new SnakeGameMultiplayer());
 
         long start = System.currentTimeMillis();
-        genePool.calculateEvolution(Settings.NUM_OF_GENERATIONS);
+        genePool.calculateEvolution();
         long stop = System.currentTimeMillis();
         System.out.println("It took: " + (stop - start) / 1000 + "s");
 

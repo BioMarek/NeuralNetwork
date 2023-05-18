@@ -1,7 +1,7 @@
 package neat.evolution;
 
 public interface EvolutionEngine {
-    void calculateEvolution(int numOfGenerations);
+    void calculateEvolution();
 
     void makeNextGeneration(boolean saveGame);
 
