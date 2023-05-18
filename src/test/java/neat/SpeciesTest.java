@@ -25,8 +25,8 @@ public class SpeciesTest {
         Settings.CHANCE_HARD_MUTATE_WEIGHT = 1;
         Settings.CHANCE_ADD_NODE = 0;
         Settings.NETWORKS_TO_KEEP = 0.3;
-        Settings.hiddenLayerActivationFunc = Util.activationFunctionIdentity();
-        Settings.outputLayerActivationFunc = Util.activationFunctionIdentity();
+        Settings.HIDDEN_LAYER_ACTIVATION_FUNC = Util.activationFunctionIdentity();
+        Settings.OUTPUT_LAYER_ACTIVATION_FUNC = Util.activationFunctionIdentity();
         genePool = new GenePool(2, 2, new SnakeGameMultiplayer());
         species = genePool.getSpecies().get(0);
     }

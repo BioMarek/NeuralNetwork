@@ -22,7 +22,7 @@ import static utils.Util.randomInt;
 import static utils.Util.repeat;
 
 public class Genotype implements Comparable<Genotype> {
-    public final EvolutionEngine genePool;
+    public final EvolutionEngine evolutionEngine;
     public List<ConnectionGene> connectionGenes = new ArrayList<>();
     public List<NodeGene> nodeGenes = new ArrayList<>();
     public List<NodeGene> inputNodes = new ArrayList<>();
@@ -32,12 +32,12 @@ public class Genotype implements Comparable<Genotype> {
     public String name = "0";
     public int age = 0;
 
-    public Genotype(EvolutionEngine genePool) {
-        this.genePool = genePool;
+    public Genotype(EvolutionEngine evolutionEngine) {
+        this.evolutionEngine = evolutionEngine;
     }
 
-    public Genotype(EvolutionEngine genePool, int inputs, int outputs) {
-        this.genePool = genePool;
+    public Genotype(EvolutionEngine evolutionEngine, int inputs, int outputs) {
+        this.evolutionEngine = evolutionEngine;
         maxNeurons = Settings.MAX_NEURONS - outputs + 1;
         List<NodeGene> outputNodes = new ArrayList<>();
 
@@ -54,7 +54,7 @@ public class Genotype implements Comparable<Genotype> {
 
         nodeGenes.addAll(inputNodes);
         nodeGenes.addAll(outputNodes);
-        name = Integer.toString(genePool.networksGeneratedIncrease());
+        name = Integer.toString(evolutionEngine.networksGeneratedIncrease());
     }
 
     /**
@@ -232,7 +232,7 @@ public class Genotype implements Comparable<Genotype> {
      * @return copied {@link Genotype} object
      */
     public Genotype copy() {
-        Genotype genotype = new Genotype(genePool);
+        Genotype genotype = new Genotype(evolutionEngine);
 
         genotype.nodeGenes = nodeGenes.stream()
                 .map(NodeGene::copy)
@@ -254,7 +254,7 @@ public class Genotype implements Comparable<Genotype> {
         }
 
         genotype.neuronNames = neuronNames;
-        genotype.name = Integer.toString(genePool.networksGeneratedIncrease());
+        genotype.name = Integer.toString(evolutionEngine.networksGeneratedIncrease());
         return genotype;
     }
 
@@ -278,12 +278,12 @@ public class Genotype implements Comparable<Genotype> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Genotype genotype = (Genotype) o;
-        return neuronNames == genotype.neuronNames && score == genotype.score && age == genotype.age && Objects.equals(genePool, genotype.genePool) && connectionGenes.equals(genotype.connectionGenes) && nodeGenes.equals(genotype.nodeGenes) && inputNodes.equals(genotype.inputNodes);
+        return neuronNames == genotype.neuronNames && score == genotype.score && age == genotype.age && Objects.equals(evolutionEngine, genotype.evolutionEngine) && connectionGenes.equals(genotype.connectionGenes) && nodeGenes.equals(genotype.nodeGenes) && inputNodes.equals(genotype.inputNodes);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(genePool, connectionGenes, nodeGenes, inputNodes, neuronNames, score, age);
+        return Objects.hash(evolutionEngine, connectionGenes, nodeGenes, inputNodes, neuronNames, score, age);
     }
 
     @Override

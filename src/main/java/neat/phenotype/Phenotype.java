@@ -4,7 +4,6 @@ import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import neat.NeuronType;
-import neat.evolution.EvolutionEngine;
 import neat.evolution.GenePool;
 import utils.Settings;
 import utils.Util;
@@ -56,11 +55,11 @@ public class Phenotype implements NeuralNetwork {
         for (int i = 0; i < inputs.length; i++) {
             inputNeurons.get(i).innerPotential = inputs[i];
         }
-        connections.forEach(connection -> connection.to.innerPotential += connection.from.getOutput(Settings.hiddenLayerActivationFunc) * connection.weight);
+        connections.forEach(connection -> connection.to.innerPotential += connection.from.getOutput(Settings.HIDDEN_LAYER_ACTIVATION_FUNC) * connection.weight);
 
         return Util.primitiveDoubleArrayFromList(
                 outputNeurons.stream()
-                        .map(neatNeuron -> neatNeuron.getOutput(Settings.outputLayerActivationFunc))
+                        .map(neatNeuron -> neatNeuron.getOutput(Settings.OUTPUT_LAYER_ACTIVATION_FUNC))
                         .collect(Collectors.toList()));
     }
 

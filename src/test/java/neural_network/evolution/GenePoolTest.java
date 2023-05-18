@@ -26,8 +26,8 @@ public class GenePoolTest {
     void shuffleGenotypesFromSpecies_works() {
         Settings.NUM_OF_PLAYERS = 2;
         Settings.TOTAL_NUM_OF_GENOTYPES = 100;
-        Settings.hiddenLayerActivationFunc = Util.activationFunctionIdentity();
-        Settings.outputLayerActivationFunc = Util.activationFunctionIdentity();
+        Settings.HIDDEN_LAYER_ACTIVATION_FUNC = Util.activationFunctionIdentity();
+        Settings.OUTPUT_LAYER_ACTIVATION_FUNC = Util.activationFunctionIdentity();
         var genePool = new GenePool(8, 4, new SnakeGameMultiplayer());
         genePool.createSpecies();
         var genotypes = genePool.shuffleGenotypesFromSpecies();
@@ -41,8 +41,8 @@ public class GenePoolTest {
     void divideGenotypes_dividesIntoCorrectNumberOfLists() {
         Settings.NUM_OF_PLAYERS = 2;
         Settings.TOTAL_NUM_OF_GENOTYPES = 100;
-        Settings.hiddenLayerActivationFunc = Util.activationFunctionIdentity();
-        Settings.outputLayerActivationFunc = Util.activationFunctionIdentity();
+        Settings.HIDDEN_LAYER_ACTIVATION_FUNC = Util.activationFunctionIdentity();
+        Settings.OUTPUT_LAYER_ACTIVATION_FUNC = Util.activationFunctionIdentity();
         var genePool = new GenePool(8, 4, new SnakeGameMultiplayer());
         var dividedGenotypes = genePool.divideGenotypes(genePool.shuffleGenotypesFromSpecies());
 
@@ -56,8 +56,8 @@ public class GenePoolTest {
     void divideGenotypes_genotypesAreNotResetOrHardCopied() {
         Settings.NUM_OF_PLAYERS = 2;
         Settings.TOTAL_NUM_OF_GENOTYPES = 100;
-        Settings.hiddenLayerActivationFunc = Util.activationFunctionIdentity();
-        Settings.outputLayerActivationFunc = Util.activationFunctionIdentity();
+        Settings.HIDDEN_LAYER_ACTIVATION_FUNC = Util.activationFunctionIdentity();
+        Settings.OUTPUT_LAYER_ACTIVATION_FUNC = Util.activationFunctionIdentity();
         var genePool = new GenePool(8, 4, new SnakeGameMultiplayer());
         renameAllGenotypes(genePool, "xyz");
         var dividedGenotypes = genePool.divideGenotypes(genePool.shuffleGenotypesFromSpecies());

@@ -8,8 +8,8 @@ public class Settings {
     public static int NUM_OF_GENERATIONS = 200; // 300
     public static int TOTAL_NUM_OF_GENOTYPES = 100;
     public static int MAX_NEURONS = 1000;
-    public static Function<Double, Double>  hiddenLayerActivationFunc = Util.activationFunctionHyperbolicTangent();
-    public static Function<Double, Double> outputLayerActivationFunc = Util.activationFunctionHyperbolicTangent();
+    public static Function<Double, Double> HIDDEN_LAYER_ACTIVATION_FUNC = Util.activationFunctionHyperbolicTangent();
+    public static Function<Double, Double> OUTPUT_LAYER_ACTIVATION_FUNC = Util.activationFunctionHyperbolicTangent();
     public static boolean VERBOSE = true;
     public static int MAX_NUM_OF_MOVES = 500;  // to stop AI moving in cycles
     public static int NUM_OF_TRIALS = 10; // how many times NeuralNetwork plays the game

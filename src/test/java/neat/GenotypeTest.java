@@ -24,8 +24,8 @@ public class GenotypeTest {
 
     @BeforeEach
     void init() {
-        Settings.hiddenLayerActivationFunc = Util.activationFunctionIdentity();
-        Settings.outputLayerActivationFunc = Util.activationFunctionIdentity();
+        Settings.HIDDEN_LAYER_ACTIVATION_FUNC = Util.activationFunctionIdentity();
+        Settings.OUTPUT_LAYER_ACTIVATION_FUNC = Util.activationFunctionIdentity();
         genePool = new GenePool(2, 2, new SnakeGameMultiplayer());
         genotype = genePool.getSpecies().get(0).genotypes.get(0);
     }
