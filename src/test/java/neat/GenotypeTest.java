@@ -7,6 +7,7 @@ import neat.evolution.Genotype;
 import neat.evolution.NodeGene;
 import neat.phenotype.Phenotype;
 import utils.Pair;
+import utils.Settings;
 import utils.Util;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,7 +24,9 @@ public class GenotypeTest {
 
     @BeforeEach
     void init() {
-        genePool = new GenePool(2, 2, Util.activationFunctionIdentity(), new SnakeGameMultiplayer());
+        Settings.hiddenLayerActivationFunc = Util.activationFunctionIdentity();
+        Settings.outputLayerActivationFunc = Util.activationFunctionIdentity();
+        genePool = new GenePool(2, 2, new SnakeGameMultiplayer());
         genotype = genePool.getSpecies().get(0).genotypes.get(0);
     }
 

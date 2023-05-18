@@ -24,9 +24,9 @@ public class Main {
      */
     public static void setupNeatNeuralNetworkWithMultiplayer() {
         Settings.multiplayerSettings();
-        GenePool genePool = new GenePool(8, 4, Util.activationFunctionHyperbolicTangent(), Util.activationFunctionHyperbolicTangent(), new SnakeGameMultiplayer());
+        GenePool genePool = new GenePool(8, 4, new SnakeGameMultiplayer());
 //        Settings.singlePlayerGame();
-//        GenePool genePool = new GenePool(8, 4, Util.activationFunctionHyperbolicTangent(), Util.activationFunctionHyperbolicTangent(), new SnakeGameMultiplayer());
+//        GenePool genePool = new GenePool(8, 4, new SnakeGameMultiplayer());
 
         long start = System.currentTimeMillis();
         genePool.calculateEvolution(Settings.NUM_OF_GENERATIONS);

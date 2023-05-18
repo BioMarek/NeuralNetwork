@@ -24,8 +24,6 @@ import static utils.Util.repeat;
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class GenePool implements EvolutionEngine {
-    public Function<Double, Double> hiddenLayerActivationFunc;
-    public Function<Double, Double> outputLayerActivationFunc;
     private final List<Species> speciesList = new ArrayList<>();
     protected int networksGenerated;
     protected int speciesNames;
@@ -33,23 +31,11 @@ public class GenePool implements EvolutionEngine {
     protected int speciesCreated = 1;
     public SavedGameDTO savedGameDTO;
 
-    public GenePool(int inputs, int outputs, Function<Double, Double> hiddenLayerActivationFunc, MultiplayerGame game) {
+    public GenePool(int inputs, int outputs, MultiplayerGame game) {
         List<Genotype> genotypes = new ArrayList<>();
         repeat.accept(Settings.TOTAL_NUM_OF_GENOTYPES, () -> genotypes.add(new Genotype(this, inputs, outputs)));
-        Species species = new Species(this, genotypes, this.speciesNames++);
+        Species species = new Species(genotypes, this.speciesNames++);
         this.speciesList.add(species);
-        this.hiddenLayerActivationFunc = hiddenLayerActivationFunc;
-        this.outputLayerActivationFunc = hiddenLayerActivationFunc;
-        this.multiplayerGame = game;
-    }
-
-    public GenePool(int inputs, int outputs, Function<Double, Double> hiddenLayerActivationFunc, Function<Double, Double> outputActivationFunc, MultiplayerGame game) {
-        List<Genotype> genotypes = new ArrayList<>();
-        repeat.accept(Settings.TOTAL_NUM_OF_GENOTYPES, () -> genotypes.add(new Genotype(this, inputs, outputs)));
-        Species species = new Species(this, genotypes, this.speciesNames++);
-        this.speciesList.add(species);
-        this.hiddenLayerActivationFunc = hiddenLayerActivationFunc;
-        this.outputLayerActivationFunc = outputActivationFunc;
         this.multiplayerGame = game;
     }
 
@@ -147,7 +133,7 @@ public class GenePool implements EvolutionEngine {
         removeDeadSpecies();
         repeat.accept(emptyPlaces, () -> speciesGenotypes.add(genotypeToSpeciate.copy()));
 
-        speciesList.add(new Species(this, speciesGenotypes, speciesNames++));
+        speciesList.add(new Species(speciesGenotypes, speciesNames++));
         speciesCreated++;
     }
 
@@ -255,6 +241,11 @@ public class GenePool implements EvolutionEngine {
                 System.out.println();
             });
         }
+    }
+
+    @Override
+    public int networksGeneratedIncrease() {
+        return networksGenerated++;
     }
 
     public void printSpecies() {

@@ -4,7 +4,9 @@ import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import neat.NeuronType;
+import neat.evolution.EvolutionEngine;
 import neat.evolution.GenePool;
+import utils.Settings;
 import utils.Util;
 import visualizations.nnVisualization.VisConnectionDTO;
 import visualizations.nnVisualization.VisNeuronDTO;
@@ -19,14 +21,12 @@ import java.util.stream.Collectors;
 @EqualsAndHashCode
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Phenotype implements NeuralNetwork {
-    public GenePool genePool;
     public List<NEATNeuron> inputNeurons;
     public List<NEATNeuron> hiddenNeurons;
     public List<NEATNeuron> outputNeurons;
     public List<Connection> connections;
 
-    public Phenotype(GenePool genePool, List<NEATNeuron> neurons, List<Connection> connections) {
-        this.genePool = genePool;
+    public Phenotype(List<NEATNeuron> neurons, List<Connection> connections) {
         this.inputNeurons = neurons.stream().filter(neatNeuron -> neatNeuron.neuronType == NeuronType.INPUT).collect(Collectors.toList());
         this.hiddenNeurons = neurons.stream().filter(neatNeuron -> neatNeuron.neuronType == NeuronType.HIDDEN).collect(Collectors.toList());
         this.outputNeurons = neurons.stream().filter(neatNeuron -> neatNeuron.neuronType == NeuronType.OUTPUT).collect(Collectors.toList());
@@ -56,11 +56,11 @@ public class Phenotype implements NeuralNetwork {
         for (int i = 0; i < inputs.length; i++) {
             inputNeurons.get(i).innerPotential = inputs[i];
         }
-        connections.forEach(connection -> connection.to.innerPotential += connection.from.getOutput(genePool.hiddenLayerActivationFunc) * connection.weight);
+        connections.forEach(connection -> connection.to.innerPotential += connection.from.getOutput(Settings.hiddenLayerActivationFunc) * connection.weight);
 
         return Util.primitiveDoubleArrayFromList(
                 outputNeurons.stream()
-                        .map(neatNeuron -> neatNeuron.getOutput(genePool.outputLayerActivationFunc))
+                        .map(neatNeuron -> neatNeuron.getOutput(Settings.outputLayerActivationFunc))
                         .collect(Collectors.toList()));
     }
 

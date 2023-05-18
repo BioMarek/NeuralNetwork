@@ -5,10 +5,10 @@ import neat.evolution.ConnectionGene;
 import neat.evolution.GenePool;
 import neat.evolution.Genotype;
 import neat.evolution.NodeGene;
-import utils.Settings;
-import utils.Util;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import utils.Settings;
+import utils.Util;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -25,7 +25,9 @@ public class ConnectionGeneTest {
         Settings.GRID_COLUMNS = 4;
         Settings.PIXELS_PER_SQUARE = 1;
         Settings.LEAVE_CORPSE = false;
-        genePool = new GenePool(2, 2, Util.activationFunctionIdentity(), new SnakeGameMultiplayer());
+        Settings.hiddenLayerActivationFunc = Util.activationFunctionIdentity();
+        Settings.outputLayerActivationFunc = Util.activationFunctionIdentity();
+        genePool = new GenePool(2, 2, new SnakeGameMultiplayer());
         genotype = genePool.getSpecies().get(0).genotypes.get(0);
         connectionGene = genotype.connectionGenes.get(0);
     }
@@ -40,7 +42,7 @@ public class ConnectionGeneTest {
     }
 
     @Test
-    void compareTo_worksCorrectly(){
+    void compareTo_worksCorrectly() {
         NodeGene inputNode = new NodeGene(NeuronType.INPUT, 0, 0);
         NodeGene hiddenLayer1First = new NodeGene(NeuronType.HIDDEN, 1, 1);
         NodeGene hiddenLayer1Second = new NodeGene(NeuronType.HIDDEN, 3, 1);

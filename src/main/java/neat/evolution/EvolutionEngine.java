@@ -8,4 +8,6 @@ public interface EvolutionEngine {
     void resetScores();
 
     void printScores();
+
+    int networksGeneratedIncrease();
 }

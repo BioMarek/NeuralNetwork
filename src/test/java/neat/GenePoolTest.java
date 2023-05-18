@@ -28,7 +28,9 @@ public class GenePoolTest {
         Settings.PIXELS_PER_SQUARE = 1;
         Settings.LEAVE_CORPSE = false;
         Settings.MIN_SPECIES_REDUCTION = 2;
-        genePool = new GenePool(2, 2, Util.activationFunctionIdentity(), new SnakeGameMultiplayer());
+        Settings.hiddenLayerActivationFunc = Util.activationFunctionIdentity();
+        Settings.outputLayerActivationFunc = Util.activationFunctionIdentity();
+        genePool = new GenePool(2, 2, new SnakeGameMultiplayer());
     }
 
     @Test

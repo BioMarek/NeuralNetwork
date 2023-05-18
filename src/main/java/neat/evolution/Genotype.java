@@ -22,7 +22,7 @@ import static utils.Util.randomInt;
 import static utils.Util.repeat;
 
 public class Genotype implements Comparable<Genotype> {
-    public final GenePool genePool;
+    public final EvolutionEngine genePool;
     public List<ConnectionGene> connectionGenes = new ArrayList<>();
     public List<NodeGene> nodeGenes = new ArrayList<>();
     public List<NodeGene> inputNodes = new ArrayList<>();
@@ -32,11 +32,11 @@ public class Genotype implements Comparable<Genotype> {
     public String name = "0";
     public int age = 0;
 
-    public Genotype(GenePool genePool) {
+    public Genotype(EvolutionEngine genePool) {
         this.genePool = genePool;
     }
 
-    public Genotype(GenePool genePool, int inputs, int outputs) {
+    public Genotype(EvolutionEngine genePool, int inputs, int outputs) {
         this.genePool = genePool;
         maxNeurons = Settings.MAX_NEURONS - outputs + 1;
         List<NodeGene> outputNodes = new ArrayList<>();
@@ -54,7 +54,7 @@ public class Genotype implements Comparable<Genotype> {
 
         nodeGenes.addAll(inputNodes);
         nodeGenes.addAll(outputNodes);
-        name = Integer.toString(genePool.networksGenerated++);
+        name = Integer.toString(genePool.networksGeneratedIncrease());
     }
 
     /**
@@ -73,7 +73,7 @@ public class Genotype implements Comparable<Genotype> {
                         neurons.get(connectionGene.from.name),
                         neurons.get(connectionGene.to.name),
                         connectionGene.weight)));
-        return new Phenotype(genePool, new ArrayList<>(neurons.values()), connections);
+        return new Phenotype(new ArrayList<>(neurons.values()), connections);
     }
 
     /**
@@ -254,7 +254,7 @@ public class Genotype implements Comparable<Genotype> {
         }
 
         genotype.neuronNames = neuronNames;
-        genotype.name = Integer.toString(genePool.networksGenerated++);
+        genotype.name = Integer.toString(genePool.networksGeneratedIncrease());
         return genotype;
     }
 
