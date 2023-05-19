@@ -160,6 +160,7 @@ public class SnakeGameMultiplayerTest {
     void play_worksWithCollisionAndSnakeRestart() {
         Settings.NUM_OF_PLAYERS = 0;
         Settings.MAX_NUM_OF_FOOD = 0;
+        Settings.MAX_NUM_OF_MOVES = 1;
 
         var snakeMultiplayerGame = new SnakeGameMultiplayer();
         var snake = new Snake(snakeMultiplayerGame.grid, 1, 1, Direction.DOWN, 1);
@@ -168,7 +169,7 @@ public class SnakeGameMultiplayerTest {
 
         NeuralNetwork network = new TestNeuralNetwork();
         var networks = List.of(network);
-        snakeMultiplayerGame.play(networks, 1);
+        snakeMultiplayerGame.play(networks);
 
         assertThat(snakeMultiplayerGame.grid[1][1], is(0));
         assertThat(snake.snakeScore, is(Settings.DEATH_PENALTY));
@@ -181,6 +182,7 @@ public class SnakeGameMultiplayerTest {
     void play_worksWithFood() {
         Settings.NUM_OF_PLAYERS = 0;
         Settings.MAX_NUM_OF_FOOD = 0;
+        Settings.MAX_NUM_OF_MOVES = 1;
 
         var snakeMultiplayerGame = new SnakeGameMultiplayer();
         var snake = new Snake(snakeMultiplayerGame.grid, 2, 1, Direction.DOWN, 1);
@@ -190,7 +192,7 @@ public class SnakeGameMultiplayerTest {
 
         NeuralNetwork network = new TestNeuralNetwork();
         var networks = List.of(network);
-        snakeMultiplayerGame.play(networks, 1);
+        snakeMultiplayerGame.play(networks);
 
         assertThat(snakeMultiplayerGame.grid[1][1], is(201));
         assertThat(snakeMultiplayerGame.grid[2][1], is(101));
@@ -206,6 +208,8 @@ public class SnakeGameMultiplayerTest {
         Settings.NUM_OF_PLAYERS = 0;
         Settings.MAX_NUM_OF_FOOD = 0;
         Settings.LEAVE_CORPSE = true;
+        Settings.MAX_NUM_OF_MOVES = 2;
+
         var snakeMultiplayerGame = new SnakeGameMultiplayer();
         var snake = new Snake(snakeMultiplayerGame.grid, 2, 1, Direction.DOWN, 1);
         snakeMultiplayerGame.snakes.add(snake);
@@ -215,7 +219,7 @@ public class SnakeGameMultiplayerTest {
 
         NeuralNetwork network = new TestNeuralNetwork();
         var networks = List.of(network);
-        snakeMultiplayerGame.play(networks, 2);
+        snakeMultiplayerGame.play(networks);
 
         assertThat(snakeMultiplayerGame.numOfFood, is(2));
 

@@ -30,11 +30,11 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
     }
 
     @Override
-    public int[] play(List<NeuralNetwork> neuralNetworks, int maxNumberOfMoves) {
+    public int[] play(List<NeuralNetwork> neuralNetworks) {
         for (int i = 0; i < snakes.size(); i++)
             snakes.get(i).neuralNetwork = neuralNetworks.get(i);
 
-        for (int move = 0; move < maxNumberOfMoves; move++) {
+        for (int move = 0; move < Settings.MAX_NUM_OF_MOVES; move++) {
             for (Snake snake : snakes) {
                 var networkOutput = snake.neuralNetwork.getNetworkOutput(snakeSightDTO.getInput_8(snake));
                 moveSnakeToDirection(snake, outputToDirection(networkOutput));
@@ -44,6 +44,15 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
         return snakes.stream()
                 .mapToInt(snake -> snake.snakeScore)
                 .toArray();
+    }
+
+    public void freeEvolution(List<Snake> snakes){
+        for (int move = 0; move < Settings.MAX_NUM_OF_MOVES; move++) {
+            for (Snake snake : snakes) {
+                var networkOutput = snake.neuralNetwork.getNetworkOutput(snakeSightDTO.getInput_8(snake));
+                moveSnakeToDirection(snake, outputToDirection(networkOutput));
+            }
+        }
     }
 
     @Override
@@ -95,7 +104,7 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
      */
     protected void moveSnakeToDirection(Snake snake, Direction direction) {
         if (Settings.SELF_COLLISION) {
-            // If SELF_COLLISION is enabled than snake that is longer than on body part cannot go opposite to its last direction because it would hit its tail
+            // If SELF_COLLISION is enabled than snake that is longer than one body part cannot go opposite to its last direction because it would hit its tail
             if (snake.size() > 1 && direction == Direction.opposite(snake.lastDirection) || direction == Direction.NONE)
                 direction = snake.lastDirection;
         } else {
