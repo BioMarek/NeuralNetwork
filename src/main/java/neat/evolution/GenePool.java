@@ -14,7 +14,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static utils.Util.repeat;
@@ -24,8 +23,6 @@ import static utils.Util.repeat;
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class GenePool implements EvolutionEngine {
-    public Function<Double, Double> hiddenLayerActivationFunc;
-    public Function<Double, Double> outputLayerActivationFunc;
     private final List<Species> speciesList = new ArrayList<>();
     protected int networksGenerated;
     protected int speciesNames;
@@ -33,30 +30,18 @@ public class GenePool implements EvolutionEngine {
     protected int speciesCreated = 1;
     public SavedGameDTO savedGameDTO;
 
-    public GenePool(int inputs, int outputs, Function<Double, Double> hiddenLayerActivationFunc, MultiplayerGame game) {
+    public GenePool(int inputs, int outputs, MultiplayerGame game) {
         List<Genotype> genotypes = new ArrayList<>();
         repeat.accept(Settings.TOTAL_NUM_OF_GENOTYPES, () -> genotypes.add(new Genotype(this, inputs, outputs)));
-        Species species = new Species(this, genotypes, this.speciesNames++);
+        Species species = new Species(genotypes, this.speciesNames++);
         this.speciesList.add(species);
-        this.hiddenLayerActivationFunc = hiddenLayerActivationFunc;
-        this.outputLayerActivationFunc = hiddenLayerActivationFunc;
-        this.multiplayerGame = game;
-    }
-
-    public GenePool(int inputs, int outputs, Function<Double, Double> hiddenLayerActivationFunc, Function<Double, Double> outputActivationFunc, MultiplayerGame game) {
-        List<Genotype> genotypes = new ArrayList<>();
-        repeat.accept(Settings.TOTAL_NUM_OF_GENOTYPES, () -> genotypes.add(new Genotype(this, inputs, outputs)));
-        Species species = new Species(this, genotypes, this.speciesNames++);
-        this.speciesList.add(species);
-        this.hiddenLayerActivationFunc = hiddenLayerActivationFunc;
-        this.outputLayerActivationFunc = outputActivationFunc;
         this.multiplayerGame = game;
     }
 
 
     @Override
-    public void calculateEvolution(int numOfGenerations) {
-        for (int generation = 0; generation < numOfGenerations; generation++) {
+    public void calculateEvolution() {
+        for (int generation = 0; generation < Settings.NUM_OF_GENERATIONS; generation++) {
             System.out.printf("\nGeneration %d %s\n", generation, "-".repeat(200));
             if (generation % Settings.FREQUENCY_OF_SPECIATION == 0 && generation > 0)
                 createSpecies();
@@ -80,10 +65,10 @@ public class GenePool implements EvolutionEngine {
 
             for (int i = 0; i < Settings.NUM_OF_TRIALS; i++) {
                 if (saveGame) {
-                    savedGameDTO = this.multiplayerGame.saveSnakeMoves(phenotypes, Settings.MAX_NUM_OF_MOVES);
+                    savedGameDTO = this.multiplayerGame.saveSnakeMoves(phenotypes);
                     return;
                 }
-                var score = this.multiplayerGame.play(phenotypes, Settings.MAX_NUM_OF_MOVES);
+                var score = this.multiplayerGame.play(phenotypes);
                 updateMultiplayerScore(score, players);
                 this.multiplayerGame.reset();
             }
@@ -147,7 +132,7 @@ public class GenePool implements EvolutionEngine {
         removeDeadSpecies();
         repeat.accept(emptyPlaces, () -> speciesGenotypes.add(genotypeToSpeciate.copy()));
 
-        speciesList.add(new Species(this, speciesGenotypes, speciesNames++));
+        speciesList.add(new Species(speciesGenotypes, speciesNames++));
         speciesCreated++;
     }
 
@@ -255,6 +240,11 @@ public class GenePool implements EvolutionEngine {
                 System.out.println();
             });
         }
+    }
+
+    @Override
+    public int networksGeneratedIncrease() {
+        return networksGenerated++;
     }
 
     public void printSpecies() {

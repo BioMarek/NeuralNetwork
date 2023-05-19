@@ -25,7 +25,9 @@ public class PhenotypeTest {
         Settings.GRID_COLUMNS = 4;
         Settings.PIXELS_PER_SQUARE = 1;
         Settings.LEAVE_CORPSE = false;
-        genePool = new GenePool(2, 2, Util.activationFunctionIdentity(), new SnakeGameMultiplayer());
+        Settings.HIDDEN_LAYER_ACTIVATION_FUNC = Util.activationFunctionIdentity();
+        Settings.OUTPUT_LAYER_ACTIVATION_FUNC = Util.activationFunctionIdentity();
+        genePool = new GenePool(2, 2, new SnakeGameMultiplayer());
         genotype = genePool.getSpecies().get(0).genotypes.get(0);
         phenotype = genotype.createPhenotype();
     }

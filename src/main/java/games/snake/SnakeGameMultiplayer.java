@@ -30,11 +30,11 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
     }
 
     @Override
-    public int[] play(List<NeuralNetwork> neuralNetworks, int maxNumberOfMoves) {
+    public int[] play(List<NeuralNetwork> neuralNetworks) {
         for (int i = 0; i < snakes.size(); i++)
             snakes.get(i).neuralNetwork = neuralNetworks.get(i);
 
-        for (int move = 0; move < maxNumberOfMoves; move++) {
+        for (int move = 0; move < Settings.MAX_NUM_OF_MOVES; move++) {
             for (Snake snake : snakes) {
                 var networkOutput = snake.neuralNetwork.getNetworkOutput(snakeSightDTO.getInput_8(snake));
                 moveSnakeToDirection(snake, outputToDirection(networkOutput));
@@ -95,7 +95,7 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
      */
     protected void moveSnakeToDirection(Snake snake, Direction direction) {
         if (Settings.SELF_COLLISION) {
-            // If SELF_COLLISION is enabled than snake that is longer than on body part cannot go opposite to its last direction because it would hit its tail
+            // If SELF_COLLISION is enabled than snake that is longer than one body part cannot go opposite to its last direction because it would hit its tail
             if (snake.size() > 1 && direction == Direction.opposite(snake.lastDirection) || direction == Direction.NONE)
                 direction = snake.lastDirection;
         } else {
@@ -225,11 +225,11 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
     /**
      * Plays the game and saves grid arrangements so they can be used later e.g. for visualization.
      */
-    public SavedGameDTO saveSnakeMoves(List<NeuralNetwork> neuralNetworks, int maxNumberOfMoves) {
+    public SavedGameDTO saveSnakeMoves(List<NeuralNetwork> neuralNetworks) {
         var savedGameDTO = new SavedGameDTO();
         savedGameDTO.rows = rows;
         savedGameDTO.columns = columns;
-        for (int move = 0; move < maxNumberOfMoves; move++) {
+        for (int move = 0; move < Settings.MAX_NUM_OF_MOVES; move++) {
             for (int i = 0; i < neuralNetworks.size(); i++) {
                 var networkOutput = neuralNetworks.get(i).getNetworkOutput(snakeSightDTO.getInput_8(snakes.get(i)));
                 moveSnakeToDirection(snakes.get(i), outputToDirection(networkOutput));
@@ -242,7 +242,7 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
             savedGameDTO.grid.add(arrayCopy(grid));
         }
         savedGameDTO.fileName = SaveGameUtil.getCurrentDateTimeAsString() + ".sav";
-        savedGameDTO.totalFrames = maxNumberOfMoves;
+        savedGameDTO.totalFrames = Settings.MAX_NUM_OF_MOVES;
         return savedGameDTO;
     }
 

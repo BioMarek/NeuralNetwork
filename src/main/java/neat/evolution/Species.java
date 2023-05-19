@@ -8,14 +8,12 @@ import java.util.List;
 
 @EqualsAndHashCode
 public class Species implements Comparable<Species> {
-    private final GenePool genePool;
     public List<Genotype> genotypes;
     public int name;
     public int age = 0;
     public double average;
 
-    public Species(GenePool genePool, List<Genotype> genotypes, int name) {
-        this.genePool = genePool;
+    public Species(List<Genotype> genotypes, int name) {
         this.genotypes = genotypes;
         this.name = name;
     }

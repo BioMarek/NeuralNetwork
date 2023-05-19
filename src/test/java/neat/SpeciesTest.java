@@ -25,7 +25,9 @@ public class SpeciesTest {
         Settings.CHANCE_HARD_MUTATE_WEIGHT = 1;
         Settings.CHANCE_ADD_NODE = 0;
         Settings.NETWORKS_TO_KEEP = 0.3;
-        genePool = new GenePool(2, 2, Util.activationFunctionIdentity(), new SnakeGameMultiplayer());
+        Settings.HIDDEN_LAYER_ACTIVATION_FUNC = Util.activationFunctionIdentity();
+        Settings.OUTPUT_LAYER_ACTIVATION_FUNC = Util.activationFunctionIdentity();
+        genePool = new GenePool(2, 2, new SnakeGameMultiplayer());
         species = genePool.getSpecies().get(0);
     }
 
@@ -95,7 +97,7 @@ public class SpeciesTest {
 
     @Test
     void compare_worksCorrectly() {
-        Species speciesCopy = new Species(genePool, species.genotypes, 1);
+        Species speciesCopy = new Species(species.genotypes, 1);
         assertThat(species.compareTo(speciesCopy), is(0));
 
         speciesCopy.average = 1.0d;
