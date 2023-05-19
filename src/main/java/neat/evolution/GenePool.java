@@ -65,7 +65,7 @@ public class GenePool implements EvolutionEngine {
 
             for (int i = 0; i < Settings.NUM_OF_TRIALS; i++) {
                 if (saveGame) {
-                    savedGameDTO = this.multiplayerGame.saveSnakeMoves(phenotypes, Settings.MAX_NUM_OF_MOVES);
+                    savedGameDTO = this.multiplayerGame.saveSnakeMoves(phenotypes);
                     return;
                 }
                 var score = this.multiplayerGame.play(phenotypes);

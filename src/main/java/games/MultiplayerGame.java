@@ -10,5 +10,5 @@ public interface MultiplayerGame {
 
     void reset();
 
-    SavedGameDTO saveSnakeMoves(List<NeuralNetwork> neuralNetworks, int maxNumberOfMoves);
+    SavedGameDTO saveSnakeMoves(List<NeuralNetwork> neuralNetworks);
 }
