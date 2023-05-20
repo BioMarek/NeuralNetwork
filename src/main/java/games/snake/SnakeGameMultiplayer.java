@@ -225,6 +225,7 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
     /**
      * Plays the game and saves grid arrangements so they can be used later e.g. for visualization.
      */
+    @Override
     public SavedGameDTO saveSnakeMoves(List<NeuralNetwork> neuralNetworks) {
         var savedGameDTO = new SavedGameDTO();
         savedGameDTO.rows = rows;

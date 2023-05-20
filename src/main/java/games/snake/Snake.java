@@ -92,7 +92,7 @@ public class Snake {
     /**
      * Places Snakes {@link BodyPart}s onto grid.
      */
-    protected void placeSnake() {
+    public void placeSnake() {
         for (int j = bodyParts.size() - 1; j >= 0; j--) { // head will be always on top of other bodyparts
             var bodyPart = bodyParts.get(j);
             if (bodyPart.isHead)
