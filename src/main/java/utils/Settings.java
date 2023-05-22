@@ -28,7 +28,7 @@ public class Settings {
     public static boolean SELF_COLLISION = false;
 
     /**
-     * multiplayer game
+     * Multiplayer game
      */
     public static int NUM_OF_PLAYERS = 2;
     public static int MAX_NUM_OF_FOOD = 30;
@@ -38,7 +38,14 @@ public class Settings {
     public static int STEPS_TO_REDUCTION = 15; // simulates starvation, snakes running in circles will be eliminated
 
     /**
-     * graphic
+     * Free evolution
+     */
+    public static boolean FREE_EVOLUTION_ON = false;
+    public static int OFFSPRING_COST = 3; // number of bodyparts that are removed when offspring is generated
+
+
+    /**
+     * Graphic
      */
     public static int TIMER_DELAY = 50;
     public static int GRID_COLUMNS = 1500;
@@ -66,6 +73,16 @@ public class Settings {
         LEAVE_CORPSE = true;
         HAS_WALL = false;
         SELF_COLLISION = false;
+    }
+
+    public static void freeEvolutionSettings() {
+        FREE_EVOLUTION_ON = true;
+        NUM_OF_PLAYERS = 10;
+        CHANCE_MUTATE_WEIGHT = 0.8d;
+        CHANCE_HARD_MUTATE_WEIGHT = 0.1d;
+        CHANCE_SWITCH_CONNECTION_ENABLED = 0.2d;
+        CHANCE_ADD_NODE = 0.03d;
+        CHANCE_ADD_CONNECTION = 0.03d;
     }
 
     public static void singlePlayerGame() {

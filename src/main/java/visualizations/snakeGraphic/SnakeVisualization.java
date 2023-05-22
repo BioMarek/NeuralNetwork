@@ -40,7 +40,8 @@ public class SnakeVisualization implements GridVisualization {
             snakeLegend.graphics = graphics;
             setBackground();
             drawGrid();
-            snakeLegend.drawLegend(currentFrame);
+            if (!Settings.FREE_EVOLUTION_ON)
+                snakeLegend.drawLegend(currentFrame);
         }
     }
 
