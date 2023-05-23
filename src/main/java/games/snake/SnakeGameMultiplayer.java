@@ -227,7 +227,9 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
     @Override
     public SavedGameDTO saveSnakeMoves(List<NeuralNetwork> neuralNetworks) {
         var savedGameDTO = new SavedGameDTO();
+        int frameCount = 0;
         for (int move = 0; move < Settings.MAX_NUM_OF_MOVES; move++) {
+            frameCount++;
             for (int i = 0; i < neuralNetworks.size(); i++) {
                 var networkOutput = neuralNetworks.get(i).getNetworkOutput(snakeSightDTO.getInput_8(snakes.get(i)));
                 moveSnakeToDirection(snakes.get(i), outputToDirection(networkOutput));
@@ -240,6 +242,7 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
             savedGameDTO.grid.add(arrayCopy(grid));
         }
         setSaveGameMetadata(savedGameDTO);
+        savedGameDTO.totalFrames = frameCount;
         return savedGameDTO;
     }
 
@@ -247,7 +250,6 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
         savedGameDTO.rows = rows;
         savedGameDTO.columns = columns;
         savedGameDTO.fileName = SaveGameUtil.getCurrentDateTimeAsString() + ".sav";
-        savedGameDTO.totalFrames = Settings.MAX_NUM_OF_MOVES;
     }
 
     /**

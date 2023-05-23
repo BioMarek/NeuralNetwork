@@ -3,15 +3,12 @@ package games.freeEvolution;
 import games.snake.BodyPart;
 import games.snake.Snake;
 import games.snake.SnakeMap;
-import neat.evolution.Genotype;
 import neat.phenotype.NeuralNetwork;
 import utils.Direction;
 import utils.Settings;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static utils.Util.randomFreeCoordinate;
 
 public class FESnake {
     public static int names = 0;
@@ -58,16 +55,8 @@ public class FESnake {
      * Removes one {@link BodyPart}. Used to simulate starvation
      */
     public void reduceSnakeByOne() {
-        // TODO remove restart
         removeSnake(false);
-        if (bodyParts.size() == 1) {
-            var coordinates = randomFreeCoordinate(grid);
-            resetSnake(coordinates.getFirst(), coordinates.getSecond(), Direction.randomDirection());
-            snakeScore += Settings.DEATH_PENALTY;
-        } else {
-            bodyParts.remove(bodyParts.size() - 1);
-        }
-        placeSnake();
+        bodyParts.remove(bodyParts.size() - 1);
     }
 
     /**

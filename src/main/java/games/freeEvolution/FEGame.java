@@ -1,12 +1,10 @@
 package games.freeEvolution;
 
-import games.MultiplayerGame;
 import games.snake.BodyPart;
 import games.snake.SnakeMap;
 import games.snake.dtos.SnakeSightDTO;
 import games.snake.savegame.SaveGameUtil;
 import games.snake.savegame.SavedGameDTO;
-import neat.evolution.Genotype;
 import neat.phenotype.NeuralNetwork;
 import utils.Direction;
 import utils.Settings;
@@ -32,7 +30,7 @@ public class FEGame {
     public FEGame(int inputs, int outputs) {
         this.rows = Settings.GRID_ROWS / Settings.PIXELS_PER_SQUARE;
         this.columns = Settings.GRID_COLUMNS / Settings.PIXELS_PER_SQUARE;
-        this.inputs= inputs;
+        this.inputs = inputs;
         this.outputs = outputs;
         reset();
     }
@@ -127,13 +125,15 @@ public class FEGame {
         if (snakeCollision(snake, row, column)) {
             var foodPlaced = snake.removeSnake(Settings.LEAVE_CORPSE);
             numOfFood += foodPlaced;
-            System.out.println("death");
             snakes.remove(snake);
         } else {
             moveSnakeByOne(snake, row, column);
             if (snake.stepsMoved == Settings.STEPS_TO_REDUCTION) {
                 snake.stepsMoved = 0;
                 snake.reduceSnakeByOne();
+                if (snake.size() == 0) {
+                    snakes.remove(snake);
+                }
             }
         }
     }
@@ -215,8 +215,10 @@ public class FEGame {
      */
     public SavedGameDTO saveSnakeMoves() {
         var savedGameDTO = new SavedGameDTO();
+        int frameCount = 0;
 
         for (int move = 0; move < Settings.MAX_NUM_OF_MOVES; move++) {
+            frameCount++;
             for (int i = 0; i < snakes.size(); i++) {
                 var networkOutput = snakes.get(i).getNeuralNetwork().getNetworkOutput(snakeSightDTO.getInput_8(snakes.get(i)));
                 moveSnakeToDirection(snakes.get(i), outputToDirection(networkOutput));
@@ -226,6 +228,7 @@ public class FEGame {
                 break;
         }
         setSaveGameMetadata(savedGameDTO);
+        savedGameDTO.totalFrames = frameCount;
         return savedGameDTO;
     }
 
@@ -233,7 +236,7 @@ public class FEGame {
         savedGameDTO.rows = rows;
         savedGameDTO.columns = columns;
         savedGameDTO.fileName = SaveGameUtil.getCurrentDateTimeAsString() + ".sav";
-        savedGameDTO.totalFrames = Settings.MAX_NUM_OF_MOVES;
+
     }
 
     /**
