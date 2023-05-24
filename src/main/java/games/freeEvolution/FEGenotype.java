@@ -262,8 +262,8 @@ public class FEGenotype implements Comparable<Genotype> {
         return genotype;
     }
 
-    public FEGenotype getMutatedCopy(FEGenotype feGenotype) {
-        FEGenotype genotype = feGenotype.copy();
+    public FEGenotype getMutatedCopy() {
+        FEGenotype genotype = this.copy();
         genotype.mutateGenotype();
 
         if (isRandomChanceTrue(Settings.CHANCE_ADD_NODE))

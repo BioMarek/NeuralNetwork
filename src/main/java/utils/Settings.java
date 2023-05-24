@@ -42,7 +42,7 @@ public class Settings {
      */
     public static boolean FREE_EVOLUTION_ON = false;
     public static int OFFSPRING_COST = 3; // number of bodyparts that are removed when offspring is generated
-
+    public static int OFFSPRING_THRESHOLD = 6;
 
     /**
      * Graphic
@@ -83,6 +83,7 @@ public class Settings {
         CHANCE_SWITCH_CONNECTION_ENABLED = 0.2d;
         CHANCE_ADD_NODE = 0.03d;
         CHANCE_ADD_CONNECTION = 0.03d;
+        OFFSPRING_COST = 3;
     }
 
     public static void singlePlayerGame() {

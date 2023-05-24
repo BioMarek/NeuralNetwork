@@ -57,12 +57,15 @@ public class FEGame {
     private void initSnakes() {
         snakes = new ArrayList<>();
         for (int i = 0; i < Settings.NUM_OF_PLAYERS; i++) {
-            var coordinates = randomFreeCoordinate(grid);
-            var snake = new FESnake(grid, coordinates.getFirst(), coordinates.getSecond(), Direction.NONE);
-            snake.genotype = new FEGenotype(inputs, outputs);
-            snake.placeSnake();
-            snakes.add(snake);
+            createSnake();
         }
+    }
+
+    protected void createSnake() {
+        var snake = new FESnake(grid);
+        snake.genotype = new FEGenotype(inputs, outputs);
+        snake.placeSnake();
+        snakes.add(snake);
     }
 
     /**
@@ -223,7 +226,19 @@ public class FEGame {
                 var networkOutput = snakes.get(i).getNeuralNetwork().getNetworkOutput(snakeSightDTO.getInput_8(snakes.get(i)));
                 moveSnakeToDirection(snakes.get(i), outputToDirection(networkOutput));
             }
+            if (snakes.size() < Settings.NUM_OF_PLAYERS) {
+                for (int i = 0; i < Settings.NUM_OF_PLAYERS - snakes.size(); i++) {
+                    createSnake();
+                }
+            }
             savedGameDTO.grid.add(arrayCopy(grid));
+            for (int i = 0; i < snakes.size(); i++) {
+                if (snakes.get(i).size() >= Settings.OFFSPRING_THRESHOLD) {
+                    var offspring = snakes.get(i).produceOffSpring();
+                    snakes.add(offspring);
+                    offspring.placeSnake();
+                }
+            }
             if (snakes.size() == 0)
                 break;
         }

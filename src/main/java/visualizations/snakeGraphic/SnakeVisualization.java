@@ -7,6 +7,7 @@ import utils.Settings;
 
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.util.Set;
 
 public class SnakeVisualization implements GridVisualization {
     private Graphics2D graphics;
