@@ -13,12 +13,12 @@ public class Main {
     public static void main(String[] args) {
 //        setupNeatNeuralNetworkWithMultiplayer();
 
-//        setupFreeEvolution();
+        setupFreeEvolution();
 
 //        playSaveGame("05-26-204251.sav");
 
-        var videoGenerator = new VideoGenerator();
-        videoGenerator.generateSavedGameVideo("05-26-205732.sav");
+//        var videoGenerator = new VideoGenerator();
+//        videoGenerator.generateSavedGameVideo("05-26-204251.sav");
 
     }
 

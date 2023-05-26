@@ -29,7 +29,7 @@ public class SnakeVisualization implements GridVisualization {
     @Override
     public void createNextFrame() {
         System.out.println("creating frame " + currentFrame);
-        if (++currentFrame >= savedGameDTO.totalFrames)
+        if (currentFrame++ >= savedGameDTO.totalFrames)
             System.exit(0);
     }
 

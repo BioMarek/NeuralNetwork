@@ -11,7 +11,6 @@ import utils.Settings;
 import visualizations.snakeGraphic.GridVisualization;
 import visualizations.snakeGraphic.SnakeVisualization;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 

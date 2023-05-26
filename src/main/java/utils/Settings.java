@@ -57,7 +57,7 @@ public class Settings {
     /**
      * Settings for mp4 generation
      */
-    public static int VIDEO_FPS = 30; // frames per second for mp4
+    public static int VIDEO_FPS = 20; // frames per second for mp4
     public static String VIDEO_BASE_PATH = "./movies/"; // where to save generated videos
     public static int VIDEO_REPEAT_LAST_FRAME = 0; // how many times the last image should be repeated in video, 30 is one second
 
