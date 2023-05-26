@@ -84,6 +84,9 @@ public class Settings {
         CHANCE_ADD_NODE = 0.03d;
         CHANCE_ADD_CONNECTION = 0.03d;
         OFFSPRING_COST = 3;
+        MAX_NUM_OF_FOOD = 60;
+        LEAVE_CORPSE = false;
+        HAS_WALL = false;
     }
 
     public static void singlePlayerGame() {

@@ -10,7 +10,9 @@ import utils.Direction;
 import utils.Settings;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static utils.Util.arrayCopy;
 import static utils.Util.randomFreeCoordinate;
@@ -25,6 +27,7 @@ public class FEGame {
     protected List<FESnake> snakes;
     private SnakeSightDTO snakeSightDTO;
     public int numOfFood;
+    public Map<Integer, Integer> scores;
 
 
     public FEGame(int inputs, int outputs) {
@@ -32,6 +35,7 @@ public class FEGame {
         this.columns = Settings.GRID_COLUMNS / Settings.PIXELS_PER_SQUARE;
         this.inputs = inputs;
         this.outputs = outputs;
+        this.scores = new HashMap<>();
         reset();
     }
 
@@ -66,6 +70,7 @@ public class FEGame {
         snake.genotype = new FEGenotype(inputs, outputs);
         snake.placeSnake();
         snakes.add(snake);
+        scores.put(snake.id, 1);
     }
 
     /**
@@ -236,6 +241,8 @@ public class FEGame {
                 if (snakes.get(i).size() >= Settings.OFFSPRING_THRESHOLD) {
                     var offspring = snakes.get(i).produceOffSpring();
                     snakes.add(offspring);
+                    var currentValue = scores.get(offspring.name);
+                    scores.put(offspring.name, currentValue + 1);
                     offspring.placeSnake();
                 }
             }
@@ -251,6 +258,10 @@ public class FEGame {
         savedGameDTO.rows = rows;
         savedGameDTO.columns = columns;
         savedGameDTO.fileName = SaveGameUtil.getCurrentDateTimeAsString() + ".sav";
+
+    }
+
+    public void calculateScores(){
 
     }
 

@@ -3,7 +3,6 @@ package games.freeEvolution;
 import games.snake.BodyPart;
 import games.snake.Snake;
 import games.snake.SnakeMap;
-import neat.evolution.Genotype;
 import neat.phenotype.NeuralNetwork;
 import utils.Direction;
 import utils.Settings;
@@ -24,12 +23,12 @@ public class FESnake {
     public int stepsMoved;
 
 
-    public FESnake(int[][] grid, int row, int column, Direction direction) {
+    public FESnake(int[][] grid, int row, int column, Direction direction, int name) {
         resetSnake(row, column, direction);
         this.grid = grid;
         this.stepsMoved = 0;
-        this.name = names++ % Settings.NUM_OF_PLAYERS;
-        this.id = names;
+        this.name = name;
+        this.id = names++;
     }
 
     public FESnake(int[][] grid) {
@@ -37,7 +36,7 @@ public class FESnake {
         resetSnake(coordinates.getFirst(), coordinates.getSecond(), Direction.NONE);
         this.grid = grid;
         this.stepsMoved = 0;
-        this.name = names++ % Settings.NUM_OF_PLAYERS;
+        this.name = names++ % 15;
         this.id = names;
     }
 
@@ -109,13 +108,12 @@ public class FESnake {
     public FESnake produceOffSpring() {
         removeSnake(false);
         var lastBodypart = bodyParts.get(bodyParts.size() - 1);
-        var offspring = new FESnake(grid, lastBodypart.row, lastBodypart.column, Direction.opposite(lastDirection));
+        var offspring = new FESnake(grid, lastBodypart.row, lastBodypart.column, Direction.opposite(lastDirection), name);
         offspring.genotype = genotype.getMutatedCopy();
         for (int i = 0; i < Settings.OFFSPRING_COST; i++) {
             bodyParts.remove(bodyParts.size() - 1);
         }
         placeSnake();
-        System.out.println("offspring produced");
         return offspring;
     }
 
