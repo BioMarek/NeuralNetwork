@@ -35,6 +35,7 @@ public class FEGame {
         this.columns = Settings.GRID_COLUMNS / Settings.PIXELS_PER_SQUARE;
         this.inputs = inputs;
         this.outputs = outputs;
+        // TODO scores should be printed or used or removed
         this.scores = new HashMap<>();
         reset();
     }
