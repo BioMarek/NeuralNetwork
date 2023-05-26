@@ -37,7 +37,17 @@ public enum Colors {
             case 13 -> new Color(240, 128, 128, alpha);
             case 14 -> new Color(240, 232, 170, alpha);
             case 15 -> new Color(128, 255, 0, alpha);
-            case 16 -> new Color(30, 30, 30, 255);
+            case 16 -> new Color(255, 102, 102, alpha);
+            case 17 -> new Color(153, 255, 51, alpha);
+            case 18 -> new Color(204, 204, 0, alpha);
+            case 19 -> new Color(204, 102, 0, alpha);
+            case 20 -> new Color(102, 255, 255, alpha);
+            case 21 -> new Color(0, 102, 204, alpha);
+            case 22 -> new Color(204, 153, 255, alpha);
+            case 23 -> new Color(255, 153, 255, alpha);
+            case 24 -> new Color(153, 0, 76, alpha);
+            case 25 -> new Color(0, 102, 102, alpha);
+            case 26 -> new Color(30, 30, 30, 255);
             default -> throw new RuntimeException("too many colors used");
         };
     }

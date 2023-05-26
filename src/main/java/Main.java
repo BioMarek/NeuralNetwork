@@ -1,8 +1,9 @@
+import games.freeEvolution.FEGame;
 import games.snake.SnakeGameMultiplayer;
 import games.snake.savegame.SaveGameUtil;
+import games.snake.savegame.SavedGameDTO;
 import neat.evolution.GenePool;
 import utils.Settings;
-import utils.Util;
 import visualizations.snakeGraphic.SnakeFrame;
 import visualizations.snakeGraphic.SnakePanel;
 import visualizations.snakeGraphic.videoGeneration.VideoGenerator;
@@ -10,12 +11,14 @@ import visualizations.snakeGraphic.videoGeneration.VideoGenerator;
 public class Main {
 
     public static void main(String[] args) {
-        setupNeatNeuralNetworkWithMultiplayer();
+//        setupNeatNeuralNetworkWithMultiplayer();
 
-//        playSaveGame("05-06-202527.sav");
+        setupFreeEvolution();
+
+//        playSaveGame("05-26-204251.sav");
 
 //        var videoGenerator = new VideoGenerator();
-//        videoGenerator.generateSavedGameVideo("05-15-195741.sav");
+//        videoGenerator.generateSavedGameVideo("05-26-204251.sav");
 
     }
 
@@ -35,6 +38,18 @@ public class Main {
 
         SaveGameUtil.saveObjectToFile(genePool.savedGameDTO);
         new SnakeFrame(new SnakePanel(genePool.savedGameDTO));
+    }
+
+    public static void setupFreeEvolution() {
+        Settings.freeEvolutionSettings();
+        long start = System.currentTimeMillis();
+        var feGame = new FEGame(8, 4);
+        SavedGameDTO savedGameDTO = feGame.saveSnakeMoves();
+        long stop = System.currentTimeMillis();
+        System.out.println("It took: " + (stop - start) / 1000 + "s");
+
+        SaveGameUtil.saveObjectToFile(savedGameDTO);
+        new SnakeFrame(new SnakePanel(savedGameDTO));
     }
 
     public static void playSaveGame(String filename) {

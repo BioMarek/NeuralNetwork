@@ -28,7 +28,7 @@ public class Settings {
     public static boolean SELF_COLLISION = false;
 
     /**
-     * multiplayer game
+     * Multiplayer game
      */
     public static int NUM_OF_PLAYERS = 2;
     public static int MAX_NUM_OF_FOOD = 30;
@@ -38,7 +38,14 @@ public class Settings {
     public static int STEPS_TO_REDUCTION = 15; // simulates starvation, snakes running in circles will be eliminated
 
     /**
-     * graphic
+     * Free evolution
+     */
+    public static boolean FREE_EVOLUTION_ON = false;
+    public static int OFFSPRING_COST = 3; // number of bodyparts that are removed when offspring is generated
+    public static int OFFSPRING_THRESHOLD = 6;
+
+    /**
+     * Graphic
      */
     public static int TIMER_DELAY = 50;
     public static int GRID_COLUMNS = 1500;
@@ -50,7 +57,7 @@ public class Settings {
     /**
      * Settings for mp4 generation
      */
-    public static int VIDEO_FPS = 30; // frames per second for mp4
+    public static int VIDEO_FPS = 20; // frames per second for mp4
     public static String VIDEO_BASE_PATH = "./movies/"; // where to save generated videos
     public static int VIDEO_REPEAT_LAST_FRAME = 0; // how many times the last image should be repeated in video, 30 is one second
 
@@ -66,6 +73,22 @@ public class Settings {
         LEAVE_CORPSE = true;
         HAS_WALL = false;
         SELF_COLLISION = false;
+    }
+
+    public static void freeEvolutionSettings() {
+        FREE_EVOLUTION_ON = true;
+        GRID_COLUMNS = 1500;
+        PIXELS_PER_SQUARE = 20;
+        NUM_OF_PLAYERS = 25;
+        CHANCE_MUTATE_WEIGHT = 0.8d;
+        CHANCE_HARD_MUTATE_WEIGHT = 0.1d;
+        CHANCE_SWITCH_CONNECTION_ENABLED = 0.2d;
+        CHANCE_ADD_NODE = 0.03d;
+        CHANCE_ADD_CONNECTION = 0.03d;
+        OFFSPRING_COST = 3;
+        MAX_NUM_OF_FOOD = 300;
+        LEAVE_CORPSE = false;
+        HAS_WALL = false;
     }
 
     public static void singlePlayerGame() {

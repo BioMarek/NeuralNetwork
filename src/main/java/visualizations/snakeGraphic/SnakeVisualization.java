@@ -7,6 +7,7 @@ import utils.Settings;
 
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.util.Set;
 
 public class SnakeVisualization implements GridVisualization {
     private Graphics2D graphics;
@@ -22,13 +23,13 @@ public class SnakeVisualization implements GridVisualization {
         this.snakeLegend = new SnakeLegend(graphics, savedGameDTO);
         rows = savedGameDTO.rows;
         columns = savedGameDTO.columns;
-        this.squareSizePixels = 20;
+        this.squareSizePixels = Settings.PIXELS_PER_SQUARE;
     }
 
     @Override
     public void createNextFrame() {
         System.out.println("creating frame " + currentFrame);
-        if (currentFrame++ > savedGameDTO.totalFrames)
+        if (currentFrame++ >= savedGameDTO.totalFrames)
             System.exit(0);
     }
 
@@ -40,7 +41,8 @@ public class SnakeVisualization implements GridVisualization {
             snakeLegend.graphics = graphics;
             setBackground();
             drawGrid();
-            snakeLegend.drawLegend(currentFrame);
+            if (!Settings.FREE_EVOLUTION_ON)
+                snakeLegend.drawLegend(currentFrame);
         }
     }
 
@@ -87,7 +89,7 @@ public class SnakeVisualization implements GridVisualization {
     }
 
     public void turnAntialiasingOn() {
-            graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            graphics.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+        graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        graphics.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
     }
 }

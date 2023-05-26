@@ -1,33 +1,43 @@
-package games.snake;
+package games.freeEvolution;
 
+import games.snake.BodyPart;
+import games.snake.Snake;
+import games.snake.SnakeMap;
 import neat.phenotype.NeuralNetwork;
 import utils.Direction;
 import utils.Settings;
+import utils.Util;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static utils.Util.randomFreeCoordinate;
-
-
-/**
- * Initializes snake, all body parts start on same position
- */
-public class Snake {
-    public NeuralNetwork neuralNetwork;
+public class FESnake {
+    public static int names = 0;
+    public FEGenotype genotype;
     protected int[][] grid;
     public List<BodyPart> bodyParts = new ArrayList<>();
     public Direction lastDirection;
-    public int name;
+    public int color;
+    public int id;
     public int snakeScore;
     public int stepsMoved;
 
 
-    public Snake(int[][] grid, int row, int column, Direction direction, int name) {
+    public FESnake(int[][] grid, int row, int column, Direction direction, int id) {
         resetSnake(row, column, direction);
         this.grid = grid;
-        this.name = name;
         this.stepsMoved = 0;
+        this.color = id % 25;
+        this.id = id;
+    }
+
+    public FESnake(int[][] grid) {
+        var coordinates = Util.randomFreeCoordinate(grid);
+        resetSnake(coordinates.getFirst(), coordinates.getSecond(), Direction.NONE);
+        this.grid = grid;
+        this.stepsMoved = 0;
+        this.color = names++ % 25;
+        this.id = names;
     }
 
     public void resetSnake(int row, int column, Direction direction) {
@@ -49,7 +59,7 @@ public class Snake {
         if (Settings.SELF_COLLISION)
             return grid[row][column] >= SnakeMap.BODY.value;
         else
-            return grid[row][column] >= SnakeMap.BODY.value && (grid[row][column] != name + SnakeMap.BODY.value && grid[row][column] != name + SnakeMap.HEAD.value);
+            return grid[row][column] >= SnakeMap.BODY.value && (grid[row][column] != color + SnakeMap.BODY.value && grid[row][column] != color + SnakeMap.HEAD.value);
     }
 
     /**
@@ -57,14 +67,7 @@ public class Snake {
      */
     public void reduceSnakeByOne() {
         removeSnake(false);
-        if (bodyParts.size() == 1) {
-            var coordinates = randomFreeCoordinate(grid);
-            resetSnake(coordinates.getFirst(), coordinates.getSecond(), Direction.randomDirection());
-            snakeScore += Settings.DEATH_PENALTY;
-        } else {
-            bodyParts.remove(bodyParts.size() - 1);
-        }
-        placeSnake();
+        bodyParts.remove(bodyParts.size() - 1);
     }
 
     /**
@@ -96,10 +99,27 @@ public class Snake {
         for (int j = bodyParts.size() - 1; j >= 0; j--) { // head will be always on top of other bodyparts
             var bodyPart = bodyParts.get(j);
             if (bodyPart.isHead)
-                grid[bodyPart.row][bodyPart.column] = name + SnakeMap.HEAD.value;
+                grid[bodyPart.row][bodyPart.column] = color + SnakeMap.HEAD.value;
             else
-                grid[bodyPart.row][bodyPart.column] = name + SnakeMap.BODY.value;
+                grid[bodyPart.row][bodyPart.column] = color + SnakeMap.BODY.value;
         }
+    }
+
+    public FESnake produceOffSpring() {
+        removeSnake(false);
+        var lastBodypart = bodyParts.get(bodyParts.size() - 1);
+        var offspring = new FESnake(grid, lastBodypart.row, lastBodypart.column, Direction.opposite(lastDirection), id);
+        offspring.genotype = genotype.getMutatedCopy();
+        System.out.println("parent id " + id + " " + color + " offspring " + id + " " +color);
+        for (int i = 0; i < Settings.OFFSPRING_COST; i++) {
+            bodyParts.remove(bodyParts.size() - 1);
+        }
+        placeSnake();
+        return offspring;
+    }
+
+    public NeuralNetwork getNeuralNetwork() {
+        return genotype.createPhenotype();
     }
 
     public int size() {
