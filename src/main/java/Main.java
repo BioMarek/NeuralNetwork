@@ -6,18 +6,19 @@ import neat.evolution.GenePool;
 import utils.Settings;
 import visualizations.snakeGraphic.SnakeFrame;
 import visualizations.snakeGraphic.SnakePanel;
+import visualizations.snakeGraphic.videoGeneration.VideoGenerator;
 
 public class Main {
 
     public static void main(String[] args) {
 //        setupNeatNeuralNetworkWithMultiplayer();
 
-        setupFreeEvolution();
+//        setupFreeEvolution();
 
-//        playSaveGame("05-06-202527.sav");
+//        playSaveGame("05-26-204251.sav");
 
-//        var videoGenerator = new VideoGenerator();
-//        videoGenerator.generateSavedGameVideo("05-15-195741.sav");
+        var videoGenerator = new VideoGenerator();
+        videoGenerator.generateSavedGameVideo("05-26-205732.sav");
 
     }
 

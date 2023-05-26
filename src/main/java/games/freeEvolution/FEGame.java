@@ -241,8 +241,8 @@ public class FEGame {
                 if (snakes.get(i).size() >= Settings.OFFSPRING_THRESHOLD) {
                     var offspring = snakes.get(i).produceOffSpring();
                     snakes.add(offspring);
-                    var currentValue = scores.get(offspring.name);
-                    scores.put(offspring.name, currentValue + 1);
+                    var currentValue = scores.get(offspring.id);
+                    scores.put(offspring.color, currentValue + 1);
                     offspring.placeSnake();
                 }
             }

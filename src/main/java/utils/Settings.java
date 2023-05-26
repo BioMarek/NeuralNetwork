@@ -77,14 +77,16 @@ public class Settings {
 
     public static void freeEvolutionSettings() {
         FREE_EVOLUTION_ON = true;
-        NUM_OF_PLAYERS = 10;
+        GRID_COLUMNS = 1500;
+        PIXELS_PER_SQUARE = 20;
+        NUM_OF_PLAYERS = 25;
         CHANCE_MUTATE_WEIGHT = 0.8d;
         CHANCE_HARD_MUTATE_WEIGHT = 0.1d;
         CHANCE_SWITCH_CONNECTION_ENABLED = 0.2d;
         CHANCE_ADD_NODE = 0.03d;
         CHANCE_ADD_CONNECTION = 0.03d;
         OFFSPRING_COST = 3;
-        MAX_NUM_OF_FOOD = 60;
+        MAX_NUM_OF_FOOD = 300;
         LEAVE_CORPSE = false;
         HAS_WALL = false;
     }

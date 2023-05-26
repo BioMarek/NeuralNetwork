@@ -23,7 +23,7 @@ public class SnakeVisualization implements GridVisualization {
         this.snakeLegend = new SnakeLegend(graphics, savedGameDTO);
         rows = savedGameDTO.rows;
         columns = savedGameDTO.columns;
-        this.squareSizePixels = 20;
+        this.squareSizePixels = Settings.PIXELS_PER_SQUARE;
     }
 
     @Override

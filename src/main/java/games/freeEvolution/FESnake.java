@@ -17,18 +17,18 @@ public class FESnake {
     protected int[][] grid;
     public List<BodyPart> bodyParts = new ArrayList<>();
     public Direction lastDirection;
-    public int name;
+    public int color;
     public int id;
     public int snakeScore;
     public int stepsMoved;
 
 
-    public FESnake(int[][] grid, int row, int column, Direction direction, int name) {
+    public FESnake(int[][] grid, int row, int column, Direction direction, int id) {
         resetSnake(row, column, direction);
         this.grid = grid;
         this.stepsMoved = 0;
-        this.name = name;
-        this.id = names++;
+        this.color = id % 25;
+        this.id = id;
     }
 
     public FESnake(int[][] grid) {
@@ -36,7 +36,7 @@ public class FESnake {
         resetSnake(coordinates.getFirst(), coordinates.getSecond(), Direction.NONE);
         this.grid = grid;
         this.stepsMoved = 0;
-        this.name = names++ % 15;
+        this.color = names++ % 25;
         this.id = names;
     }
 
@@ -59,7 +59,7 @@ public class FESnake {
         if (Settings.SELF_COLLISION)
             return grid[row][column] >= SnakeMap.BODY.value;
         else
-            return grid[row][column] >= SnakeMap.BODY.value && (grid[row][column] != name + SnakeMap.BODY.value && grid[row][column] != name + SnakeMap.HEAD.value);
+            return grid[row][column] >= SnakeMap.BODY.value && (grid[row][column] != color + SnakeMap.BODY.value && grid[row][column] != color + SnakeMap.HEAD.value);
     }
 
     /**
@@ -99,17 +99,18 @@ public class FESnake {
         for (int j = bodyParts.size() - 1; j >= 0; j--) { // head will be always on top of other bodyparts
             var bodyPart = bodyParts.get(j);
             if (bodyPart.isHead)
-                grid[bodyPart.row][bodyPart.column] = name + SnakeMap.HEAD.value;
+                grid[bodyPart.row][bodyPart.column] = color + SnakeMap.HEAD.value;
             else
-                grid[bodyPart.row][bodyPart.column] = name + SnakeMap.BODY.value;
+                grid[bodyPart.row][bodyPart.column] = color + SnakeMap.BODY.value;
         }
     }
 
     public FESnake produceOffSpring() {
         removeSnake(false);
         var lastBodypart = bodyParts.get(bodyParts.size() - 1);
-        var offspring = new FESnake(grid, lastBodypart.row, lastBodypart.column, Direction.opposite(lastDirection), name);
+        var offspring = new FESnake(grid, lastBodypart.row, lastBodypart.column, Direction.opposite(lastDirection), id);
         offspring.genotype = genotype.getMutatedCopy();
+        System.out.println("parent id " + id + " " + color + " offspring " + id + " " +color);
         for (int i = 0; i < Settings.OFFSPRING_COST; i++) {
             bodyParts.remove(bodyParts.size() - 1);
         }
