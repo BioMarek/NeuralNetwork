@@ -3,7 +3,6 @@ package utils;
 import java.util.function.Function;
 
 public class Settings {
-    public static int GRID_SQUARES = 20; // For SingleplayerSnake
     public static boolean HAS_WALL = true;
     public static int NUM_OF_GENERATIONS = 200; // 300
     public static int TOTAL_NUM_OF_GENOTYPES = 100;
@@ -93,10 +92,11 @@ public class Settings {
 
     public static void singlePlayerGame() {
         NUM_OF_PLAYERS = 1;
-        GRID_SQUARES = 20;
-        SNAKE_SIGHT = 7;
+        SNAKE_SIGHT = 15;
         DEATH_PENALTY = -1;
         MAX_NUM_OF_FOOD = 1;
+        PIXELS_PER_SQUARE = 40;
+        STEPS_TO_REDUCTION = 501;
         LEAVE_CORPSE = false;
         HAS_WALL = true;
         SELF_COLLISION = true;
