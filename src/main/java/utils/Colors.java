@@ -59,4 +59,8 @@ public enum Colors {
     public static void setColor(Graphics2D graphics, Color color) {
         graphics.setColor(color);
     }
+
+    public static Color textWithAlpha(int alpha) {
+        return new Color(210, 210, 210, alpha);
+    }
 }

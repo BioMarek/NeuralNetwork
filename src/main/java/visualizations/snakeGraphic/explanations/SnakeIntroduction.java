@@ -7,6 +7,7 @@ import utils.Settings;
 import visualizations.snakeGraphic.GridVisualization;
 import visualizations.snakeGraphic.SnakeLegend;
 
+import java.awt.BasicStroke;
 import java.awt.Graphics2D;
 
 import static utils.Util.arrayCopy;
@@ -18,9 +19,11 @@ public class SnakeIntroduction implements GridVisualization {
     private final int rows;
     protected int[][] grid;
     private int currentFrame = 0;
-    private int totalFrames = 30;
+    private int totalFrames = 50;
     private final int squareSizePixels = 40;
     private final SavedGameDTO savedGameDTO;
+
+    private int GRID_FRAMES = 50;
 
     public SnakeIntroduction() {
         this.rows = Settings.GRID_ROWS / Settings.PIXELS_PER_SQUARE;
@@ -42,8 +45,7 @@ public class SnakeIntroduction implements GridVisualization {
     @Override
     public void createNextFrame() {
         System.out.println("creating frame " + currentFrame);
-        if (currentFrame++ >= totalFrames)
-            System.exit(0);
+        currentFrame++;
     }
 
     @Override
@@ -52,6 +54,10 @@ public class SnakeIntroduction implements GridVisualization {
         snakeLegend.graphics = graphics;
         this.snakeLegend.drawLegend(0);
         drawGrid();
+
+        if (currentFrame > 30) {
+            drawSightRays(30, 60);
+        }
     }
 
     @Override
@@ -92,18 +98,40 @@ public class SnakeIntroduction implements GridVisualization {
     }
 
     public void initialScene() {
-        grid[6][8] = SnakeMap.FOOD.value;
-        grid[6][6] = SnakeMap.HEAD.value;
+        grid[4][4] = SnakeMap.FOOD.value;
+        grid[6][6] = SnakeMap.BODY.value;
         grid[6][5] = SnakeMap.BODY.value;
-        grid[6][4] = SnakeMap.BODY.value;
+        grid[6][4] = SnakeMap.HEAD.value;
     }
 
     public SavedGameDTO buildMockDTO() {
         var saveGame = new SavedGameDTO();
-        for (int i = 0; i <= 30; i++) {
+        for (int i = 0; i <= GRID_FRAMES; i++) {
             saveGame.grid.add(arrayCopy(grid));
             saveGame.scores.add(new int[]{0});
         }
         return saveGame;
+    }
+
+    public void drawSightRays(int startAppearingFrame, int startDisappearingFrame) {
+        var alpha = calculateAppearingAlpha(startAppearingFrame);
+        graphics.setColor(Colors.textWithAlpha(alpha));
+        graphics.setStroke(new BasicStroke(3f));
+        graphics.drawLine(160, 260, 40, 260); // left
+        graphics.drawLine(200, 260, 320, 260); // right
+        graphics.drawLine(180, 240, 180, 200); // top
+        graphics.drawLine(180, 280, 180, 400); // bottom
+
+        graphics.drawLine(160, 240, 40, 120); // top left
+        graphics.drawLine(200, 240, 320, 120);// top right
+        graphics.drawLine(160, 280, 40, 400); // bottom left
+        graphics.drawLine(200, 280, 320, 400);// bottom right
+    }
+
+    public int calculateAppearingAlpha(int startAppearingFrame) {
+        if (startAppearingFrame + 15 < currentFrame)
+            return 255;
+        else
+            return (int) ((currentFrame - startAppearingFrame) / 15.0 * 255);
     }
 }
