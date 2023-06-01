@@ -3,11 +3,13 @@ package visualizations.snakeGraphic.explanations;
 import games.snake.SnakeMap;
 import games.snake.savegame.SavedGameDTO;
 import utils.Colors;
+import utils.Pair;
 import utils.Settings;
 import visualizations.snakeGraphic.GridVisualization;
 import visualizations.snakeGraphic.SnakeLegend;
 
 import java.awt.BasicStroke;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,11 +24,12 @@ public class SnakeIntroduction implements GridVisualization {
     protected int[][] grid;
     private int slowFrame = 0;
     private int fastFrame = 0;
-    private int totalFrames = 120;
+    private int totalFrames = 90;
     private final int squareSizePixels = 40;
     private final SavedGameDTO savedGameDTO;
-    private int GRID_FRAMES = 120;
-    private int GRID_DISAPPEAR = 90;
+    private int GRID_FRAMES = 90;
+    private int GRID_DISAPPEAR = 100;
+    private int FONT_SIZE = (int) (Settings.BACKGROUND_HEIGHT / 60 * 1.2);
 
     public SnakeIntroduction() {
         Settings.VIDEO_FPS = 60;
@@ -61,13 +64,17 @@ public class SnakeIntroduction implements GridVisualization {
         this.snakeLegend.drawLegend(0);
         drawGrid();
 
-        if (slowFrame > 30) {
-            drawSightRays(30, 60);
+        var raysStart = 0; // 30
+        if (slowFrame > raysStart) {
+            drawSightRays(raysStart, 60);
         }
 
-        if (slowFrame > 60) {
-            drawNetwork(500, 100, 60);
+        var networkStart = 0; // 60
+        if (slowFrame > networkStart) {
+            drawNetwork(500, 100, networkStart);
         }
+
+        drawMovingNumber("0.5", 180, 120, 505, 128, 60, 20);
     }
 
     @Override
@@ -129,7 +136,7 @@ public class SnakeIntroduction implements GridVisualization {
         graphics.setStroke(new BasicStroke(3f));
         graphics.drawLine(160, 260, 40, 260); // left
         graphics.drawLine(200, 260, 320, 260); // right
-        graphics.drawLine(180, 240, 180, 200); // top
+        graphics.drawLine(180, 240, 180, 120); // top
         graphics.drawLine(180, 280, 180, 400); // bottom
 
         graphics.drawLine(160, 240, 40, 120); // top left
@@ -175,8 +182,29 @@ public class SnakeIntroduction implements GridVisualization {
         }
     }
 
-    public void drawMovingNumber(int startX, int startY, int endX, int endY, int startMoving, int endMoving) {
+    public void drawMovingNumber(String number, float startX, float startY, float endX, float endY, int startAnimationFastFrame, int startWaitTime) {
+        if (fastFrame < startAnimationFastFrame)
+            return;
 
+        List<Pair<Float>> coordinates = new ArrayList<>();
+        int fastFramesPerMove = 60;
+        float axisXShift = (endX - startX) / fastFramesPerMove;
+        float axisYShift = (endY - startY) / fastFramesPerMove;
+
+        for (int i = 0; i < fastFramesPerMove; i++) {
+            coordinates.add(new Pair<>(startX + axisXShift * i, startY + axisYShift * i));
+        }
+        graphics.setColor(Colors.TEXT.getColor());
+        graphics.setFont(new Font("Arial", Font.BOLD, FONT_SIZE));
+
+        if (startAnimationFastFrame + startWaitTime > fastFrame) {
+            graphics.drawString(number, startX, startY);
+        } else if (startAnimationFastFrame + fastFramesPerMove + startWaitTime > fastFrame) {
+            var currentCoordinate = coordinates.get(fastFrame - startAnimationFastFrame - startWaitTime);
+            graphics.drawString(number, currentCoordinate.getFirst(), currentCoordinate.getSecond());
+        } else {
+            graphics.drawString(number, endX, endY);
+        }
     }
 
     public int calculateAppearingAlpha(int startAppearingFrame) {
