@@ -21,11 +21,12 @@ public class SnakeIntroduction implements GridVisualization {
     private final int rows;
     protected int[][] grid;
     private int currentFrame = 0;
-    private int totalFrames = 70;
+    private int totalFrames = 90;
     private final int squareSizePixels = 40;
     private final SavedGameDTO savedGameDTO;
 
-    private int GRID_FRAMES = 70;
+    private int GRID_FRAMES = 90;
+    private int GRID_DISAPPEAR = 50;
 
     public SnakeIntroduction() {
         this.rows = Settings.GRID_ROWS / Settings.PIXELS_PER_SQUARE;
@@ -82,7 +83,7 @@ public class SnakeIntroduction implements GridVisualization {
             for (int column = 0; column < columns; column++) {
                 if (currentGrid[row][column] == 0)
                     continue;
-                numberToColor(currentGrid[row][column]);
+                numberToColor(currentGrid[row][column], calculateDisappearingAlpha(GRID_DISAPPEAR));
                 if (currentGrid[row][column] == SnakeMap.FOOD.value) {
                     graphics.fillOval(column * squareSizePixels, row * squareSizePixels, squareSizePixels, squareSizePixels);
                 } else {
@@ -92,15 +93,15 @@ public class SnakeIntroduction implements GridVisualization {
         }
     }
 
-    public void numberToColor(int num) {
+    public void numberToColor(int num, int alpha) {
         if (num == -1)
-            Colors.setColor(graphics, Colors.WALL.getColor());
+            Colors.setColor(graphics, Colors.wallWithAlpha(alpha));
         else if (num == SnakeMap.FOOD.value)
-            Colors.setColor(graphics, Colors.FOOD.getColor());
+            Colors.setColor(graphics, Colors.foodWithAlpha(alpha));
         else if (num >= SnakeMap.HEAD.value)
-            Colors.setColor(graphics, num - SnakeMap.HEAD.value, 255);
+            Colors.setColor(graphics, num - SnakeMap.HEAD.value, alpha);
         else if (num >= SnakeMap.BODY.value)
-            Colors.setColor(graphics, num - SnakeMap.BODY.value, 150);
+            Colors.setColor(graphics, num - SnakeMap.BODY.value, 150 * alpha / 255);
     }
 
     public void initialScene() {
@@ -179,10 +180,12 @@ public class SnakeIntroduction implements GridVisualization {
             return (int) ((currentFrame - startAppearingFrame) / 15.0 * 255);
     }
 
-    public int calculateDisappearingAlpha(int startDisappearingAlpha) {
-        if (startDisappearingAlpha + Settings.FADEIN_FRAMES < currentFrame)
+    public int calculateDisappearingAlpha(int startDisappearingFrame) {
+        if (startDisappearingFrame >= currentFrame)
+            return 255;
+        if (startDisappearingFrame + Settings.FADEIN_FRAMES < currentFrame)
             return 0;
         else
-            return 255 - (int) ((currentFrame - startDisappearingAlpha) / 15.0 * 255);
+            return 255 - (int) ((currentFrame - startDisappearingFrame) / 15.0 * 255);
     }
 }

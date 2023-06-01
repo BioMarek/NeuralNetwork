@@ -63,4 +63,12 @@ public enum Colors {
     public static Color textWithAlpha(int alpha) {
         return new Color(210, 210, 210, alpha);
     }
+
+    public static Color foodWithAlpha(int alpha) {
+        return new Color(255, 0, 0, alpha);
+    }
+
+    public static Color wallWithAlpha(int alpha) {
+        return new Color(210, 210, 210, alpha);
+    }
 }
