@@ -9,6 +9,8 @@ import visualizations.snakeGraphic.SnakeLegend;
 
 import java.awt.BasicStroke;
 import java.awt.Graphics2D;
+import java.util.ArrayList;
+import java.util.List;
 
 import static utils.Util.arrayCopy;
 
@@ -19,11 +21,11 @@ public class SnakeIntroduction implements GridVisualization {
     private final int rows;
     protected int[][] grid;
     private int currentFrame = 0;
-    private int totalFrames = 50;
+    private int totalFrames = 70;
     private final int squareSizePixels = 40;
     private final SavedGameDTO savedGameDTO;
 
-    private int GRID_FRAMES = 50;
+    private int GRID_FRAMES = 70;
 
     public SnakeIntroduction() {
         this.rows = Settings.GRID_ROWS / Settings.PIXELS_PER_SQUARE;
@@ -57,6 +59,10 @@ public class SnakeIntroduction implements GridVisualization {
 
         if (currentFrame > 30) {
             drawSightRays(30, 60);
+        }
+
+        if (currentFrame > 0) {
+            drawNetwork(500, 100, 0);
         }
     }
 
@@ -128,10 +134,55 @@ public class SnakeIntroduction implements GridVisualization {
         graphics.drawLine(200, 280, 320, 400);// bottom right
     }
 
+    public void drawNetwork(int startX, int startY, int startAppearingFrame) {
+        drawLayer(startX, startY, 8, 40, 50, startAppearingFrame);
+        drawLayer(startX + 200, startY + 100, 4, 40, 50, startAppearingFrame);
+        drawWeights(startX, startY, 40, 50, 8, 4);
+    }
+
+    public void drawLayer(int startX, int startY, int nodes, int nodeSize, int nodeGap, int startAppearingFrame) {
+        var alpha = calculateAppearingAlpha(startAppearingFrame);
+        graphics.setColor(Colors.textWithAlpha(alpha));
+        graphics.setStroke(new BasicStroke(3f));
+        for (int i = 0; i < nodes; i++) {
+            graphics.drawOval(startX, startY + i * nodeGap, nodeSize, nodeSize);
+        }
+    }
+
+    public void drawWeights(int startX, int startY, int nodeSize, int nodeGap, int leftNodes, int rightNodes) {
+        List<Integer> leftYs = new ArrayList<>();
+        List<Integer> rightYs = new ArrayList<>();
+        int leftX = startX + nodeSize;
+        int rightX = startX + 200;
+        int rightYShift = nodeSize / 2 + (leftNodes - rightNodes) /2 * (nodeGap + nodeSize);
+
+        for (int l = 0; l < leftNodes; l++) {
+            leftYs.add(startY + nodeSize / 2 + l * nodeGap);
+        }
+        for (int r = 0; r < rightNodes; r++) {
+            rightYs.add(rightYShift + nodeSize / 2 + r * nodeGap);
+        }
+
+
+        for (int l = 0; l < leftNodes; l++) {
+            for (int r = 0; r < rightNodes; r++) {
+                graphics.drawLine(leftX, leftYs.get(l), rightX, rightYs.get(r));
+            }
+        }
+
+    }
+
     public int calculateAppearingAlpha(int startAppearingFrame) {
-        if (startAppearingFrame + 15 < currentFrame)
+        if (startAppearingFrame + Settings.FADEIN_FRAMES < currentFrame)
             return 255;
         else
             return (int) ((currentFrame - startAppearingFrame) / 15.0 * 255);
+    }
+
+    public int calculateDisappearingAlpha(int startDisappearingAlpha) {
+        if (startDisappearingAlpha + Settings.FADEIN_FRAMES < currentFrame)
+            return 0;
+        else
+            return 255 - (int) ((currentFrame - startDisappearingAlpha) / 15.0 * 255);
     }
 }
