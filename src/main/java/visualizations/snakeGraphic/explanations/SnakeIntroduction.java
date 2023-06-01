@@ -20,15 +20,16 @@ public class SnakeIntroduction implements GridVisualization {
     private final int columns;
     private final int rows;
     protected int[][] grid;
-    private int currentFrame = 0;
-    private int totalFrames = 90;
+    private int slowFrame = 0;
+    private int fastFrame = 0;
+    private int totalFrames = 120;
     private final int squareSizePixels = 40;
     private final SavedGameDTO savedGameDTO;
-
-    private int GRID_FRAMES = 90;
-    private int GRID_DISAPPEAR = 50;
+    private int GRID_FRAMES = 120;
+    private int GRID_DISAPPEAR = 90;
 
     public SnakeIntroduction() {
+        Settings.VIDEO_FPS = 60;
         this.rows = Settings.GRID_ROWS / Settings.PIXELS_PER_SQUARE;
         this.columns = Settings.GRID_COLUMNS / Settings.PIXELS_PER_SQUARE;
         this.grid = new int[rows][columns];
@@ -47,8 +48,10 @@ public class SnakeIntroduction implements GridVisualization {
 
     @Override
     public void createNextFrame() {
-        System.out.println("creating frame " + currentFrame);
-        currentFrame++;
+        System.out.println("creating fast frame " + fastFrame);
+        fastFrame++;
+        if (fastFrame % 3 == 0)
+            slowFrame++;
     }
 
     @Override
@@ -58,18 +61,18 @@ public class SnakeIntroduction implements GridVisualization {
         this.snakeLegend.drawLegend(0);
         drawGrid();
 
-        if (currentFrame > 30) {
+        if (slowFrame > 30) {
             drawSightRays(30, 60);
         }
 
-        if (currentFrame > 0) {
-            drawNetwork(500, 100, 0);
+        if (slowFrame > 60) {
+            drawNetwork(500, 100, 60);
         }
     }
 
     @Override
     public boolean stopped() {
-        return currentFrame >= totalFrames;
+        return slowFrame >= totalFrames;
     }
 
     @Override
@@ -78,7 +81,7 @@ public class SnakeIntroduction implements GridVisualization {
     }
 
     public void drawGrid() {
-        int[][] currentGrid = savedGameDTO.grid.get(currentFrame);
+        int[][] currentGrid = savedGameDTO.grid.get(slowFrame);
         for (int row = 0; row < rows; row++) {
             for (int column = 0; column < columns; column++) {
                 if (currentGrid[row][column] == 0)
@@ -155,7 +158,7 @@ public class SnakeIntroduction implements GridVisualization {
         List<Integer> rightYs = new ArrayList<>();
         int leftX = startX + nodeSize;
         int rightX = startX + 200;
-        int rightYShift = nodeSize / 2 + (leftNodes - rightNodes) /2 * (nodeGap + nodeSize);
+        int rightYShift = nodeSize / 2 + (leftNodes - rightNodes) / 2 * (nodeGap + nodeSize);
 
         for (int l = 0; l < leftNodes; l++) {
             leftYs.add(startY + nodeSize / 2 + l * nodeGap);
@@ -170,22 +173,25 @@ public class SnakeIntroduction implements GridVisualization {
                 graphics.drawLine(leftX, leftYs.get(l), rightX, rightYs.get(r));
             }
         }
+    }
+
+    public void drawMovingNumber(int startX, int startY, int endX, int endY, int startMoving, int endMoving) {
 
     }
 
     public int calculateAppearingAlpha(int startAppearingFrame) {
-        if (startAppearingFrame + Settings.FADEIN_FRAMES < currentFrame)
+        if (startAppearingFrame + Settings.FADEIN_FRAMES < slowFrame)
             return 255;
         else
-            return (int) ((currentFrame - startAppearingFrame) / 15.0 * 255);
+            return (int) ((slowFrame - startAppearingFrame) / 15.0 * 255);
     }
 
     public int calculateDisappearingAlpha(int startDisappearingFrame) {
-        if (startDisappearingFrame >= currentFrame)
+        if (startDisappearingFrame >= slowFrame)
             return 255;
-        if (startDisappearingFrame + Settings.FADEIN_FRAMES < currentFrame)
+        if (startDisappearingFrame + Settings.FADEIN_FRAMES < slowFrame)
             return 0;
         else
-            return 255 - (int) ((currentFrame - startDisappearingFrame) / 15.0 * 255);
+            return 255 - (int) ((slowFrame - startDisappearingFrame) / 15.0 * 255);
     }
 }
