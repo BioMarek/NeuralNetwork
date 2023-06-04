@@ -11,16 +11,16 @@ import visualizations.snakeGraphic.videoGeneration.VideoGenerator;
 public class Main {
 
     public static void main(String[] args) {
-//        setupNeatNeuralNetworkWithMultiplayer();
+        setupNeatNeuralNetworkWithMultiplayer();
 
 //        setupFreeEvolution();
 
 //        playSaveGame("05-26-204251.sav");
 
-        Settings.singlePlayerGame();
-        var videoGenerator = new VideoGenerator();
+//        Settings.singlePlayerGame();
+//        var videoGenerator = new VideoGenerator();
 //        videoGenerator.generateSavedGameVideo("05-29-164129.sav");
-        videoGenerator.generateSnakeIntroduction();
+//        videoGenerator.generateSnakeIntroduction();
 
     }
 
@@ -38,7 +38,6 @@ public class Main {
         long stop = System.currentTimeMillis();
         System.out.println("It took: " + (stop - start) / 1000 + "s");
 
-        SaveGameUtil.saveObjectToFile(genePool.savedGameDTO);
         new SnakeFrame(new SnakePanel(genePool.savedGameDTO));
     }
 

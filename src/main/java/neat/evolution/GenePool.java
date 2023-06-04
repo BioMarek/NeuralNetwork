@@ -1,6 +1,7 @@
 package neat.evolution;
 
 import games.MultiplayerGame;
+import games.snake.savegame.SaveGameUtil;
 import games.snake.savegame.SavedGameDTO;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -46,7 +47,11 @@ public class GenePool implements EvolutionEngine {
             if (generation % Settings.FREQUENCY_OF_SPECIATION == 0 && generation > 0)
                 createSpecies();
             resetScores();
-            makeNextGeneration(generation > 0 && (generation % Settings.SAVE_EVERY_N_GENERATIONS == 0 || generation == Settings.NUM_OF_GENERATIONS - 1));
+            if (generation > 0 && (generation % Settings.SAVE_EVERY_N_GENERATIONS == 0 || generation == Settings.SAVE_EVERY_N_GENERATIONS)) {
+                makeNextGeneration(true);
+                SaveGameUtil.saveObjectToFile(this.savedGameDTO);
+            } else
+                makeNextGeneration(false);
             resizeSpecies();
             removeDeadSpecies();
             printSpecies();

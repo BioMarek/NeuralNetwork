@@ -4,7 +4,7 @@ import java.util.function.Function;
 
 public class Settings {
     public static boolean HAS_WALL = true;
-    public static int NUM_OF_GENERATIONS = 200; // 300
+    public static int NUM_OF_GENERATIONS = 500; // 300
     public static int TOTAL_NUM_OF_GENOTYPES = 100;
     public static int MAX_NEURONS = 1000;
     public static Function<Double, Double> HIDDEN_LAYER_ACTIVATION_FUNC = Util.activationFunctionHyperbolicTangent();
@@ -60,6 +60,7 @@ public class Settings {
     public static int VIDEO_FPS = 20; // frames per second for mp4
     public static String VIDEO_BASE_PATH = "./movies/"; // where to save generated videos
     public static int VIDEO_REPEAT_LAST_FRAME = 0; // how many times the last image should be repeated in video, 30 is one second
+    public static int SAVE_EVERY_N_GENERATIONS = 10000;
 
 
     public static void multiplayerSettings() {
