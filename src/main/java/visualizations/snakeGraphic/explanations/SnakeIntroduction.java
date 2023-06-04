@@ -24,10 +24,10 @@ public class SnakeIntroduction implements GridVisualization {
     protected int[][] grid;
     private int slowFrame = 0;
     private int fastFrame = 0;
-    private int totalFrames = 90;
+    private int totalFrames = 120;
     private final int squareSizePixels = 40;
     private final SavedGameDTO savedGameDTO;
-    private int GRID_FRAMES = 90;
+    private int GRID_FRAMES = 120;
     private int GRID_DISAPPEAR = 100;
     private int FONT_SIZE = (int) (Settings.BACKGROUND_HEIGHT / 60 * 1.2);
 
@@ -74,7 +74,12 @@ public class SnakeIntroduction implements GridVisualization {
             drawNetwork(500, 100, networkStart);
         }
 
-        drawMovingNumber("0.5", 180, 120, 505, 128, 60, 20);
+        drawMovingNumber("0.5", 180, 120, 505, 128, 60, 20); // top
+        drawMovingNumber("0.0", 320, 120, 505, 178, 90, 20); // top right
+        drawMovingNumber("0.0", 320, 260, 505, 228, 120, 20); // right
+        drawMovingNumber("0.0", 320, 400, 505, 278, 150, 20); // bottom right
+        drawMovingNumber("0.0", 180, 400, 505, 328, 180, 20); // bottom
+        drawMovingNumber("-0.1", 40, 400, 505, 378, 210, 20); // bottom left
     }
 
     @Override
