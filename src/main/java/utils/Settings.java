@@ -102,5 +102,6 @@ public class Settings {
         LEAVE_CORPSE = false;
         HAS_WALL = true;
         SELF_COLLISION = true;
+        SAVE_EVERY_N_GENERATIONS = 100;
     }
 }

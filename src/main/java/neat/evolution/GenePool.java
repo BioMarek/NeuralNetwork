@@ -47,7 +47,7 @@ public class GenePool implements EvolutionEngine {
             if (generation % Settings.FREQUENCY_OF_SPECIATION == 0 && generation > 0)
                 createSpecies();
             resetScores();
-            if (generation > 0 && (generation % Settings.SAVE_EVERY_N_GENERATIONS == 0 || generation == Settings.SAVE_EVERY_N_GENERATIONS)) {
+            if (generation > 0 && (generation % Settings.SAVE_EVERY_N_GENERATIONS == 0 || generation == Settings.NUM_OF_GENERATIONS - 1)) {
                 makeNextGeneration(true);
                 SaveGameUtil.saveObjectToFile(this.savedGameDTO);
             } else
