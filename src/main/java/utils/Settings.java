@@ -11,6 +11,7 @@ public class Settings {
     public static Function<Double, Double> OUTPUT_LAYER_ACTIVATION_FUNC = Util.activationFunctionHyperbolicTangent();
     public static boolean VERBOSE = true;
     public static int MAX_NUM_OF_MOVES = 500;  // to stop AI moving in cycles
+    public static int MAX_NUM_OF_MOVES_VIDEO = 1000;  // to stop AI moving in cycles
     public static int NUM_OF_TRIALS = 10; // how many times NeuralNetwork plays the game
     public static double CHANCE_MUTATE_WEIGHT = 0.8d; // chance that weight will be mutated
     public static double CHANCE_HARD_MUTATE_WEIGHT = 0.1d; // chance to assign new value to weight when it is being mutated, small change otherwise
@@ -68,12 +69,13 @@ public class Settings {
         GRID_COLUMNS = 1500;
         GRID_ROWS = 1080;
         PIXELS_PER_SQUARE = 20;
-        SNAKE_SIGHT = 7;
-        DEATH_PENALTY = -5;
+        SNAKE_SIGHT = 10;
+        DEATH_PENALTY = -3;
         MAX_NUM_OF_FOOD = 150;
-        LEAVE_CORPSE = true;
-        HAS_WALL = false;
+        LEAVE_CORPSE = false;
+        HAS_WALL = true;
         SELF_COLLISION = false;
+        SAVE_EVERY_N_GENERATIONS = 100;
     }
 
     public static void freeEvolutionSettings() {
@@ -97,7 +99,7 @@ public class Settings {
         SNAKE_SIGHT = 15;
         DEATH_PENALTY = -1;
         MAX_NUM_OF_FOOD = 1;
-        PIXELS_PER_SQUARE = 40;
+        PIXELS_PER_SQUARE = 50;
         STEPS_TO_REDUCTION = 501;
         LEAVE_CORPSE = false;
         HAS_WALL = true;

@@ -7,6 +7,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import neat.phenotype.NeuralNetwork;
 import utils.Settings;
+import visualizations.snakeGraphic.videoGeneration.VideoGenerator;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -49,6 +50,8 @@ public class GenePool implements EvolutionEngine {
             resetScores();
             if (generation > 0 && (generation % Settings.SAVE_EVERY_N_GENERATIONS == 0 || generation == Settings.NUM_OF_GENERATIONS - 1)) {
                 makeNextGeneration(true);
+                var videoGenerator = new VideoGenerator();
+                videoGenerator.generateSavedGameVideo(this.savedGameDTO);
                 SaveGameUtil.saveObjectToFile(this.savedGameDTO);
             } else
                 makeNextGeneration(false);

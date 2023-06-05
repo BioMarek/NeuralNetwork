@@ -1,6 +1,7 @@
 package visualizations.snakeGraphic.videoGeneration;
 
 import games.snake.savegame.SaveGameUtil;
+import games.snake.savegame.SavedGameDTO;
 import org.jcodec.api.SequenceEncoder;
 import org.jcodec.common.Codec;
 import org.jcodec.common.Format;
@@ -21,6 +22,11 @@ public class VideoGenerator {
     public void generateSavedGameVideo(String filename) {
         var path = Settings.SAVE_GAME_PATH + filename;
         var savedGameDTO = SaveGameUtil.loadObjectFromFile(path);
+        gridVisualization = new SnakeVisualization(savedGameDTO);
+        createMP4();
+    }
+
+    public void generateSavedGameVideo(SavedGameDTO savedGameDTO) {
         gridVisualization = new SnakeVisualization(savedGameDTO);
         createMP4();
     }

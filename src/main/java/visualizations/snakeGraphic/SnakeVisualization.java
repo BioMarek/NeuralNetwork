@@ -35,7 +35,7 @@ public class SnakeVisualization implements GridVisualization {
 
     @Override
     public void drawPresentation(Graphics2D graphics) {
-        if (currentFrame < Settings.MAX_NUM_OF_MOVES) {
+        if (currentFrame < savedGameDTO.totalFrames) {
             this.graphics = graphics;
             turnAntialiasingOn();
             snakeLegend.graphics = graphics;

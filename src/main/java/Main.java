@@ -15,11 +15,13 @@ public class Main {
 
 //        setupFreeEvolution();
 
-//        playSaveGame("05-26-204251.sav");
+//        Settings.multiplayerSettings();
+//        playSaveGame("06-04-212719.sav");
 
-//        Settings.singlePlayerGame();
+//        Settings.multiplayerSettings();
 //        var videoGenerator = new VideoGenerator();
-//        videoGenerator.generateSavedGameVideo("05-29-164129.sav");
+//        videoGenerator.generateSavedGameVideo("06-05-205714.sav");
+
 //        videoGenerator.generateSnakeIntroduction();
 
     }
@@ -28,10 +30,10 @@ public class Main {
      * Runs {@link SnakeGameMultiplayer} with NEAT network with single player
      */
     public static void setupNeatNeuralNetworkWithMultiplayer() {
-//        Settings.multiplayerSettings();
-//        GenePool genePool = new GenePool(8, 4, new SnakeGameMultiplayer());
-        Settings.singlePlayerGame();
+        Settings.multiplayerSettings();
         GenePool genePool = new GenePool(8, 4, new SnakeGameMultiplayer());
+//        Settings.singlePlayerGame();
+//        GenePool genePool = new GenePool(8, 4, new SnakeGameMultiplayer());
 
         long start = System.currentTimeMillis();
         genePool.calculateEvolution();
