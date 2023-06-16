@@ -52,7 +52,7 @@ public class GenePool implements EvolutionEngine {
                 makeNextGeneration(true);
                 var videoGenerator = new VideoGenerator();
                 videoGenerator.generateSavedGameVideo(this.savedGameDTO);
-                SaveGameUtil.saveObjectToFile(this.savedGameDTO);
+//                SaveGameUtil.saveObjectToFile(this.savedGameDTO);
             } else
                 makeNextGeneration(false);
             resizeSpecies();

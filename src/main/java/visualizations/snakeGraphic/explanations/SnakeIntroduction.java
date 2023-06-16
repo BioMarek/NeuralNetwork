@@ -18,7 +18,6 @@ import static utils.Util.arrayCopy;
 
 public class SnakeIntroduction implements GridVisualization {
     private Graphics2D graphics;
-    private final SnakeLegend snakeLegend;
     private final int columns;
     private final int rows;
     protected int[][] grid;
@@ -29,6 +28,8 @@ public class SnakeIntroduction implements GridVisualization {
     private final SavedGameDTO savedGameDTO;
     private int GRID_FRAMES = 120;
     private int GRID_DISAPPEAR = 100;
+    private int NODE_SIZE = 50;
+    private int NODE_GAP = 80;
     private int FONT_SIZE = (int) (Settings.BACKGROUND_HEIGHT / 60 * 1.2);
 
     public SnakeIntroduction() {
@@ -46,7 +47,6 @@ public class SnakeIntroduction implements GridVisualization {
 
         initialScene();
         savedGameDTO = buildMockDTO();
-        this.snakeLegend = new SnakeLegend(graphics, savedGameDTO);
     }
 
     @Override
@@ -60,8 +60,6 @@ public class SnakeIntroduction implements GridVisualization {
     @Override
     public void drawPresentation(Graphics2D graphics) {
         this.graphics = graphics;
-        snakeLegend.graphics = graphics;
-        this.snakeLegend.drawLegend(0);
         drawGrid();
 
         var raysStart = 0; // 30
@@ -74,12 +72,16 @@ public class SnakeIntroduction implements GridVisualization {
             drawNetwork(500, 100, networkStart);
         }
 
-        drawMovingNumber("0.5", 180, 120, 505, 128, 60, 20); // top
-        drawMovingNumber("0.0", 320, 120, 505, 178, 90, 20); // top right
-        drawMovingNumber("0.0", 320, 260, 505, 228, 120, 20); // right
-        drawMovingNumber("0.0", 320, 400, 505, 278, 150, 20); // bottom right
-        drawMovingNumber("0.0", 180, 400, 505, 328, 180, 20); // bottom
-        drawMovingNumber("-0.1", 40, 400, 505, 378, 210, 20); // bottom left
+        int startNumberMoveFrame = 60;
+        drawMovingNumber("0.5", 180, 120, 510, 132, startNumberMoveFrame, 20); // top
+        drawMovingNumber("0.0", 320, 120, 510, 212, startNumberMoveFrame + 30, 20); // top right
+        drawMovingNumber("0.0", 320, 260, 510, 292, startNumberMoveFrame + 60, 20); // right
+        drawMovingNumber("0.0", 320, 400, 510, 372, startNumberMoveFrame + 90, 20); // bottom right
+        drawMovingNumber("0.0", 180, 400, 510, 452, startNumberMoveFrame + 120, 20); // bottom
+        drawMovingNumber("-0.1", 40, 400, 505, 532, startNumberMoveFrame + 150, 20); // bottom left
+
+        drawMovingNumber("-0.1", 40, 260, 505, 612, startNumberMoveFrame + 180, 20); // left
+        drawMovingNumber("-0.1", 40, 120, 505, 692, startNumberMoveFrame + 210, 20); // left
     }
 
     @Override
@@ -147,13 +149,13 @@ public class SnakeIntroduction implements GridVisualization {
         graphics.drawLine(160, 240, 40, 120); // top left
         graphics.drawLine(200, 240, 320, 120);// top right
         graphics.drawLine(160, 280, 40, 400); // bottom left
-        graphics.drawLine(200, 280, 320, 400);// bottom right
+        graphics.drawLine(200, 280, 320, 400); // bottom right
     }
 
     public void drawNetwork(int startX, int startY, int startAppearingFrame) {
-        drawLayer(startX, startY, 8, 40, 50, startAppearingFrame);
-        drawLayer(startX + 200, startY + 100, 4, 40, 50, startAppearingFrame);
-        drawWeights(startX, startY, 40, 50, 8, 4);
+        drawLayer(startX, startY, 8, NODE_SIZE, NODE_GAP, startAppearingFrame);
+        drawLayer(startX + 300, startY + 185, 4, NODE_SIZE, NODE_GAP, startAppearingFrame);
+        drawWeights(startX, startY, NODE_SIZE, NODE_GAP, 8, 4);
     }
 
     public void drawLayer(int startX, int startY, int nodes, int nodeSize, int nodeGap, int startAppearingFrame) {
@@ -169,7 +171,7 @@ public class SnakeIntroduction implements GridVisualization {
         List<Integer> leftYs = new ArrayList<>();
         List<Integer> rightYs = new ArrayList<>();
         int leftX = startX + nodeSize;
-        int rightX = startX + 200;
+        int rightX = startX + 300;
         int rightYShift = nodeSize / 2 + (leftNodes - rightNodes) / 2 * (nodeGap + nodeSize);
 
         for (int l = 0; l < leftNodes; l++) {
@@ -178,7 +180,6 @@ public class SnakeIntroduction implements GridVisualization {
         for (int r = 0; r < rightNodes; r++) {
             rightYs.add(rightYShift + nodeSize / 2 + r * nodeGap);
         }
-
 
         for (int l = 0; l < leftNodes; l++) {
             for (int r = 0; r < rightNodes; r++) {

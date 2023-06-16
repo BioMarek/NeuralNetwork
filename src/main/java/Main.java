@@ -11,18 +11,18 @@ import visualizations.snakeGraphic.videoGeneration.VideoGenerator;
 public class Main {
 
     public static void main(String[] args) {
-        setupNeatNeuralNetworkWithMultiplayer();
+//        setupNeatNeuralNetworkWithMultiplayer();
 
 //        setupFreeEvolution();
 
 //        Settings.multiplayerSettings();
 //        playSaveGame("06-04-212719.sav");
 
-//        Settings.multiplayerSettings();
-//        var videoGenerator = new VideoGenerator();
-//        videoGenerator.generateSavedGameVideo("06-05-205714.sav");
+        Settings.multiplayerSettings();
+        var videoGenerator = new VideoGenerator();
+        videoGenerator.generateSnakeIntroduction();
 
-//        videoGenerator.generateSnakeIntroduction();
+        //        videoGenerator.generateSavedGameVideo("06-05-205714.sav");
 
     }
 
