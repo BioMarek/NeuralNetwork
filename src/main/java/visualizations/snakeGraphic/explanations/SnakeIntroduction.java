@@ -71,16 +71,24 @@ public class SnakeIntroduction implements GridVisualization {
             drawNetwork(500, 100, networkStart);
         }
 
-        int startNumberMoveFrame = 60;
+        var startNumberMoveFrame = 60;
         drawMovingNumber("0.5", 180, 120, 510, 132, startNumberMoveFrame, 20); // top
         drawMovingNumber("0.0", 320, 120, 510, 212, startNumberMoveFrame + 30, 20); // top right
         drawMovingNumber("0.0", 320, 260, 510, 292, startNumberMoveFrame + 60, 20); // right
         drawMovingNumber("0.0", 320, 400, 510, 372, startNumberMoveFrame + 90, 20); // bottom right
         drawMovingNumber("0.0", 180, 400, 510, 452, startNumberMoveFrame + 120, 20); // bottom
         drawMovingNumber("-0.1", 40, 400, 505, 532, startNumberMoveFrame + 150, 20); // bottom left
-
         drawMovingNumber("-0.1", 40, 260, 505, 612, startNumberMoveFrame + 180, 20); // left
         drawMovingNumber("-0.1", 40, 120, 505, 692, startNumberMoveFrame + 210, 20); // left
+
+
+        var resultNumbersStart = 90;
+        if (slowFrame > resultNumbersStart) {
+            drawNumber("0.9", 810, 317); // up
+            drawNumber("0.5", 810, 397); // right
+            drawNumber("-0.1", 805, 477); // down
+            drawNumber("-0.3", 805, 557); // left
+        }
     }
 
     @Override
@@ -210,6 +218,12 @@ public class SnakeIntroduction implements GridVisualization {
         } else {
             graphics.drawString(number, endX, endY);
         }
+    }
+
+    public void drawNumber(String number, float startX, float startY) {
+        graphics.setColor(Colors.TEXT.getColor());
+        graphics.setFont(new Font("Arial", Font.BOLD, FONT_SIZE));
+        graphics.drawString(number, startX, startY);
     }
 
     public int calculateAppearingAlpha(int startAppearingFrame) {
