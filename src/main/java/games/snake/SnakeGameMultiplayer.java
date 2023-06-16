@@ -24,8 +24,8 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
     public int numOfFood;
 
     public SnakeGameMultiplayer() {
-        this.rows = Settings.GRID_ROWS / Settings.PIXELS_PER_SQUARE;
-        this.columns = Settings.GRID_COLUMNS / Settings.PIXELS_PER_SQUARE;
+        this.rows = Settings.GRID_ROW_PIXELS / Settings.PIXELS_PER_SQUARE;
+        this.columns = Settings.GRID_COLUMN_PIXELS / Settings.PIXELS_PER_SQUARE;
         reset();
     }
 

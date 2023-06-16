@@ -16,7 +16,7 @@ public class SnakePanel extends JPanel implements ActionListener {
     private final GridVisualization gridVisualization;
 
     public SnakePanel(SavedGameDTO savedGameDTO) {
-        this.setPreferredSize(new Dimension(Settings.GRID_COLUMNS, Settings.GRID_ROWS));
+        this.setPreferredSize(new Dimension(Settings.GRID_COLUMN_PIXELS, Settings.GRID_ROW_PIXELS));
         this.setFocusable(true);
         gridVisualization = new SnakeVisualization(savedGameDTO);
 

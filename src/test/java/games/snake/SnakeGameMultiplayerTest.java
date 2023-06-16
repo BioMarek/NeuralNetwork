@@ -19,8 +19,8 @@ public class SnakeGameMultiplayerTest {
     @BeforeEach
     void setup() {
         Settings.MAX_NUM_OF_FOOD = 2;
-        Settings.GRID_ROWS = 4;
-        Settings.GRID_COLUMNS = 4;
+        Settings.GRID_ROW_PIXELS = 4;
+        Settings.GRID_COLUMN_PIXELS = 4;
         Settings.PIXELS_PER_SQUARE = 1;
         Settings.LEAVE_CORPSE = false;
         Settings.HAS_WALL = true;
@@ -258,8 +258,8 @@ public class SnakeGameMultiplayerTest {
     void cleanup() {
         Settings.LEAVE_CORPSE = true;
         Settings.MAX_NUM_OF_FOOD = 2;
-        Settings.GRID_ROWS = 20;
-        Settings.GRID_COLUMNS = 20;
+        Settings.GRID_ROW_PIXELS = 20;
+        Settings.GRID_COLUMN_PIXELS = 20;
         Settings.PIXELS_PER_SQUARE = 20;
         Settings.HAS_WALL = false;
         Settings.SELF_COLLISION = false;

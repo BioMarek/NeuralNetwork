@@ -6,7 +6,6 @@ import utils.Colors;
 import utils.Pair;
 import utils.Settings;
 import visualizations.snakeGraphic.GridVisualization;
-import visualizations.snakeGraphic.SnakeLegend;
 
 import java.awt.BasicStroke;
 import java.awt.Font;
@@ -34,8 +33,8 @@ public class SnakeIntroduction implements GridVisualization {
 
     public SnakeIntroduction() {
         Settings.VIDEO_FPS = 60;
-        this.rows = Settings.GRID_ROWS / Settings.PIXELS_PER_SQUARE;
-        this.columns = Settings.GRID_COLUMNS / Settings.PIXELS_PER_SQUARE;
+        this.rows = Settings.GRID_ROW_PIXELS / squareSizePixels;
+        this.columns = Settings.GRID_COLUMN_PIXELS / squareSizePixels;
         this.grid = new int[rows][columns];
 
         for (int row = 0; row < rows; row++) {
@@ -147,7 +146,7 @@ public class SnakeIntroduction implements GridVisualization {
         graphics.drawLine(180, 280, 180, 400); // bottom
 
         graphics.drawLine(160, 240, 40, 120); // top left
-        graphics.drawLine(200, 240, 320, 120);// top right
+        graphics.drawLine(200, 240, 320, 120); // top right
         graphics.drawLine(160, 280, 40, 400); // bottom left
         graphics.drawLine(200, 280, 320, 400); // bottom right
     }

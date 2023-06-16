@@ -17,8 +17,8 @@ public class GenePoolTest {
     @BeforeEach
     void setup() {
         Settings.MAX_NUM_OF_FOOD = 2;
-        Settings.GRID_ROWS = 4;
-        Settings.GRID_COLUMNS = 4;
+        Settings.GRID_ROW_PIXELS = 4;
+        Settings.GRID_COLUMN_PIXELS = 4;
         Settings.PIXELS_PER_SQUARE = 1;
     }
 
@@ -70,8 +70,8 @@ public class GenePoolTest {
     @AfterEach
     void cleanup() {
         Settings.MAX_NUM_OF_FOOD = 2;
-        Settings.GRID_ROWS = 20;
-        Settings.GRID_COLUMNS = 20;
+        Settings.GRID_ROW_PIXELS = 20;
+        Settings.GRID_COLUMN_PIXELS = 20;
         Settings.PIXELS_PER_SQUARE = 20;
     }
 

@@ -23,8 +23,8 @@ public class GenePoolTest {
     @BeforeEach
     void init() {
         Settings.MAX_NUM_OF_FOOD = 2;
-        Settings.GRID_ROWS = 4;
-        Settings.GRID_COLUMNS = 4;
+        Settings.GRID_ROW_PIXELS = 4;
+        Settings.GRID_COLUMN_PIXELS = 4;
         Settings.PIXELS_PER_SQUARE = 1;
         Settings.LEAVE_CORPSE = false;
         Settings.MIN_SPECIES_REDUCTION = 2;

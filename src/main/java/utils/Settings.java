@@ -48,8 +48,8 @@ public class Settings {
      * Graphic
      */
     public static int TIMER_DELAY = 50;
-    public static int GRID_COLUMNS = 1500;
-    public static int GRID_ROWS = 1080;
+    public static int GRID_COLUMN_PIXELS = 1500;
+    public static int GRID_ROW_PIXELS = 1080;
     public static int BACKGROUND_WIDTH = 1920;
     public static int BACKGROUND_HEIGHT = 1080;
     public static int PIXELS_PER_SQUARE = 20;
@@ -66,8 +66,8 @@ public class Settings {
 
     public static void multiplayerSettings() {
         NUM_OF_PLAYERS = 10;
-        GRID_COLUMNS = 1500;
-        GRID_ROWS = 1080;
+        GRID_COLUMN_PIXELS = 1500;
+        GRID_ROW_PIXELS = 1080;
         PIXELS_PER_SQUARE = 20;
         SNAKE_SIGHT = 10;
         DEATH_PENALTY = -3;
@@ -80,7 +80,7 @@ public class Settings {
 
     public static void freeEvolutionSettings() {
         FREE_EVOLUTION_ON = true;
-        GRID_COLUMNS = 1500;
+        GRID_COLUMN_PIXELS = 1500;
         PIXELS_PER_SQUARE = 20;
         NUM_OF_PLAYERS = 25;
         CHANCE_MUTATE_WEIGHT = 0.8d;
@@ -92,6 +92,11 @@ public class Settings {
         MAX_NUM_OF_FOOD = 300;
         LEAVE_CORPSE = false;
         HAS_WALL = false;
+    }
+
+    public static void explanationSettings() {
+        GRID_COLUMN_PIXELS = 1920;
+        GRID_ROW_PIXELS = 1080;
     }
 
     public static void singlePlayerGame() {

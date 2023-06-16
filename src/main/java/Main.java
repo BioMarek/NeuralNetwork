@@ -18,7 +18,7 @@ public class Main {
 //        Settings.multiplayerSettings();
 //        playSaveGame("06-04-212719.sav");
 
-        Settings.multiplayerSettings();
+        Settings.explanationSettings();
         var videoGenerator = new VideoGenerator();
         videoGenerator.generateSnakeIntroduction();
 
