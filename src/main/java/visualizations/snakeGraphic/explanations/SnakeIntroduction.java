@@ -29,8 +29,8 @@ public class SnakeIntroduction implements GridVisualization {
     private int slowFrame = 0;
     private int fastFrame = 0;
     private final int totalFrames = 390;
-    private final int gridFrames = 270;
-    private final int gridDisappear = 240;
+    private final int gridFrames = 300;
+    private final int gridDisappear = 270;
 
     public SnakeIntroduction() {
         Settings.VIDEO_FPS = 60;
@@ -68,36 +68,35 @@ public class SnakeIntroduction implements GridVisualization {
             drawSightRays(raysStart, 240);
         }
 
-        var networkStart = 60;
+        var networkStart = 90;
         if (slowFrame > networkStart) {
-            drawNetwork(500, 100, networkStart, 240);
+            drawNetwork(750, 100, networkStart, 270);
         }
 
-        var outputDirection = 120;
+        var outputDirection = 150;
         if (slowFrame > outputDirection) {
-            drawText("UP", 870, 317, Colors.TEXT.getColor(), Color.RED, 330); // up
-            drawText("LEFT", 870, 397); // right
-            drawText("DOWN", 870, 477); // down
-            drawText("RIGHT", 870, 557); // left
+            drawText("UP", 1120, 317, Colors.TEXT.getColor(), Color.RED, 330); // up
+            drawText("LEFT", 1120, 397); // right
+            drawText("DOWN", 1120, 477); // down
+            drawText("RIGHT", 1120, 557); // left
         }
 
-        var startNumberMoveFastFrame = 420;
-        drawMovingNumber("0.5", 180, 120, 510, 132, startNumberMoveFastFrame, 20); // top
-        drawMovingNumber("0.0", 320, 120, 510, 212, startNumberMoveFastFrame + 30, 20); // top right
-        drawMovingNumber("0.0", 320, 260, 510, 292, startNumberMoveFastFrame + 60, 20); // right
-        drawMovingNumber("0.0", 320, 400, 510, 372, startNumberMoveFastFrame + 90, 20); // bottom right
-        drawMovingNumber("0.0", 180, 400, 510, 452, startNumberMoveFastFrame + 120, 20); // bottom
-        drawMovingNumber("-0.1", 40, 400, 505, 532, startNumberMoveFastFrame + 150, 20); // bottom left
-        drawMovingNumber("-0.1", 40, 260, 505, 612, startNumberMoveFastFrame + 180, 20); // left
-        drawMovingNumber("-0.1", 40, 120, 505, 692, startNumberMoveFastFrame + 210, 20); // left
+        var startNumberMoveFastFrame = 510;
+        drawMovingNumber("0.5", 180, 120, 760, 132, startNumberMoveFastFrame, 20); // top
+        drawMovingNumber("0.0", 320, 120, 760, 212, startNumberMoveFastFrame + 30, 20); // top right
+        drawMovingNumber("0.0", 320, 260, 760, 292, startNumberMoveFastFrame + 60, 20); // right
+        drawMovingNumber("0.0", 320, 400, 760, 372, startNumberMoveFastFrame + 90, 20); // bottom right
+        drawMovingNumber("0.0", 180, 400, 760, 452, startNumberMoveFastFrame + 120, 20); // bottom
+        drawMovingNumber("-0.1", 40, 400, 755, 532, startNumberMoveFastFrame + 150, 20); // bottom left
+        drawMovingNumber("-0.1", 40, 260, 755, 612, startNumberMoveFastFrame + 180, 20); // left
+        drawMovingNumber("-0.1", 40, 120, 755, 692, startNumberMoveFastFrame + 210, 20); // left
 
-
-        var resultNumbersStart = 270;
+        var resultNumbersStart = 300;
         if (slowFrame > resultNumbersStart) {
-            drawText("0.9", 810, 317, Colors.TEXT.getColor(), Color.RED, 330); // up
-            drawText("0.5", 810, 397); // right
-            drawText("-0.1", 805, 477); // down
-            drawText("-0.3", 805, 557); // left
+            drawText("0.9", 1060, 317, Colors.TEXT.getColor(), Color.RED, 330); // up
+            drawText("0.5", 1060, 397); // right
+            drawText("-0.1", 1055, 477); // down
+            drawText("-0.3", 1055, 557); // left
         }
     }
 
