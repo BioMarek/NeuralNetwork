@@ -8,6 +8,7 @@ import utils.Settings;
 import visualizations.snakeGraphic.GridVisualization;
 
 import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
@@ -71,6 +72,14 @@ public class SnakeIntroduction implements GridVisualization {
             drawNetwork(500, 100, networkStart);
         }
 
+        var outputDirection = 60;
+        if (slowFrame > outputDirection) {
+            drawText("UP", 870, 317, Colors.TEXT.getColor(), Color.RED, 90); // up
+            drawText("LEFT", 870, 397); // right
+            drawText("DOWN", 870, 477); // down
+            drawText("RIGHT", 870, 557); // left
+        }
+
         var startNumberMoveFrame = 60;
         drawMovingNumber("0.5", 180, 120, 510, 132, startNumberMoveFrame, 20); // top
         drawMovingNumber("0.0", 320, 120, 510, 212, startNumberMoveFrame + 30, 20); // top right
@@ -84,10 +93,10 @@ public class SnakeIntroduction implements GridVisualization {
 
         var resultNumbersStart = 90;
         if (slowFrame > resultNumbersStart) {
-            drawNumber("0.9", 810, 317); // up
-            drawNumber("0.5", 810, 397); // right
-            drawNumber("-0.1", 805, 477); // down
-            drawNumber("-0.3", 805, 557); // left
+            drawText("0.9", 810, 317, Colors.TEXT.getColor(), Color.RED, 90); // up
+            drawText("0.5", 810, 397); // right
+            drawText("-0.1", 805, 477); // down
+            drawText("-0.3", 805, 557); // left
         }
     }
 
@@ -220,14 +229,21 @@ public class SnakeIntroduction implements GridVisualization {
         }
     }
 
-    public void drawNumber(String number, float startX, float startY) {
+    public void drawText(String text, float startX, float startY) {
         graphics.setColor(Colors.TEXT.getColor());
         graphics.setFont(new Font("Arial", Font.BOLD, FONT_SIZE));
-        graphics.drawString(number, startX, startY);
+        graphics.drawString(text, startX, startY);
+    }
+
+    public void drawText(String text, float startX, float startY, Color from, Color to, int startChangingFrame) {
+        var color = calculateChangingColor(from, to, startChangingFrame);
+        graphics.setColor(color);
+        graphics.setFont(new Font("Arial", Font.BOLD, FONT_SIZE));
+        graphics.drawString(text, startX, startY);
     }
 
     public int calculateAppearingAlpha(int startAppearingFrame) {
-        if (startAppearingFrame + Settings.FADEIN_FRAMES < slowFrame)
+        if (startAppearingFrame + Settings.CHANGING_SLOW_FRAMES < slowFrame)
             return 255;
         else
             return (int) ((slowFrame - startAppearingFrame) / 15.0 * 255);
@@ -236,9 +252,36 @@ public class SnakeIntroduction implements GridVisualization {
     public int calculateDisappearingAlpha(int startDisappearingFrame) {
         if (startDisappearingFrame >= slowFrame)
             return 255;
-        if (startDisappearingFrame + Settings.FADEIN_FRAMES < slowFrame)
+        if (startDisappearingFrame + Settings.CHANGING_SLOW_FRAMES < slowFrame)
             return 0;
         else
             return 255 - (int) ((slowFrame - startDisappearingFrame) / 15.0 * 255);
+    }
+
+    public Color calculateChangingColor(Color from, Color to, int startChangingFrame) {
+        int stage;
+        if (slowFrame < startChangingFrame)
+            stage = 0;
+        else if (slowFrame >= startChangingFrame + Settings.CHANGING_SLOW_FRAMES) {
+            stage = Settings.CHANGING_SLOW_FRAMES;
+        } else
+            stage = slowFrame - startChangingFrame;
+        return colorMixing(from, to, stage);
+    }
+
+
+    public Color colorMixing(Color from, Color to, int stage) {
+        if (stage <= 0) {
+            return from;
+        } else if (stage >= Settings.CHANGING_SLOW_FRAMES) {
+            return to;
+        } else {
+            float ratio = (float) stage / Settings.CHANGING_SLOW_FRAMES;
+            int red = (int) (from.getRed() + (to.getRed() - from.getRed()) * ratio);
+            int green = (int) (from.getGreen() + (to.getGreen() - from.getGreen()) * ratio);
+            int blue = (int) (from.getBlue() + (to.getBlue() - from.getBlue()) * ratio);
+            int alpha = (int) (from.getAlpha() + (to.getAlpha() - from.getAlpha()) * ratio);
+            return new Color(red, green, blue, alpha);
+        }
     }
 }

@@ -53,7 +53,7 @@ public class Settings {
     public static int BACKGROUND_WIDTH = 1920;
     public static int BACKGROUND_HEIGHT = 1080;
     public static int PIXELS_PER_SQUARE = 20;
-    public static int FADEIN_FRAMES = 15;
+    public static int CHANGING_SLOW_FRAMES = 15;
 
     /**
      * Settings for mp4 generation
