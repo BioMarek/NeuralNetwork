@@ -28,7 +28,7 @@ public class SnakeIntroduction implements GridVisualization {
     private final int[][] grid;
     private int slowFrame = 0;
     private int fastFrame = 0;
-    private final int totalFrames = 390;
+    private final int totalFrames = 420;
     private final int gridFrames = 300;
     private final int gridDisappear = 270;
 
@@ -65,17 +65,17 @@ public class SnakeIntroduction implements GridVisualization {
 
         var raysStart = 30;
         if (slowFrame > raysStart) {
-            drawSightRays(raysStart, 240);
+            drawSightRays(raysStart, 270);
         }
 
         var networkStart = 90;
         if (slowFrame > networkStart) {
-            drawNetwork(750, 100, networkStart, 270);
+            drawNetwork(750, 100, networkStart, 300);
         }
 
         var outputDirection = 150;
         if (slowFrame > outputDirection) {
-            drawText("UP", 1120, 317, Colors.TEXT.getColor(), Color.RED, 330); // up
+            drawText("UP", 1120, 317, Colors.TEXT.getColor(), Color.RED, 360); // up
             drawText("LEFT", 1120, 397); // right
             drawText("DOWN", 1120, 477); // down
             drawText("RIGHT", 1120, 557); // left
@@ -91,9 +91,9 @@ public class SnakeIntroduction implements GridVisualization {
         drawMovingNumber("-0.1", 40, 260, 755, 612, startNumberMoveFastFrame + 180, 20); // left
         drawMovingNumber("-0.1", 40, 120, 755, 692, startNumberMoveFastFrame + 210, 20); // left
 
-        var resultNumbersStart = 300;
+        var resultNumbersStart = 330;
         if (slowFrame > resultNumbersStart) {
-            drawText("0.9", 1060, 317, Colors.TEXT.getColor(), Color.RED, 330); // up
+            drawText("0.9", 1060, 317, Colors.TEXT.getColor(), Color.RED, 360); // up
             drawText("0.5", 1060, 397); // right
             drawText("-0.1", 1055, 477); // down
             drawText("-0.3", 1055, 557); // left
