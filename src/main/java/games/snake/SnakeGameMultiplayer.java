@@ -24,8 +24,8 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
     public int numOfFood;
 
     public SnakeGameMultiplayer() {
-        this.rows = Settings.GRID_ROWS / Settings.PIXELS_PER_SQUARE;
-        this.columns = Settings.GRID_COLUMNS / Settings.PIXELS_PER_SQUARE;
+        this.rows = Settings.GRID_ROW_PIXELS / Settings.PIXELS_PER_SQUARE;
+        this.columns = Settings.GRID_COLUMN_PIXELS / Settings.PIXELS_PER_SQUARE;
         reset();
     }
 
@@ -228,7 +228,7 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
     public SavedGameDTO saveSnakeMoves(List<NeuralNetwork> neuralNetworks) {
         var savedGameDTO = new SavedGameDTO();
         int frameCount = 0;
-        for (int move = 0; move < Settings.MAX_NUM_OF_MOVES; move++) {
+        for (int move = 0; move < Settings.MAX_NUM_OF_MOVES_VIDEO; move++) {
             frameCount++;
             for (int i = 0; i < neuralNetworks.size(); i++) {
                 var networkOutput = neuralNetworks.get(i).getNetworkOutput(snakeSightDTO.getInput_8(snakes.get(i)));

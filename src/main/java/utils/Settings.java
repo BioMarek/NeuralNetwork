@@ -3,15 +3,15 @@ package utils;
 import java.util.function.Function;
 
 public class Settings {
-    public static int GRID_SQUARES = 20; // For SingleplayerSnake
     public static boolean HAS_WALL = true;
-    public static int NUM_OF_GENERATIONS = 200; // 300
+    public static int NUM_OF_GENERATIONS = 500; // 300
     public static int TOTAL_NUM_OF_GENOTYPES = 100;
     public static int MAX_NEURONS = 1000;
     public static Function<Double, Double> HIDDEN_LAYER_ACTIVATION_FUNC = Util.activationFunctionHyperbolicTangent();
     public static Function<Double, Double> OUTPUT_LAYER_ACTIVATION_FUNC = Util.activationFunctionHyperbolicTangent();
     public static boolean VERBOSE = true;
     public static int MAX_NUM_OF_MOVES = 500;  // to stop AI moving in cycles
+    public static int MAX_NUM_OF_MOVES_VIDEO = 2000;  // to stop AI moving in cycles
     public static int NUM_OF_TRIALS = 10; // how many times NeuralNetwork plays the game
     public static double CHANCE_MUTATE_WEIGHT = 0.8d; // chance that weight will be mutated
     public static double CHANCE_HARD_MUTATE_WEIGHT = 0.1d; // chance to assign new value to weight when it is being mutated, small change otherwise
@@ -48,11 +48,12 @@ public class Settings {
      * Graphic
      */
     public static int TIMER_DELAY = 50;
-    public static int GRID_COLUMNS = 1500;
-    public static int GRID_ROWS = 1080;
+    public static int GRID_COLUMN_PIXELS = 1500;
+    public static int GRID_ROW_PIXELS = 1080;
     public static int BACKGROUND_WIDTH = 1920;
     public static int BACKGROUND_HEIGHT = 1080;
     public static int PIXELS_PER_SQUARE = 20;
+    public static int CHANGING_SLOW_FRAMES = 15;
 
     /**
      * Settings for mp4 generation
@@ -60,24 +61,26 @@ public class Settings {
     public static int VIDEO_FPS = 20; // frames per second for mp4
     public static String VIDEO_BASE_PATH = "./movies/"; // where to save generated videos
     public static int VIDEO_REPEAT_LAST_FRAME = 0; // how many times the last image should be repeated in video, 30 is one second
+    public static int SAVE_EVERY_N_GENERATIONS = 10000;
 
 
     public static void multiplayerSettings() {
         NUM_OF_PLAYERS = 10;
-        GRID_COLUMNS = 1500;
-        GRID_ROWS = 1080;
+        GRID_COLUMN_PIXELS = 1500;
+        GRID_ROW_PIXELS = 1080;
         PIXELS_PER_SQUARE = 20;
-        SNAKE_SIGHT = 7;
-        DEATH_PENALTY = -5;
+        SNAKE_SIGHT = 10;
+        DEATH_PENALTY = -3;
         MAX_NUM_OF_FOOD = 150;
-        LEAVE_CORPSE = true;
-        HAS_WALL = false;
+        LEAVE_CORPSE = false;
+        HAS_WALL = true;
         SELF_COLLISION = false;
+        SAVE_EVERY_N_GENERATIONS = 100;
     }
 
     public static void freeEvolutionSettings() {
         FREE_EVOLUTION_ON = true;
-        GRID_COLUMNS = 1500;
+        GRID_COLUMN_PIXELS = 1500;
         PIXELS_PER_SQUARE = 20;
         NUM_OF_PLAYERS = 25;
         CHANCE_MUTATE_WEIGHT = 0.8d;
@@ -91,14 +94,21 @@ public class Settings {
         HAS_WALL = false;
     }
 
+    public static void explanationSettings() {
+        GRID_COLUMN_PIXELS = 1920;
+        GRID_ROW_PIXELS = 1080;
+    }
+
     public static void singlePlayerGame() {
         NUM_OF_PLAYERS = 1;
-        GRID_SQUARES = 20;
-        SNAKE_SIGHT = 7;
+        SNAKE_SIGHT = 15;
         DEATH_PENALTY = -1;
         MAX_NUM_OF_FOOD = 1;
+        PIXELS_PER_SQUARE = 50;
+        STEPS_TO_REDUCTION = 501;
         LEAVE_CORPSE = false;
         HAS_WALL = true;
         SELF_COLLISION = true;
+        SAVE_EVERY_N_GENERATIONS = 100;
     }
 }

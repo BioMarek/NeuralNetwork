@@ -13,12 +13,16 @@ public class Main {
     public static void main(String[] args) {
 //        setupNeatNeuralNetworkWithMultiplayer();
 
-        setupFreeEvolution();
+//        setupFreeEvolution();
 
-//        playSaveGame("05-26-204251.sav");
+//        Settings.multiplayerSettings();
+//        playSaveGame("06-04-212719.sav");
 
-//        var videoGenerator = new VideoGenerator();
-//        videoGenerator.generateSavedGameVideo("05-26-204251.sav");
+        Settings.explanationSettings();
+        var videoGenerator = new VideoGenerator();
+        videoGenerator.generateSnakeIntroduction();
+
+        //        videoGenerator.generateSavedGameVideo("06-05-205714.sav");
 
     }
 
@@ -36,7 +40,6 @@ public class Main {
         long stop = System.currentTimeMillis();
         System.out.println("It took: " + (stop - start) / 1000 + "s");
 
-        SaveGameUtil.saveObjectToFile(genePool.savedGameDTO);
         new SnakeFrame(new SnakePanel(genePool.savedGameDTO));
     }
 

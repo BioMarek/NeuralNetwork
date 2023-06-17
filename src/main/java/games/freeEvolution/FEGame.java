@@ -31,8 +31,8 @@ public class FEGame {
 
 
     public FEGame(int inputs, int outputs) {
-        this.rows = Settings.GRID_ROWS / Settings.PIXELS_PER_SQUARE;
-        this.columns = Settings.GRID_COLUMNS / Settings.PIXELS_PER_SQUARE;
+        this.rows = Settings.GRID_ROW_PIXELS / Settings.PIXELS_PER_SQUARE;
+        this.columns = Settings.GRID_COLUMN_PIXELS / Settings.PIXELS_PER_SQUARE;
         this.inputs = inputs;
         this.outputs = outputs;
         // TODO scores should be printed or used or removed

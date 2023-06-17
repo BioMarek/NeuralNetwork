@@ -59,4 +59,31 @@ public enum Colors {
     public static void setColor(Graphics2D graphics, Color color) {
         graphics.setColor(color);
     }
+
+    public static Color textWithAlpha(int alpha) {
+        return new Color(210, 210, 210, alpha);
+    }
+
+    public static Color foodWithAlpha(int alpha) {
+        return new Color(255, 0, 0, alpha);
+    }
+
+    public static Color wallWithAlpha(int alpha) {
+        return new Color(210, 210, 210, alpha);
+    }
+
+    public static Color colorMixing(Color from, Color to, int stage) {
+        if (stage <= 0) {
+            return from;
+        } else if (stage >= Settings.CHANGING_SLOW_FRAMES) {
+            return to;
+        } else {
+            float ratio = (float) stage / Settings.CHANGING_SLOW_FRAMES;
+            int red = (int) (from.getRed() + (to.getRed() - from.getRed()) * ratio);
+            int green = (int) (from.getGreen() + (to.getGreen() - from.getGreen()) * ratio);
+            int blue = (int) (from.getBlue() + (to.getBlue() - from.getBlue()) * ratio);
+            int alpha = (int) (from.getAlpha() + (to.getAlpha() - from.getAlpha()) * ratio);
+            return new Color(red, green, blue, alpha);
+        }
+    }
 }
