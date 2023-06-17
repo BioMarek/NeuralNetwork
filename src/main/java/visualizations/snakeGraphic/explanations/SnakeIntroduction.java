@@ -5,6 +5,7 @@ import games.snake.savegame.SavedGameDTO;
 import utils.Colors;
 import utils.Pair;
 import utils.Settings;
+import utils.Util;
 import visualizations.snakeGraphic.GridVisualization;
 
 import java.awt.BasicStroke;
@@ -14,7 +15,6 @@ import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
 
-import static utils.Util.arrayCopy;
 
 public class SnakeIntroduction implements GridVisualization {
     private Graphics2D graphics;
@@ -147,7 +147,7 @@ public class SnakeIntroduction implements GridVisualization {
     public SavedGameDTO buildMockDTO() {
         var saveGame = new SavedGameDTO();
         for (int i = 0; i <= GRID_FRAMES; i++) {
-            saveGame.grid.add(arrayCopy(grid));
+            saveGame.grid.add(Util.arrayCopy(grid));
             saveGame.scores.add(new int[]{0});
         }
         return saveGame;
@@ -171,7 +171,7 @@ public class SnakeIntroduction implements GridVisualization {
     public void drawNetwork(int startX, int startY, int startAppearingFrame) {
         drawLayer(startX, startY, 8, NODE_SIZE, NODE_GAP, startAppearingFrame);
         drawLayer(startX + 300, startY + 185, 4, NODE_SIZE, NODE_GAP, startAppearingFrame);
-        drawWeights(startX, startY, NODE_SIZE, NODE_GAP, 8, 4);
+        drawWeights(startX, startY, NODE_SIZE, NODE_GAP, 8, 4, 60);
     }
 
     public void drawLayer(int startX, int startY, int nodes, int nodeSize, int nodeGap, int startAppearingFrame) {
@@ -183,7 +183,7 @@ public class SnakeIntroduction implements GridVisualization {
         }
     }
 
-    public void drawWeights(int startX, int startY, int nodeSize, int nodeGap, int leftNodes, int rightNodes) {
+    public void drawWeights(int startX, int startY, int nodeSize, int nodeGap, int leftNodes, int rightNodes, int startMovingDot) {
         List<Integer> leftYs = new ArrayList<>();
         List<Integer> rightYs = new ArrayList<>();
         int leftX = startX + nodeSize;
@@ -200,7 +200,25 @@ public class SnakeIntroduction implements GridVisualization {
         for (int l = 0; l < leftNodes; l++) {
             for (int r = 0; r < rightNodes; r++) {
                 graphics.drawLine(leftX, leftYs.get(l), rightX, rightYs.get(r));
+                if (slowFrame >= startMovingDot && slowFrame <= startMovingDot + Settings.CHANGING_SLOW_FRAMES * 2) {
+                    int dotSize = 10;
+                    int stage = slowFrame - startMovingDot;
+                    var pair = calculateMovingDotCoordinates(leftX, leftYs.get(l), rightX, rightYs.get(r), stage);
+                    graphics.fillOval(pair.getFirst() - dotSize / 2, pair.getSecond() - dotSize / 2, dotSize, dotSize);
+                }
             }
+        }
+    }
+
+    public Pair<Integer> calculateMovingDotCoordinates(int startX, int startY, int endX, int endY, int stage) {
+        if (stage <= 0) {
+            return new Pair<>(startX, startY);
+        } else if (stage >= Settings.CHANGING_SLOW_FRAMES * 2) {
+            return new Pair<>(endX, endY);
+        } else {
+            int x = startX + (endX - startX) * stage / (Settings.CHANGING_SLOW_FRAMES * 2);
+            int y = startY + (endY - startY) * stage / (Settings.CHANGING_SLOW_FRAMES * 2);
+            return new Pair<>(x, y);
         }
     }
 
@@ -266,22 +284,6 @@ public class SnakeIntroduction implements GridVisualization {
             stage = Settings.CHANGING_SLOW_FRAMES;
         } else
             stage = slowFrame - startChangingFrame;
-        return colorMixing(from, to, stage);
-    }
-
-
-    public Color colorMixing(Color from, Color to, int stage) {
-        if (stage <= 0) {
-            return from;
-        } else if (stage >= Settings.CHANGING_SLOW_FRAMES) {
-            return to;
-        } else {
-            float ratio = (float) stage / Settings.CHANGING_SLOW_FRAMES;
-            int red = (int) (from.getRed() + (to.getRed() - from.getRed()) * ratio);
-            int green = (int) (from.getGreen() + (to.getGreen() - from.getGreen()) * ratio);
-            int blue = (int) (from.getBlue() + (to.getBlue() - from.getBlue()) * ratio);
-            int alpha = (int) (from.getAlpha() + (to.getAlpha() - from.getAlpha()) * ratio);
-            return new Color(red, green, blue, alpha);
-        }
+        return Colors.colorMixing(from, to, stage);
     }
 }
