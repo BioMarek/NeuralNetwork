@@ -20,22 +20,22 @@ public class SnakeIntroduction implements GridVisualization {
     private Graphics2D graphics;
     private final int columns;
     private final int rows;
-    protected int[][] grid;
+    private final int SQUARE_PIXEL_SIZE = 40;
+    private final SavedGameDTO savedGameDTO;
+    private final int NODE_SIZE = 50;
+    private final int NODE_GAP = 80;
+    private final int FONT_SIZE = (int) (Settings.BACKGROUND_HEIGHT / 60 * 1.2);
+    private final int[][] grid;
     private int slowFrame = 0;
     private int fastFrame = 0;
-    private int totalFrames = 120;
-    private final int squareSizePixels = 40;
-    private final SavedGameDTO savedGameDTO;
-    private int GRID_FRAMES = 120;
-    private int GRID_DISAPPEAR = 100;
-    private int NODE_SIZE = 50;
-    private int NODE_GAP = 80;
-    private int FONT_SIZE = (int) (Settings.BACKGROUND_HEIGHT / 60 * 1.2);
+    private final int totalFrames = 390;
+    private final int gridFrames = 270;
+    private final int gridDisappear = 240;
 
     public SnakeIntroduction() {
         Settings.VIDEO_FPS = 60;
-        this.rows = Settings.GRID_ROW_PIXELS / squareSizePixels;
-        this.columns = Settings.GRID_COLUMN_PIXELS / squareSizePixels;
+        this.rows = Settings.GRID_ROW_PIXELS / SQUARE_PIXEL_SIZE;
+        this.columns = Settings.GRID_COLUMN_PIXELS / SQUARE_PIXEL_SIZE;
         this.grid = new int[rows][columns];
 
         for (int row = 0; row < rows; row++) {
@@ -60,40 +60,41 @@ public class SnakeIntroduction implements GridVisualization {
     @Override
     public void drawPresentation(Graphics2D graphics) {
         this.graphics = graphics;
-        drawGrid();
+        if (slowFrame < gridFrames)
+            drawGrid();
 
-        var raysStart = 0; // 30
+        var raysStart = 30;
         if (slowFrame > raysStart) {
-            drawSightRays(raysStart, 60);
+            drawSightRays(raysStart, 240);
         }
 
-        var networkStart = 0; // 60
+        var networkStart = 60;
         if (slowFrame > networkStart) {
-            drawNetwork(500, 100, networkStart);
+            drawNetwork(500, 100, networkStart, 240);
         }
 
-        var outputDirection = 60;
+        var outputDirection = 120;
         if (slowFrame > outputDirection) {
-            drawText("UP", 870, 317, Colors.TEXT.getColor(), Color.RED, 90); // up
+            drawText("UP", 870, 317, Colors.TEXT.getColor(), Color.RED, 330); // up
             drawText("LEFT", 870, 397); // right
             drawText("DOWN", 870, 477); // down
             drawText("RIGHT", 870, 557); // left
         }
 
-        var startNumberMoveFrame = 60;
-        drawMovingNumber("0.5", 180, 120, 510, 132, startNumberMoveFrame, 20); // top
-        drawMovingNumber("0.0", 320, 120, 510, 212, startNumberMoveFrame + 30, 20); // top right
-        drawMovingNumber("0.0", 320, 260, 510, 292, startNumberMoveFrame + 60, 20); // right
-        drawMovingNumber("0.0", 320, 400, 510, 372, startNumberMoveFrame + 90, 20); // bottom right
-        drawMovingNumber("0.0", 180, 400, 510, 452, startNumberMoveFrame + 120, 20); // bottom
-        drawMovingNumber("-0.1", 40, 400, 505, 532, startNumberMoveFrame + 150, 20); // bottom left
-        drawMovingNumber("-0.1", 40, 260, 505, 612, startNumberMoveFrame + 180, 20); // left
-        drawMovingNumber("-0.1", 40, 120, 505, 692, startNumberMoveFrame + 210, 20); // left
+        var startNumberMoveFastFrame = 420;
+        drawMovingNumber("0.5", 180, 120, 510, 132, startNumberMoveFastFrame, 20); // top
+        drawMovingNumber("0.0", 320, 120, 510, 212, startNumberMoveFastFrame + 30, 20); // top right
+        drawMovingNumber("0.0", 320, 260, 510, 292, startNumberMoveFastFrame + 60, 20); // right
+        drawMovingNumber("0.0", 320, 400, 510, 372, startNumberMoveFastFrame + 90, 20); // bottom right
+        drawMovingNumber("0.0", 180, 400, 510, 452, startNumberMoveFastFrame + 120, 20); // bottom
+        drawMovingNumber("-0.1", 40, 400, 505, 532, startNumberMoveFastFrame + 150, 20); // bottom left
+        drawMovingNumber("-0.1", 40, 260, 505, 612, startNumberMoveFastFrame + 180, 20); // left
+        drawMovingNumber("-0.1", 40, 120, 505, 692, startNumberMoveFastFrame + 210, 20); // left
 
 
-        var resultNumbersStart = 90;
+        var resultNumbersStart = 270;
         if (slowFrame > resultNumbersStart) {
-            drawText("0.9", 810, 317, Colors.TEXT.getColor(), Color.RED, 90); // up
+            drawText("0.9", 810, 317, Colors.TEXT.getColor(), Color.RED, 330); // up
             drawText("0.5", 810, 397); // right
             drawText("-0.1", 805, 477); // down
             drawText("-0.3", 805, 557); // left
@@ -116,11 +117,11 @@ public class SnakeIntroduction implements GridVisualization {
             for (int column = 0; column < columns; column++) {
                 if (currentGrid[row][column] == 0)
                     continue;
-                numberToColor(currentGrid[row][column], calculateDisappearingAlpha(GRID_DISAPPEAR));
+                numberToColor(currentGrid[row][column], calculateDisappearingAlpha(gridDisappear));
                 if (currentGrid[row][column] == SnakeMap.FOOD.value) {
-                    graphics.fillOval(column * squareSizePixels, row * squareSizePixels, squareSizePixels, squareSizePixels);
+                    graphics.fillOval(column * SQUARE_PIXEL_SIZE, row * SQUARE_PIXEL_SIZE, SQUARE_PIXEL_SIZE, SQUARE_PIXEL_SIZE);
                 } else {
-                    graphics.fillRect(column * squareSizePixels, row * squareSizePixels, squareSizePixels, squareSizePixels);
+                    graphics.fillRect(column * SQUARE_PIXEL_SIZE, row * SQUARE_PIXEL_SIZE, SQUARE_PIXEL_SIZE, SQUARE_PIXEL_SIZE);
                 }
             }
         }
@@ -146,7 +147,7 @@ public class SnakeIntroduction implements GridVisualization {
 
     public SavedGameDTO buildMockDTO() {
         var saveGame = new SavedGameDTO();
-        for (int i = 0; i <= GRID_FRAMES; i++) {
+        for (int i = 0; i <= gridFrames; i++) {
             saveGame.grid.add(Util.arrayCopy(grid));
             saveGame.scores.add(new int[]{0});
         }
@@ -154,7 +155,15 @@ public class SnakeIntroduction implements GridVisualization {
     }
 
     public void drawSightRays(int startAppearingFrame, int startDisappearingFrame) {
-        var alpha = calculateAppearingAlpha(startAppearingFrame);
+        var appearingAlpha = calculateAppearingAlpha(startAppearingFrame);
+        var disapperatingAlpha = calculateDisappearingAlpha(startDisappearingFrame);
+        var alpha = 0;
+        if (slowFrame >= startAppearingFrame && slowFrame < startDisappearingFrame)
+            alpha = appearingAlpha;
+        else if (slowFrame >= startDisappearingFrame) {
+            alpha = disapperatingAlpha;
+        }
+
         graphics.setColor(Colors.textWithAlpha(alpha));
         graphics.setStroke(new BasicStroke(3f));
         graphics.drawLine(160, 260, 40, 260); // left
@@ -168,10 +177,10 @@ public class SnakeIntroduction implements GridVisualization {
         graphics.drawLine(200, 280, 320, 400); // bottom right
     }
 
-    public void drawNetwork(int startX, int startY, int startAppearingFrame) {
+    public void drawNetwork(int startX, int startY, int startAppearingFrame, int startMovingDots) {
         drawLayer(startX, startY, 8, NODE_SIZE, NODE_GAP, startAppearingFrame);
         drawLayer(startX + 300, startY + 185, 4, NODE_SIZE, NODE_GAP, startAppearingFrame);
-        drawWeights(startX, startY, NODE_SIZE, NODE_GAP, 8, 4, 60);
+        drawWeights(startX, startY, NODE_SIZE, NODE_GAP, 8, 4, startMovingDots);
     }
 
     public void drawLayer(int startX, int startY, int nodes, int nodeSize, int nodeGap, int startAppearingFrame) {
@@ -200,7 +209,8 @@ public class SnakeIntroduction implements GridVisualization {
         for (int l = 0; l < leftNodes; l++) {
             for (int r = 0; r < rightNodes; r++) {
                 graphics.drawLine(leftX, leftYs.get(l), rightX, rightYs.get(r));
-                if (slowFrame >= startMovingDot && slowFrame <= startMovingDot + Settings.CHANGING_SLOW_FRAMES * 2) {
+                if ((slowFrame >= startMovingDot && slowFrame <= startMovingDot + Settings.CHANGING_SLOW_FRAMES * 2)
+                        && (l == 0 || l == 5 || l == 6 || l == 7)) { // shows dots moving just from non-zero inputs
                     int dotSize = 10;
                     int stage = slowFrame - startMovingDot;
                     var pair = calculateMovingDotCoordinates(leftX, leftYs.get(l), rightX, rightYs.get(r), stage);
@@ -211,13 +221,14 @@ public class SnakeIntroduction implements GridVisualization {
     }
 
     public Pair<Integer> calculateMovingDotCoordinates(int startX, int startY, int endX, int endY, int stage) {
+        int totalFrames = Settings.CHANGING_SLOW_FRAMES * 2;
         if (stage <= 0) {
             return new Pair<>(startX, startY);
-        } else if (stage >= Settings.CHANGING_SLOW_FRAMES * 2) {
+        } else if (stage >= totalFrames) {
             return new Pair<>(endX, endY);
         } else {
-            int x = startX + (endX - startX) * stage / (Settings.CHANGING_SLOW_FRAMES * 2);
-            int y = startY + (endY - startY) * stage / (Settings.CHANGING_SLOW_FRAMES * 2);
+            int x = startX + (endX - startX) * stage / totalFrames;
+            int y = startY + (endY - startY) * stage / totalFrames;
             return new Pair<>(x, y);
         }
     }
