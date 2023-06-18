@@ -22,15 +22,16 @@ public class SnakeIntroduction implements GridVisualization {
     private final int rows;
     private final int SQUARE_PIXEL_SIZE = 40;
     private final SavedGameDTO savedGameDTO;
-    private final int NODE_SIZE = 50;
-    private final int NODE_GAP = 80;
     private final int FONT_SIZE = (int) (Settings.BACKGROUND_HEIGHT / 60 * 1.2);
     private final int[][] grid;
     private int slowFrame = 0;
     private int fastFrame = 0;
-    private final int totalFrames = 420;
+    private final int totalFrames = 480;
     private final int gridFrames = 300;
     private final int gridDisappear = 270;
+    private float networkScale = 1.0f;
+    private int networkStartX = 750;
+    private int networkStartY = 100;
 
     public SnakeIntroduction() {
         Settings.VIDEO_FPS = 60;
@@ -69,12 +70,11 @@ public class SnakeIntroduction implements GridVisualization {
         }
 
         var networkStart = 90;
-        if (slowFrame > networkStart) {
-            drawNetwork(750, 100, networkStart, 300);
-        }
+        var startShrinking = 420;
+        drawShrinkingNetwork(networkStart, startShrinking, 300);
 
         var outputDirection = 150;
-        if (slowFrame > outputDirection) {
+        if (slowFrame > outputDirection && slowFrame <= startShrinking) {
             drawText("UP", 1120, 317, Colors.TEXT.getColor(), Color.RED, 360); // up
             drawText("LEFT", 1120, 397); // right
             drawText("DOWN", 1120, 477); // down
@@ -82,17 +82,19 @@ public class SnakeIntroduction implements GridVisualization {
         }
 
         var startNumberMoveFastFrame = 510;
-        drawMovingNumber("0.5", 180, 120, 760, 132, startNumberMoveFastFrame, 20); // top
-        drawMovingNumber("0.0", 320, 120, 760, 212, startNumberMoveFastFrame + 30, 20); // top right
-        drawMovingNumber("0.0", 320, 260, 760, 292, startNumberMoveFastFrame + 60, 20); // right
-        drawMovingNumber("0.0", 320, 400, 760, 372, startNumberMoveFastFrame + 90, 20); // bottom right
-        drawMovingNumber("0.0", 180, 400, 760, 452, startNumberMoveFastFrame + 120, 20); // bottom
-        drawMovingNumber("-0.1", 40, 400, 755, 532, startNumberMoveFastFrame + 150, 20); // bottom left
-        drawMovingNumber("-0.1", 40, 260, 755, 612, startNumberMoveFastFrame + 180, 20); // left
-        drawMovingNumber("-0.1", 40, 120, 755, 692, startNumberMoveFastFrame + 210, 20); // left
+        if (slowFrame <= startShrinking) {
+            drawMovingNumber("0.5", 180, 120, 760, 132, startNumberMoveFastFrame, 20); // top
+            drawMovingNumber("0.0", 320, 120, 760, 212, startNumberMoveFastFrame + 30, 20); // top right
+            drawMovingNumber("0.0", 320, 260, 760, 292, startNumberMoveFastFrame + 60, 20); // right
+            drawMovingNumber("0.0", 320, 400, 760, 372, startNumberMoveFastFrame + 90, 20); // bottom right
+            drawMovingNumber("0.0", 180, 400, 760, 452, startNumberMoveFastFrame + 120, 20); // bottom
+            drawMovingNumber("-0.1", 40, 400, 755, 532, startNumberMoveFastFrame + 150, 20); // bottom left
+            drawMovingNumber("-0.1", 40, 260, 755, 612, startNumberMoveFastFrame + 180, 20); // left
+            drawMovingNumber("-0.1", 40, 120, 755, 692, startNumberMoveFastFrame + 210, 20); // left
+        }
 
         var resultNumbersStart = 330;
-        if (slowFrame > resultNumbersStart) {
+        if (slowFrame > resultNumbersStart && slowFrame <= startShrinking) {
             drawText("0.9", 1060, 317, Colors.TEXT.getColor(), Color.RED, 360); // up
             drawText("0.5", 1060, 397); // right
             drawText("-0.1", 1055, 477); // down
@@ -176,10 +178,24 @@ public class SnakeIntroduction implements GridVisualization {
         graphics.drawLine(200, 280, 320, 400); // bottom right
     }
 
+    public void drawShrinkingNetwork(int startAppearingFrame, int startShrinking, int startMovingDots) {
+        if (slowFrame > startAppearingFrame) {
+            if (slowFrame > startShrinking) {
+                networkScale -= 0.01f;
+                networkStartX -= 5;
+                networkStartY += 1;
+            }
+            if (networkScale > 0)
+                drawNetwork(networkStartX, networkStartY, startAppearingFrame, startMovingDots);
+        }
+    }
+
     public void drawNetwork(int startX, int startY, int startAppearingFrame, int startMovingDots) {
-        drawLayer(startX, startY, 8, NODE_SIZE, NODE_GAP, startAppearingFrame);
-        drawLayer(startX + 300, startY + 185, 4, NODE_SIZE, NODE_GAP, startAppearingFrame);
-        drawWeights(startX, startY, NODE_SIZE, NODE_GAP, 8, 4, startMovingDots);
+        int nodeSize = (int) (50 * networkScale);
+        int nodeGap = (int) (80 * networkScale);
+        drawLayer(startX, startY, 8, nodeSize, nodeGap, startAppearingFrame);
+        drawLayer(startX + nodeSize * 6, startY + nodeGap * 2 + nodeSize / 2, 4, nodeSize, nodeGap, startAppearingFrame);
+        drawWeights(startX, startY, nodeSize, nodeGap, 8, 4, startMovingDots);
     }
 
     public void drawLayer(int startX, int startY, int nodes, int nodeSize, int nodeGap, int startAppearingFrame) {
@@ -195,8 +211,8 @@ public class SnakeIntroduction implements GridVisualization {
         List<Integer> leftYs = new ArrayList<>();
         List<Integer> rightYs = new ArrayList<>();
         int leftX = startX + nodeSize;
-        int rightX = startX + 300;
-        int rightYShift = nodeSize / 2 + (leftNodes - rightNodes) / 2 * (nodeGap + nodeSize);
+        int rightX = startX + nodeSize * 6;
+        int rightYShift = startY + nodeGap * 2 + nodeSize / 2;
 
         for (int l = 0; l < leftNodes; l++) {
             leftYs.add(startY + nodeSize / 2 + l * nodeGap);
