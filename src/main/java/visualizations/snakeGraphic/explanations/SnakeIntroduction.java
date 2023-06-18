@@ -26,7 +26,7 @@ public class SnakeIntroduction implements GridVisualization {
     private final int[][] grid;
     private int slowFrame = 0;
     private int fastFrame = 0;
-    private final int totalFrames = 480;
+    private final int totalFrames = 180; // 480
     private final int gridFrames = 300;
     private final int gridDisappear = 270;
     private float networkScale = 1.0f;
@@ -61,45 +61,52 @@ public class SnakeIntroduction implements GridVisualization {
     @Override
     public void drawPresentation(Graphics2D graphics) {
         this.graphics = graphics;
-        if (slowFrame < gridFrames)
-            drawGrid();
+//        if (slowFrame < gridFrames)
+//            drawGrid();
+//
+//        var raysStart = 30;
+//        if (slowFrame > raysStart) {
+//            drawSightRays(raysStart, 270);
+//        }
+//
+//        var networkStart = 90;
+//        var startShrinking = 420;
+//        drawShrinkingNetwork(networkStart, startShrinking, 300);
+//
+//        var outputDirection = 150;
+//        if (slowFrame > outputDirection && slowFrame <= startShrinking) {
+//            drawText("UP", 1120, 317, Colors.TEXT.getColor(), Color.RED, 360); // up
+//            drawText("LEFT", 1120, 397); // right
+//            drawText("DOWN", 1120, 477); // down
+//            drawText("RIGHT", 1120, 557); // left
+//        }
+//
+//        var startNumberMoveFastFrame = 510;
+//        if (slowFrame <= startShrinking) {
+//            drawMovingNumber("0.5", 180, 120, 760, 132, startNumberMoveFastFrame, 20); // top
+//            drawMovingNumber("0.0", 320, 120, 760, 212, startNumberMoveFastFrame + 30, 20); // top right
+//            drawMovingNumber("0.0", 320, 260, 760, 292, startNumberMoveFastFrame + 60, 20); // right
+//            drawMovingNumber("0.0", 320, 400, 760, 372, startNumberMoveFastFrame + 90, 20); // bottom right
+//            drawMovingNumber("0.0", 180, 400, 760, 452, startNumberMoveFastFrame + 120, 20); // bottom
+//            drawMovingNumber("-0.1", 40, 400, 755, 532, startNumberMoveFastFrame + 150, 20); // bottom left
+//            drawMovingNumber("-0.1", 40, 260, 755, 612, startNumberMoveFastFrame + 180, 20); // left
+//            drawMovingNumber("-0.1", 40, 120, 755, 692, startNumberMoveFastFrame + 210, 20); // left
+//        }
+//
+//        var resultNumbersStart = 330;
+//        if (slowFrame > resultNumbersStart && slowFrame <= startShrinking) {
+//            drawText("0.9", 1060, 317, Colors.TEXT.getColor(), Color.RED, 360); // up
+//            drawText("0.5", 1060, 397); // right
+//            drawText("-0.1", 1055, 477); // down
+//            drawText("-0.3", 1055, 557); // left
+//        }
 
-        var raysStart = 30;
-        if (slowFrame > raysStart) {
-            drawSightRays(raysStart, 270);
-        }
+        var networkStart = 0;
+        var startShrinking = 30;
+        drawShrinkingNetwork(networkStart, startShrinking, 30);
 
-        var networkStart = 90;
-        var startShrinking = 420;
-        drawShrinkingNetwork(networkStart, startShrinking, 300);
+        drawNetworkGraph(270, 196, 61);
 
-        var outputDirection = 150;
-        if (slowFrame > outputDirection && slowFrame <= startShrinking) {
-            drawText("UP", 1120, 317, Colors.TEXT.getColor(), Color.RED, 360); // up
-            drawText("LEFT", 1120, 397); // right
-            drawText("DOWN", 1120, 477); // down
-            drawText("RIGHT", 1120, 557); // left
-        }
-
-        var startNumberMoveFastFrame = 510;
-        if (slowFrame <= startShrinking) {
-            drawMovingNumber("0.5", 180, 120, 760, 132, startNumberMoveFastFrame, 20); // top
-            drawMovingNumber("0.0", 320, 120, 760, 212, startNumberMoveFastFrame + 30, 20); // top right
-            drawMovingNumber("0.0", 320, 260, 760, 292, startNumberMoveFastFrame + 60, 20); // right
-            drawMovingNumber("0.0", 320, 400, 760, 372, startNumberMoveFastFrame + 90, 20); // bottom right
-            drawMovingNumber("0.0", 180, 400, 760, 452, startNumberMoveFastFrame + 120, 20); // bottom
-            drawMovingNumber("-0.1", 40, 400, 755, 532, startNumberMoveFastFrame + 150, 20); // bottom left
-            drawMovingNumber("-0.1", 40, 260, 755, 612, startNumberMoveFastFrame + 180, 20); // left
-            drawMovingNumber("-0.1", 40, 120, 755, 692, startNumberMoveFastFrame + 210, 20); // left
-        }
-
-        var resultNumbersStart = 330;
-        if (slowFrame > resultNumbersStart && slowFrame <= startShrinking) {
-            drawText("0.9", 1060, 317, Colors.TEXT.getColor(), Color.RED, 360); // up
-            drawText("0.5", 1060, 397); // right
-            drawText("-0.1", 1055, 477); // down
-            drawText("-0.3", 1055, 557); // left
-        }
     }
 
     @Override
@@ -185,7 +192,7 @@ public class SnakeIntroduction implements GridVisualization {
                 networkStartX -= 5;
                 networkStartY += 1;
             }
-            if (networkScale > 0)
+            if (networkScale > 0.05)
                 drawNetwork(networkStartX, networkStartY, startAppearingFrame, startMovingDots);
         }
     }
@@ -270,6 +277,23 @@ public class SnakeIntroduction implements GridVisualization {
             graphics.drawString(number, currentCoordinate.getFirst(), currentCoordinate.getSecond());
         } else {
             graphics.drawString(number, endX, endY);
+        }
+    }
+
+    public void drawNetworkGraph(int startX, int startY, int startDrawing) {
+        int gap = 10;
+        int width = 15;
+        int height = 30;
+        int sequenceDelay = 30;
+        int limit = 1;
+        if (slowFrame > startDrawing) {
+            graphics.setColor(Colors.TEXT.getColor());
+            if (slowFrame > startDrawing + sequenceDelay)
+                limit = Math.min(50, slowFrame - startDrawing - sequenceDelay);
+
+            for (int i = 0; i < limit; i++) {
+                graphics.fillRect(startX + i * (gap + width), startY, width, height);
+            }
         }
     }
 
