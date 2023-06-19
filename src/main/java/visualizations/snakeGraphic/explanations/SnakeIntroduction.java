@@ -17,6 +17,7 @@ import java.util.List;
 
 
 public class SnakeIntroduction implements GridVisualization {
+    private NetworkGraph networkGraph;
     private Graphics2D graphics;
     private final int columns;
     private final int rows;
@@ -35,6 +36,7 @@ public class SnakeIntroduction implements GridVisualization {
 
     public SnakeIntroduction() {
         Settings.VIDEO_FPS = 60;
+        this.networkGraph = new NetworkGraph();
         this.rows = Settings.GRID_ROW_PIXELS / SQUARE_PIXEL_SIZE;
         this.columns = Settings.GRID_COLUMN_PIXELS / SQUARE_PIXEL_SIZE;
         this.grid = new int[rows][columns];
@@ -61,6 +63,9 @@ public class SnakeIntroduction implements GridVisualization {
     @Override
     public void drawPresentation(Graphics2D graphics) {
         this.graphics = graphics;
+        networkGraph.graphics = graphics;
+        networkGraph.slowFrame = slowFrame;
+        networkGraph.fastFrame = fastFrame;
 //        if (slowFrame < gridFrames)
 //            drawGrid();
 //
@@ -105,8 +110,11 @@ public class SnakeIntroduction implements GridVisualization {
         var startShrinking = 30;
         drawShrinkingNetwork(networkStart, startShrinking, 30);
 
-        drawNetworkGraph(270, 196, 61);
-
+        networkGraph.initConstants(270, 496, 61);
+        //TODO move to networkGraph single function
+        networkGraph.initGraphBars();
+        networkGraph.drawNetworkGraph();
+        networkGraph.drawGraphAxis();
     }
 
     @Override
@@ -190,7 +198,7 @@ public class SnakeIntroduction implements GridVisualization {
             if (slowFrame > startShrinking) {
                 networkScale -= 0.01f;
                 networkStartX -= 5;
-                networkStartY += 1;
+                networkStartY += 4;
             }
             if (networkScale > 0.05)
                 drawNetwork(networkStartX, networkStartY, startAppearingFrame, startMovingDots);
@@ -277,23 +285,6 @@ public class SnakeIntroduction implements GridVisualization {
             graphics.drawString(number, currentCoordinate.getFirst(), currentCoordinate.getSecond());
         } else {
             graphics.drawString(number, endX, endY);
-        }
-    }
-
-    public void drawNetworkGraph(int startX, int startY, int startDrawing) {
-        int gap = 10;
-        int width = 15;
-        int height = 30;
-        int sequenceDelay = 30;
-        int limit = 1;
-        if (slowFrame > startDrawing) {
-            graphics.setColor(Colors.TEXT.getColor());
-            if (slowFrame > startDrawing + sequenceDelay)
-                limit = Math.min(50, slowFrame - startDrawing - sequenceDelay);
-
-            for (int i = 0; i < limit; i++) {
-                graphics.fillRect(startX + i * (gap + width), startY, width, height);
-            }
         }
     }
 
