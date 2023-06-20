@@ -1,12 +1,14 @@
 package visualizations.snakeGraphic.explanations;
 
 import utils.Colors;
+import utils.Pair;
 import utils.Util;
 
 import java.awt.BasicStroke;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class NetworkGraph {
@@ -21,15 +23,17 @@ public class NetworkGraph {
     private int startY;
     private int startDrawing;
     private int barGap = 15;
+    private int numOfBarMoves = 30;
+    private int cutOffShowDelay = 150;
+    private int graphBarMoveIndex = 0;
 
-    public NetworkGraph() {
+    public NetworkGraph(int startX, int startY, int startDrawing) {
         graphBars = new ArrayList<>();
-    }
-
-    public void initConstants(int startX, int startY, int startDrawing) {
         this.startX = startX;
         this.startY = startY;
         this.startDrawing = startDrawing;
+
+        initGraphBars();
     }
 
     public void initGraphBars() {
@@ -44,7 +48,7 @@ public class NetworkGraph {
         }
     }
 
-    public void drawNetworkGraph() {
+    public void drawGraphBars(int startMovingBars) {
         int width = 10;
         int sequenceDelay = 30;
         int limit = 1;
@@ -52,10 +56,18 @@ public class NetworkGraph {
             graphics.setColor(Colors.lightGreenWithAlpha(255));
             if (slowFrame > startDrawing + sequenceDelay)
                 limit = Math.min(NUM_OF_BARS, slowFrame - startDrawing - sequenceDelay);
+            if (slowFrame > startMovingBars){
+                graphBarMoveIndex = Math.min(numOfBarMoves - 1, slowFrame - startMovingBars);
+                calculateNewGraphBarPosition();
+                for (int i = 0; i < NUM_OF_BARS; i++) {
+                    var graphBar = graphBars.get(i);
+                    graphBar.currentCoordinates = graphBar.moveCoordinatesList.get(graphBarMoveIndex);
+                }
+            }
 
             for (int i = 0; i < limit; i++) {
                 var graphBar = graphBars.get(i);
-                graphics.fillRect(graphBar.xPosition + 2, graphBar.yPosition - 1, width, graphBar.height); // -2 and -1 so the bars are not over axis
+                graphics.fillRect(graphBar.currentCoordinates.getFirst() + 2, graphBar.currentCoordinates.getSecond() - 1, width, graphBar.height); // -2 and -1 so the bars are not over axis
             }
         }
     }
@@ -81,11 +93,23 @@ public class NetworkGraph {
             }
 
             // last 10 cutoff
-            int cutOffShowDelay = 150;
             if (slowFrame > startDrawing + cutOffShowDelay) {
                 graphics.setColor(Colors.redWithAlpha(200));
                 graphics.drawLine(startX + 90 * barGap, startY - 3, startX + 90 * barGap, startY - 170); // cutOffLine
             }
+        }
+    }
+
+    public void calculateNewGraphBarPosition() {
+        for (int i = 0; i < graphBars.size(); i++) {
+            graphBars.get(i).oldPosition = i;
+        }
+        graphBars.sort(Collections.reverseOrder());
+        for (int i = 0; i < graphBars.size(); i++) {
+            var graphBar = graphBars.get(i);
+            var endCoordinate = new Pair<>(startX + barGap * i, startY - graphBar.height);
+            graphBar.newPosition = i;
+            graphBar.calculateMoveCoordinates(numOfBarMoves, endCoordinate);
         }
     }
 }
