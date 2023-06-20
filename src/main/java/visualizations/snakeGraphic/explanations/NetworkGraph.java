@@ -49,13 +49,13 @@ public class NetworkGraph {
         int sequenceDelay = 30;
         int limit = 1;
         if (slowFrame > startDrawing) {
-            graphics.setColor(Colors.TEXT.getColor());
+            graphics.setColor(Colors.lightGreenWithAlpha(255));
             if (slowFrame > startDrawing + sequenceDelay)
                 limit = Math.min(NUM_OF_BARS, slowFrame - startDrawing - sequenceDelay);
 
             for (int i = 0; i < limit; i++) {
                 var graphBar = graphBars.get(i);
-                graphics.fillRect(graphBar.xPosition, graphBar.yPosition, width, graphBar.height);
+                graphics.fillRect(graphBar.xPosition + 2, graphBar.yPosition - 1, width, graphBar.height); // -2 and -1 so the bars are not over axis
             }
         }
     }
@@ -78,6 +78,13 @@ public class NetworkGraph {
                 var number = String.valueOf(50 * i);
                 var leftShift = number.length() == 3 ? 50 : 39; // only for length 2 an 3
                 graphics.drawString(number, startX - leftShift, startY + 8 - 50 * i);
+            }
+
+            // last 10 cutoff
+            int cutOffShowDelay = 150;
+            if (slowFrame > startDrawing + cutOffShowDelay) {
+                graphics.setColor(Colors.redWithAlpha(200));
+                graphics.drawLine(startX + 90 * barGap, startY - 3, startX + 90 * barGap, startY - 170); // cutOffLine
             }
         }
     }

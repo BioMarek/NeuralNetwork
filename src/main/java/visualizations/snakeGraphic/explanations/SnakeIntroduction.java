@@ -27,7 +27,7 @@ public class SnakeIntroduction implements GridVisualization {
     private final int[][] grid;
     private int slowFrame = 0;
     private int fastFrame = 0;
-    private final int totalFrames = 210; // 480
+    private final int totalFrames = 240; // 480
     private final int gridFrames = 300;
     private final int gridDisappear = 270;
     private float networkScale = 1.0f;
@@ -147,7 +147,7 @@ public class SnakeIntroduction implements GridVisualization {
         if (num == -1)
             Colors.setColor(graphics, Colors.wallWithAlpha(alpha));
         else if (num == SnakeMap.FOOD.value)
-            Colors.setColor(graphics, Colors.foodWithAlpha(alpha));
+            Colors.setColor(graphics, Colors.redWithAlpha(alpha));
         else if (num >= SnakeMap.HEAD.value)
             Colors.setColor(graphics, num - SnakeMap.HEAD.value, alpha);
         else if (num >= SnakeMap.BODY.value)
