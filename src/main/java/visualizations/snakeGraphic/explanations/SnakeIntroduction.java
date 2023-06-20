@@ -27,7 +27,7 @@ public class SnakeIntroduction implements GridVisualization {
     private final int[][] grid;
     private int slowFrame = 0;
     private int fastFrame = 0;
-    private final int totalFrames = 180; // 480
+    private final int totalFrames = 210; // 480
     private final int gridFrames = 300;
     private final int gridDisappear = 270;
     private float networkScale = 1.0f;
@@ -110,11 +110,11 @@ public class SnakeIntroduction implements GridVisualization {
         var startShrinking = 30;
         drawShrinkingNetwork(networkStart, startShrinking, 30);
 
-        networkGraph.initConstants(270, 496, 61);
+        networkGraph.initConstants(260, 605, 62);
         //TODO move to networkGraph single function
         networkGraph.initGraphBars();
-        networkGraph.drawNetworkGraph();
         networkGraph.drawGraphAxis();
+        networkGraph.drawNetworkGraph();
     }
 
     @Override
@@ -198,9 +198,9 @@ public class SnakeIntroduction implements GridVisualization {
             if (slowFrame > startShrinking) {
                 networkScale -= 0.01f;
                 networkStartX -= 5;
-                networkStartY += 4;
+                networkStartY += 5;
             }
-            if (networkScale > 0.05)
+            if (networkScale > 0.02)
                 drawNetwork(networkStartX, networkStartY, startAppearingFrame, startMovingDots);
         }
     }
