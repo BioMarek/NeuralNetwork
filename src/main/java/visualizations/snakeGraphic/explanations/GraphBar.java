@@ -15,13 +15,15 @@ public class GraphBar implements Comparable<GraphBar> {
     public int newPosition;
     public boolean isVisible = false;
     public Color currentColor;
+    public int alphaReductionStep = 255 / 30;
+    public int currentAlpha = 255;
 
     public GraphBar(int xPosition, int yPosition, int height) {
         this.currentCoordinates = new Pair<>(xPosition, yPosition);
         this.height = height;
         this.moveCoordinatesList = new ArrayList<>();
         this.moveCoordinatesList.add(currentCoordinates);
-        this.currentColor = Colors.lightGreenWithAlpha(255);
+        this.currentColor = Colors.lightGreenWithAlpha(currentAlpha);
     }
 
     public void calculateMoveCoordinates(int steps, Pair<Integer> endCoordinate) {
@@ -34,6 +36,11 @@ public class GraphBar implements Comparable<GraphBar> {
             else
                 moveCoordinatesList.add(new Pair<>(x, y));
         }
+    }
+
+    public void reduceAlpha() {
+        currentAlpha = Math.max(0, currentAlpha - alphaReductionStep);
+        currentColor = Colors.lightGreenWithAlpha(currentAlpha);
     }
 
     @Override

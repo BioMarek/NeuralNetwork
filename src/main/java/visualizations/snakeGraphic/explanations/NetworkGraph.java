@@ -25,7 +25,7 @@ public class NetworkGraph {
     private int barGap = 15;
     private int numOfBarMoves = 60;
     private int cutoffDelay = 238; // 300 - 62
-    private int eliminatedDisappearDelay = 268;
+    private int eliminatedDisappearDelay = 268; // 330 - 62
     private int graphBarMoveIndex = 0;
 
     public NetworkGraph(int startX, int startY, int startDrawing) {
@@ -35,7 +35,7 @@ public class NetworkGraph {
         this.startDrawing = startDrawing;
 
         initGraphBars();
-        calculateNewGraphBarPosition();
+        calculateNewGraphBarPosition(true);
     }
 
     public void initGraphBars() {
@@ -69,9 +69,11 @@ public class NetworkGraph {
                 }
             }
 
+            if (slowFrame == startDrawing + eliminatedDisappearDelay - 1)
+                calculateNewGraphBarPosition(false);
             if (slowFrame > startDrawing + eliminatedDisappearDelay)
                 for (int i = 90; i < NUM_OF_BARS; i++)
-                    graphBars.get(i).isVisible = false;
+                    graphBars.get(i).reduceAlpha();
 
             for (int i = 0; i < NUM_OF_BARS; i++) {
                 var graphBar = graphBars.get(i);
@@ -110,13 +112,17 @@ public class NetworkGraph {
         }
     }
 
-    public void calculateNewGraphBarPosition() {
+    public void calculateNewGraphBarPosition(boolean withCopy) {
         for (int i = 0; i < graphBars.size(); i++) {
             graphBars.get(i).oldPosition = i;
         }
 
         var graphBarsCopy = new ArrayList<>(graphBars);
-        graphBarsCopy.sort(Collections.reverseOrder());
+        if (withCopy) {
+            graphBarsCopy.sort(Collections.reverseOrder());
+        } else {
+            graphBars.sort(Collections.reverseOrder());
+        }
 
         for (int i = 0; i < graphBarsCopy.size(); i++) {
             var graphBar = graphBarsCopy.get(i);
