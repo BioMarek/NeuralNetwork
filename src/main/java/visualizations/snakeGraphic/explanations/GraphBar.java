@@ -20,11 +20,10 @@ public class GraphBar implements Comparable<GraphBar> {
     }
 
     public void calculateMoveCoordinates(int steps, Pair<Integer> endCoordinate) {
-        // TODO fix non smooth movement of bars
         moveCoordinatesList.clear();
         for (int i = 0; i < steps; i++) {
-            int x = (int) (currentCoordinates.getFirst() + (endCoordinate.getFirst() - currentCoordinates.getFirst()) * i / steps * 1.0);
-            int y = (int) (currentCoordinates.getSecond() + (endCoordinate.getSecond() - currentCoordinates.getSecond()) * i / steps * 1.0);
+            int x = (int) (currentCoordinates.getFirst() + (endCoordinate.getFirst() - currentCoordinates.getFirst()) * i / (steps - 1) * 1.0);
+            int y = (int) (currentCoordinates.getSecond() + (endCoordinate.getSecond() - currentCoordinates.getSecond()) * i / (steps - 1) * 1.0);
             if (i == steps - 1)
                 moveCoordinatesList.add(endCoordinate);
             else
