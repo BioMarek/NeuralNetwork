@@ -1,7 +1,9 @@
 package visualizations.snakeGraphic.explanations;
 
+import utils.Colors;
 import utils.Pair;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,12 +13,15 @@ public class GraphBar implements Comparable<GraphBar> {
     public int height;
     public int oldPosition;
     public int newPosition;
+    public boolean isVisible = false;
+    public Color currentColor;
 
     public GraphBar(int xPosition, int yPosition, int height) {
         this.currentCoordinates = new Pair<>(xPosition, yPosition);
         this.height = height;
         this.moveCoordinatesList = new ArrayList<>();
         this.moveCoordinatesList.add(currentCoordinates);
+        this.currentColor = Colors.lightGreenWithAlpha(255);
     }
 
     public void calculateMoveCoordinates(int steps, Pair<Integer> endCoordinate) {

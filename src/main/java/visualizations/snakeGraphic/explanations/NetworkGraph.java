@@ -24,7 +24,8 @@ public class NetworkGraph {
     private int startDrawing;
     private int barGap = 15;
     private int numOfBarMoves = 60;
-    private int showCutoff = 300;
+    private int cutoffDelay = 238; // 300 - 62
+    private int eliminatedDisappearDelay = 268;
     private int graphBarMoveIndex = 0;
 
     public NetworkGraph(int startX, int startY, int startDrawing) {
@@ -41,7 +42,9 @@ public class NetworkGraph {
         int min = 5;
         int max = 100;
         int currentX = startX;
-        graphBars.add(new GraphBar(currentX, startY - 30, 30));
+        var firstGraphBar = new GraphBar(currentX, startY - 30, 30);
+        firstGraphBar.isVisible = true;
+        graphBars.add(firstGraphBar);
         for (int i = 1; i < NUM_OF_BARS; i++) {
             currentX += barGap;
             int height = Util.randomInt(min, max);
@@ -54,9 +57,10 @@ public class NetworkGraph {
         int sequenceDelay = 30;
         int limit = 1;
         if (slowFrame > startDrawing) {
-            graphics.setColor(Colors.lightGreenWithAlpha(255));
-            if (slowFrame > startDrawing + sequenceDelay)
-                limit = Math.min(NUM_OF_BARS, slowFrame - startDrawing - sequenceDelay);
+            if (slowFrame > startDrawing + sequenceDelay) {
+                limit = Math.min(NUM_OF_BARS - 1, slowFrame - startDrawing - sequenceDelay);
+                graphBars.get(limit).isVisible = true;
+            }
             if (slowFrame > startMovingBars) {
                 graphBarMoveIndex = Math.min(numOfBarMoves - 1, slowFrame - startMovingBars);
                 for (int i = 0; i < NUM_OF_BARS; i++) {
@@ -65,9 +69,15 @@ public class NetworkGraph {
                 }
             }
 
-            for (int i = 0; i < limit; i++) {
+            if (slowFrame > startDrawing + eliminatedDisappearDelay)
+                for (int i = 90; i < NUM_OF_BARS; i++)
+                    graphBars.get(i).isVisible = false;
+
+            for (int i = 0; i < NUM_OF_BARS; i++) {
                 var graphBar = graphBars.get(i);
-                graphics.fillRect(graphBar.currentCoordinates.getFirst() + 2, graphBar.currentCoordinates.getSecond() - 1, width, graphBar.height); // -2 and -1 so the bars are not over axis
+                graphics.setColor(graphBar.currentColor);
+                if (graphBar.isVisible)
+                    graphics.fillRect(graphBar.currentCoordinates.getFirst() + 2, graphBar.currentCoordinates.getSecond() - 1, width, graphBar.height); // -2 and -1 so the bars are not over axis
             }
         }
     }
@@ -93,9 +103,9 @@ public class NetworkGraph {
             }
 
             // last 10 cutoff
-            if (slowFrame > showCutoff) {
+            if (slowFrame > startDrawing + cutoffDelay) {
                 graphics.setColor(Colors.redWithAlpha(200));
-                graphics.drawLine(startX + 90 * barGap, startY - 3, startX + 90 * barGap, startY - 170); // cutOffLine
+                graphics.drawLine(startX + 90 * barGap, startY - 2, startX + 90 * barGap, startY - 170); // cutOffLine
             }
         }
     }
