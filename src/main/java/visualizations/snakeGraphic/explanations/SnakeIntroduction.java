@@ -27,7 +27,7 @@ public class SnakeIntroduction implements GridVisualization {
     private final int[][] grid;
     private int slowFrame = 0;
     private int fastFrame = 0;
-    private final int totalFrames = 360; // 480
+    private final int totalFrames = 420; // 480
     private final int gridFrames = 300;
     private final int gridDisappear = 270;
     private float networkScale = 1.0f;
@@ -65,7 +65,6 @@ public class SnakeIntroduction implements GridVisualization {
         this.graphics = graphics;
         networkGraph.graphics = graphics;
         networkGraph.slowFrame = slowFrame;
-        networkGraph.fastFrame = fastFrame;
 //        if (slowFrame < gridFrames)
 //            drawGrid();
 //

@@ -38,6 +38,39 @@ public class GraphBar implements Comparable<GraphBar> {
         }
     }
 
+    public void calculateJumpCoordinates(int steps, int jumpHeight, Pair<Integer> startCoordinate, Pair<Integer> endCoordinate) {
+        moveCoordinatesList.clear();
+        moveCoordinatesList.add(startCoordinate);
+        int jumpSteps = (int) (steps * 0.15);
+        int lastX = 0;
+        int lastY = 0;
+
+        // move up
+        for (int i = 1; i < jumpSteps; i++) {
+            int x = startCoordinate.getFirst();
+            int y = (int) (startCoordinate.getSecond() + jumpHeight * i / (jumpSteps - 1) * 1.0);
+            moveCoordinatesList.add(new Pair<>(x, y));
+            lastY = y;
+        }
+
+        // move to the side
+        for (int i = 0; i < steps - 2 * jumpSteps; i++) {
+            int x = (int) (startCoordinate.getFirst() + (endCoordinate.getFirst() - startCoordinate.getFirst()) * (i + 1) / (steps - (2 * jumpSteps)) * 1.0);
+            int y = startCoordinate.getSecond() + jumpHeight;
+            moveCoordinatesList.add(new Pair<>(x, y));
+            lastX = x;
+        }
+
+        // move down
+        for (int i = 1; i < jumpSteps; i++) {
+            int y = (int) (lastY - jumpHeight * i / (jumpSteps - 1) * 1.0);
+            moveCoordinatesList.add(new Pair<>(lastX, y));
+        }
+
+        moveCoordinatesList.add(endCoordinate);
+        moveCoordinatesList.add(endCoordinate);
+    }
+
     public void reduceAlpha() {
         currentAlpha = Math.max(0, currentAlpha - alphaReductionStep);
         currentColor = Colors.lightGreenWithAlpha(currentAlpha);

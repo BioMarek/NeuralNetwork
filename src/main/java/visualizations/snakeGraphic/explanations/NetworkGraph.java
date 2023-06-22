@@ -14,11 +14,12 @@ import java.util.List;
 public class NetworkGraph {
     public Graphics2D graphics;
     public int slowFrame;
-    public int fastFrame;
     private List<GraphBar> graphBars;
+    private List<GraphBar> moveGraphBars;
     private int BIG_FONT_SIZE = 27;
     private int SMALL_FONT_SIZE = 20;
     private int NUM_OF_BARS = 100;
+    private int NUM_MOVE_BARS = 10;
     private int startX;
     private int startY;
     private int startDrawing;
@@ -26,10 +27,12 @@ public class NetworkGraph {
     private int numOfBarMoves = 60;
     private int cutoffDelay = 238; // 300 - 62
     private int eliminatedDisappearDelay = 268; // 330 - 62
+    private int lateralMoveDelay = 298; // 360 - 62
     private int graphBarMoveIndex = 0;
 
     public NetworkGraph(int startX, int startY, int startDrawing) {
         graphBars = new ArrayList<>();
+        moveGraphBars = new ArrayList<>();
         this.startX = startX;
         this.startY = startY;
         this.startDrawing = startDrawing;
@@ -61,25 +64,35 @@ public class NetworkGraph {
                 limit = Math.min(NUM_OF_BARS - 1, slowFrame - startDrawing - sequenceDelay);
                 graphBars.get(limit).isVisible = true;
             }
-            if (slowFrame > startMovingBars) {
+            if (slowFrame > startMovingBars && slowFrame <= startMovingBars + numOfBarMoves) {
                 graphBarMoveIndex = Math.min(numOfBarMoves - 1, slowFrame - startMovingBars);
                 for (int i = 0; i < NUM_OF_BARS; i++) {
                     var graphBar = graphBars.get(i);
                     graphBar.currentCoordinates = graphBar.moveCoordinatesList.get(graphBarMoveIndex);
                 }
             }
-
-            if (slowFrame == startDrawing + eliminatedDisappearDelay - 1)
+            if (slowFrame == startDrawing + eliminatedDisappearDelay)
                 calculateNewGraphBarPosition(false);
             if (slowFrame > startDrawing + eliminatedDisappearDelay)
                 for (int i = 90; i < NUM_OF_BARS; i++)
                     graphBars.get(i).reduceAlpha();
 
+            if (slowFrame == (startDrawing + lateralMoveDelay))
+                calculateNewGraphBarPositionLateralMove();
+            if (slowFrame > (startDrawing + lateralMoveDelay)) {
+                for (int i = 0; i < NUM_MOVE_BARS; i++) {
+                    var graphBar = moveGraphBars.get(i);
+                    var lateralMoveIndex = Math.min(numOfBarMoves - 1, slowFrame - (startDrawing + lateralMoveDelay));
+                    graphBar.currentCoordinates = graphBar.moveCoordinatesList.get(lateralMoveIndex);
+                    graphics.setColor(graphBar.currentColor);
+                    graphics.fillRect(graphBar.currentCoordinates.getFirst() + 2, graphBar.currentCoordinates.getSecond() - 1, width, graphBar.height); // +2 and -1 so the bars are not over axis
+                }
+            }
+
             for (int i = 0; i < NUM_OF_BARS; i++) {
                 var graphBar = graphBars.get(i);
                 graphics.setColor(graphBar.currentColor);
-                if (graphBar.isVisible)
-                    graphics.fillRect(graphBar.currentCoordinates.getFirst() + 2, graphBar.currentCoordinates.getSecond() - 1, width, graphBar.height); // -2 and -1 so the bars are not over axis
+                graphics.fillRect(graphBar.currentCoordinates.getFirst() + 2, graphBar.currentCoordinates.getSecond() - 1, width, graphBar.height); // +2 and -1 so the bars are not over axis
             }
         }
     }
@@ -129,6 +142,17 @@ public class NetworkGraph {
             var endCoordinate = new Pair<>(startX + barGap * i, startY - graphBar.height);
             graphBar.newPosition = i;
             graphBar.calculateMoveCoordinates(numOfBarMoves, endCoordinate);
+        }
+    }
+
+    public void calculateNewGraphBarPositionLateralMove() {
+        int currentX = startX;
+        for (int i = 0; i < NUM_MOVE_BARS; i++) {
+            var height = graphBars.get(i).height;
+            var graphBar = new GraphBar(currentX, startY, height);
+            graphBar.calculateJumpCoordinates(numOfBarMoves, -200, graphBar.currentCoordinates, new Pair<>(currentX + 90 * barGap, startY - height));
+            moveGraphBars.add(graphBar);
+            currentX += barGap;
         }
     }
 }
