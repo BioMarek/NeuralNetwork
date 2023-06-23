@@ -73,7 +73,10 @@ public class GraphBar implements Comparable<GraphBar> {
 
     public void reduceAlpha() {
         currentAlpha = Math.max(0, currentAlpha - alphaReductionStep);
-        currentColor = Colors.lightGreenWithAlpha(currentAlpha);
+        if (currentColor.getRed() == 143)
+            currentColor = Colors.lightGreenWithAlpha(currentAlpha);
+        else
+            currentColor = Colors.lightLightVioletWithAlpha(currentAlpha);
     }
 
     @Override

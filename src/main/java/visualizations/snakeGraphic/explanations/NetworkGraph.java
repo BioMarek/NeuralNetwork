@@ -31,8 +31,9 @@ public class NetworkGraph {
     private int eliminatedDisappearDelay = 268; // 330 - 62
     private int lateralMoveDelay = 298; // 360 - 62
     private int graphBarMoveIndex = 0;
-    private int showFirstMutationDelay = 388; // 390 - 62
-    private int showSecondMutationDelay = 448; // 420 - 62
+    private int showFirstMutationDelay = 388;
+    private int showSecondMutationDelay = 448;
+    private int hideBarsForNextGeneration = 508;
 
     public NetworkGraph(int startX, int startY, int startDrawing) {
         graphBars = new ArrayList<>();
@@ -62,7 +63,7 @@ public class NetworkGraph {
     public void drawGraphBars(int startMovingBars) {
         int width = 10;
         int sequenceDelay = 30;
-        int limit = 1;
+        int limit;
         if (slowFrame > startDrawing) {
             if (slowFrame > startDrawing + sequenceDelay) {
                 limit = Math.min(NUM_OF_BARS - 1, slowFrame - startDrawing - sequenceDelay);
@@ -104,6 +105,14 @@ public class NetworkGraph {
                     if (graphBar.newPosition >= 80 && graphBar.newPosition < 90)
                         graphBar.currentColor = calculateChangingColor(Colors.lightGreenWithAlpha(255), Colors.lightLightVioletWithAlpha(255), startDrawing + showSecondMutationDelay);
                 }
+            }
+
+            if (slowFrame > (startDrawing + hideBarsForNextGeneration)) {
+                for (GraphBar graphBar : graphBars) {
+                    graphBar.reduceAlpha();
+                }
+                for (GraphBar graphBar : moveGraphBars)
+                    graphBar.reduceAlpha();
             }
 
             for (int i = 0; i < NUM_OF_BARS; i++) {
