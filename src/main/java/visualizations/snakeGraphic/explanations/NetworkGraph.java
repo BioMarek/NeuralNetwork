@@ -29,6 +29,8 @@ public class NetworkGraph {
     private int eliminatedDisappearDelay = 268; // 330 - 62
     private int lateralMoveDelay = 298; // 360 - 62
     private int graphBarMoveIndex = 0;
+    private int showFirstMutationDelay = 328; // 390 - 62
+    private int showSecondMutationDelay = 358; // 420 - 62
 
     public NetworkGraph(int startX, int startY, int startDrawing) {
         graphBars = new ArrayList<>();
@@ -91,8 +93,10 @@ public class NetworkGraph {
 
             for (int i = 0; i < NUM_OF_BARS; i++) {
                 var graphBar = graphBars.get(i);
-                graphics.setColor(graphBar.currentColor);
-                graphics.fillRect(graphBar.currentCoordinates.getFirst() + 2, graphBar.currentCoordinates.getSecond() - 1, width, graphBar.height); // +2 and -1 so the bars are not over axis
+                if (graphBar.isVisible) {
+                    graphics.setColor(graphBar.currentColor);
+                    graphics.fillRect(graphBar.currentCoordinates.getFirst() + 2, graphBar.currentCoordinates.getSecond() - 1, width, graphBar.height); // +2 and -1 so the bars are not over axis
+                }
             }
         }
     }
@@ -150,7 +154,7 @@ public class NetworkGraph {
         for (int i = 0; i < NUM_MOVE_BARS; i++) {
             var height = graphBars.get(i).height;
             var graphBar = new GraphBar(currentX, startY - height, height);
-            graphBar.calculateJumpCoordinates(numOfBarMoves, - 200, graphBar.currentCoordinates, new Pair<>(currentX + 90 * barGap, startY - height));
+            graphBar.calculateJumpCoordinates(numOfBarMoves, -200, graphBar.currentCoordinates, new Pair<>(currentX + 90 * barGap, startY - height));
             moveGraphBars.add(graphBar);
             currentX += barGap;
         }
