@@ -2,9 +2,11 @@ package visualizations.snakeGraphic.explanations;
 
 import utils.Colors;
 import utils.Pair;
+import utils.Settings;
 import utils.Util;
 
 import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
@@ -29,8 +31,8 @@ public class NetworkGraph {
     private int eliminatedDisappearDelay = 268; // 330 - 62
     private int lateralMoveDelay = 298; // 360 - 62
     private int graphBarMoveIndex = 0;
-    private int showFirstMutationDelay = 328; // 390 - 62
-    private int showSecondMutationDelay = 358; // 420 - 62
+    private int showFirstMutationDelay = 388; // 390 - 62
+    private int showSecondMutationDelay = 418; // 420 - 62
 
     public NetworkGraph(int startX, int startY, int startDrawing) {
         graphBars = new ArrayList<>();
@@ -88,6 +90,12 @@ public class NetworkGraph {
                     graphBar.currentCoordinates = graphBar.moveCoordinatesList.get(lateralMoveIndex);
                     graphics.setColor(graphBar.currentColor);
                     graphics.fillRect(graphBar.currentCoordinates.getFirst() + 2, graphBar.currentCoordinates.getSecond() - 1, width, graphBar.height); // +2 and -1 so the bars are not over axis
+                }
+            }
+
+            if (slowFrame > (startDrawing + showFirstMutationDelay)) {
+                for (GraphBar graphBar : moveGraphBars) {
+                    graphBar.currentColor = calculateChangingColor(Colors.lightGreenWithAlpha(255), Colors.lightLightVioletWithAlpha(255), startDrawing + showFirstMutationDelay);
                 }
             }
 
@@ -158,5 +166,16 @@ public class NetworkGraph {
             moveGraphBars.add(graphBar);
             currentX += barGap;
         }
+    }
+
+    public Color calculateChangingColor(Color from, Color to, int startChangingFrame) {
+        int stage;
+        if (slowFrame < startChangingFrame)
+            stage = 0;
+        else if (slowFrame >= startChangingFrame + Settings.CHANGING_SLOW_FRAMES) {
+            stage = Settings.CHANGING_SLOW_FRAMES;
+        } else
+            stage = slowFrame - startChangingFrame;
+        return Colors.colorMixing(from, to, stage);
     }
 }

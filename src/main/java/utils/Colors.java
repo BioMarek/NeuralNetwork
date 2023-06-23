@@ -70,6 +70,9 @@ public enum Colors {
     public static Color lightGreenWithAlpha(int alpha) {
         return new Color(143, 238, 143, alpha);
     }
+    public static Color lightLightVioletWithAlpha(int alpha) {
+        return new Color(171, 102, 248, alpha);
+    }
 
     public static Color wallWithAlpha(int alpha) {
         return new Color(210, 210, 210, alpha);
