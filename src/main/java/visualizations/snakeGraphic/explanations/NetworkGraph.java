@@ -149,8 +149,8 @@ public class NetworkGraph {
         int currentX = startX;
         for (int i = 0; i < NUM_MOVE_BARS; i++) {
             var height = graphBars.get(i).height;
-            var graphBar = new GraphBar(currentX, startY, height);
-            graphBar.calculateJumpCoordinates(numOfBarMoves, -200, graphBar.currentCoordinates, new Pair<>(currentX + 90 * barGap, startY - height));
+            var graphBar = new GraphBar(currentX, startY - height, height);
+            graphBar.calculateJumpCoordinates(numOfBarMoves, - 200, graphBar.currentCoordinates, new Pair<>(currentX + 90 * barGap, startY - height));
             moveGraphBars.add(graphBar);
             currentX += barGap;
         }
