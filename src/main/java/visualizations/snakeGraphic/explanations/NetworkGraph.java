@@ -35,6 +35,7 @@ public class NetworkGraph {
     private int graphBarMoveIndex = 0;
     private int showFirstMutationDelay = 418;
     private int hideBarsForNextGeneration = 478;
+    private double averageHeight;
 
     public NetworkGraph(int startX, int startY, int startDrawing) {
         graphBars = new ArrayList<>();
@@ -44,6 +45,9 @@ public class NetworkGraph {
         this.startDrawing = startDrawing;
 
         initGraphBars();
+        averageHeight = graphBars.stream().mapToDouble(bar -> bar.height)
+                .average()
+                .orElse(0);
         calculateNewGraphBarPosition(true);
     }
 
@@ -137,9 +141,12 @@ public class NetworkGraph {
                 graphics.drawString(number, startX - leftShift, startY + 8 - 50 * i);
             }
 
-            // generation
-            if (slowFrame > (startDrawing + showGenerationTextDelay))
-                drawText("Generation " + currentGeneration, startX - 165, startY - 240);
+            // generations and average
+            if (slowFrame > (startDrawing + showGenerationTextDelay)) {
+                drawText("Generation  " + currentGeneration, startX - 165 + 46 * barGap, startY - 440);
+                drawText("avg. score:  " + averageHeight, startX - 165 + 46 * barGap, startY - 400);
+            }
+
 
             // last 30 cutoff
             if (slowFrame > startDrawing + cutoffDelay) {
