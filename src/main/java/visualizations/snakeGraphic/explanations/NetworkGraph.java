@@ -21,19 +21,20 @@ public class NetworkGraph {
     private int BIG_FONT_SIZE = 27;
     private int SMALL_FONT_SIZE = 20;
     private int NUM_OF_BARS = 100;
-    private int NUM_MOVE_BARS = 10;
+    private int NUM_MOVE_BARS = 30;
     private int startX;
     private int startY;
     private int startDrawing;
     private int barGap = 15;
     private int numOfBarMoves = 60;
-    private int cutoffDelay = 238; // 300 - 62
-    private int eliminatedDisappearDelay = 268; // 330 - 62
-    private int lateralMoveDelay = 298; // 360 - 62
+    private int currentGeneration = 1;
+    private int showGenerationTextDelay = 148; // x - 62
+    private int cutoffDelay = 268;
+    private int eliminatedDisappearDelay = 298;
+    private int lateralMoveDelay = 328;
     private int graphBarMoveIndex = 0;
-    private int showFirstMutationDelay = 388;
-    private int showSecondMutationDelay = 448;
-    private int hideBarsForNextGeneration = 508;
+    private int showFirstMutationDelay = 418;
+    private int hideBarsForNextGeneration = 478;
 
     public NetworkGraph(int startX, int startY, int startDrawing) {
         graphBars = new ArrayList<>();
@@ -79,7 +80,7 @@ public class NetworkGraph {
             if (slowFrame == startDrawing + eliminatedDisappearDelay)
                 calculateNewGraphBarPosition(false);
             if (slowFrame > startDrawing + eliminatedDisappearDelay)
-                for (int i = 90; i < NUM_OF_BARS; i++)
+                for (int i = (NUM_OF_BARS - NUM_MOVE_BARS); i < NUM_OF_BARS; i++)
                     graphBars.get(i).reduceAlpha();
 
             if (slowFrame == (startDrawing + lateralMoveDelay))
@@ -97,13 +98,6 @@ public class NetworkGraph {
             if (slowFrame > (startDrawing + showFirstMutationDelay)) {
                 for (GraphBar graphBar : moveGraphBars) {
                     graphBar.currentColor = calculateChangingColor(Colors.lightGreenWithAlpha(255), Colors.lightLightVioletWithAlpha(255), startDrawing + showFirstMutationDelay);
-                }
-            }
-
-            if (slowFrame > (startDrawing + showSecondMutationDelay)) {
-                for (GraphBar graphBar : graphBars) {
-                    if (graphBar.newPosition >= 80 && graphBar.newPosition < 90)
-                        graphBar.currentColor = calculateChangingColor(Colors.lightGreenWithAlpha(255), Colors.lightLightVioletWithAlpha(255), startDrawing + showSecondMutationDelay);
                 }
             }
 
@@ -127,10 +121,8 @@ public class NetworkGraph {
 
     public void drawGraphAxis() {
         if (slowFrame > startDrawing) {
-            graphics.setFont(new Font("Arial", Font.BOLD, BIG_FONT_SIZE));
-            graphics.drawString("Score", startX - 75, startY - 190);
+            drawText("Score", startX - 75, startY - 190);
             graphics.setStroke(new BasicStroke(3f));
-            graphics.setColor(Colors.TEXT.getColor());
 
             // axis
             graphics.drawLine(startX, startY, startX + barGap * NUM_OF_BARS + 10, startY); // x axis
@@ -145,10 +137,14 @@ public class NetworkGraph {
                 graphics.drawString(number, startX - leftShift, startY + 8 - 50 * i);
             }
 
-            // last 10 cutoff
+            // generation
+            if (slowFrame > (startDrawing + showGenerationTextDelay))
+                drawText("Generation " + currentGeneration, startX - 165, startY - 240);
+
+            // last 30 cutoff
             if (slowFrame > startDrawing + cutoffDelay) {
                 graphics.setColor(Colors.redWithAlpha(200));
-                graphics.drawLine(startX + 90 * barGap, startY - 2, startX + 90 * barGap, startY - 170); // cutOffLine
+                graphics.drawLine(startX + (NUM_OF_BARS - NUM_MOVE_BARS) * barGap, startY - 2, startX + (NUM_OF_BARS - NUM_MOVE_BARS) * barGap, startY - 170); // cutOffLine
             }
         }
     }
@@ -178,7 +174,7 @@ public class NetworkGraph {
         for (int i = 0; i < NUM_MOVE_BARS; i++) {
             var height = graphBars.get(i).height;
             var graphBar = new GraphBar(currentX, startY - height, height);
-            graphBar.calculateJumpCoordinates(numOfBarMoves, -200, graphBar.currentCoordinates, new Pair<>(currentX + 90 * barGap, startY - height));
+            graphBar.calculateJumpCoordinates(numOfBarMoves, -200, graphBar.currentCoordinates, new Pair<>(currentX + (NUM_OF_BARS - NUM_MOVE_BARS) * barGap, startY - height));
             moveGraphBars.add(graphBar);
             currentX += barGap;
         }
@@ -193,5 +189,11 @@ public class NetworkGraph {
         } else
             stage = slowFrame - startChangingFrame;
         return Colors.colorMixing(from, to, stage);
+    }
+
+    public void drawText(String text, float startX, float startY) {
+        graphics.setColor(Colors.TEXT.getColor());
+        graphics.setFont(new Font("Arial", Font.BOLD, BIG_FONT_SIZE));
+        graphics.drawString(text, startX, startY);
     }
 }
