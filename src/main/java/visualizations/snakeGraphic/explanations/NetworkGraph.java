@@ -35,6 +35,8 @@ public class NetworkGraph {
     private int graphBarMoveIndex = 0;
     private int showFirstMutationDelay = 418;
     private int hideBarsForNextGeneration = 478;
+    private int showSecondGeneration = 508;
+    private int showThirdGeneration = 538;
     private double averageHeight;
 
     public NetworkGraph(int startX, int startY, int startDrawing) {
@@ -83,13 +85,13 @@ public class NetworkGraph {
             }
             if (slowFrame == startDrawing + eliminatedDisappearDelay)
                 calculateNewGraphBarPosition(false);
-            if (slowFrame > startDrawing + eliminatedDisappearDelay)
+            if (slowFrame > (startDrawing + eliminatedDisappearDelay) && slowFrame < (startDrawing + showSecondGeneration))
                 for (int i = (NUM_OF_BARS - NUM_MOVE_BARS); i < NUM_OF_BARS; i++)
                     graphBars.get(i).reduceAlpha();
 
             if (slowFrame == (startDrawing + lateralMoveDelay))
                 calculateNewGraphBarPositionLateralMove();
-            if (slowFrame > (startDrawing + lateralMoveDelay)) {
+            if (slowFrame > (startDrawing + lateralMoveDelay) && slowFrame < (startDrawing + showSecondGeneration)) {
                 for (int i = 0; i < NUM_MOVE_BARS; i++) {
                     var graphBar = moveGraphBars.get(i);
                     var lateralMoveIndex = Math.min(numOfBarMoves - 1, slowFrame - (startDrawing + lateralMoveDelay));
@@ -99,18 +101,30 @@ public class NetworkGraph {
                 }
             }
 
-            if (slowFrame > (startDrawing + showFirstMutationDelay)) {
+            if (slowFrame > (startDrawing + showFirstMutationDelay) && slowFrame < (startDrawing + showSecondGeneration)) {
                 for (GraphBar graphBar : moveGraphBars) {
                     graphBar.currentColor = calculateChangingColor(Colors.lightGreenWithAlpha(255), Colors.lightLightVioletWithAlpha(255), startDrawing + showFirstMutationDelay);
                 }
             }
 
-            if (slowFrame > (startDrawing + hideBarsForNextGeneration)) {
+            if (slowFrame > (startDrawing + hideBarsForNextGeneration) && slowFrame < (startDrawing + showSecondGeneration)) {
                 for (GraphBar graphBar : graphBars) {
                     graphBar.reduceAlpha();
                 }
                 for (GraphBar graphBar : moveGraphBars)
                     graphBar.reduceAlpha();
+            }
+
+            if (slowFrame == (startDrawing + showSecondGeneration)) {
+                prepareNextGeneration(6, 110);
+                currentGeneration = 2;
+            }
+
+            if (slowFrame > (startDrawing + showSecondGeneration) && slowFrame < (startDrawing + showThirdGeneration)) {
+                for (GraphBar graphBar : graphBars) {
+                    graphBar.height = Math.min(graphBar.height + 5, graphBar.maxHeight);
+                    graphBar.currentCoordinates.setSecond(startY - graphBar.height);
+                }
             }
 
             for (int i = 0; i < NUM_OF_BARS; i++) {
@@ -184,6 +198,26 @@ public class NetworkGraph {
             graphBar.calculateJumpCoordinates(numOfBarMoves, -200, graphBar.currentCoordinates, new Pair<>(currentX + (NUM_OF_BARS - NUM_MOVE_BARS) * barGap, startY - height));
             moveGraphBars.add(graphBar);
             currentX += barGap;
+        }
+    }
+
+    public void prepareNextGeneration(int minHeight, int maxHeight) {
+        for (GraphBar graphBar : graphBars) {
+            graphBar.currentColor = Colors.lightGreenWithAlpha(255);
+            graphBar.height = Util.randomInt(minHeight, maxHeight);
+            graphBar.currentCoordinates.setSecond(startY);
+        }
+
+        averageHeight = graphBars.stream().mapToDouble(bar -> bar.height)
+                .average()
+                .orElse(0);
+        graphBars.sort(Collections.reverseOrder());
+
+        for (int i = 0; i < graphBars.size(); i++) {
+            var graphBar = graphBars.get(i);
+            graphBar.currentCoordinates = new Pair<>(startX + barGap * i, startY - graphBar.height);
+            graphBar.maxHeight = graphBar.height;
+            graphBar.height = 0;
         }
     }
 

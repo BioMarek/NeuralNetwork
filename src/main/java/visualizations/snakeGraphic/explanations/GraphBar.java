@@ -11,6 +11,7 @@ public class GraphBar implements Comparable<GraphBar> {
     public List<Pair<Integer>> moveCoordinatesList;
     public Pair<Integer> currentCoordinates;
     public int height;
+    public int maxHeight;
     public int oldPosition;
     public int newPosition;
     public boolean isVisible = false;
