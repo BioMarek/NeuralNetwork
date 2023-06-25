@@ -37,6 +37,9 @@ public class NetworkGraph {
     private int hideBarsForNextGeneration = 478;
     private int showSecondGeneration = 508;
     private int showThirdGeneration = 538;
+    private int showFourthGeneration = 568;
+    private int showFifthGeneration = 598;
+    private int showSixthGeneration = 629;
     private double averageHeight;
 
     public NetworkGraph(int startX, int startY, int startDrawing) {
@@ -121,6 +124,42 @@ public class NetworkGraph {
             }
 
             if (slowFrame > (startDrawing + showSecondGeneration) && slowFrame < (startDrawing + showThirdGeneration)) {
+                for (GraphBar graphBar : graphBars) {
+                    graphBar.height = Math.min(graphBar.height + 5, graphBar.maxHeight);
+                    graphBar.currentCoordinates.setSecond(startY - graphBar.height);
+                }
+            }
+
+            if (slowFrame == (startDrawing + showThirdGeneration)) {
+                prepareNextGeneration(7, 120);
+                currentGeneration = 3;
+            }
+
+            if (slowFrame > (startDrawing + showThirdGeneration) && slowFrame < (startDrawing + showFourthGeneration)) {
+                for (GraphBar graphBar : graphBars) {
+                    graphBar.height = Math.min(graphBar.height + 5, graphBar.maxHeight);
+                    graphBar.currentCoordinates.setSecond(startY - graphBar.height);
+                }
+            }
+
+            if (slowFrame == (startDrawing + showFourthGeneration)) {
+                prepareNextGeneration(8, 130);
+                currentGeneration = 4;
+            }
+
+            if (slowFrame > (startDrawing + showFourthGeneration) && slowFrame < (startDrawing + showFifthGeneration)) {
+                for (GraphBar graphBar : graphBars) {
+                    graphBar.height = Math.min(graphBar.height + 5, graphBar.maxHeight);
+                    graphBar.currentCoordinates.setSecond(startY - graphBar.height);
+                }
+            }
+
+            if (slowFrame == (startDrawing + showFifthGeneration)) {
+                prepareNextGeneration(9, 140);
+                currentGeneration = 5;
+            }
+
+            if (slowFrame > (startDrawing + showFifthGeneration) && slowFrame < (startDrawing + showSixthGeneration)) {
                 for (GraphBar graphBar : graphBars) {
                     graphBar.height = Math.min(graphBar.height + 5, graphBar.maxHeight);
                     graphBar.currentCoordinates.setSecond(startY - graphBar.height);
