@@ -17,7 +17,8 @@ import java.util.List;
 
 
 public class SnakeIntroduction implements GridVisualization {
-    private NetworkGraph networkGraph;
+    private final NetworkGraph networkGraph;
+    private final SpeciesExplanation speciesExplanation;
     private Graphics2D graphics;
     private final int columns;
     private final int rows;
@@ -27,7 +28,7 @@ public class SnakeIntroduction implements GridVisualization {
     private final int[][] grid;
     private int slowFrame = 0;
     private int fastFrame = 0;
-    private final int totalFrames = 720; // 480
+    private final int totalFrames = 60; // 480 for first part, 720 third part
     private final int gridFrames = 300;
     private final int gridDisappear = 270;
     private float networkScale = 1.0f;
@@ -37,6 +38,7 @@ public class SnakeIntroduction implements GridVisualization {
     public SnakeIntroduction() {
         Settings.VIDEO_FPS = 60;
         this.networkGraph = new NetworkGraph(260, 605, 62);
+        this.speciesExplanation = new SpeciesExplanation(500, 200, 0);
         this.rows = Settings.GRID_ROW_PIXELS / SQUARE_PIXEL_SIZE;
         this.columns = Settings.GRID_COLUMN_PIXELS / SQUARE_PIXEL_SIZE;
         this.grid = new int[rows][columns];
@@ -65,6 +67,10 @@ public class SnakeIntroduction implements GridVisualization {
         this.graphics = graphics;
         networkGraph.graphics = graphics;
         networkGraph.slowFrame = slowFrame;
+        speciesExplanation.graphics = graphics;
+        speciesExplanation.slowFrame = slowFrame;
+
+        // first part
 //        if (slowFrame < gridFrames)
 //            drawGrid();
 //
@@ -104,13 +110,16 @@ public class SnakeIntroduction implements GridVisualization {
 //            drawText("-0.1", 1055, 477); // down
 //            drawText("-0.3", 1055, 557); // left
 //        }
+        // second part
+//        var networkStart = 0;
+//        var startShrinking = 30;
+//        drawShrinkingNetwork(networkStart, startShrinking, 1000);
+//
+//        networkGraph.drawGraphAxis();
+//        networkGraph.drawGraphBars(240);
 
-        var networkStart = 0;
-        var startShrinking = 30;
-        drawShrinkingNetwork(networkStart, startShrinking, 1000);
-
-        networkGraph.drawGraphAxis();
-        networkGraph.drawGraphBars(240);
+        // third part
+        speciesExplanation.drawSpeciesExplanation();
     }
 
     @Override

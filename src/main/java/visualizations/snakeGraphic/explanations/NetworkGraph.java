@@ -16,17 +16,17 @@ import java.util.List;
 public class NetworkGraph {
     public Graphics2D graphics;
     public int slowFrame;
-    private List<GraphBar> graphBars;
-    private List<GraphBar> moveGraphBars;
-    private int BIG_FONT_SIZE = 27;
-    private int SMALL_FONT_SIZE = 20;
-    private int NUM_OF_BARS = 100;
-    private int NUM_MOVE_BARS = 30;
-    private int startX;
-    private int startY;
-    private int startDrawing;
-    private int barGap = 15;
-    private int numOfBarMoves = 60;
+    private final List<GraphBar> graphBars;
+    private final List<GraphBar> moveGraphBars;
+    private final int BIG_FONT_SIZE = 27;
+    private final int SMALL_FONT_SIZE = 20;
+    private final int NUM_OF_BARS = 100;
+    private final int NUM_MOVE_BARS = 30;
+    private final int startX;
+    private final int startY;
+    private final int startDrawing;
+    private final int barGap = 15;
+    private final int numOfBarMoves = 60;
     private int currentGeneration = 1;
     private int showGenerationTextDelay = 148; // x - 62
     private int cutoffDelay = 268;
