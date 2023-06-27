@@ -1,10 +1,11 @@
 package visualizations.snakeGraphic.explanations;
 
 import utils.Colors;
-import utils.Pair;
 import utils.Settings;
+import utils.Util;
 
 import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,11 +17,18 @@ public class SpeciesExplanation {
     private final int startDrawing;
     public int slowFrame = 0;
     private float networkScale = 1.0f;
+    private int[][] weights = new int[8][4];
 
     public SpeciesExplanation(int startX, int startY, int startDrawing) {
         this.startX = startX;
         this.startY = startY;
         this.startDrawing = startDrawing;
+
+        for (int l = 0; l < 8; l++) {
+            for (int r = 0; r < 4; r++) {
+                weights[l][r] = Util.randomInt(0, 255);
+            }
+        }
     }
 
     public void drawSpeciesExplanation() {
@@ -58,18 +66,23 @@ public class SpeciesExplanation {
             rightYs.add(rightYShift + nodeSize / 2 + r * nodeGap);
         }
 
+
         for (int l = 0; l < leftNodes; l++) {
             for (int r = 0; r < rightNodes; r++) {
+                graphics.setColor(weightToColor(weights[l][r]));
                 graphics.drawLine(leftX, leftYs.get(l), rightX, rightYs.get(r));
             }
         }
     }
-
 
     public int calculateAppearingAlpha(int startAppearingFrame) {
         if (startAppearingFrame + Settings.CHANGING_SLOW_FRAMES < slowFrame)
             return 255;
         else
             return (int) ((slowFrame - startAppearingFrame) / 15.0 * 255);
+    }
+
+    public Color weightToColor(int weight) {
+        return new Color(weight, 255 - weight, 0, 200);
     }
 }
