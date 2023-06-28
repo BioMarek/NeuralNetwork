@@ -12,6 +12,7 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,7 +39,7 @@ public class SnakeIntroduction implements GridVisualization {
     public SnakeIntroduction() {
         Settings.VIDEO_FPS = 60;
         this.networkGraph = new NetworkGraph(260, 605, 62);
-        this.speciesExplanation = new SpeciesExplanation(500, 200, 0);
+        this.speciesExplanation = new SpeciesExplanation(500, 100, 0);
         this.rows = Settings.GRID_ROW_PIXELS / SQUARE_PIXEL_SIZE;
         this.columns = Settings.GRID_COLUMN_PIXELS / SQUARE_PIXEL_SIZE;
         this.grid = new int[rows][columns];
@@ -65,6 +66,7 @@ public class SnakeIntroduction implements GridVisualization {
     @Override
     public void drawPresentation(Graphics2D graphics) {
         this.graphics = graphics;
+        this.graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         networkGraph.graphics = graphics;
         networkGraph.slowFrame = slowFrame;
         speciesExplanation.graphics = graphics;

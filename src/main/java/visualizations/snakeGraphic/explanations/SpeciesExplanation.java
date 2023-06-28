@@ -6,11 +6,13 @@ import utils.Util;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SpeciesExplanation {
+    private final int FONT_SIZE = (int) (Settings.BACKGROUND_HEIGHT / 60 * 1.2);
     public Graphics2D graphics;
     private final int startX;
     private final int startY;
@@ -38,9 +40,10 @@ public class SpeciesExplanation {
     public void drawNetwork(int startX, int startY, int startAppearingFrame) {
         int nodeSize = (int) (50 * networkScale);
         int nodeGap = (int) (80 * networkScale);
+        drawWeights(startX, startY, nodeSize, nodeGap, 8, 4);
         drawLayer(startX, startY, 8, nodeSize, nodeGap, startAppearingFrame);
         drawLayer(startX + nodeSize * 6, startY + nodeGap * 2 + nodeSize / 2, 4, nodeSize, nodeGap, startAppearingFrame);
-        drawWeights(startX, startY, nodeSize, nodeGap, 8, 4);
+        drawWeightColorLegend(startX + 100, startY + 700);
     }
 
     public void drawLayer(int startX, int startY, int nodes, int nodeSize, int nodeGap, int startAppearingFrame) {
@@ -75,6 +78,27 @@ public class SpeciesExplanation {
         }
     }
 
+    public void drawWeightColorLegend(int startX, int startY) {
+        graphics.setColor(Colors.TEXT.getColor());
+        graphics.fillRect(startX - 1, startY - 1, 152, 32);
+        var innerX = startX + 4;
+        var innerY = startY + 4;
+
+        for (int i = 0; i < 144; i++) {
+            int mockWeightColor = (int) (255.0 / 144.0 * i);
+            graphics.setColor(weightToColor(mockWeightColor));
+            graphics.drawLine(innerX, innerY, innerX, innerY + 22);
+            innerX++;
+        }
+
+        // labels
+        graphics.setColor(Colors.TEXT.getColor());
+        graphics.drawLine(startX, startY, startX, startY + 50);
+        graphics.drawLine(startX + 150, startY, startX + 150, startY + 50);
+        drawText("-1", startX - 14, startY + 80);
+        drawText("1", startX + 144, startY + 80);
+    }
+
     public int calculateAppearingAlpha(int startAppearingFrame) {
         if (startAppearingFrame + Settings.CHANGING_SLOW_FRAMES < slowFrame)
             return 255;
@@ -84,5 +108,11 @@ public class SpeciesExplanation {
 
     public Color weightToColor(int weight) {
         return new Color(weight, 255 - weight, 0, 200);
+    }
+
+    public void drawText(String text, float startX, float startY) {
+        graphics.setColor(Colors.TEXT.getColor());
+        graphics.setFont(new Font("Arial", Font.BOLD, FONT_SIZE));
+        graphics.drawString(text, startX, startY);
     }
 }
