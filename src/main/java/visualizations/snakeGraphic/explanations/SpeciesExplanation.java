@@ -1,6 +1,7 @@
 package visualizations.snakeGraphic.explanations;
 
 import utils.Colors;
+import utils.Pair;
 import utils.Settings;
 import utils.Util;
 
@@ -20,6 +21,7 @@ public class SpeciesExplanation {
     public int slowFrame = 0;
     private float networkScale = 1.0f;
     private int[][] weights = new int[8][4];
+    List<Pair<Integer>> changingWeights;
 
     public SpeciesExplanation(int startX, int startY, int startDrawing) {
         this.startX = startX;
@@ -31,6 +33,14 @@ public class SpeciesExplanation {
                 weights[l][r] = Util.randomInt(0, 255);
             }
         }
+        initChangingWeights();
+    }
+
+    public void initChangingWeights() {
+        changingWeights = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            changingWeights.add(new Pair<>(Util.randomInt(0, 32), Util.randomInt(0, 255)));
+        }
     }
 
     public void drawSpeciesExplanation() {
@@ -40,7 +50,7 @@ public class SpeciesExplanation {
     public void drawNetwork(int startX, int startY, int startAppearingFrame) {
         int nodeSize = (int) (50 * networkScale);
         int nodeGap = (int) (80 * networkScale);
-        drawWeights(startX, startY, nodeSize, nodeGap, 8, 4, startAppearingFrame);
+        drawWeights(startX, startY, nodeSize, nodeGap, 8, 4, startAppearingFrame, 60);
         drawLayer(startX, startY, 8, nodeSize, nodeGap, startAppearingFrame);
         drawLayer(startX + nodeSize * 6, startY + nodeGap * 2, 4, nodeSize, nodeGap, startAppearingFrame);
         drawWeightColorLegend(startX + 100, startY + 700, startAppearingFrame);
@@ -55,7 +65,7 @@ public class SpeciesExplanation {
         }
     }
 
-    public void drawWeights(int startX, int startY, int nodeSize, int nodeGap, int leftNodes, int rightNodes, int startAppearingFrame) {
+    public void drawWeights(int startX, int startY, int nodeSize, int nodeGap, int leftNodes, int rightNodes, int startAppearingFrame, int startChangingWeights) {
         var alpha = calculateAppearingAlpha(startAppearingFrame);
         List<Integer> leftYs = new ArrayList<>();
         List<Integer> rightYs = new ArrayList<>();
@@ -73,10 +83,29 @@ public class SpeciesExplanation {
         graphics.setStroke(new BasicStroke(3f));
         for (int l = 0; l < leftNodes; l++) {
             for (int r = 0; r < rightNodes; r++) {
+                if (slowFrame > startChangingWeights && l * rightNodes + r == changingWeights.get(0).getFirst()) {
+                    weights[l][r] = changingWeights.get(0).getSecond();
+                    var thickness = calculateThickness(slowFrame - startChangingWeights);
+                    graphics.setStroke(new BasicStroke(thickness));
+                } else
+                    graphics.setStroke(new BasicStroke(3f));
+
                 graphics.setColor(weightToColor(weights[l][r], alpha));
                 graphics.drawLine(leftX, leftYs.get(l), rightX, rightYs.get(r));
             }
         }
+    }
+
+    public float calculateThickness(int stage) {
+        return switch (stage) {
+            case 1, 2, 3 -> 9f;
+            case 4, 5, 6 -> 8f;
+            case 7, 8, 9 -> 7f;
+            case 10, 11, 12 -> 6f;
+            case 13, 14, 15 -> 5f;
+            case 16, 17, 18 -> 4f;
+            default -> 3f;
+        };
     }
 
     public void drawWeightColorLegend(int startX, int startY, int startAppearingFrame) {
