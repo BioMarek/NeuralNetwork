@@ -29,7 +29,7 @@ public class SnakeIntroduction implements GridVisualization {
     private final int[][] grid;
     private int slowFrame = 0;
     private int fastFrame = 0;
-    private final int totalFrames = 60; // 480 for first part, 720 third part
+    private final int totalFrames = 60; // 480 for first part, 720 second part
     private final int gridFrames = 300;
     private final int gridDisappear = 270;
     private float networkScale = 1.0f;
@@ -112,6 +112,7 @@ public class SnakeIntroduction implements GridVisualization {
 //            drawText("-0.1", 1055, 477); // down
 //            drawText("-0.3", 1055, 557); // left
 //        }
+
         // second part
 //        var networkStart = 0;
 //        var startShrinking = 30;

@@ -40,10 +40,10 @@ public class SpeciesExplanation {
     public void drawNetwork(int startX, int startY, int startAppearingFrame) {
         int nodeSize = (int) (50 * networkScale);
         int nodeGap = (int) (80 * networkScale);
-        drawWeights(startX, startY, nodeSize, nodeGap, 8, 4);
+        drawWeights(startX, startY, nodeSize, nodeGap, 8, 4, startAppearingFrame);
         drawLayer(startX, startY, 8, nodeSize, nodeGap, startAppearingFrame);
         drawLayer(startX + nodeSize * 6, startY + nodeGap * 2 + nodeSize / 2, 4, nodeSize, nodeGap, startAppearingFrame);
-        drawWeightColorLegend(startX + 100, startY + 700);
+        drawWeightColorLegend(startX + 100, startY + 700, startAppearingFrame);
     }
 
     public void drawLayer(int startX, int startY, int nodes, int nodeSize, int nodeGap, int startAppearingFrame) {
@@ -55,7 +55,8 @@ public class SpeciesExplanation {
         }
     }
 
-    public void drawWeights(int startX, int startY, int nodeSize, int nodeGap, int leftNodes, int rightNodes) {
+    public void drawWeights(int startX, int startY, int nodeSize, int nodeGap, int leftNodes, int rightNodes, int startAppearingFrame) {
+        var alpha = calculateAppearingAlpha(startAppearingFrame);
         List<Integer> leftYs = new ArrayList<>();
         List<Integer> rightYs = new ArrayList<>();
         int leftX = startX + nodeSize;
@@ -69,34 +70,35 @@ public class SpeciesExplanation {
             rightYs.add(rightYShift + nodeSize / 2 + r * nodeGap);
         }
 
-
+        graphics.setStroke(new BasicStroke(3f));
         for (int l = 0; l < leftNodes; l++) {
             for (int r = 0; r < rightNodes; r++) {
-                graphics.setColor(weightToColor(weights[l][r]));
+                graphics.setColor(weightToColor(weights[l][r], alpha));
                 graphics.drawLine(leftX, leftYs.get(l), rightX, rightYs.get(r));
             }
         }
     }
 
-    public void drawWeightColorLegend(int startX, int startY) {
-        graphics.setColor(Colors.TEXT.getColor());
+    public void drawWeightColorLegend(int startX, int startY, int startAppearingFrame) {
+        var alpha = calculateAppearingAlpha(startAppearingFrame);
+        graphics.setColor(Colors.textWithAlpha(alpha));
         graphics.fillRect(startX - 1, startY - 1, 152, 32);
         var innerX = startX + 4;
         var innerY = startY + 4;
 
         for (int i = 0; i < 144; i++) {
             int mockWeightColor = (int) (255.0 / 144.0 * i);
-            graphics.setColor(weightToColor(mockWeightColor));
+            graphics.setColor(weightToColor(mockWeightColor, alpha));
             graphics.drawLine(innerX, innerY, innerX, innerY + 22);
             innerX++;
         }
 
         // labels
-        graphics.setColor(Colors.TEXT.getColor());
+        graphics.setColor(Colors.textWithAlpha(alpha));
         graphics.drawLine(startX, startY, startX, startY + 50);
         graphics.drawLine(startX + 150, startY, startX + 150, startY + 50);
-        drawText("-1", startX - 14, startY + 80);
-        drawText("1", startX + 144, startY + 80);
+        drawText("-1", startX - 14, startY + 80, alpha);
+        drawText("1", startX + 144, startY + 80, alpha);
     }
 
     public int calculateAppearingAlpha(int startAppearingFrame) {
@@ -106,12 +108,12 @@ public class SpeciesExplanation {
             return (int) ((slowFrame - startAppearingFrame) / 15.0 * 255);
     }
 
-    public Color weightToColor(int weight) {
-        return new Color(weight, 255 - weight, 0, 200);
+    public Color weightToColor(int weight, int alpha) {
+        return new Color(weight, 255 - weight, 0, alpha);
     }
 
-    public void drawText(String text, float startX, float startY) {
-        graphics.setColor(Colors.TEXT.getColor());
+    public void drawText(String text, float startX, float startY, int alpha) {
+        graphics.setColor(Colors.textWithAlpha(alpha));
         graphics.setFont(new Font("Arial", Font.BOLD, FONT_SIZE));
         graphics.drawString(text, startX, startY);
     }
