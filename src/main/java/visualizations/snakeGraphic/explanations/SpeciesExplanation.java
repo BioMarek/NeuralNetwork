@@ -22,6 +22,7 @@ public class SpeciesExplanation {
     private float networkScale = 1.0f;
     private int[][] weights = new int[8][4];
     List<Pair<Integer>> changingWeights;
+    private int startChangingWeights = 45;
 
     public SpeciesExplanation(int startX, int startY, int startDrawing) {
         this.startX = startX;
@@ -50,7 +51,7 @@ public class SpeciesExplanation {
     public void drawNetwork(int startX, int startY, int startAppearingFrame) {
         int nodeSize = (int) (50 * networkScale);
         int nodeGap = (int) (80 * networkScale);
-        drawWeights(startX, startY, nodeSize, nodeGap, 8, 4, startAppearingFrame, 60);
+        drawWeights(startX, startY, nodeSize, nodeGap, 8, 4, startAppearingFrame);
         drawLayer(startX, startY, 8, nodeSize, nodeGap, startAppearingFrame);
         drawLayer(startX + nodeSize * 6, startY + nodeGap * 2, 4, nodeSize, nodeGap, startAppearingFrame);
         drawWeightColorLegend(startX + 100, startY + 700, startAppearingFrame);
@@ -65,7 +66,7 @@ public class SpeciesExplanation {
         }
     }
 
-    public void drawWeights(int startX, int startY, int nodeSize, int nodeGap, int leftNodes, int rightNodes, int startAppearingFrame, int startChangingWeights) {
+    public void drawWeights(int startX, int startY, int nodeSize, int nodeGap, int leftNodes, int rightNodes, int startAppearingFrame) {
         var alpha = calculateAppearingAlpha(startAppearingFrame);
         List<Integer> leftYs = new ArrayList<>();
         List<Integer> rightYs = new ArrayList<>();
@@ -83,16 +84,21 @@ public class SpeciesExplanation {
         graphics.setStroke(new BasicStroke(3f));
         for (int l = 0; l < leftNodes; l++) {
             for (int r = 0; r < rightNodes; r++) {
-                if (slowFrame > startChangingWeights && l * rightNodes + r == changingWeights.get(0).getFirst()) {
-                    weights[l][r] = changingWeights.get(0).getSecond();
-                    var thickness = calculateThickness(slowFrame - startChangingWeights);
-                    graphics.setStroke(new BasicStroke(thickness));
-                } else
-                    graphics.setStroke(new BasicStroke(3f));
-
+                for (int i = 0; i < 5; i++) {
+                    showWeightBlink(l, r, i);
+                }
                 graphics.setColor(weightToColor(weights[l][r], alpha));
                 graphics.drawLine(leftX, leftYs.get(l), rightX, rightYs.get(r));
+                graphics.setStroke(new BasicStroke(3f));
             }
+        }
+    }
+
+    public void showWeightBlink(int l, int r, int index) {
+        if (slowFrame > startChangingWeights + 20 * index && l * 4 + r == changingWeights.get(index).getFirst()) {
+            weights[l][r] = changingWeights.get(0).getSecond();
+            var thickness = calculateThickness(slowFrame - startChangingWeights - 20 * index);
+            graphics.setStroke(new BasicStroke(thickness));
         }
     }
 
