@@ -42,7 +42,7 @@ public class SpeciesExplanation {
         int nodeGap = (int) (80 * networkScale);
         drawWeights(startX, startY, nodeSize, nodeGap, 8, 4, startAppearingFrame);
         drawLayer(startX, startY, 8, nodeSize, nodeGap, startAppearingFrame);
-        drawLayer(startX + nodeSize * 6, startY + nodeGap * 2 + nodeSize / 2, 4, nodeSize, nodeGap, startAppearingFrame);
+        drawLayer(startX + nodeSize * 6, startY + nodeGap * 2, 4, nodeSize, nodeGap, startAppearingFrame);
         drawWeightColorLegend(startX + 100, startY + 700, startAppearingFrame);
     }
 
@@ -61,7 +61,7 @@ public class SpeciesExplanation {
         List<Integer> rightYs = new ArrayList<>();
         int leftX = startX + nodeSize;
         int rightX = startX + nodeSize * 6;
-        int rightYShift = startY + nodeGap * 2 + nodeSize / 2;
+        int rightYShift = startY + nodeGap * 2;
 
         for (int l = 0; l < leftNodes; l++) {
             leftYs.add(startY + nodeSize / 2 + l * nodeGap);

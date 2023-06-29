@@ -87,10 +87,10 @@ public class SnakeIntroduction implements GridVisualization {
 //
 //        var outputDirection = 150;
 //        if (slowFrame > outputDirection && slowFrame <= startShrinking) {
-//            drawText("UP", 1120, 317, Colors.TEXT.getColor(), Color.RED, 360); // up
-//            drawText("LEFT", 1120, 397); // right
-//            drawText("DOWN", 1120, 477); // down
-//            drawText("RIGHT", 1120, 557); // left
+//            drawText("UP", 1120, 292, Colors.TEXT.getColor(), Color.RED, 360); // up
+//            drawText("LEFT", 1120, 372); // right
+//            drawText("DOWN", 1120, 452); // down
+//            drawText("RIGHT", 1120, 532); // left
 //        }
 //
 //        var startNumberMoveFastFrame = 510;
@@ -107,10 +107,10 @@ public class SnakeIntroduction implements GridVisualization {
 //
 //        var resultNumbersStart = 330;
 //        if (slowFrame > resultNumbersStart && slowFrame <= startShrinking) {
-//            drawText("0.9", 1060, 317, Colors.TEXT.getColor(), Color.RED, 360); // up
-//            drawText("0.5", 1060, 397); // right
-//            drawText("-0.1", 1055, 477); // down
-//            drawText("-0.3", 1055, 557); // left
+//            drawText("0.9", 1060, 292, Colors.TEXT.getColor(), Color.RED, 360); // up
+//            drawText("0.5", 1060, 372); // right
+//            drawText("-0.1", 1055, 452); // down
+//            drawText("-0.3", 1055, 532); // left
 //        }
 
         // second part
@@ -217,7 +217,7 @@ public class SnakeIntroduction implements GridVisualization {
         int nodeSize = (int) (50 * networkScale);
         int nodeGap = (int) (80 * networkScale);
         drawLayer(startX, startY, 8, nodeSize, nodeGap, startAppearingFrame);
-        drawLayer(startX + nodeSize * 6, startY + nodeGap * 2 + nodeSize / 2, 4, nodeSize, nodeGap, startAppearingFrame);
+        drawLayer(startX + nodeSize * 6, startY + nodeGap * 2, 4, nodeSize, nodeGap, startAppearingFrame);
         drawWeights(startX, startY, nodeSize, nodeGap, 8, 4, startMovingDots);
     }
 
@@ -235,7 +235,7 @@ public class SnakeIntroduction implements GridVisualization {
         List<Integer> rightYs = new ArrayList<>();
         int leftX = startX + nodeSize;
         int rightX = startX + nodeSize * 6;
-        int rightYShift = startY + nodeGap * 2 + nodeSize / 2;
+        int rightYShift = startY + nodeGap * 2;
 
         for (int l = 0; l < leftNodes; l++) {
             leftYs.add(startY + nodeSize / 2 + l * nodeGap);
