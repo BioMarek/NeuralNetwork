@@ -17,9 +17,14 @@ public class SpeciesExplanation {
     public Graphics2D graphics;
     private final int startX;
     private final int startY;
+    private int startX2;
+    private int startY2;
     private final int startDrawing;
     public int slowFrame = 0;
-    private float networkScale = 1.0f;
+    private float networkScale1 = 1.0f;
+    private float networkScale2 = 0.0f;
+    private float networkScale3 = 1.0f;
+    private float networkScale4 = 1.0f;
     private int[][] weights = new int[8][4];
     List<Pair<Integer>> changingWeights;
     private int startChangingWeights = 45;
@@ -27,6 +32,8 @@ public class SpeciesExplanation {
     public SpeciesExplanation(int startX, int startY, int startDrawing) {
         this.startX = startX;
         this.startY = startY;
+        this.startX2 = startX + 200;
+        this.startY2 = startY + 300;
         this.startDrawing = startDrawing;
 
         for (int l = 0; l < 8; l++) {
@@ -46,11 +53,14 @@ public class SpeciesExplanation {
 
     public void drawSpeciesExplanation() {
         drawNetwork(startX, startY, startDrawing);
+
+        if (slowFrame > 90)
+            drawGrowingNetwork(90, 90);
     }
 
     public void drawNetwork(int startX, int startY, int startAppearingFrame) {
-        int nodeSize = (int) (50 * networkScale);
-        int nodeGap = (int) (80 * networkScale);
+        int nodeSize = (int) (50 * networkScale1);
+        int nodeGap = (int) (80 * networkScale1);
         drawWeights(startX, startY, nodeSize, nodeGap, 8, 4, startAppearingFrame);
         drawLayer(startX, startY, 8, nodeSize, nodeGap, startAppearingFrame);
         drawLayer(startX + nodeSize * 6, startY + nodeGap * 2, 4, nodeSize, nodeGap, startAppearingFrame);
@@ -134,6 +144,26 @@ public class SpeciesExplanation {
         graphics.drawLine(startX + 150, startY, startX + 150, startY + 50);
         drawText("-1", startX - 14, startY + 80, alpha);
         drawText("1", startX + 144, startY + 80, alpha);
+    }
+
+    public void drawGrowingNetwork(int startAppearingFrame, int startGrowing) {
+        if (slowFrame > startAppearingFrame) {
+            if (slowFrame > startGrowing) {
+                networkScale2 = Math.min(networkScale2 + 0.02f, 0.5f);
+                startX2 = Math.min(startX2 + 5, 1100);
+                startY2 = Math.max(startY2 - 5, 100);
+            }
+            if (networkScale2 > 0.02)
+                drawNetworkWithHiddenLayer(startX2, startY2, startAppearingFrame);
+        }
+    }
+
+    public void drawNetworkWithHiddenLayer(int startX, int startY, int startAppearingFrame) {
+        int nodeSize = (int) (50 * networkScale2);
+        int nodeGap = (int) (80 * networkScale2);
+        drawLayer(startX, startY, 8, nodeSize, nodeGap, startAppearingFrame);
+        drawLayer(startX + nodeSize * 4, (int) (startY + nodeGap * 3.5), 1, nodeSize, nodeGap, startAppearingFrame);
+        drawLayer(startX + nodeSize * 8, startY + nodeGap * 2, 4, nodeSize, nodeGap, startAppearingFrame);
     }
 
     public int calculateAppearingAlpha(int startAppearingFrame) {
