@@ -2,9 +2,13 @@ package visualizations.snakeGraphic.explanations;
 
 import utils.Colors;
 import utils.Settings;
+import utils.Util;
 
 import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Graphics2D;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GrowingNetwork {
     public Graphics2D graphics;
@@ -16,6 +20,8 @@ public class GrowingNetwork {
     private int endY;
     private int xShift;
     private int yShift;
+    private double chanceToDrawWeight = 0.5d;
+    private int[][] weights = new int[8][4];
 
     public GrowingNetwork(int startX, int startY, int endX, int endY) {
         this.startX = startX;
@@ -24,6 +30,15 @@ public class GrowingNetwork {
         this.endY = endY;
         this.xShift = (endX - startX) / 100;
         this.yShift = (endY - startY) / 100;
+
+        for (int l = 0; l < 8; l++) {
+            for (int r = 0; r < 4; r++) {
+                if (Util.isRandomChanceTrue(chanceToDrawWeight))
+                    weights[l][r] = Util.randomInt(0, 255);
+                else
+                    weights[l][r] = 0;
+            }
+        }
     }
 
     public void drawGrowingNetwork(int startAppearingFrame, int startGrowing) {
@@ -43,6 +58,7 @@ public class GrowingNetwork {
         int nodeGap = (int) (80 * networkScale);
         int INPUTS = 8;
         int hiddenLayerShift = nodeGap * (INPUTS - hiddenNodes) / 2;
+        drawWeights(startX, startY, nodeSize, nodeGap, 8, 4, startAppearingFrame);
         drawLayer(startX, startY, INPUTS, nodeSize, nodeGap, startAppearingFrame);
         drawLayer(startX + nodeSize * 4, startY + hiddenLayerShift, 1, nodeSize, nodeGap, startAppearingFrame);
         drawLayer(startX + nodeSize * 8, startY + nodeGap * 2, 4, nodeSize, nodeGap, startAppearingFrame);
@@ -62,5 +78,37 @@ public class GrowingNetwork {
             return 255;
         else
             return (int) ((slowFrame - startAppearingFrame) / 15.0 * 255);
+    }
+
+    public void drawWeights(int startX, int startY, int nodeSize, int nodeGap, int leftNodes, int rightNodes, int startAppearingFrame) {
+        var alpha = calculateAppearingAlpha(startAppearingFrame);
+        List<Integer> leftYs = new ArrayList<>();
+        List<Integer> rightYs = new ArrayList<>();
+        int leftX = startX + nodeSize;
+        int rightX = startX + nodeSize * 8;
+        int rightYShift = startY + nodeGap * 2;
+
+        for (int l = 0; l < leftNodes; l++) {
+            leftYs.add(startY + nodeSize / 2 + l * nodeGap);
+        }
+        for (int r = 0; r < rightNodes; r++) {
+            rightYs.add(rightYShift + nodeSize / 2 + r * nodeGap);
+        }
+
+        graphics.setStroke(new BasicStroke(3f));
+        for (int l = 0; l < leftNodes; l++) {
+            for (int r = 0; r < rightNodes; r++) {
+                graphics.setColor(weightToColor(weights[l][r], alpha));
+                graphics.drawLine(leftX, leftYs.get(l), rightX, rightYs.get(r));
+                graphics.setStroke(new BasicStroke(3f));
+
+            }
+        }
+    }
+
+    public Color weightToColor(int weight, int alpha) {
+        if (weight == 0)
+            alpha = 0;
+        return new Color(weight, 255 - weight, 0, alpha);
     }
 }
