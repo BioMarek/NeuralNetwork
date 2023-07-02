@@ -28,6 +28,7 @@ public class SpeciesExplanation {
     private int[][] weights = new int[8][4];
     List<Pair<Integer>> changingWeights;
     private int startChangingWeights = 45;
+    private GrowingNetwork growingNetwork1;
 
     public SpeciesExplanation(int startX, int startY, int startDrawing) {
         this.startX = startX;
@@ -35,6 +36,7 @@ public class SpeciesExplanation {
         this.startX2 = startX + 200;
         this.startY2 = startY + 300;
         this.startDrawing = startDrawing;
+        this.growingNetwork1 = new GrowingNetwork(startX + 200, startY + 300, 1100, 100);
 
         for (int l = 0; l < 8; l++) {
             for (int r = 0; r < 4; r++) {
@@ -53,9 +55,11 @@ public class SpeciesExplanation {
 
     public void drawSpeciesExplanation() {
         drawNetwork(startX, startY, startDrawing);
+        growingNetwork1.graphics = graphics;
+        growingNetwork1.slowFrame = slowFrame;
 
         if (slowFrame > 90)
-            drawGrowingNetwork(90, 90);
+            growingNetwork1.drawGrowingNetwork(90, 90);
     }
 
     public void drawNetwork(int startX, int startY, int startAppearingFrame) {
@@ -149,9 +153,9 @@ public class SpeciesExplanation {
     public void drawGrowingNetwork(int startAppearingFrame, int startGrowing) {
         if (slowFrame > startAppearingFrame) {
             if (slowFrame > startGrowing) {
-                networkScale2 = Math.min(networkScale2 + 0.02f, 0.5f);
-                startX2 = Math.min(startX2 + 5, 1100);
-                startY2 = Math.max(startY2 - 5, 100);
+                networkScale2 = Math.min(networkScale2 + 0.02f, 0.3f);
+                startX2 = Math.min(startX2 + 4, 1100); // 700
+                startY2 = Math.max(startY2 - 3, 100); // 400
             }
             if (networkScale2 > 0.02)
                 drawNetworkWithHiddenLayer(startX2, startY2, startAppearingFrame);

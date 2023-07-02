@@ -39,7 +39,7 @@ public class SnakeIntroduction implements GridVisualization {
     public SnakeIntroduction() {
         Settings.VIDEO_FPS = 60;
         this.networkGraph = new NetworkGraph(260, 605, 62);
-        this.speciesExplanation = new SpeciesExplanation(500, 100, 0);
+        this.speciesExplanation = new SpeciesExplanation(300, 100, 0);
         this.rows = Settings.GRID_ROW_PIXELS / SQUARE_PIXEL_SIZE;
         this.columns = Settings.GRID_COLUMN_PIXELS / SQUARE_PIXEL_SIZE;
         this.grid = new int[rows][columns];
