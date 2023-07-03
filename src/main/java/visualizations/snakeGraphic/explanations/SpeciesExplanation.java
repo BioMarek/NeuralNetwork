@@ -17,14 +17,8 @@ public class SpeciesExplanation {
     public Graphics2D graphics;
     private final int startX;
     private final int startY;
-    private int startX2;
-    private int startY2;
     private final int startDrawing;
     public int slowFrame = 0;
-    private float networkScale1 = 1.0f;
-    private float networkScale2 = 0.0f;
-    private float networkScale3 = 1.0f;
-    private float networkScale4 = 1.0f;
     private int[][] weights = new int[8][4];
     List<Pair<Integer>> changingWeights;
     private int startChangingWeights = 45;
@@ -36,8 +30,6 @@ public class SpeciesExplanation {
     public SpeciesExplanation(int startX, int startY, int startDrawing) {
         this.startX = startX;
         this.startY = startY;
-        this.startX2 = startX + 200;
-        this.startY2 = startY + 300;
         this.startDrawing = startDrawing;
         this.growingNetwork1 = new GrowingNetwork(startX + 200, startY + 300, 1400, 200, 1);
         this.growingNetwork2 = new GrowingNetwork(startX + 200, startY + 300, 1100, 200, 1);
@@ -73,7 +65,7 @@ public class SpeciesExplanation {
             growingNetwork1.drawGrowingNetwork(180);
         if (slowFrame > 195)
             growingNetwork2.drawGrowingNetwork(195);
-        if (slowFrame > 210)
+        if (slowFrame > 240)
             drawText("Species 1", 1250, 150, 255);
 
 
@@ -82,15 +74,16 @@ public class SpeciesExplanation {
         growingNetwork4.graphics = graphics;
         growingNetwork4.slowFrame = slowFrame;
 
-        if (slowFrame > 240)
-            growingNetwork3.drawGrowingNetwork(240);
-        if (slowFrame > 255)
-            growingNetwork4.drawGrowingNetwork(255);
-        if (slowFrame > 300)
+        if (slowFrame > 270)
+            growingNetwork3.drawGrowingNetwork(270);
+        if (slowFrame > 285)
+            growingNetwork4.drawGrowingNetwork(285);
+        if (slowFrame > 330)
             drawText("Species 2", 1250, 650, 255);
     }
 
     public void drawNetwork(int startX, int startY, int startAppearingFrame) {
+        float networkScale1 = 1.0f;
         int nodeSize = (int) (50 * networkScale1);
         int nodeGap = (int) (80 * networkScale1);
         drawWeights(startX, startY, nodeSize, nodeGap, 8, 4, startAppearingFrame);
