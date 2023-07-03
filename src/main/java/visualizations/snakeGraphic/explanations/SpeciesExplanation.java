@@ -69,11 +69,11 @@ public class SpeciesExplanation {
 
         FONT_SIZE = (int) (Settings.BACKGROUND_HEIGHT / 60 * 1.5);
 
-        if (slowFrame > 90)
-            growingNetwork1.drawGrowingNetwork(90, 90);
-        if (slowFrame > 105)
-            growingNetwork2.drawGrowingNetwork(105, 105);
-        if (slowFrame > 120)
+        if (slowFrame > 180)
+            growingNetwork1.drawGrowingNetwork(180);
+        if (slowFrame > 195)
+            growingNetwork2.drawGrowingNetwork(195);
+        if (slowFrame > 210)
             drawText("Species 1", 1250, 150, 255);
 
 
@@ -82,11 +82,11 @@ public class SpeciesExplanation {
         growingNetwork4.graphics = graphics;
         growingNetwork4.slowFrame = slowFrame;
 
-        if (slowFrame > 150)
-            growingNetwork3.drawGrowingNetwork(150, 150);
-        if (slowFrame > 165)
-            growingNetwork4.drawGrowingNetwork(165, 165);
-        if (slowFrame > 210)
+        if (slowFrame > 240)
+            growingNetwork3.drawGrowingNetwork(240);
+        if (slowFrame > 255)
+            growingNetwork4.drawGrowingNetwork(255);
+        if (slowFrame > 300)
             drawText("Species 2", 1250, 650, 255);
     }
 
