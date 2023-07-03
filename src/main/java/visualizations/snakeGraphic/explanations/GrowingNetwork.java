@@ -20,14 +20,16 @@ public class GrowingNetwork {
     private int endY;
     private int xShift;
     private int yShift;
-    private double chanceToDrawWeight = 0.5d;
+    private double chanceToDrawWeight = 0.7d;
     private int[][] weights = new int[8][4];
+    private int hiddenLayerNodes;
 
-    public GrowingNetwork(int startX, int startY, int endX, int endY) {
+    public GrowingNetwork(int startX, int startY, int endX, int endY, int hiddenLayerNodes) {
         this.startX = startX;
         this.startY = startY;
         this.endX = endX;
         this.endY = endY;
+        this.hiddenLayerNodes = hiddenLayerNodes;
         this.xShift = (endX - startX) / 100;
         this.yShift = (endY - startY) / 100;
 
@@ -45,22 +47,22 @@ public class GrowingNetwork {
         if (slowFrame > startAppearingFrame) {
             if (slowFrame > startGrowing) {
                 networkScale = Math.min(networkScale + 0.02f, 0.3f);
-                startX = Math.min(startX + xShift, endX);
-                startY = Math.max(startY + yShift, endY);
+                startX = startX != endX ? startX + xShift : endX;
+                startY = startY != endY ? startY + yShift : endY;
             }
             if (networkScale > 0.02)
-                drawNetworkWithHiddenLayer(startX, startY, 1, startAppearingFrame);
+                drawNetworkWithHiddenLayer(startX, startY, startAppearingFrame);
         }
     }
 
-    public void drawNetworkWithHiddenLayer(int startX, int startY, int hiddenNodes, int startAppearingFrame) {
+    public void drawNetworkWithHiddenLayer(int startX, int startY, int startAppearingFrame) {
         int nodeSize = (int) (50 * networkScale);
         int nodeGap = (int) (80 * networkScale);
         int INPUTS = 8;
-        int hiddenLayerShift = nodeGap * (INPUTS - hiddenNodes) / 2;
+        int hiddenLayerShift = nodeGap * (INPUTS - hiddenLayerNodes) / 2;
         drawWeights(startX, startY, nodeSize, nodeGap, 8, 4, startAppearingFrame);
         drawLayer(startX, startY, INPUTS, nodeSize, nodeGap, startAppearingFrame);
-        drawLayer(startX + nodeSize * 4, startY + hiddenLayerShift, 1, nodeSize, nodeGap, startAppearingFrame);
+        drawLayer(startX + nodeSize * 4, startY + hiddenLayerShift, hiddenLayerNodes, nodeSize, nodeGap, startAppearingFrame);
         drawLayer(startX + nodeSize * 8, startY + nodeGap * 2, 4, nodeSize, nodeGap, startAppearingFrame);
     }
 

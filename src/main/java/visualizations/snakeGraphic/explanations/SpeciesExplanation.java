@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SpeciesExplanation {
-    private final int FONT_SIZE = (int) (Settings.BACKGROUND_HEIGHT / 60 * 1.2);
+    private int FONT_SIZE = (int) (Settings.BACKGROUND_HEIGHT / 60 * 1.2);
     public Graphics2D graphics;
     private final int startX;
     private final int startY;
@@ -29,6 +29,9 @@ public class SpeciesExplanation {
     List<Pair<Integer>> changingWeights;
     private int startChangingWeights = 45;
     private GrowingNetwork growingNetwork1;
+    private GrowingNetwork growingNetwork2;
+    private GrowingNetwork growingNetwork3;
+    private GrowingNetwork growingNetwork4;
 
     public SpeciesExplanation(int startX, int startY, int startDrawing) {
         this.startX = startX;
@@ -36,7 +39,11 @@ public class SpeciesExplanation {
         this.startX2 = startX + 200;
         this.startY2 = startY + 300;
         this.startDrawing = startDrawing;
-        this.growingNetwork1 = new GrowingNetwork(startX + 200, startY + 300, 1100, 100);
+        this.growingNetwork1 = new GrowingNetwork(startX + 200, startY + 300, 1400, 200, 1);
+        this.growingNetwork2 = new GrowingNetwork(startX + 200, startY + 300, 1100, 200, 1);
+
+        this.growingNetwork3 = new GrowingNetwork(1400, 200, 1400, 700, 2);
+        this.growingNetwork4 = new GrowingNetwork(1400, 200, 1100, 700, 2);
 
         for (int l = 0; l < 8; l++) {
             for (int r = 0; r < 4; r++) {
@@ -57,9 +64,30 @@ public class SpeciesExplanation {
         drawNetwork(startX, startY, startDrawing);
         growingNetwork1.graphics = graphics;
         growingNetwork1.slowFrame = slowFrame;
+        growingNetwork2.graphics = graphics;
+        growingNetwork2.slowFrame = slowFrame;
+
+        FONT_SIZE = (int) (Settings.BACKGROUND_HEIGHT / 60 * 1.5);
 
         if (slowFrame > 90)
             growingNetwork1.drawGrowingNetwork(90, 90);
+        if (slowFrame > 105)
+            growingNetwork2.drawGrowingNetwork(105, 105);
+        if (slowFrame > 120)
+            drawText("Species 1", 1250, 150, 255);
+
+
+        growingNetwork3.graphics = graphics;
+        growingNetwork3.slowFrame = slowFrame;
+        growingNetwork4.graphics = graphics;
+        growingNetwork4.slowFrame = slowFrame;
+
+        if (slowFrame > 150)
+            growingNetwork3.drawGrowingNetwork(150, 150);
+        if (slowFrame > 165)
+            growingNetwork4.drawGrowingNetwork(165, 165);
+        if (slowFrame > 210)
+            drawText("Species 2", 1250, 650, 255);
     }
 
     public void drawNetwork(int startX, int startY, int startAppearingFrame) {
