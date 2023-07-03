@@ -20,7 +20,8 @@ public class Main {
 
         Settings.explanationSettings();
         var videoGenerator = new VideoGenerator();
-        videoGenerator.generateSnakeIntroduction();
+//        videoGenerator.generateSnakeIntroduction();
+        videoGenerator.generateSnakeIntroSnakeGame();
 
         //        videoGenerator.generateSavedGameVideo("06-05-205714.sav");
 
