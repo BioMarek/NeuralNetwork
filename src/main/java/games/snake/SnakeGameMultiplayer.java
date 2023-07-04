@@ -26,6 +26,7 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
     public SnakeGameMultiplayer() {
         this.rows = Settings.GRID_ROW_PIXELS / Settings.PIXELS_PER_SQUARE;
         this.columns = Settings.GRID_COLUMN_PIXELS / Settings.PIXELS_PER_SQUARE;
+        this.snakes = new ArrayList<>();
         reset();
     }
 
@@ -67,13 +68,16 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
     }
 
     private void initSnakes() {
-        snakes = new ArrayList<>();
         for (int i = 0; i < Settings.NUM_OF_PLAYERS; i++) {
-            var coordinates = randomFreeCoordinate(grid);
-            var snake = new Snake(grid, coordinates.getFirst(), coordinates.getSecond(), Direction.NONE, i);
-            snake.placeSnake();
-            snakes.add(snake);
+            initSnake(i);
         }
+    }
+
+    public void initSnake(int name) {
+        var coordinates = randomFreeCoordinate(grid);
+        var snake = new Snake(grid, coordinates.getFirst(), coordinates.getSecond(), Direction.NONE, name);
+        snake.placeSnake();
+        snakes.add(snake);
     }
 
     /**

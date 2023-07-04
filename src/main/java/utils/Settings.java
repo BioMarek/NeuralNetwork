@@ -36,6 +36,7 @@ public class Settings {
     public static int SNAKE_SIGHT = 7;
     public static boolean LEAVE_CORPSE = true; // leaves food in place of dead snake BodyParts
     public static int STEPS_TO_REDUCTION = 15; // simulates starvation, snakes running in circles will be eliminated
+    public static boolean RECORD_INTRO_GAME = true;
 
     /**
      * Free evolution
