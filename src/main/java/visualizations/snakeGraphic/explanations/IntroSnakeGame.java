@@ -13,6 +13,7 @@ public class IntroSnakeGame implements GridVisualization {
     private Graphics2D graphics;
     private final int SQUARE_PIXEL_SIZE = 40;
     private SavedGameDTO savedGameDTO;
+    private final FinalScreenLetters finalScreenLetters;
     private final int[][] grid;
     private final int columns;
     private final int rows;
@@ -30,7 +31,8 @@ public class IntroSnakeGame implements GridVisualization {
                     grid[row][column] = SnakeMap.WALL.value;
             }
         }
-
+        finalScreenLetters = new FinalScreenLetters(grid);
+        finalScreenLetters.finalScreen();
         savedGameDTO = buildMockDTO();
     }
 
@@ -98,4 +100,7 @@ public class IntroSnakeGame implements GridVisualization {
         else
             return (int) ((frame - startAppearingFrame) / 15.0 * 255);
     }
+
+    // rows 54, columns 96
+
 }
