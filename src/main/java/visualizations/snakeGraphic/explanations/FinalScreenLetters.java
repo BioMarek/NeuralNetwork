@@ -7,18 +7,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FinalScreenLetters {
-    private final int[][] grid;
 
-    public FinalScreenLetters(int[][] grid) {
-        this.grid = grid;
+    public void finalScreenInsert(int[][] grid) {
+        insertIntoGrid(grid, letterS(), SnakeMap.FOOD.value);
+        insertIntoGrid(grid, letterN(), SnakeMap.FOOD.value);
     }
 
-    public void finalScreen() {
-        insertIntoGrid(letterS(), SnakeMap.FOOD.value);
-        insertIntoGrid(letterN(), SnakeMap.FOOD.value);
-    }
-
-    public void insertIntoGrid(List<Pair<Integer>> coordinates, int number) {
+    public void insertIntoGrid(int[][] grid, List<Pair<Integer>> coordinates, int number) {
         for (Pair<Integer> pair : coordinates) {
             grid[pair.getFirst()][pair.getSecond()] = number;
         }

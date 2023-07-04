@@ -7,6 +7,7 @@ import games.snake.savegame.SavedGameDTO;
 import neat.phenotype.NeuralNetwork;
 import utils.Direction;
 import utils.Settings;
+import visualizations.snakeGraphic.explanations.FinalScreenLetters;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,18 +16,23 @@ import static utils.Util.arrayCopy;
 import static utils.Util.randomFreeCoordinate;
 import static utils.Util.repeat;
 
-public class SnakeGameMultiplayer implements MultiplayerGame {
+public class SnakeGameIntro implements MultiplayerGame {
+    private final int SQUARE_PIXEL_SIZE = 40;
     private final int columns;
     private final int rows;
     protected int[][] grid;
     protected List<Snake> snakes;
     private SnakeSightDTO snakeSightDTO;
     public int numOfFood;
+    private FinalScreenLetters finalScreenLetters;
 
-    public SnakeGameMultiplayer() {
+    public SnakeGameIntro() {
+        // TODO set wide
         this.rows = Settings.GRID_ROW_PIXELS / Settings.PIXELS_PER_SQUARE;
         this.columns = Settings.GRID_COLUMN_PIXELS / Settings.PIXELS_PER_SQUARE;
+        this.snakes = new ArrayList<>();
         reset();
+        this.finalScreenLetters = new FinalScreenLetters();
     }
 
     @Override
@@ -50,6 +56,7 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
     public void reset() {
         initGrid();
         initSnakes();
+        placeSnakes(false);
         snakeSightDTO = new SnakeSightDTO(grid);
         numOfFood = 0;
         repeat.accept(Settings.MAX_NUM_OF_FOOD, this::placeFood);
@@ -71,8 +78,16 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
         for (int i = 0; i < Settings.NUM_OF_PLAYERS; i++) {
             var coordinates = randomFreeCoordinate(grid);
             var snake = new Snake(grid, coordinates.getFirst(), coordinates.getSecond(), Direction.NONE, i);
-            snake.placeSnake();
             snakes.add(snake);
+        }
+    }
+
+    private void placeSnakes(boolean placeAll){
+        for (int i = 0; i < Settings.NUM_OF_PLAYERS; i++) {
+            if (i == 0 || placeAll){
+                var snake = snakes.get(i);
+                snake.placeSnake();
+            }
         }
     }
 
@@ -228,17 +243,22 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
     public SavedGameDTO saveSnakeMoves(List<NeuralNetwork> neuralNetworks) {
         var savedGameDTO = new SavedGameDTO();
         int frameCount = 0;
-        for (int move = 0; move < Settings.MAX_NUM_OF_MOVES_VIDEO; move++) {
+        for (int move = 0; move < 40; move++) {
+            if (move == 20){
+                finalScreenLetters.finalScreenInsert(grid);
+                placeSnakes(true);
+            }
             frameCount++;
-            for (int i = 0; i < neuralNetworks.size(); i++) {
-                var networkOutput = neuralNetworks.get(i).getNetworkOutput(snakeSightDTO.getInput_8(snakes.get(i)));
-                moveSnakeToDirection(snakes.get(i), outputToDirection(networkOutput));
+            if (move >= 20){
+                for (int i = 0; i < neuralNetworks.size(); i++) {
+                    var networkOutput = neuralNetworks.get(i).getNetworkOutput(snakeSightDTO.getInput_8(snakes.get(i)));
+                    moveSnakeToDirection(snakes.get(i), outputToDirection(networkOutput));
+                }
+            } else {
+                var networkOutput = neuralNetworks.get(0).getNetworkOutput(snakeSightDTO.getInput_8(snakes.get(0)));
+                moveSnakeToDirection(snakes.get(0), outputToDirection(networkOutput));
             }
-            int[] scores = new int[snakes.size()];
-            for (int i = 0; i < neuralNetworks.size(); i++) {
-                scores[i] = snakes.get(i).snakeScore;
-            }
-            savedGameDTO.scores.add(scores);
+
             savedGameDTO.grid.add(arrayCopy(grid));
         }
         setSaveGameMetadata(savedGameDTO);

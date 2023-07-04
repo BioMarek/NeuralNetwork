@@ -41,7 +41,7 @@ public class SnakeVisualization implements GridVisualization {
             snakeLegend.graphics = graphics;
             setBackground();
             drawGrid();
-            if (!Settings.FREE_EVOLUTION_ON)
+            if (Settings.SHOW_LEGEND)
                 snakeLegend.drawLegend(currentFrame);
         }
     }

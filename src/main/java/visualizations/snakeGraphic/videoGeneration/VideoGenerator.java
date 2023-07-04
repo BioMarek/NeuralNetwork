@@ -11,7 +11,6 @@ import org.jcodec.scale.AWTUtil;
 import utils.Settings;
 import visualizations.snakeGraphic.GridVisualization;
 import visualizations.snakeGraphic.SnakeVisualization;
-import visualizations.snakeGraphic.explanations.IntroSnakeGame;
 import visualizations.snakeGraphic.explanations.SnakeIntroduction;
 
 import java.io.File;
@@ -34,11 +33,6 @@ public class VideoGenerator {
 
     public void generateSnakeIntroduction() {
         gridVisualization = new SnakeIntroduction();
-        createMP4();
-    }
-
-    public void generateSnakeIntroSnakeGame() {
-        gridVisualization = new IntroSnakeGame();
         createMP4();
     }
 
