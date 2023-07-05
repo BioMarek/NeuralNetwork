@@ -6,9 +6,9 @@ import utils.Pair;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FinalScreenLetters {
+public class IntroScreenLetters {
 
-    public int finalScreenInsert(int[][] grid) {
+    public int signInsert(int[][] grid) {
         var foodPlaced = 0;
         foodPlaced += insertIntoGrid(grid, letterS(1, 0), SnakeMap.FOOD.value);
         foodPlaced += insertIntoGrid(grid, letterN(1, 1), SnakeMap.FOOD.value);

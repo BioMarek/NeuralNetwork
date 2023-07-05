@@ -7,7 +7,7 @@ import games.snake.savegame.SavedGameDTO;
 import neat.phenotype.NeuralNetwork;
 import utils.Direction;
 import utils.Settings;
-import visualizations.snakeGraphic.explanations.FinalScreenLetters;
+import visualizations.snakeGraphic.explanations.IntroScreenLetters;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +23,8 @@ public class SnakeGameIntro implements MultiplayerGame {
     protected List<Snake> snakes;
     private SnakeSightDTO snakeSightDTO;
     public int numOfFood;
-    private FinalScreenLetters finalScreenLetters;
+    private IntroScreenLetters introScreenLetters;
+    private int introSignAppear = 150; // 20 for testing
 
     public SnakeGameIntro() {
         // TODO set wide
@@ -31,7 +32,7 @@ public class SnakeGameIntro implements MultiplayerGame {
         this.columns = Settings.GRID_COLUMN_PIXELS / Settings.PIXELS_PER_SQUARE;
         this.snakes = new ArrayList<>();
         reset();
-        this.finalScreenLetters = new FinalScreenLetters();
+        this.introScreenLetters = new IntroScreenLetters();
     }
 
     @Override
@@ -243,13 +244,13 @@ public class SnakeGameIntro implements MultiplayerGame {
     public SavedGameDTO saveSnakeMoves(List<NeuralNetwork> neuralNetworks) {
         var savedGameDTO = new SavedGameDTO();
         int frameCount = 0;
-        for (int move = 0; move < 150; move++) {
-            if (move == 20) { // 90
+        for (int move = 0; move < 300; move++) {
+            if (move == introSignAppear) {
                 clearAllFood();
-                numOfFood += finalScreenLetters.finalScreenInsert(grid);
+                numOfFood += introScreenLetters.signInsert(grid);
             }
             frameCount++;
-            if (move >= 20) { // 90
+            if (move >= introSignAppear) {
                 placeSnakes(calculateSnakeWhichIsPlaced(move));
                 for (int i = 0; i < calculateSnakeWhichIsPlaced(move) + 1; i++) {
                     var networkOutput = neuralNetworks.get(i).getNetworkOutput(snakeSightDTO.getInput_8(snakes.get(i)));
@@ -268,7 +269,7 @@ public class SnakeGameIntro implements MultiplayerGame {
     }
 
     public int calculateSnakeWhichIsPlaced(int move) {
-        int snakeNumber = (move - 20) / 10; // 90
+        int snakeNumber = (move - introSignAppear) / 10;
         return Math.min(snakeNumber, 9);
     }
 
