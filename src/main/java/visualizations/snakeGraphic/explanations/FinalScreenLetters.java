@@ -10,13 +10,12 @@ public class FinalScreenLetters {
 
     public int finalScreenInsert(int[][] grid) {
         var foodPlaced = 0;
-        foodPlaced += insertIntoGrid(grid, letterS(1, 1), SnakeMap.FOOD.value);
+        foodPlaced += insertIntoGrid(grid, letterS(1, 0), SnakeMap.FOOD.value);
         foodPlaced += insertIntoGrid(grid, letterN(1, 1), SnakeMap.FOOD.value);
         foodPlaced += insertIntoGrid(grid, letterA(1, 1), SnakeMap.FOOD.value);
         foodPlaced += insertIntoGrid(grid, letterK(1, 1), SnakeMap.FOOD.value);
         foodPlaced += insertIntoGrid(grid, letterE(1, 1), SnakeMap.FOOD.value);
         foodPlaced += insertIntoGrid(grid, letterS(1, 37), SnakeMap.FOOD.value);
-        // TODO clear all food
         return foodPlaced;
     }
 
@@ -33,6 +32,7 @@ public class FinalScreenLetters {
         coordinates.add(new Pair<>(rowShift + 7, 4 + columnShift));
         coordinates.add(new Pair<>(rowShift + 7, 5 + columnShift));
         coordinates.add(new Pair<>(rowShift + 7, 6 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 7, 7 + columnShift));
 
         coordinates.add(new Pair<>(rowShift + 8, 3 + columnShift));
         coordinates.add(new Pair<>(rowShift + 9, 3 + columnShift));
@@ -43,13 +43,15 @@ public class FinalScreenLetters {
         coordinates.add(new Pair<>(rowShift + 12, 4 + columnShift));
         coordinates.add(new Pair<>(rowShift + 12, 5 + columnShift));
         coordinates.add(new Pair<>(rowShift + 12, 6 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 12, 7 + columnShift));
 
-        coordinates.add(new Pair<>(rowShift + 13, 6 + columnShift));
-        coordinates.add(new Pair<>(rowShift + 14, 6 + columnShift));
-        coordinates.add(new Pair<>(rowShift + 15, 6 + columnShift));
-        coordinates.add(new Pair<>(rowShift + 16, 6 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 13, 7 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 14, 7 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 15, 7 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 16, 7 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 17, 7 + columnShift));
+
         coordinates.add(new Pair<>(rowShift + 17, 6 + columnShift));
-
         coordinates.add(new Pair<>(rowShift + 17, 5 + columnShift));
         coordinates.add(new Pair<>(rowShift + 17, 4 + columnShift));
         coordinates.add(new Pair<>(rowShift + 17, 3 + columnShift));

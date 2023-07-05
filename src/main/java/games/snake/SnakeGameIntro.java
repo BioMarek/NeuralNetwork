@@ -245,6 +245,7 @@ public class SnakeGameIntro implements MultiplayerGame {
         int frameCount = 0;
         for (int move = 0; move < 150; move++) {
             if (move == 20) { // 90
+                clearAllFood();
                 numOfFood += finalScreenLetters.finalScreenInsert(grid);
             }
             frameCount++;
@@ -275,6 +276,17 @@ public class SnakeGameIntro implements MultiplayerGame {
         savedGameDTO.rows = rows;
         savedGameDTO.columns = columns;
         savedGameDTO.fileName = SaveGameUtil.getCurrentDateTimeAsString() + ".sav";
+    }
+
+    public void clearAllFood() {
+        for (int row = 0; row < rows; row++) {
+            for (int column = 0; column < columns; column++) {
+                if (grid[row][column] == SnakeMap.FOOD.value) {
+                    grid[row][column] = SnakeMap.EMPTY.value;
+                }
+            }
+        }
+        numOfFood = 0;
     }
 
     /**
