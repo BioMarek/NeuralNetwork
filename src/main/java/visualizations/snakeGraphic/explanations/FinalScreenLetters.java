@@ -10,11 +10,13 @@ public class FinalScreenLetters {
 
     public int finalScreenInsert(int[][] grid) {
         var foodPlaced = 0;
-        foodPlaced += insertIntoGrid(grid, letterS(), SnakeMap.FOOD.value);
-        foodPlaced += insertIntoGrid(grid, letterN(), SnakeMap.FOOD.value);
-        foodPlaced += insertIntoGrid(grid, letterA(), SnakeMap.FOOD.value);
-        foodPlaced += insertIntoGrid(grid, letterK(), SnakeMap.FOOD.value);
-        foodPlaced += insertIntoGrid(grid, letterE(), SnakeMap.FOOD.value);
+        foodPlaced += insertIntoGrid(grid, letterS(1, 1), SnakeMap.FOOD.value);
+        foodPlaced += insertIntoGrid(grid, letterN(1, 1), SnakeMap.FOOD.value);
+        foodPlaced += insertIntoGrid(grid, letterA(1, 1), SnakeMap.FOOD.value);
+        foodPlaced += insertIntoGrid(grid, letterK(1, 1), SnakeMap.FOOD.value);
+        foodPlaced += insertIntoGrid(grid, letterE(1, 1), SnakeMap.FOOD.value);
+        foodPlaced += insertIntoGrid(grid, letterS(1, 37), SnakeMap.FOOD.value);
+        // TODO clear all food
         return foodPlaced;
     }
 
@@ -25,168 +27,168 @@ public class FinalScreenLetters {
         return coordinates.size();
     }
 
-    public List<Pair<Integer>> letterS() {
+    public List<Pair<Integer>> letterS(int rowShift, int columnShift) {
         List<Pair<Integer>> coordinates = new ArrayList<>();
-        coordinates.add(new Pair<>(7, 5));
-        coordinates.add(new Pair<>(7, 6));
-        coordinates.add(new Pair<>(7, 7));
-        coordinates.add(new Pair<>(7, 8));
+        coordinates.add(new Pair<>(rowShift + 7, 3 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 7, 4 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 7, 5 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 7, 6 + columnShift));
 
-        coordinates.add(new Pair<>(8, 5));
-        coordinates.add(new Pair<>(9, 5));
-        coordinates.add(new Pair<>(10, 5));
-        coordinates.add(new Pair<>(11, 5));
-        coordinates.add(new Pair<>(12, 5));
+        coordinates.add(new Pair<>(rowShift + 8, 3 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 9, 3 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 10, 3 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 11, 3 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 12, 3 + columnShift));
 
-        coordinates.add(new Pair<>(12, 6));
-        coordinates.add(new Pair<>(12, 7));
-        coordinates.add(new Pair<>(12, 8));
+        coordinates.add(new Pair<>(rowShift + 12, 4 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 12, 5 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 12, 6 + columnShift));
 
-        coordinates.add(new Pair<>(13, 8));
-        coordinates.add(new Pair<>(14, 8));
-        coordinates.add(new Pair<>(15, 8));
-        coordinates.add(new Pair<>(16, 8));
-        coordinates.add(new Pair<>(17, 8));
+        coordinates.add(new Pair<>(rowShift + 13, 6 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 14, 6 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 15, 6 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 16, 6 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 17, 6 + columnShift));
 
-        coordinates.add(new Pair<>(17, 7));
-        coordinates.add(new Pair<>(17, 6));
-        coordinates.add(new Pair<>(17, 5));
+        coordinates.add(new Pair<>(rowShift + 17, 5 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 17, 4 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 17, 3 + columnShift));
         return coordinates;
     }
 
-    public List<Pair<Integer>> letterN() {
+    public List<Pair<Integer>> letterN(int rowShift, int columnShift) {
         List<Pair<Integer>> coordinates = new ArrayList<>();
-        coordinates.add(new Pair<>(7, 11));
-        coordinates.add(new Pair<>(8, 11));
-        coordinates.add(new Pair<>(9, 11));
-        coordinates.add(new Pair<>(10, 11));
-        coordinates.add(new Pair<>(11, 11));
-        coordinates.add(new Pair<>(12, 11));
-        coordinates.add(new Pair<>(13, 11));
-        coordinates.add(new Pair<>(14, 11));
-        coordinates.add(new Pair<>(15, 11));
-        coordinates.add(new Pair<>(16, 11));
-        coordinates.add(new Pair<>(17, 11));
+        coordinates.add(new Pair<>(rowShift + 7, 8 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 8, 8 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 9, 8 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 10, 8 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 11, 8 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 12, 8 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 13, 8 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 14, 8 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 15, 8 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 16, 8 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 17, 8 + columnShift));
 
-        coordinates.add(new Pair<>(8, 12));
-        coordinates.add(new Pair<>(9, 12));
-        coordinates.add(new Pair<>(10, 13));
-        coordinates.add(new Pair<>(11, 13));
-        coordinates.add(new Pair<>(12, 14));
-        coordinates.add(new Pair<>(13, 15));
-        coordinates.add(new Pair<>(14, 15));
-        coordinates.add(new Pair<>(15, 16));
-        coordinates.add(new Pair<>(16, 16));
+        coordinates.add(new Pair<>(rowShift + 8, 9 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 9, 9 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 10, 10 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 11, 10 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 12, 11 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 13, 12 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 14, 12 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 15, 13 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 16, 13 + columnShift));
 
-        coordinates.add(new Pair<>(7, 17));
-        coordinates.add(new Pair<>(8, 17));
-        coordinates.add(new Pair<>(9, 17));
-        coordinates.add(new Pair<>(10, 17));
-        coordinates.add(new Pair<>(11, 17));
-        coordinates.add(new Pair<>(12, 17));
-        coordinates.add(new Pair<>(13, 17));
-        coordinates.add(new Pair<>(14, 17));
-        coordinates.add(new Pair<>(15, 17));
-        coordinates.add(new Pair<>(16, 17));
-        coordinates.add(new Pair<>(17, 17));
+        coordinates.add(new Pair<>(rowShift + 7, 14 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 8, 14 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 9, 14 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 10, 14 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 11, 14 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 12, 14 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 13, 14 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 14, 14 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 15, 14 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 16, 14 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 17, 14 + columnShift));
         return coordinates;
     }
 
-    public List<Pair<Integer>> letterA() {
+    public List<Pair<Integer>> letterA(int rowShift, int columnShift) {
         List<Pair<Integer>> coordinates = new ArrayList<>();
 
-        coordinates.add(new Pair<>(7, 24));
-        coordinates.add(new Pair<>(8, 23));
-        coordinates.add(new Pair<>(9, 23));
-        coordinates.add(new Pair<>(10, 22));
-        coordinates.add(new Pair<>(11, 22));
+        coordinates.add(new Pair<>(rowShift + 7, 20 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 8, 19 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 9, 19 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 10, 18 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 11, 18 + columnShift));
 
-        coordinates.add(new Pair<>(8, 25));
-        coordinates.add(new Pair<>(9, 25));
-        coordinates.add(new Pair<>(10, 26));
-        coordinates.add(new Pair<>(11, 26));
+        coordinates.add(new Pair<>(rowShift + 8, 21 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 9, 21 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 10, 22 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 11, 22 + columnShift));
 
-        coordinates.add(new Pair<>(12, 22));
-        coordinates.add(new Pair<>(12, 23));
-        coordinates.add(new Pair<>(12, 24));
-        coordinates.add(new Pair<>(12, 25));
-        coordinates.add(new Pair<>(12, 26));
+        coordinates.add(new Pair<>(rowShift + 12, 18 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 12, 19 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 12, 20 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 12, 21 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 12, 22 + columnShift));
 
-        coordinates.add(new Pair<>(13, 21));
-        coordinates.add(new Pair<>(14, 21));
-        coordinates.add(new Pair<>(15, 21));
-        coordinates.add(new Pair<>(16, 20));
-        coordinates.add(new Pair<>(17, 20));
+        coordinates.add(new Pair<>(rowShift + 13, 17 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 14, 17 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 15, 17 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 16, 16 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 17, 16 + columnShift));
 
-        coordinates.add(new Pair<>(13, 27));
-        coordinates.add(new Pair<>(14, 27));
-        coordinates.add(new Pair<>(15, 27));
-        coordinates.add(new Pair<>(16, 28));
-        coordinates.add(new Pair<>(17, 28));
-
-        return coordinates;
-    }
-
-    public List<Pair<Integer>> letterK() {
-        List<Pair<Integer>> coordinates = new ArrayList<>();
-
-        coordinates.add(new Pair<>(7, 31));
-        coordinates.add(new Pair<>(8, 31));
-        coordinates.add(new Pair<>(9, 31));
-        coordinates.add(new Pair<>(10, 31));
-        coordinates.add(new Pair<>(11, 31));
-        coordinates.add(new Pair<>(12, 31));
-        coordinates.add(new Pair<>(13, 31));
-        coordinates.add(new Pair<>(14, 31));
-        coordinates.add(new Pair<>(15, 31));
-        coordinates.add(new Pair<>(16, 31));
-        coordinates.add(new Pair<>(17, 31));
-
-        coordinates.add(new Pair<>(7, 35));
-        coordinates.add(new Pair<>(8, 34));
-        coordinates.add(new Pair<>(9, 34));
-        coordinates.add(new Pair<>(10, 33));
-        coordinates.add(new Pair<>(11, 33));
-        coordinates.add(new Pair<>(12, 32));
-
-        coordinates.add(new Pair<>(13, 33));
-        coordinates.add(new Pair<>(14, 33));
-        coordinates.add(new Pair<>(15, 34));
-        coordinates.add(new Pair<>(16, 34));
-        coordinates.add(new Pair<>(17, 35));
+        coordinates.add(new Pair<>(rowShift + 13, 23 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 14, 23 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 15, 23 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 16, 24 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 17, 24 + columnShift));
 
         return coordinates;
     }
 
-    public List<Pair<Integer>> letterE() {
+    public List<Pair<Integer>> letterK(int rowShift, int columnShift) {
         List<Pair<Integer>> coordinates = new ArrayList<>();
 
-        coordinates.add(new Pair<>(7, 38));
-        coordinates.add(new Pair<>(8, 38));
-        coordinates.add(new Pair<>(9, 38));
-        coordinates.add(new Pair<>(10, 38));
-        coordinates.add(new Pair<>(11, 38));
-        coordinates.add(new Pair<>(12, 38));
-        coordinates.add(new Pair<>(13, 38));
-        coordinates.add(new Pair<>(14, 38));
-        coordinates.add(new Pair<>(15, 38));
-        coordinates.add(new Pair<>(16, 38));
-        coordinates.add(new Pair<>(17, 38));
+        coordinates.add(new Pair<>(rowShift + 7, 26 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 8, 26 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 9, 26 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 10, 26 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 11, 26 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 12, 26 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 13, 26 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 14, 26 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 15, 26 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 16, 26 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 17, 26 + columnShift));
 
-        coordinates.add(new Pair<>(7, 39));
-        coordinates.add(new Pair<>(7, 40));
-        coordinates.add(new Pair<>(7, 41));
-        coordinates.add(new Pair<>(7, 42));
+        coordinates.add(new Pair<>(rowShift + 7, 30 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 8, 29 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 9, 29 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 10, 28 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 11, 28 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 12, 27 + columnShift));
 
-        coordinates.add(new Pair<>(12, 39));
-        coordinates.add(new Pair<>(12, 40));
-        coordinates.add(new Pair<>(12, 41));
-        coordinates.add(new Pair<>(12, 42));
+        coordinates.add(new Pair<>(rowShift + 13, 28 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 14, 28 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 15, 29 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 16, 29 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 17, 30 + columnShift));
 
-        coordinates.add(new Pair<>(17, 39));
-        coordinates.add(new Pair<>(17, 40));
-        coordinates.add(new Pair<>(17, 41));
-        coordinates.add(new Pair<>(17, 42));
+        return coordinates;
+    }
+
+    public List<Pair<Integer>> letterE(int rowShift, int columnShift) {
+        List<Pair<Integer>> coordinates = new ArrayList<>();
+
+        coordinates.add(new Pair<>(rowShift + 7, 32 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 8, 32 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 9, 32 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 10, 32 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 11, 32 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 12, 32 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 13, 32 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 14, 32 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 15, 32 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 16, 32 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 17, 32 + columnShift));
+
+        coordinates.add(new Pair<>(rowShift + 7, 33 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 7, 34 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 7, 35 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 7, 36 + columnShift));
+
+        coordinates.add(new Pair<>(rowShift + 12, 33 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 12, 34 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 12, 35 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 12, 36 + columnShift));
+
+        coordinates.add(new Pair<>(rowShift + 17, 33 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 17, 34 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 17, 35 + columnShift));
+        coordinates.add(new Pair<>(rowShift + 17, 36 + columnShift));
 
         return coordinates;
     }

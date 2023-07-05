@@ -86,7 +86,7 @@ public class Settings {
         PIXELS_PER_SQUARE = 40;
         SNAKE_SIGHT = 10;
         DEATH_PENALTY = -3;
-        MAX_NUM_OF_FOOD = 1;
+        MAX_NUM_OF_FOOD = 10;
         LEAVE_CORPSE = false;
         HAS_WALL = true;
         SELF_COLLISION = true;

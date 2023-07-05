@@ -244,11 +244,11 @@ public class SnakeGameIntro implements MultiplayerGame {
         var savedGameDTO = new SavedGameDTO();
         int frameCount = 0;
         for (int move = 0; move < 150; move++) {
-            if (move == 20) {
+            if (move == 20) { // 90
                 numOfFood += finalScreenLetters.finalScreenInsert(grid);
             }
             frameCount++;
-            if (move >= 20) {
+            if (move >= 20) { // 90
                 placeSnakes(calculateSnakeWhichIsPlaced(move));
                 for (int i = 0; i < calculateSnakeWhichIsPlaced(move) + 1; i++) {
                     var networkOutput = neuralNetworks.get(i).getNetworkOutput(snakeSightDTO.getInput_8(snakes.get(i)));
@@ -267,7 +267,7 @@ public class SnakeGameIntro implements MultiplayerGame {
     }
 
     public int calculateSnakeWhichIsPlaced(int move) {
-        int snakeNumber = (move - 20) / 10;
+        int snakeNumber = (move - 20) / 10; // 90
         return Math.min(snakeNumber, 9);
     }
 
