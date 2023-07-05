@@ -1,7 +1,6 @@
 package neat.evolution;
 
 import games.MultiplayerGame;
-import games.snake.savegame.SaveGameUtil;
 import games.snake.savegame.SavedGameDTO;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

@@ -12,7 +12,6 @@ import visualizations.snakeGraphic.explanations.FinalScreenLetters;
 import java.util.ArrayList;
 import java.util.List;
 
-import static utils.Util.activationFunctionUnitStep;
 import static utils.Util.arrayCopy;
 import static utils.Util.randomFreeCoordinate;
 import static utils.Util.repeat;
@@ -56,7 +55,7 @@ public class SnakeGameIntro implements MultiplayerGame {
     public void reset() {
         initGrid();
         initSnakes();
-        placeSnakes(false);
+        placeSnakes(0);
         snakeSightDTO = new SnakeSightDTO(grid);
         numOfFood = 0;
         repeat.accept(Settings.MAX_NUM_OF_FOOD, this::placeFood);
@@ -82,13 +81,14 @@ public class SnakeGameIntro implements MultiplayerGame {
         }
     }
 
-    private void placeSnakes(boolean placeAll){
-        for (int i = 0; i < Settings.NUM_OF_PLAYERS; i++) {
-            if (i == 0 || placeAll){
-                var snake = snakes.get(i);
-                snake.placeSnake();
-            }
-        }
+    private void placeSnakes(int numOfPlaced) {
+        numOfPlaced = Math.min(numOfPlaced, Settings.NUM_OF_PLAYERS);
+//        for (int i = 0; i < numOfPlaced; i++) {
+//                var snake = snakes.get(i);
+//                snake.placeSnake();
+//        }
+        var snake = snakes.get(numOfPlaced);
+        snake.placeSnake();
     }
 
     /**
@@ -244,13 +244,13 @@ public class SnakeGameIntro implements MultiplayerGame {
         var savedGameDTO = new SavedGameDTO();
         int frameCount = 0;
         for (int move = 0; move < 40; move++) {
-            if (move == 20){
+            if (move == 20) {
                 numOfFood += finalScreenLetters.finalScreenInsert(grid);
-                placeSnakes(true);
             }
             frameCount++;
-            if (move >= 20){
-                for (int i = 0; i < neuralNetworks.size(); i++) {
+            if (move >= 20) {
+                placeSnakes(Math.min(move - 19, 9));
+                for (int i = 0; i < Math.min(move - 19, 9) + 1; i++) {
                     var networkOutput = neuralNetworks.get(i).getNetworkOutput(snakeSightDTO.getInput_8(snakes.get(i)));
                     moveSnakeToDirection(snakes.get(i), outputToDirection(networkOutput));
                 }
