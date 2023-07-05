@@ -12,12 +12,12 @@ import visualizations.snakeGraphic.explanations.FinalScreenLetters;
 import java.util.ArrayList;
 import java.util.List;
 
+import static utils.Util.activationFunctionUnitStep;
 import static utils.Util.arrayCopy;
 import static utils.Util.randomFreeCoordinate;
 import static utils.Util.repeat;
 
 public class SnakeGameIntro implements MultiplayerGame {
-    private final int SQUARE_PIXEL_SIZE = 40;
     private final int columns;
     private final int rows;
     protected int[][] grid;
@@ -245,7 +245,7 @@ public class SnakeGameIntro implements MultiplayerGame {
         int frameCount = 0;
         for (int move = 0; move < 40; move++) {
             if (move == 20){
-                finalScreenLetters.finalScreenInsert(grid);
+                numOfFood += finalScreenLetters.finalScreenInsert(grid);
                 placeSnakes(true);
             }
             frameCount++;

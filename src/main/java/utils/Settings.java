@@ -81,7 +81,7 @@ public class Settings {
     public static void introSettings() {
         SHOW_LEGEND = false;
         NUM_OF_PLAYERS = 10;
-        GRID_COLUMN_PIXELS = 1940;
+        GRID_COLUMN_PIXELS = 1920;
         GRID_ROW_PIXELS = 1080;
         PIXELS_PER_SQUARE = 40;
         SNAKE_SIGHT = 10;
@@ -89,7 +89,7 @@ public class Settings {
         MAX_NUM_OF_FOOD = 1;
         LEAVE_CORPSE = false;
         HAS_WALL = true;
-        SELF_COLLISION = false;
+        SELF_COLLISION = true;
         SAVE_EVERY_N_GENERATIONS = 100;
     }
 

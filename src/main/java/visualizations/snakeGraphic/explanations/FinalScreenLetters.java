@@ -8,15 +8,18 @@ import java.util.List;
 
 public class FinalScreenLetters {
 
-    public void finalScreenInsert(int[][] grid) {
-        insertIntoGrid(grid, letterS(), SnakeMap.FOOD.value);
-        insertIntoGrid(grid, letterN(), SnakeMap.FOOD.value);
+    public int finalScreenInsert(int[][] grid) {
+        var foodPlaced = 0;
+        foodPlaced += insertIntoGrid(grid, letterS(), SnakeMap.FOOD.value);
+        foodPlaced += insertIntoGrid(grid, letterN(), SnakeMap.FOOD.value);
+        return foodPlaced;
     }
 
-    public void insertIntoGrid(int[][] grid, List<Pair<Integer>> coordinates, int number) {
+    public int insertIntoGrid(int[][] grid, List<Pair<Integer>> coordinates, int number) {
         for (Pair<Integer> pair : coordinates) {
             grid[pair.getFirst()][pair.getSecond()] = number;
         }
+        return coordinates.size();
     }
 
     public List<Pair<Integer>> letterS() {
