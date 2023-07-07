@@ -12,8 +12,8 @@ import visualizations.snakeGraphic.videoGeneration.VideoGenerator;
 public class Main {
 
     public static void main(String[] args) {
-//        setupNeatNeuralNetworkWithMultiplayer();
-        setupNeatNeuralNetworkWithMultiplayerIntro();
+        setupNeatNeuralNetworkWithMultiplayer();
+//        setupNeatNeuralNetworkWithMultiplayerIntro();
 
 //        setupFreeEvolution();
 
