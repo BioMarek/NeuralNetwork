@@ -91,6 +91,7 @@ public class Settings {
         HAS_WALL = true;
         SELF_COLLISION = true;
         SAVE_EVERY_N_GENERATIONS = 100;
+        STEPS_TO_REDUCTION = 501;
     }
 
     public static void freeEvolutionSettings() {
