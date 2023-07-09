@@ -4,7 +4,7 @@ import java.util.function.Function;
 
 public class Settings {
     public static boolean HAS_WALL = true;
-    public static int NUM_OF_GENERATIONS = 300; // 300
+    public static int NUM_OF_GENERATIONS = 1500; // 300
     public static int TOTAL_NUM_OF_GENOTYPES = 100;
     public static int MAX_NEURONS = 1000;
     public static Function<Double, Double> HIDDEN_LAYER_ACTIVATION_FUNC = Util.activationFunctionHyperbolicTangent();
@@ -40,7 +40,7 @@ public class Settings {
     /**
      * Free evolution
      */
-    public static boolean SHOW_LEGEND = false;
+    public static boolean SHOW_LEGEND = true;
     public static int OFFSPRING_COST = 3; // number of bodyparts that are removed when offspring is generated
     public static int OFFSPRING_THRESHOLD = 6;
 
@@ -91,6 +91,7 @@ public class Settings {
         HAS_WALL = true;
         SELF_COLLISION = true;
         SAVE_EVERY_N_GENERATIONS = 100;
+        STEPS_TO_REDUCTION = 501;
     }
 
     public static void freeEvolutionSettings() {
