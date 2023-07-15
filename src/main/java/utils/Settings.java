@@ -1,5 +1,7 @@
 package utils;
 
+import games.snake.dtos.SnakeSightType;
+
 import java.util.function.Function;
 
 public class Settings {
@@ -11,7 +13,7 @@ public class Settings {
     public static Function<Double, Double> OUTPUT_LAYER_ACTIVATION_FUNC = Util.activationFunctionHyperbolicTangent();
     public static boolean VERBOSE = true;
     public static int MAX_NUM_OF_MOVES = 500;  // to stop AI moving in cycles
-    public static int MAX_NUM_OF_MOVES_VIDEO = 1000;  // to stop AI moving in cycles
+    public static int MAX_NUM_OF_MOVES_VIDEO = 500;  // to stop AI moving in cycles
     public static int NUM_OF_TRIALS = 10; // how many times NeuralNetwork plays the game
     public static double CHANCE_MUTATE_WEIGHT = 0.8d; // chance that weight will be mutated
     public static double CHANCE_HARD_MUTATE_WEIGHT = 0.1d; // chance to assign new value to weight when it is being mutated, small change otherwise
@@ -26,6 +28,7 @@ public class Settings {
     public static int FREQUENCY_OF_SPECIATION = 10;
     public static String SAVE_GAME_PATH = "savedGames/";
     public static boolean SELF_COLLISION = false;
+    public static SnakeSightType SNAKE_SIGHT_TYPE = SnakeSightType.RAYS;
 
     /**
      * Multiplayer game
@@ -69,13 +72,14 @@ public class Settings {
         GRID_COLUMN_PIXELS = 1500;
         GRID_ROW_PIXELS = 1080;
         PIXELS_PER_SQUARE = 20;
-        SNAKE_SIGHT = 10;
+        SNAKE_SIGHT = 2;
         DEATH_PENALTY = -3;
         MAX_NUM_OF_FOOD = 150;
         LEAVE_CORPSE = false;
         HAS_WALL = true;
         SELF_COLLISION = false;
-        SAVE_EVERY_N_GENERATIONS = 100;
+        SAVE_EVERY_N_GENERATIONS = 50;
+        SNAKE_SIGHT_TYPE = SnakeSightType.TOP_DOWN;
     }
 
     public static void introSettings() {
@@ -92,6 +96,7 @@ public class Settings {
         SELF_COLLISION = true;
         SAVE_EVERY_N_GENERATIONS = 100;
         STEPS_TO_REDUCTION = 501;
+        SNAKE_SIGHT_TYPE = SnakeSightType.RAYS;
     }
 
     public static void freeEvolutionSettings() {
@@ -108,6 +113,7 @@ public class Settings {
         MAX_NUM_OF_FOOD = 300;
         LEAVE_CORPSE = false;
         HAS_WALL = false;
+        SNAKE_SIGHT_TYPE = SnakeSightType.RAYS;
     }
 
     public static void explanationSettings() {
@@ -126,5 +132,6 @@ public class Settings {
         HAS_WALL = true;
         SELF_COLLISION = true;
         SAVE_EVERY_N_GENERATIONS = 100;
+        SNAKE_SIGHT_TYPE = SnakeSightType.RAYS;
     }
 }

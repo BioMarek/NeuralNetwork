@@ -7,7 +7,6 @@ import neat.evolution.GenePool;
 import utils.Settings;
 import visualizations.snakeGraphic.SnakeFrame;
 import visualizations.snakeGraphic.SnakePanel;
-import visualizations.snakeGraphic.videoGeneration.VideoGenerator;
 
 public class Main {
 
@@ -34,7 +33,13 @@ public class Main {
      */
     public static void setupNeatNeuralNetworkWithMultiplayer() {
         Settings.multiplayerSettings();
-        GenePool genePool = new GenePool(8, 4, new SnakeGameMultiplayer());
+        GenePool genePool = null;
+        // TODO put this into genepool later
+        switch (Settings.SNAKE_SIGHT_TYPE) {
+            case RAYS -> genePool = new GenePool(8, 4, new SnakeGameMultiplayer());
+            case TOP_DOWN ->
+                    genePool = new GenePool((Settings.SNAKE_SIGHT * 2 + 1) * (Settings.SNAKE_SIGHT * 2 + 1), 4, new SnakeGameMultiplayer());
+        }
 //        Settings.singlePlayerGame();
 //        GenePool genePool = new GenePool(8, 4, new SnakeGameMultiplayer());
 

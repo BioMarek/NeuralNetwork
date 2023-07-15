@@ -1,6 +1,6 @@
 package games.snake;
 
-import games.snake.dtos.SnakeSightDTO;
+import games.snake.dtos.SnakeSightRaysDTO;
 import org.junit.jupiter.api.Test;
 import utils.Direction;
 import utils.Settings;
@@ -9,10 +9,10 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.closeTo;
 import static org.hamcrest.Matchers.is;
 
-public class SnakeSightDTOTest {
+public class SnakeSightRaysDTOTest {
     private static int SIZE = 4;
     private int[][] grid;
-    private SnakeSightDTO snakeSightDTO;
+    private SnakeSightRaysDTO snakeSightRaysDTO;
 
 
     @Test
@@ -20,7 +20,7 @@ public class SnakeSightDTOTest {
         Settings.SNAKE_SIGHT = 4;
         SIZE = 4;
         initGrid();
-        var input = snakeSightDTO.getInput(new Snake(grid, 1, 1, Direction.UP, 1));
+        var input = snakeSightRaysDTO.getInput(new Snake(grid, 1, 1, Direction.UP, 1));
         assertThat(input[0], is(closeTo(-1.0, 0.1)));
         assertThat(input[1], is(closeTo(-0.5, 0.1)));
         assertThat(input[2], is(closeTo(-0.5, 0.1)));
@@ -40,7 +40,7 @@ public class SnakeSightDTOTest {
         grid[3][3] = SnakeMap.FOOD.value;
         grid[2][3] = SnakeMap.FOOD.value;
         grid[1][3] = 301;
-        var input = snakeSightDTO.getInput(new Snake(grid, 2, 2, Direction.UP, 1));
+        var input = snakeSightRaysDTO.getInput(new Snake(grid, 2, 2, Direction.UP, 1));
         assertThat(input[0], is(closeTo(-0.5, 0.1)));
         assertThat(input[1], is(closeTo(1.0, 0.1)));
         assertThat(input[2], is(closeTo(-0.5, 0.1)));
@@ -62,7 +62,7 @@ public class SnakeSightDTOTest {
         grid[4][5] = 101;
         grid[7][1] = 102;
         grid[8][8] = 103;
-        var input = snakeSightDTO.getInput(new Snake(grid, 4, 4, Direction.UP, 1));
+        var input = snakeSightRaysDTO.getInput(new Snake(grid, 4, 4, Direction.UP, 1));
 
         assertThat(input[0], is(closeTo(-0.2, 0.1)));
         assertThat(input[1], is(closeTo(0.2, 0.1)));
@@ -78,13 +78,13 @@ public class SnakeSightDTOTest {
     @Test
     void wrapAroundCoordinates_isCorrect() {
         initGrid();
-        snakeSightDTO = new SnakeSightDTO(grid);
-        assertThat(snakeSightDTO.wrapAroundCoordinates(4, 5), is(4));
-        assertThat(snakeSightDTO.wrapAroundCoordinates(5, 5), is(0));
-        assertThat(snakeSightDTO.wrapAroundCoordinates(6, 5), is(1));
-        assertThat(snakeSightDTO.wrapAroundCoordinates(0, 5), is(0));
-        assertThat(snakeSightDTO.wrapAroundCoordinates(-1, 5), is(4));
-        assertThat(snakeSightDTO.wrapAroundCoordinates(-2, 5), is(3));
+        snakeSightRaysDTO = new SnakeSightRaysDTO(grid);
+        assertThat(snakeSightRaysDTO.wrapAroundCoordinates(4, 5), is(4));
+        assertThat(snakeSightRaysDTO.wrapAroundCoordinates(5, 5), is(0));
+        assertThat(snakeSightRaysDTO.wrapAroundCoordinates(6, 5), is(1));
+        assertThat(snakeSightRaysDTO.wrapAroundCoordinates(0, 5), is(0));
+        assertThat(snakeSightRaysDTO.wrapAroundCoordinates(-1, 5), is(4));
+        assertThat(snakeSightRaysDTO.wrapAroundCoordinates(-2, 5), is(3));
     }
 
     private void initGrid() {
@@ -95,6 +95,6 @@ public class SnakeSightDTOTest {
                     grid[row][column] = SnakeMap.WALL.value;
             }
         }
-        snakeSightDTO = new SnakeSightDTO(grid);
+        snakeSightRaysDTO = new SnakeSightRaysDTO(grid);
     }
 }

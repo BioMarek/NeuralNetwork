@@ -2,6 +2,8 @@ package games.snake;
 
 import games.MultiplayerGame;
 import games.snake.dtos.SnakeSightDTO;
+import games.snake.dtos.SnakeSightRaysDTO;
+import games.snake.dtos.SnakeTopDownDTO;
 import games.snake.savegame.SaveGameUtil;
 import games.snake.savegame.SavedGameDTO;
 import neat.phenotype.NeuralNetwork;
@@ -50,7 +52,10 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
     public void reset() {
         initGrid();
         initSnakes();
-        snakeSightDTO = new SnakeSightDTO(grid);
+        switch (Settings.SNAKE_SIGHT_TYPE) {
+            case RAYS -> snakeSightDTO = new SnakeSightRaysDTO(grid);
+            case TOP_DOWN -> snakeSightDTO = new SnakeTopDownDTO(grid);
+        }
         numOfFood = 0;
         repeat.accept(Settings.MAX_NUM_OF_FOOD, this::placeFood);
     }
