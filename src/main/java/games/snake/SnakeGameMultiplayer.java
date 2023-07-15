@@ -36,7 +36,7 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
 
         for (int move = 0; move < Settings.MAX_NUM_OF_MOVES; move++) {
             for (Snake snake : snakes) {
-                var networkOutput = snake.neuralNetwork.getNetworkOutput(snakeSightDTO.getInput_8(snake));
+                var networkOutput = snake.neuralNetwork.getNetworkOutput(snakeSightDTO.getInput(snake));
                 moveSnakeToDirection(snake, outputToDirection(networkOutput));
             }
         }
@@ -231,7 +231,7 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
         for (int move = 0; move < Settings.MAX_NUM_OF_MOVES_VIDEO; move++) {
             frameCount++;
             for (int i = 0; i < neuralNetworks.size(); i++) {
-                var networkOutput = neuralNetworks.get(i).getNetworkOutput(snakeSightDTO.getInput_8(snakes.get(i)));
+                var networkOutput = neuralNetworks.get(i).getNetworkOutput(snakeSightDTO.getInput(snakes.get(i)));
                 moveSnakeToDirection(snakes.get(i), outputToDirection(networkOutput));
             }
             int[] scores = new int[snakes.size()];

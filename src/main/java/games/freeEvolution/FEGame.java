@@ -229,7 +229,7 @@ public class FEGame {
         for (int move = 0; move < Settings.MAX_NUM_OF_MOVES; move++) {
             frameCount++;
             for (int i = 0; i < snakes.size(); i++) {
-                var networkOutput = snakes.get(i).getNeuralNetwork().getNetworkOutput(snakeSightDTO.getInput_8(snakes.get(i)));
+                var networkOutput = snakes.get(i).getNeuralNetwork().getNetworkOutput(snakeSightDTO.getInput(snakes.get(i)));
                 moveSnakeToDirection(snakes.get(i), outputToDirection(networkOutput));
             }
             if (snakes.size() < Settings.NUM_OF_PLAYERS) {

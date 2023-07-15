@@ -11,16 +11,17 @@ public class SnakeTopDownDTO {
     public final int[][] grid;
     private final int rows;
     private final int columns;
-    private final int sightSquareLength;
+    private final int snakeSight;
 
     public SnakeTopDownDTO(int[][] grid) {
-        this.rows = grid.length + Settings.SNAKE_SIGHT * 2;
-        this.columns = grid[0].length + Settings.SNAKE_SIGHT * 2;
+        this.snakeSight = Settings.SNAKE_SIGHT;
+        this.rows = grid.length + snakeSight * 2;
+        this.columns = grid[0].length + snakeSight * 2;
         this.grid = new int[rows][columns];
-        this.sightSquareLength = Settings.SNAKE_SIGHT * 2 + 1;
-        this.result = new double[sightSquareLength * sightSquareLength];
+        int sightSquareLength = snakeSight * 2 + 1;
+        this.result = new double[sightSquareLength * sightSquareLength - 1];
 
-        extendedCopyGrid(grid, Settings.SNAKE_SIGHT);
+        extendedCopyGrid(grid, snakeSight);
     }
 
     public void extendedCopyGrid(int[][] originalGrid, int offset) {
@@ -36,12 +37,18 @@ public class SnakeTopDownDTO {
 
     public double[] getInput(Snake snake) {
         BodyPart head = snake.bodyParts.get(0);
-        Arrays.fill(result, -1);
-        var rowStart = Math.min(0, head.row - Settings.SNAKE_SIGHT / 2);
-        var rowEnd = Math.max(rows, head.row + Settings.SNAKE_SIGHT / 2);
-        var columnStart = Math.min(0, head.column - Settings.SNAKE_SIGHT / 2);
-        var columnEnd = Math.max(columns, head.column + Settings.SNAKE_SIGHT / 2);
+        var rowEnd = head.row + snakeSight * 2 + 1;
+        var columnEnd = head.column + snakeSight * 2 + 1;
+        int resultIndex = 0;
 
+        for (int rowStart = head.row; rowStart < rowEnd; rowStart++) {
+            for (int columnStart = head.column; columnStart < columnEnd; columnStart++) {
+                if (rowStart == (head.row + snakeSight) && columnStart == (head.column + snakeSight))
+                    continue;
+                result[resultIndex] = grid[rowStart][columnStart];
+                resultIndex++;
+            }
+        }
         return result;
     }
 }

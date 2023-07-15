@@ -21,7 +21,7 @@ public class SnakeSightDTO {
         this.columns = grid[0].length;
     }
 
-    public double[] getInput_8(Snake snake) {
+    public double[] getInput(Snake snake) {
         Arrays.fill(result, 0);
         calculateSightRay(snake, -1, 0, 0); // up
         calculateSightRay(snake, 0, 1, 1); // right
@@ -35,7 +35,7 @@ public class SnakeSightDTO {
         return result;
     }
 
-    public double[] getInput_8(FESnake snake) {
+    public double[] getInput(FESnake snake) {
         // TODO make Snake and FEsnake into one interface
         Arrays.fill(result, 0);
         calculateSightRay(snake, -1, 0, 0); // up
