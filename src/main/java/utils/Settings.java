@@ -79,7 +79,27 @@ public class Settings {
         HAS_WALL = true;
         SELF_COLLISION = false;
         SAVE_EVERY_N_GENERATIONS = 50;
+        SNAKE_SIGHT_TYPE = SnakeSightType.RAYS;
+    }
+
+    public static void multiplayerSettingsTopDown() {
+        NUM_OF_PLAYERS = 10;
+        GRID_COLUMN_PIXELS = 1500;
+        GRID_ROW_PIXELS = 1080;
+        PIXELS_PER_SQUARE = 20;
+        SNAKE_SIGHT = 1;
+        DEATH_PENALTY = -3;
+        MAX_NUM_OF_FOOD = 150;
+        LEAVE_CORPSE = false;
+        HAS_WALL = true;
+        SELF_COLLISION = false;
+        SAVE_EVERY_N_GENERATIONS = 200;
         SNAKE_SIGHT_TYPE = SnakeSightType.TOP_DOWN;
+
+        CHANCE_MUTATE_WEIGHT = 2.5d;
+        CHANCE_HARD_MUTATE_WEIGHT = 0.5d;
+        PROTECTED_AGE = 30;
+        FREQUENCY_OF_SPECIATION = 20;
     }
 
     public static void introSettings() {

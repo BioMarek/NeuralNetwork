@@ -32,13 +32,15 @@ public class Main {
      * Runs {@link SnakeGameMultiplayer} with NEAT network with single player
      */
     public static void setupNeatNeuralNetworkWithMultiplayer() {
-        Settings.multiplayerSettings();
+        Settings.multiplayerSettingsTopDown();
         GenePool genePool = null;
-        // TODO put this into genepool later
+
         switch (Settings.SNAKE_SIGHT_TYPE) {
             case RAYS -> genePool = new GenePool(8, 4, new SnakeGameMultiplayer());
-            case TOP_DOWN ->
-                    genePool = new GenePool((Settings.SNAKE_SIGHT * 2 + 1) * (Settings.SNAKE_SIGHT * 2 + 1), 4, new SnakeGameMultiplayer());
+            case TOP_DOWN -> {
+                var snakeSight = Settings.SNAKE_SIGHT * 2 + 1;
+                genePool = new GenePool(snakeSight * snakeSight, 4, new SnakeGameMultiplayer());
+            }
         }
 //        Settings.singlePlayerGame();
 //        GenePool genePool = new GenePool(8, 4, new SnakeGameMultiplayer());
