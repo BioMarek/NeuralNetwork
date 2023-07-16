@@ -32,7 +32,7 @@ public class Main {
      * Runs {@link SnakeGameMultiplayer} with NEAT network with single player
      */
     public static void setupNeatNeuralNetworkWithMultiplayer() {
-        Settings.multiplayerSettingsTopDown();
+        Settings.multiplayerSettings();
         GenePool genePool = null;
 
         switch (Settings.SNAKE_SIGHT_TYPE) {
@@ -50,7 +50,7 @@ public class Main {
         long stop = System.currentTimeMillis();
         System.out.println("It took: " + (stop - start) / 1000 + "s");
 
-        new SnakeFrame(new SnakePanel(genePool.savedGameDTO));
+//        new SnakeFrame(new SnakePanel(genePool.savedGameDTO));
     }
 
     public static void setupFreeEvolution() {
@@ -62,7 +62,7 @@ public class Main {
         System.out.println("It took: " + (stop - start) / 1000 + "s");
 
         SaveGameUtil.saveObjectToFile(savedGameDTO);
-        new SnakeFrame(new SnakePanel(savedGameDTO));
+//        new SnakeFrame(new SnakePanel(savedGameDTO));
     }
 
     public static void playSaveGame(String filename) {
