@@ -11,20 +11,20 @@ import visualizations.snakeGraphic.SnakePanel;
 public class Main {
 
     public static void main(String[] args) {
-        setupNeatNeuralNetworkWithMultiplayer();
+//        setupNeatNeuralNetworkWithMultiplayer();
 //        setupNeatNeuralNetworkWithMultiplayerIntro();
 
-//        setupFreeEvolution();
+        setupFreeEvolution();
 
 //        Settings.multiplayerSettings();
-//        playSaveGame("06-04-212719.sav");
+//        playSaveGame("07-17-214701.sav");
 
 //        Settings.explanationSettings();
 //        var videoGenerator = new VideoGenerator();
 ////        videoGenerator.generateSnakeIntroduction();
 //        videoGenerator.generateSnakeIntroSnakeGame();
 
-        //        videoGenerator.generateSavedGameVideo("06-05-205714.sav");
+//        videoGenerator.generateSavedGameVideo("06-05-205714.sav");
 
     }
 
@@ -61,11 +61,12 @@ public class Main {
         long stop = System.currentTimeMillis();
         System.out.println("It took: " + (stop - start) / 1000 + "s");
 
-        SaveGameUtil.saveObjectToFile(savedGameDTO);
-//        new SnakeFrame(new SnakePanel(savedGameDTO));
+//        SaveGameUtil.saveObjectToFile(savedGameDTO);
+        new SnakeFrame(new SnakePanel(savedGameDTO));
     }
 
     public static void playSaveGame(String filename) {
+        Settings.freeEvolutionSettings();
         var path = Settings.SAVE_GAME_PATH + filename;
         var savedGameDTO = SaveGameUtil.loadObjectFromFile(path);
         new SnakeFrame(new SnakePanel(savedGameDTO));

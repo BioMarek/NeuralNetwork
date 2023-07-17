@@ -108,9 +108,14 @@ public class FESnake {
     public FESnake produceOffSpring() {
         removeSnake(false);
         var lastBodypart = bodyParts.get(bodyParts.size() - 1);
-        var offspring = new FESnake(grid, lastBodypart.row, lastBodypart.column, Direction.opposite(lastDirection), id);
-        offspring.genotype = genotype.getMutatedCopy();
-        System.out.println("parent id " + id + " " + color + " offspring " + id + " " +color);
+        var mutatedGenotype = genotype.getMutatedCopy();
+        var newId = id;
+        if (mutatedGenotype.newSpecies)
+            newId++;
+        var offspring = new FESnake(grid, lastBodypart.row, lastBodypart.column, Direction.opposite(lastDirection), newId);
+        offspring.genotype = mutatedGenotype;
+        offspring.genotype.newSpecies = false;
+
         for (int i = 0; i < Settings.OFFSPRING_COST; i++) {
             bodyParts.remove(bodyParts.size() - 1);
         }

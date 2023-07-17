@@ -10,7 +10,6 @@ import neat.phenotype.NEATNeuron;
 import neat.phenotype.Phenotype;
 import utils.Pair;
 import utils.Settings;
-import utils.Util;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,8 +33,9 @@ public class FEGenotype implements Comparable<Genotype> {
     public int neuronNames = 0;
     public int maxNeurons;
     public int score = 0;
-    public int name ;
+    public int name;
     public int age = 0;
+    public boolean newSpecies = false;
 
     public FEGenotype() {
     }
@@ -266,8 +266,10 @@ public class FEGenotype implements Comparable<Genotype> {
         FEGenotype genotype = this.copy();
         genotype.mutateGenotype();
 
-        if (isRandomChanceTrue(Settings.CHANCE_ADD_NODE))
+        if (isRandomChanceTrue(Settings.CHANCE_ADD_NODE)) {
             genotype.addNode();
+            genotype.newSpecies = true;
+        }
 
         return genotype;
     }

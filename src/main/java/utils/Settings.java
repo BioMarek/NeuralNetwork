@@ -121,7 +121,7 @@ public class Settings {
 
     public static void freeEvolutionSettings() {
         SHOW_LEGEND = false;
-        GRID_COLUMN_PIXELS = 1500;
+        GRID_COLUMN_PIXELS = 1920;
         PIXELS_PER_SQUARE = 20;
         NUM_OF_PLAYERS = 25;
         CHANCE_MUTATE_WEIGHT = 0.8d;
