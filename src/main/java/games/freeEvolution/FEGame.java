@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import static utils.Util.arrayCopy;
+import static utils.Util.randomCoordinate;
 import static utils.Util.randomFreeCoordinate;
 import static utils.Util.repeat;
 
@@ -84,8 +85,12 @@ public class FEGame {
      * square.
      */
     private void placeFood() {
-        if (numOfFood < Settings.MAX_NUM_OF_FOOD) {
-            var coordinates = randomFreeCoordinate(grid);
+        if (numOfFood >= Settings.MAX_NUM_OF_FOOD) {
+            return;
+        }
+
+        var coordinates = Settings.IS_FOOD_GUARANTEED ? randomFreeCoordinate(grid) : randomCoordinate(grid);
+        if (grid[coordinates.getFirst()][coordinates.getSecond()] == SnakeMap.EMPTY.value) {
             grid[coordinates.getFirst()][coordinates.getSecond()] = SnakeMap.FOOD.value;
             numOfFood++;
         }
@@ -254,6 +259,9 @@ public class FEGame {
             }
             if (snakes.size() == 0)
                 break;
+            if (!Settings.IS_FOOD_GUARANTEED && numOfFood < Settings.MAX_NUM_OF_FOOD){
+                placeFood();
+            }
         }
         setSaveGameMetadata(savedGameDTO);
         savedGameDTO.totalFrames = frameCount;

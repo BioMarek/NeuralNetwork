@@ -12,8 +12,8 @@ public class Settings {
     public static Function<Double, Double> HIDDEN_LAYER_ACTIVATION_FUNC = Util.activationFunctionHyperbolicTangent();
     public static Function<Double, Double> OUTPUT_LAYER_ACTIVATION_FUNC = Util.activationFunctionHyperbolicTangent();
     public static boolean VERBOSE = true;
-    public static int MAX_NUM_OF_MOVES = 500;  // to stop AI moving in cycles
-    public static int MAX_NUM_OF_MOVES_VIDEO = 500;  // to stop AI moving in cycles
+    public static int MAX_NUM_OF_MOVES = 2000;  // to stop AI moving in cycles
+    public static int MAX_NUM_OF_MOVES_VIDEO = 2000;  // to stop AI moving in cycles
     public static int NUM_OF_TRIALS = 10; // how many times NeuralNetwork plays the game
     public static double CHANCE_MUTATE_WEIGHT = 0.8d; // chance that weight will be mutated
     public static double CHANCE_HARD_MUTATE_WEIGHT = 0.1d; // chance to assign new value to weight when it is being mutated, small change otherwise
@@ -39,6 +39,7 @@ public class Settings {
     public static int SNAKE_SIGHT = 7;
     public static boolean LEAVE_CORPSE = true; // leaves food in place of dead snake BodyParts
     public static int STEPS_TO_REDUCTION = 15; // simulates starvation, snakes running in circles will be eliminated
+    public static boolean IS_FOOD_GUARANTEED = true;
 
     /**
      * Free evolution
@@ -134,6 +135,7 @@ public class Settings {
         LEAVE_CORPSE = false;
         HAS_WALL = false;
         SNAKE_SIGHT_TYPE = SnakeSightType.RAYS;
+        IS_FOOD_GUARANTEED = false;
     }
 
     public static void explanationSettings() {
