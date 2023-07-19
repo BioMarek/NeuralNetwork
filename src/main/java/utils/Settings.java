@@ -46,7 +46,8 @@ public class Settings {
      */
     public static boolean SHOW_LEGEND = true;
     public static int OFFSPRING_COST = 3; // number of bodyparts that are removed when offspring is generated
-    public static int OFFSPRING_THRESHOLD = 6;
+    public static int MIN_PARENT_LENGTH_FOR_OFFSPRING = 2;
+    public static double OFFSPRING_THRESHOLD = 0.1d;
 
     /**
      * Graphic
@@ -134,6 +135,7 @@ public class Settings {
         MAX_NUM_OF_FOOD = 300;
         LEAVE_CORPSE = false;
         HAS_WALL = false;
+        SELF_COLLISION = true;
         SNAKE_SIGHT_TYPE = SnakeSightType.RAYS;
         IS_FOOD_GUARANTEED = false;
     }

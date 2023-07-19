@@ -56,7 +56,7 @@ public class Main {
     public static void setupFreeEvolution() {
         Settings.freeEvolutionSettings();
         long start = System.currentTimeMillis();
-        var feGame = new FEGame(8, 4);
+        var feGame = new FEGame(8, 5);
         SavedGameDTO savedGameDTO = feGame.saveSnakeMoves();
         long stop = System.currentTimeMillis();
         System.out.println("It took: " + (stop - start) / 1000 + "s");

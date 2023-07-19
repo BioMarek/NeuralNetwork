@@ -220,7 +220,7 @@ public class FEGame {
         int maxIndex = 0;
         double max = array[0];
 
-        for (int i = 0; i < array.length; i++) {
+        for (int i = 0; i < 4; i++) { // 4 because movement output nodes are only 4
             if (max < array[i]) {
                 max = array[i];
                 maxIndex = i;
@@ -240,6 +240,7 @@ public class FEGame {
             frameCount++;
             for (int i = 0; i < snakes.size(); i++) {
                 var networkOutput = snakes.get(i).getNeuralNetwork().getNetworkOutput(snakeSightDTO.getInput(snakes.get(i)));
+                snakes.get(i).offspringNeuronOutput = networkOutput[4];
                 moveSnakeToDirection(snakes.get(i), outputToDirection(networkOutput));
             }
             if (snakes.size() < Settings.NUM_OF_PLAYERS) {
@@ -249,23 +250,28 @@ public class FEGame {
             }
             savedGameDTO.grid.add(arrayCopy(grid));
             for (int i = 0; i < snakes.size(); i++) {
-                if (snakes.get(i).size() >= Settings.OFFSPRING_THRESHOLD) {
-                    var offspring = snakes.get(i).produceOffSpring();
-                    snakes.add(offspring);
-                    var currentValue = scores.get(offspring.id);
-                    scores.put(offspring.color, currentValue + 1);
-                    offspring.placeSnake();
-                }
+                produceOffspring(snakes.get(i));
             }
             if (snakes.size() == 0)
                 break;
-            if (!Settings.IS_FOOD_GUARANTEED && numOfFood < Settings.MAX_NUM_OF_FOOD){
-                placeFood();
+            if (!Settings.IS_FOOD_GUARANTEED && numOfFood < Settings.MAX_NUM_OF_FOOD) {
+                placeFood(); // when food drops belows limit this tries to bring it up
             }
         }
         setSaveGameMetadata(savedGameDTO);
         savedGameDTO.totalFrames = frameCount;
         return savedGameDTO;
+    }
+
+    public void produceOffspring(FESnake snake) {
+        if (snake.size() >= Settings.MIN_PARENT_LENGTH_FOR_OFFSPRING && snake.offspringNeuronOutput > Settings.OFFSPRING_THRESHOLD) {
+            var offspring = snake.produceOffSpring();
+            snakes.add(offspring);
+            var currentValue = scores.get(offspring.id);
+            // TODO bug here
+            scores.put(offspring.color, currentValue + 1);
+            offspring.placeSnake();
+        }
     }
 
     public void setSaveGameMetadata(SavedGameDTO savedGameDTO) {

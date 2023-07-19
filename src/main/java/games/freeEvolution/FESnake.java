@@ -21,10 +21,10 @@ public class FESnake {
     public int id;
     public int snakeScore;
     public int stepsMoved;
+    public double offspringNeuronOutput;
 
-
-    public FESnake(int[][] grid, int row, int column, Direction direction, int id) {
-        resetSnake(row, column, direction);
+    public FESnake(int[][] grid, int row, int column, Direction direction, int id, int length) {
+        resetSnake(row, column, direction, length);
         this.grid = grid;
         this.stepsMoved = 0;
         this.color = id % 25;
@@ -33,18 +33,20 @@ public class FESnake {
 
     public FESnake(int[][] grid) {
         var coordinates = Util.randomFreeCoordinate(grid);
-        resetSnake(coordinates.getFirst(), coordinates.getSecond(), Direction.NONE);
+        resetSnake(coordinates.getFirst(), coordinates.getSecond(), Direction.NONE, 3);
         this.grid = grid;
         this.stepsMoved = 0;
         this.color = names++ % 25;
         this.id = names;
     }
 
-    public void resetSnake(int row, int column, Direction direction) {
+    public void resetSnake(int row, int column, Direction direction, int length) {
+        assert length >= 1;
         bodyParts = new ArrayList<>();
         bodyParts.add(new BodyPart(true, row, column));
-        bodyParts.add(new BodyPart(false, row, column));
-        bodyParts.add(new BodyPart(false, row, column));
+        for (int i = 1; i < length; i++) {
+            bodyParts.add(new BodyPart(false, row, column));
+        }
         this.lastDirection = direction;
     }
 
@@ -112,14 +114,14 @@ public class FESnake {
         var newId = id;
         if (mutatedGenotype.newSpecies)
             newId++;
-        var offspring = new FESnake(grid, lastBodypart.row, lastBodypart.column, Direction.opposite(lastDirection), newId);
+        var offspringCost = bodyParts.size() / 2;
+        var offspring = new FESnake(grid, lastBodypart.row, lastBodypart.column, Direction.opposite(lastDirection), newId, offspringCost);
         offspring.genotype = mutatedGenotype;
         offspring.genotype.newSpecies = false;
 
-        for (int i = 0; i < Settings.OFFSPRING_COST; i++) {
+        for (int i = 0; i < offspringCost; i++) {
             bodyParts.remove(bodyParts.size() - 1);
         }
-        placeSnake();
         return offspring;
     }
 
