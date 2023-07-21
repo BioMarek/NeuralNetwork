@@ -102,9 +102,8 @@ public class FEGame {
             // If SELF_COLLISION is enabled than snake that is longer than one body part cannot go opposite to its last direction because it would hit its tail
             if (snake.size() > 1 && direction == Direction.opposite(snake.lastDirection) || direction == Direction.NONE)
                 direction = snake.lastDirection;
-        } else {
-            snake.lastDirection = direction;
         }
+        snake.lastDirection = direction;
 
         int headRow = snake.bodyParts.get(0).row;
         int headColumn = snake.bodyParts.get(0).column;

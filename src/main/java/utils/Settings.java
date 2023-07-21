@@ -138,6 +138,7 @@ public class Settings {
         SELF_COLLISION = true;
         SNAKE_SIGHT_TYPE = SnakeSightType.RAYS;
         IS_FOOD_GUARANTEED = false;
+        OFFSPRING_THRESHOLD = 0.1d;
     }
 
     public static void explanationSettings() {
