@@ -30,7 +30,6 @@ public class FEGame {
     protected List<FESnake> snakes;
     private SnakeSightDTO snakeSightDTO;
     public int numOfFood;
-    public Map<Integer, Integer> scores;
 
 
     public FEGame(int inputs, int outputs) {
@@ -38,8 +37,6 @@ public class FEGame {
         this.columns = Settings.GRID_COLUMN_PIXELS / Settings.PIXELS_PER_SQUARE;
         this.inputs = inputs;
         this.outputs = outputs;
-        // TODO scores should be printed or used or removed
-        this.scores = new HashMap<>();
         reset();
     }
 
@@ -77,7 +74,6 @@ public class FEGame {
         snake.genotype = new FEGenotype(inputs, outputs);
         snake.placeSnake();
         snakes.add(snake);
-        scores.put(snake.id, 1);
     }
 
     /**
@@ -267,9 +263,6 @@ public class FEGame {
         if (snake.size() >= Settings.MIN_PARENT_LENGTH_FOR_OFFSPRING && snake.offspringNeuronOutput > Settings.OFFSPRING_THRESHOLD) {
             var offspring = snake.produceOffSpring();
             snakes.add(offspring);
-            var currentValue = scores.get(offspring.id);
-            // TODO bug here
-            scores.put(offspring.color, currentValue + 1);
             offspring.placeSnake();
         }
     }
