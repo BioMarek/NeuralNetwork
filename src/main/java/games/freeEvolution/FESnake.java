@@ -70,6 +70,7 @@ public class FESnake {
     public void reduceSnakeByOne() {
         removeSnake(false);
         bodyParts.remove(bodyParts.size() - 1);
+        placeSnake();
     }
 
     /**

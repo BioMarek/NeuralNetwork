@@ -1,6 +1,5 @@
 package visualizations.snakeGraphic.videoGeneration;
 
-import games.snake.savegame.SavedGameDTO;
 import utils.Settings;
 import visualizations.snakeGraphic.GridVisualization;
 
@@ -10,7 +9,6 @@ import java.util.Iterator;
 public class ImageIterator implements Iterator<BufferedImage> {
     private final GridVisualization gridVisualization;
     private BufferedImage bImg;
-    private int currentFrame = 0;
 
     public ImageIterator(GridVisualization gridVisualization) {
         this.gridVisualization = gridVisualization;
