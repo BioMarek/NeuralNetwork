@@ -12,8 +12,8 @@ public class Settings {
     public static Function<Double, Double> HIDDEN_LAYER_ACTIVATION_FUNC = Util.activationFunctionHyperbolicTangent();
     public static Function<Double, Double> OUTPUT_LAYER_ACTIVATION_FUNC = Util.activationFunctionHyperbolicTangent();
     public static boolean VERBOSE = true;
-    public static int MAX_NUM_OF_MOVES = 2000;  // to stop AI moving in cycles
-    public static int MAX_NUM_OF_MOVES_VIDEO = 2000;  // to stop AI moving in cycles
+    public static int MAX_NUM_OF_MOVES = 10000;  // to stop AI moving in cycles
+    public static int MAX_NUM_OF_MOVES_VIDEO = 10000;  // to stop AI moving in cycles
     public static int NUM_OF_TRIALS = 10; // how many times NeuralNetwork plays the game
     public static double CHANCE_MUTATE_WEIGHT = 0.8d; // chance that weight will be mutated
     public static double CHANCE_HARD_MUTATE_WEIGHT = 0.1d; // chance to assign new value to weight when it is being mutated, small change otherwise
@@ -45,7 +45,6 @@ public class Settings {
      * Free evolution
      */
     public static boolean SHOW_LEGEND = true;
-    public static int OFFSPRING_COST = 3; // number of bodyparts that are removed when offspring is generated
     public static int MIN_PARENT_LENGTH_FOR_OFFSPRING = 2;
     public static double OFFSPRING_THRESHOLD = 0.1d;
 
@@ -131,14 +130,13 @@ public class Settings {
         CHANCE_SWITCH_CONNECTION_ENABLED = 0.2d;
         CHANCE_ADD_NODE = 0.03d;
         CHANCE_ADD_CONNECTION = 0.03d;
-        OFFSPRING_COST = 3;
-        MAX_NUM_OF_FOOD = 150;
+        MAX_NUM_OF_FOOD = 200;
         LEAVE_CORPSE = false;
         HAS_WALL = false;
         SELF_COLLISION = true;
         SNAKE_SIGHT_TYPE = SnakeSightType.RAYS;
         IS_FOOD_GUARANTEED = false;
-        OFFSPRING_THRESHOLD = 0.1d;
+        OFFSPRING_THRESHOLD = 0.15d;
     }
 
     public static void explanationSettings() {

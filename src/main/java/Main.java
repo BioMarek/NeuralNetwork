@@ -7,6 +7,7 @@ import neat.evolution.GenePool;
 import utils.Settings;
 import visualizations.snakeGraphic.SnakeFrame;
 import visualizations.snakeGraphic.SnakePanel;
+import visualizations.snakeGraphic.videoGeneration.VideoGenerator;
 
 public class Main {
 
@@ -61,8 +62,10 @@ public class Main {
         long stop = System.currentTimeMillis();
         System.out.println("It took: " + (stop - start) / 1000 + "s");
 
-//        SaveGameUtil.saveObjectToFile(savedGameDTO);
-        new SnakeFrame(new SnakePanel(savedGameDTO));
+        var videoGenerator = new VideoGenerator();
+        videoGenerator.generateSavedGameVideo(savedGameDTO);
+
+//        new SnakeFrame(new SnakePanel(savedGameDTO));
     }
 
     public static void playSaveGame(String filename) {
