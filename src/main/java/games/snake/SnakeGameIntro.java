@@ -153,7 +153,7 @@ public class SnakeGameIntro implements MultiplayerGame {
             var coordinates = randomFreeCoordinate(grid);
             var foodPlaced = snake.removeSnake(Settings.LEAVE_CORPSE);
             numOfFood += foodPlaced;
-            snake.resetSnake(coordinates.getFirst(), coordinates.getSecond(), Direction.randomDirection());
+            snake.resetSnake(coordinates.getFirst(), coordinates.getSecond(), Direction.randomDirection(), 3);
             snake.snakeScore += Settings.DEATH_PENALTY;
             snake.placeSnake();
         } else {

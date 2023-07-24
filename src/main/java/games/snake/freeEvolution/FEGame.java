@@ -1,4 +1,4 @@
-package games.freeEvolution;
+package games.snake.freeEvolution;
 
 import games.snake.BodyPart;
 import games.snake.SnakeMap;
@@ -12,9 +12,7 @@ import utils.Direction;
 import utils.Settings;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static utils.Util.arrayCopy;
 import static utils.Util.randomCoordinate;

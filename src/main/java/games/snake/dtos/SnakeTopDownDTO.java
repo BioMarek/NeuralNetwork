@@ -1,6 +1,6 @@
 package games.snake.dtos;
 
-import games.freeEvolution.FESnake;
+import games.snake.freeEvolution.FESnake;
 import games.snake.BodyPart;
 import games.snake.Snake;
 import utils.Settings;

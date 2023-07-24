@@ -1,54 +1,18 @@
-package games.freeEvolution;
+package games.snake;
 
-import games.snake.BodyPart;
-import games.snake.Snake;
-import games.snake.SnakeMap;
-import neat.phenotype.NeuralNetwork;
 import utils.Direction;
 import utils.Settings;
-import utils.Util;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class FESnake {
-    public static int names = 0;
-    public FEGenotype genotype;
+public abstract class AbstractSnake {
     protected int[][] grid;
     public List<BodyPart> bodyParts = new ArrayList<>();
     public Direction lastDirection;
     public int color;
-    public int id;
     public int snakeScore;
     public int stepsMoved;
-    public double offspringNeuronOutput;
-
-    public FESnake(int[][] grid, int row, int column, Direction direction, int id, int length) {
-        resetSnake(row, column, direction, length);
-        this.grid = grid;
-        this.stepsMoved = 0;
-        this.color = id % 25;
-        this.id = id;
-    }
-
-    public FESnake(int[][] grid) {
-        var coordinates = Util.randomFreeCoordinate(grid);
-        resetSnake(coordinates.getFirst(), coordinates.getSecond(), Direction.NONE, 3);
-        this.grid = grid;
-        this.stepsMoved = 0;
-        this.color = names++ % 25;
-        this.id = names;
-    }
-
-    public void resetSnake(int row, int column, Direction direction, int length) {
-        assert length >= 1;
-        bodyParts = new ArrayList<>();
-        bodyParts.add(new BodyPart(true, row, column));
-        for (int i = 1; i < length; i++) {
-            bodyParts.add(new BodyPart(false, row, column));
-        }
-        this.lastDirection = direction;
-    }
 
     /**
      * Checks whether on particular row and column of grid is or is not Snake different from this one.
@@ -62,15 +26,6 @@ public class FESnake {
             return grid[row][column] >= SnakeMap.BODY.value;
         else
             return grid[row][column] >= SnakeMap.BODY.value && (grid[row][column] != color + SnakeMap.BODY.value && grid[row][column] != color + SnakeMap.HEAD.value);
-    }
-
-    /**
-     * Removes one {@link BodyPart}. Used to simulate starvation
-     */
-    public void reduceSnakeByOne() {
-        removeSnake(false);
-        bodyParts.remove(bodyParts.size() - 1);
-        placeSnake();
     }
 
     /**
@@ -96,6 +51,24 @@ public class FESnake {
     }
 
     /**
+     * Resets Snake to default configuration.
+     *
+     * @param row       on which Snake {@link BodyPart}s will be created
+     * @param column    on which Snake {@link BodyPart}s will be created
+     * @param direction lastDirection of snake
+     * @param length    how many {@link BodyPart}s Snake should have
+     */
+    public void resetSnake(int row, int column, Direction direction, int length) {
+        assert length >= 1;
+        bodyParts = new ArrayList<>();
+        bodyParts.add(new BodyPart(true, row, column));
+        for (int i = 1; i < length; i++) {
+            bodyParts.add(new BodyPart(false, row, column));
+        }
+        this.lastDirection = direction;
+    }
+
+    /**
      * Places Snakes {@link BodyPart}s onto grid.
      */
     public void placeSnake() {
@@ -108,28 +81,9 @@ public class FESnake {
         }
     }
 
-    public FESnake produceOffSpring() {
-        removeSnake(false);
-        var lastBodypart = bodyParts.get(bodyParts.size() - 1);
-        var mutatedGenotype = genotype.getMutatedCopy();
-        var newId = id;
-        if (mutatedGenotype.newSpecies)
-            newId++;
-        var offspringCost = bodyParts.size() / 2;
-        var offspring = new FESnake(grid, lastBodypart.row, lastBodypart.column, Direction.opposite(lastDirection), newId, offspringCost);
-        offspring.genotype = mutatedGenotype;
-        offspring.genotype.newSpecies = false;
-
-        for (int i = 0; i < offspringCost; i++) {
-            bodyParts.remove(bodyParts.size() - 1);
-        }
-        return offspring;
-    }
-
-    public NeuralNetwork getNeuralNetwork() {
-        return genotype.createPhenotype();
-    }
-
+    /**
+     * @return size of snake i.e. number of {@link BodyPart}s
+     */
     public int size() {
         return bodyParts.size();
     }

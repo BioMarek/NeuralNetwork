@@ -6,14 +6,14 @@ import java.util.function.Function;
 
 public class Settings {
     public static boolean HAS_WALL = true;
-    public static int NUM_OF_GENERATIONS = 300; // 300
+    public static int NUM_OF_GENERATIONS = 100; // 300
     public static int TOTAL_NUM_OF_GENOTYPES = 100;
     public static int MAX_NEURONS = 1000;
     public static Function<Double, Double> HIDDEN_LAYER_ACTIVATION_FUNC = Util.activationFunctionHyperbolicTangent();
     public static Function<Double, Double> OUTPUT_LAYER_ACTIVATION_FUNC = Util.activationFunctionHyperbolicTangent();
     public static boolean VERBOSE = true;
-    public static int MAX_NUM_OF_MOVES = 10000;  // to stop AI moving in cycles
-    public static int MAX_NUM_OF_MOVES_VIDEO = 10000;  // to stop AI moving in cycles
+    public static int MAX_NUM_OF_MOVES = 300;  // to stop AI moving in cycles, number of frames for free evolution
+    public static int MAX_NUM_OF_MOVES_VIDEO = 300;  // to stop AI moving in cycles, number of frames for free evolution
     public static int NUM_OF_TRIALS = 10; // how many times NeuralNetwork plays the game
     public static double CHANCE_MUTATE_WEIGHT = 0.8d; // chance that weight will be mutated
     public static double CHANCE_HARD_MUTATE_WEIGHT = 0.1d; // chance to assign new value to weight when it is being mutated, small change otherwise
@@ -137,6 +137,8 @@ public class Settings {
         SNAKE_SIGHT_TYPE = SnakeSightType.RAYS;
         IS_FOOD_GUARANTEED = false;
         OFFSPRING_THRESHOLD = 0.15d;
+        MAX_NUM_OF_MOVES = 10000;
+        MAX_NUM_OF_MOVES_VIDEO = 10000;
     }
 
     public static void explanationSettings() {

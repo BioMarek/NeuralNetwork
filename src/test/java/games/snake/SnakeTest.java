@@ -27,6 +27,6 @@ public class SnakeTest {
         assertThat(snake.lastDirection, is(Direction.UP));
         assertThat(snake.lastDirection, is(Direction.UP));
 
-        assertThat(snake.name, is(1));
+        assertThat(snake.color, is(1));
     }
 }
