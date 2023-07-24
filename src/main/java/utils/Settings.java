@@ -137,8 +137,8 @@ public class Settings {
         SNAKE_SIGHT_TYPE = SnakeSightType.RAYS;
         IS_FOOD_GUARANTEED = false;
         OFFSPRING_THRESHOLD = 0.15d;
-        MAX_NUM_OF_MOVES = 10000;
-        MAX_NUM_OF_MOVES_VIDEO = 10000;
+        MAX_NUM_OF_MOVES = 1000;
+        MAX_NUM_OF_MOVES_VIDEO = 1000;
     }
 
     public static void explanationSettings() {

@@ -12,10 +12,10 @@ import visualizations.snakeGraphic.videoGeneration.VideoGenerator;
 public class Main {
 
     public static void main(String[] args) {
-        setupNeatNeuralNetworkWithMultiplayer();
+//        setupNeatNeuralNetworkWithMultiplayer();
 //        setupNeatNeuralNetworkWithMultiplayerIntro();
 
-//        setupFreeEvolution();
+        setupFreeEvolution();
 
 //        Settings.multiplayerSettings();
 //        playSaveGame("07-17-214701.sav");

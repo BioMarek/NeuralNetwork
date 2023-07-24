@@ -1,13 +1,12 @@
 package games.snake.dtos;
 
-import games.snake.freeEvolution.FESnake;
+import games.snake.AbstractSnake;
 import games.snake.BodyPart;
-import games.snake.Snake;
 import utils.Settings;
 
 import java.util.Arrays;
 
-public class SnakeTopDownDTO implements SnakeSightDTO{
+public class SnakeTopDownDTO implements SnakeSightDTO {
     private final double[] result;
     public final int[][] grid;
     private final int rows;
@@ -36,25 +35,7 @@ public class SnakeTopDownDTO implements SnakeSightDTO{
         }
     }
 
-    public double[] getInput(Snake snake) {
-        BodyPart head = snake.bodyParts.get(0);
-        var rowEnd = head.row + snakeSight * 2 + 1;
-        var columnEnd = head.column + snakeSight * 2 + 1;
-        int resultIndex = 0;
-
-        for (int rowStart = head.row; rowStart < rowEnd; rowStart++) {
-            for (int columnStart = head.column; columnStart < columnEnd; columnStart++) {
-                if (rowStart == (head.row + snakeSight) && columnStart == (head.column + snakeSight))
-                    continue;
-                result[resultIndex] = grid[rowStart][columnStart];
-                resultIndex++;
-            }
-        }
-        return result;
-    }
-
-    @Override
-    public double[] getInput(FESnake snake) {
+    public double[] getInput(AbstractSnake snake) {
         BodyPart head = snake.bodyParts.get(0);
         var rowEnd = head.row + snakeSight * 2 + 1;
         var columnEnd = head.column + snakeSight * 2 + 1;

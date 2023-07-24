@@ -1,9 +1,7 @@
 package games.snake.dtos;
 
-import games.snake.freeEvolution.FESnake;
-import games.snake.Snake;
+import games.snake.AbstractSnake;
 
 public interface SnakeSightDTO {
-    double[] getInput(Snake snake);
-    double[] getInput(FESnake snake);
+    double[] getInput(AbstractSnake snake);
 }
