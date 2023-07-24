@@ -1,17 +1,19 @@
 package utils;
 
+import games.snake.dtos.SnakeSightType;
+
 import java.util.function.Function;
 
 public class Settings {
     public static boolean HAS_WALL = true;
-    public static int NUM_OF_GENERATIONS = 1500; // 300
+    public static int NUM_OF_GENERATIONS = 300; // 300
     public static int TOTAL_NUM_OF_GENOTYPES = 100;
     public static int MAX_NEURONS = 1000;
     public static Function<Double, Double> HIDDEN_LAYER_ACTIVATION_FUNC = Util.activationFunctionHyperbolicTangent();
     public static Function<Double, Double> OUTPUT_LAYER_ACTIVATION_FUNC = Util.activationFunctionHyperbolicTangent();
     public static boolean VERBOSE = true;
-    public static int MAX_NUM_OF_MOVES = 500;  // to stop AI moving in cycles
-    public static int MAX_NUM_OF_MOVES_VIDEO = 2000;  // to stop AI moving in cycles
+    public static int MAX_NUM_OF_MOVES = 10000;  // to stop AI moving in cycles
+    public static int MAX_NUM_OF_MOVES_VIDEO = 10000;  // to stop AI moving in cycles
     public static int NUM_OF_TRIALS = 10; // how many times NeuralNetwork plays the game
     public static double CHANCE_MUTATE_WEIGHT = 0.8d; // chance that weight will be mutated
     public static double CHANCE_HARD_MUTATE_WEIGHT = 0.1d; // chance to assign new value to weight when it is being mutated, small change otherwise
@@ -26,6 +28,7 @@ public class Settings {
     public static int FREQUENCY_OF_SPECIATION = 10;
     public static String SAVE_GAME_PATH = "savedGames/";
     public static boolean SELF_COLLISION = false;
+    public static SnakeSightType SNAKE_SIGHT_TYPE = SnakeSightType.RAYS;
 
     /**
      * Multiplayer game
@@ -36,13 +39,14 @@ public class Settings {
     public static int SNAKE_SIGHT = 7;
     public static boolean LEAVE_CORPSE = true; // leaves food in place of dead snake BodyParts
     public static int STEPS_TO_REDUCTION = 15; // simulates starvation, snakes running in circles will be eliminated
+    public static boolean IS_FOOD_GUARANTEED = true;
 
     /**
      * Free evolution
      */
     public static boolean SHOW_LEGEND = true;
-    public static int OFFSPRING_COST = 3; // number of bodyparts that are removed when offspring is generated
-    public static int OFFSPRING_THRESHOLD = 6;
+    public static int MIN_PARENT_LENGTH_FOR_OFFSPRING = 2;
+    public static double OFFSPRING_THRESHOLD = 0.1d;
 
     /**
      * Graphic
@@ -69,13 +73,34 @@ public class Settings {
         GRID_COLUMN_PIXELS = 1500;
         GRID_ROW_PIXELS = 1080;
         PIXELS_PER_SQUARE = 20;
-        SNAKE_SIGHT = 10;
+        SNAKE_SIGHT = 2;
         DEATH_PENALTY = -3;
         MAX_NUM_OF_FOOD = 150;
         LEAVE_CORPSE = false;
         HAS_WALL = true;
         SELF_COLLISION = false;
-        SAVE_EVERY_N_GENERATIONS = 100;
+        SAVE_EVERY_N_GENERATIONS = 50;
+        SNAKE_SIGHT_TYPE = SnakeSightType.RAYS;
+    }
+
+    public static void multiplayerSettingsTopDown() {
+        NUM_OF_PLAYERS = 10;
+        GRID_COLUMN_PIXELS = 1500;
+        GRID_ROW_PIXELS = 1080;
+        PIXELS_PER_SQUARE = 20;
+        SNAKE_SIGHT = 1;
+        DEATH_PENALTY = -3;
+        MAX_NUM_OF_FOOD = 150;
+        LEAVE_CORPSE = false;
+        HAS_WALL = true;
+        SELF_COLLISION = false;
+        SAVE_EVERY_N_GENERATIONS = 200;
+        SNAKE_SIGHT_TYPE = SnakeSightType.TOP_DOWN;
+
+        CHANCE_MUTATE_WEIGHT = 2.5d;
+        CHANCE_HARD_MUTATE_WEIGHT = 0.5d;
+        PROTECTED_AGE = 30;
+        FREQUENCY_OF_SPECIATION = 20;
     }
 
     public static void introSettings() {
@@ -92,11 +117,12 @@ public class Settings {
         SELF_COLLISION = true;
         SAVE_EVERY_N_GENERATIONS = 100;
         STEPS_TO_REDUCTION = 501;
+        SNAKE_SIGHT_TYPE = SnakeSightType.RAYS;
     }
 
     public static void freeEvolutionSettings() {
         SHOW_LEGEND = false;
-        GRID_COLUMN_PIXELS = 1500;
+        GRID_COLUMN_PIXELS = 1920;
         PIXELS_PER_SQUARE = 20;
         NUM_OF_PLAYERS = 25;
         CHANCE_MUTATE_WEIGHT = 0.8d;
@@ -104,10 +130,13 @@ public class Settings {
         CHANCE_SWITCH_CONNECTION_ENABLED = 0.2d;
         CHANCE_ADD_NODE = 0.03d;
         CHANCE_ADD_CONNECTION = 0.03d;
-        OFFSPRING_COST = 3;
-        MAX_NUM_OF_FOOD = 300;
+        MAX_NUM_OF_FOOD = 200;
         LEAVE_CORPSE = false;
         HAS_WALL = false;
+        SELF_COLLISION = true;
+        SNAKE_SIGHT_TYPE = SnakeSightType.RAYS;
+        IS_FOOD_GUARANTEED = false;
+        OFFSPRING_THRESHOLD = 0.15d;
     }
 
     public static void explanationSettings() {
@@ -126,5 +155,6 @@ public class Settings {
         HAS_WALL = true;
         SELF_COLLISION = true;
         SAVE_EVERY_N_GENERATIONS = 100;
+        SNAKE_SIGHT_TYPE = SnakeSightType.RAYS;
     }
 }

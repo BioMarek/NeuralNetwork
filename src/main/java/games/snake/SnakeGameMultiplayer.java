@@ -2,6 +2,8 @@ package games.snake;
 
 import games.MultiplayerGame;
 import games.snake.dtos.SnakeSightDTO;
+import games.snake.dtos.SnakeSightRaysDTO;
+import games.snake.dtos.SnakeTopDownDTO;
 import games.snake.savegame.SaveGameUtil;
 import games.snake.savegame.SavedGameDTO;
 import neat.phenotype.NeuralNetwork;
@@ -36,7 +38,7 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
 
         for (int move = 0; move < Settings.MAX_NUM_OF_MOVES; move++) {
             for (Snake snake : snakes) {
-                var networkOutput = snake.neuralNetwork.getNetworkOutput(snakeSightDTO.getInput_8(snake));
+                var networkOutput = snake.neuralNetwork.getNetworkOutput(snakeSightDTO.getInput(snake));
                 moveSnakeToDirection(snake, outputToDirection(networkOutput));
             }
         }
@@ -50,7 +52,10 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
     public void reset() {
         initGrid();
         initSnakes();
-        snakeSightDTO = new SnakeSightDTO(grid);
+        switch (Settings.SNAKE_SIGHT_TYPE) {
+            case RAYS -> snakeSightDTO = new SnakeSightRaysDTO(grid);
+            case TOP_DOWN -> snakeSightDTO = new SnakeTopDownDTO(grid);
+        }
         numOfFood = 0;
         repeat.accept(Settings.MAX_NUM_OF_FOOD, this::placeFood);
     }
@@ -98,9 +103,8 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
             // If SELF_COLLISION is enabled than snake that is longer than one body part cannot go opposite to its last direction because it would hit its tail
             if (snake.size() > 1 && direction == Direction.opposite(snake.lastDirection) || direction == Direction.NONE)
                 direction = snake.lastDirection;
-        } else {
-            snake.lastDirection = direction;
         }
+        snake.lastDirection = direction;
 
         int headRow = snake.bodyParts.get(0).row;
         int headColumn = snake.bodyParts.get(0).column;
@@ -231,7 +235,7 @@ public class SnakeGameMultiplayer implements MultiplayerGame {
         for (int move = 0; move < Settings.MAX_NUM_OF_MOVES_VIDEO; move++) {
             frameCount++;
             for (int i = 0; i < neuralNetworks.size(); i++) {
-                var networkOutput = neuralNetworks.get(i).getNetworkOutput(snakeSightDTO.getInput_8(snakes.get(i)));
+                var networkOutput = neuralNetworks.get(i).getNetworkOutput(snakeSightDTO.getInput(snakes.get(i)));
                 moveSnakeToDirection(snakes.get(i), outputToDirection(networkOutput));
             }
             int[] scores = new int[snakes.size()];

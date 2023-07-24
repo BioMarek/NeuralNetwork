@@ -3,6 +3,8 @@ package games.freeEvolution;
 import games.snake.BodyPart;
 import games.snake.SnakeMap;
 import games.snake.dtos.SnakeSightDTO;
+import games.snake.dtos.SnakeSightRaysDTO;
+import games.snake.dtos.SnakeTopDownDTO;
 import games.snake.savegame.SaveGameUtil;
 import games.snake.savegame.SavedGameDTO;
 import neat.phenotype.NeuralNetwork;
@@ -15,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import static utils.Util.arrayCopy;
+import static utils.Util.randomCoordinate;
 import static utils.Util.randomFreeCoordinate;
 import static utils.Util.repeat;
 
@@ -27,7 +30,6 @@ public class FEGame {
     protected List<FESnake> snakes;
     private SnakeSightDTO snakeSightDTO;
     public int numOfFood;
-    public Map<Integer, Integer> scores;
 
 
     public FEGame(int inputs, int outputs) {
@@ -35,15 +37,16 @@ public class FEGame {
         this.columns = Settings.GRID_COLUMN_PIXELS / Settings.PIXELS_PER_SQUARE;
         this.inputs = inputs;
         this.outputs = outputs;
-        // TODO scores should be printed or used or removed
-        this.scores = new HashMap<>();
         reset();
     }
 
     public void reset() {
         initGrid();
         initSnakes();
-        snakeSightDTO = new SnakeSightDTO(grid);
+        switch (Settings.SNAKE_SIGHT_TYPE) {
+            case RAYS -> snakeSightDTO = new SnakeSightRaysDTO(grid);
+            case TOP_DOWN -> snakeSightDTO = new SnakeTopDownDTO(grid);
+        }
         numOfFood = 0;
         repeat.accept(Settings.MAX_NUM_OF_FOOD, this::placeFood);
     }
@@ -71,7 +74,6 @@ public class FEGame {
         snake.genotype = new FEGenotype(inputs, outputs);
         snake.placeSnake();
         snakes.add(snake);
-        scores.put(snake.id, 1);
     }
 
     /**
@@ -79,8 +81,12 @@ public class FEGame {
      * square.
      */
     private void placeFood() {
-        if (numOfFood < Settings.MAX_NUM_OF_FOOD) {
-            var coordinates = randomFreeCoordinate(grid);
+        if (numOfFood >= Settings.MAX_NUM_OF_FOOD) {
+            return;
+        }
+
+        var coordinates = Settings.IS_FOOD_GUARANTEED ? randomFreeCoordinate(grid) : randomCoordinate(grid);
+        if (grid[coordinates.getFirst()][coordinates.getSecond()] == SnakeMap.EMPTY.value) {
             grid[coordinates.getFirst()][coordinates.getSecond()] = SnakeMap.FOOD.value;
             numOfFood++;
         }
@@ -96,9 +102,8 @@ public class FEGame {
             // If SELF_COLLISION is enabled than snake that is longer than one body part cannot go opposite to its last direction because it would hit its tail
             if (snake.size() > 1 && direction == Direction.opposite(snake.lastDirection) || direction == Direction.NONE)
                 direction = snake.lastDirection;
-        } else {
-            snake.lastDirection = direction;
         }
+        snake.lastDirection = direction;
 
         int headRow = snake.bodyParts.get(0).row;
         int headColumn = snake.bodyParts.get(0).column;
@@ -210,7 +215,7 @@ public class FEGame {
         int maxIndex = 0;
         double max = array[0];
 
-        for (int i = 0; i < array.length; i++) {
+        for (int i = 0; i < 4; i++) { // 4 because movement output nodes are only 4
             if (max < array[i]) {
                 max = array[i];
                 maxIndex = i;
@@ -229,7 +234,8 @@ public class FEGame {
         for (int move = 0; move < Settings.MAX_NUM_OF_MOVES; move++) {
             frameCount++;
             for (int i = 0; i < snakes.size(); i++) {
-                var networkOutput = snakes.get(i).getNeuralNetwork().getNetworkOutput(snakeSightDTO.getInput_8(snakes.get(i)));
+                var networkOutput = snakes.get(i).getNeuralNetwork().getNetworkOutput(snakeSightDTO.getInput(snakes.get(i)));
+                snakes.get(i).offspringNeuronOutput = networkOutput[4];
                 moveSnakeToDirection(snakes.get(i), outputToDirection(networkOutput));
             }
             if (snakes.size() < Settings.NUM_OF_PLAYERS) {
@@ -239,20 +245,25 @@ public class FEGame {
             }
             savedGameDTO.grid.add(arrayCopy(grid));
             for (int i = 0; i < snakes.size(); i++) {
-                if (snakes.get(i).size() >= Settings.OFFSPRING_THRESHOLD) {
-                    var offspring = snakes.get(i).produceOffSpring();
-                    snakes.add(offspring);
-                    var currentValue = scores.get(offspring.id);
-                    scores.put(offspring.color, currentValue + 1);
-                    offspring.placeSnake();
-                }
+                produceOffspring(snakes.get(i));
             }
             if (snakes.size() == 0)
                 break;
+            if (!Settings.IS_FOOD_GUARANTEED && numOfFood < Settings.MAX_NUM_OF_FOOD) {
+                placeFood(); // when food drops belows limit this tries to bring it up
+            }
         }
         setSaveGameMetadata(savedGameDTO);
         savedGameDTO.totalFrames = frameCount;
         return savedGameDTO;
+    }
+
+    public void produceOffspring(FESnake snake) {
+        if (snake.size() >= Settings.MIN_PARENT_LENGTH_FOR_OFFSPRING && snake.offspringNeuronOutput > Settings.OFFSPRING_THRESHOLD) {
+            var offspring = snake.produceOffSpring();
+            snakes.add(offspring);
+            offspring.placeSnake();
+        }
     }
 
     public void setSaveGameMetadata(SavedGameDTO savedGameDTO) {
@@ -262,7 +273,7 @@ public class FEGame {
 
     }
 
-    public void calculateScores(){
+    public void calculateScores() {
 
     }
 

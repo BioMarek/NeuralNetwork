@@ -156,4 +156,8 @@ public class Util {
         } while (grid[row][column] != SnakeMap.EMPTY.value);
         return new Pair<>(row, column);
     }
+
+    public static Pair<Integer> randomCoordinate(int[][] grid) {
+        return new Pair<>(Util.randomInt(1, grid.length - 1), Util.randomInt(1, grid[0].length - 1));
+    }
 }

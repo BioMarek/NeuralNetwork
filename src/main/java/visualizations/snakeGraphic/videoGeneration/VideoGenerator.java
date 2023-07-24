@@ -13,6 +13,8 @@ import visualizations.snakeGraphic.GridVisualization;
 import visualizations.snakeGraphic.SnakeVisualization;
 import visualizations.snakeGraphic.explanations.SnakeIntroduction;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
@@ -53,6 +55,20 @@ public class VideoGenerator {
             encoder.finish();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * For debugging.
+     * @param image to save
+     * @param filePath where to save image
+     */
+    public static void saveAsJpg(BufferedImage image, String filePath) {
+        try {
+            File outputImage = new File(filePath + ".jpg");
+            ImageIO.write(image, "jpg", outputImage);
+        } catch (IOException e) {
+            System.err.println("Error saving the image: " + e.getMessage());
         }
     }
 }
