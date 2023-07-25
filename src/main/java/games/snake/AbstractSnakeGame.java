@@ -15,7 +15,7 @@ public abstract class AbstractSnakeGame {
     protected int columns;
     protected int rows;
 
-    protected int[][] grid;
+    public int[][] grid;
     public int numOfFood;
 
     protected void initGrid() {

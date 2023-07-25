@@ -183,5 +183,4 @@ public class FEGame extends AbstractSnakeGame {
             offspring.placeSnake();
         }
     }
-
 }
