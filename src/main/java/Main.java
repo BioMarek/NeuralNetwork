@@ -1,4 +1,4 @@
-import games.freeEvolution.FEGame;
+import games.snake.freeEvolution.FEGame;
 import games.snake.SnakeGameIntro;
 import games.snake.SnakeGameMultiplayer;
 import games.snake.savegame.SaveGameUtil;

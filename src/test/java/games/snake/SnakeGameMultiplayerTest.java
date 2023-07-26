@@ -122,6 +122,24 @@ public class SnakeGameMultiplayerTest {
     }
 
     @Test
+    void moveSnakeToDirection_length1CanGoOppositeDirection() {
+        Settings.NUM_OF_PLAYERS = 0;
+        Settings.MAX_NUM_OF_FOOD = 0;
+        var snakeMultiplayerGame = new SnakeGameMultiplayer();
+        var snake = new Snake(snakeMultiplayerGame.grid, 1, 1, Direction.UP, 1);
+        snake.placeSnake();
+        snakeMultiplayerGame.moveSnakeToDirection(snake, Direction.DOWN);
+
+        assertThat(snakeMultiplayerGame.grid[1][1], is(101));
+        assertThat(snakeMultiplayerGame.grid[2][1], is(201));
+        assertThat(snakeMultiplayerGame.grid[1][2], is(not(101)));
+        assertThat(snakeMultiplayerGame.grid[2][2], is(not(101)));
+
+        Settings.NUM_OF_PLAYERS = 2;
+        Settings.MAX_NUM_OF_FOOD = 2;
+    }
+
+    @Test
     void moveSnakeToDirection_foodEaten() {
         Settings.NUM_OF_PLAYERS = 0;
         Settings.MAX_NUM_OF_FOOD = 0;
@@ -132,6 +150,42 @@ public class SnakeGameMultiplayerTest {
         snakeMultiplayerGame.moveSnakeToDirection(snake, Direction.RIGHT);
 
         assertThat(snakeMultiplayerGame.grid[1][2], is(not(2)));
+
+        Settings.NUM_OF_PLAYERS = 2;
+        Settings.MAX_NUM_OF_FOOD = 2;
+    }
+
+    @Test
+    public void testMoveSnakeToDirection_WithSelfCollisionEnabled() {
+        Settings.NUM_OF_PLAYERS = 0;
+        Settings.MAX_NUM_OF_FOOD = 0;
+        Settings.SELF_COLLISION = true;
+
+        var snakeMultiplayerGame = new SnakeGameMultiplayer();
+        var snake = new Snake(snakeMultiplayerGame.grid, 1, 1, Direction.DOWN, 1);
+        snake.placeSnake();
+        snakeMultiplayerGame.moveSnakeToDirection(snake, Direction.UP);
+
+        assertThat(snakeMultiplayerGame.grid[2][1], is(201));
+
+        Settings.NUM_OF_PLAYERS = 2;
+        Settings.MAX_NUM_OF_FOOD = 2;
+        Settings.SELF_COLLISION = false;
+    }
+
+    @Test
+    public void testMoveSnakeToDirection_WithSelfCollisionDisabled() {
+        Settings.NUM_OF_PLAYERS = 0;
+        Settings.MAX_NUM_OF_FOOD = 0;
+        Settings.SELF_COLLISION = false;
+
+        var snakeMultiplayerGame = new SnakeGameMultiplayer();
+        var snake = new Snake(snakeMultiplayerGame.grid, 1, 1, Direction.DOWN, 1);
+        snake.placeSnake();
+        snakeMultiplayerGame.moveSnakeToDirection(snake, Direction.DOWN);
+        snakeMultiplayerGame.moveSnakeToDirection(snake, Direction.UP);
+
+        assertThat(snakeMultiplayerGame.grid[1][1], is(201));
 
         Settings.NUM_OF_PLAYERS = 2;
         Settings.MAX_NUM_OF_FOOD = 2;

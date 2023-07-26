@@ -1,4 +1,4 @@
-package games.freeEvolution;
+package games.snake.freeEvolution;
 
 import neat.NeuronType;
 import neat.evolution.ConnectionGene;
