@@ -6,7 +6,7 @@ import java.util.function.Function;
 
 public class Settings {
     public static boolean HAS_WALL = true;
-    public static int NUM_OF_GENERATIONS = 100; // 300
+    public static int NUM_OF_GENERATIONS = 300; // 300
     public static int TOTAL_NUM_OF_GENOTYPES = 100;
     public static int MAX_NEURONS = 1000;
     public static Function<Double, Double> HIDDEN_LAYER_ACTIVATION_FUNC = Util.activationFunctionHyperbolicTangent();
@@ -73,7 +73,7 @@ public class Settings {
         GRID_COLUMN_PIXELS = 1500;
         GRID_ROW_PIXELS = 1080;
         PIXELS_PER_SQUARE = 20;
-        SNAKE_SIGHT = 2;
+        SNAKE_SIGHT = 7;
         DEATH_PENALTY = -3;
         MAX_NUM_OF_FOOD = 150;
         LEAVE_CORPSE = false;
