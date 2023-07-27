@@ -4,6 +4,7 @@ import games.snake.SnakeGameMultiplayer;
 import games.snake.savegame.SaveGameUtil;
 import games.snake.savegame.SavedGameDTO;
 import neat.evolution.GenePool;
+import runner.Runner;
 import utils.Settings;
 import visualizations.snakeGraphic.SnakeFrame;
 import visualizations.snakeGraphic.SnakePanel;
@@ -12,10 +13,12 @@ import visualizations.snakeGraphic.videoGeneration.VideoGenerator;
 public class Main {
 
     public static void main(String[] args) {
+        Runner.runAllGamesInConfiguration();
+
 //        setupNeatNeuralNetworkWithMultiplayer();
 //        setupNeatNeuralNetworkWithMultiplayerIntro();
 
-        setupFreeEvolution();
+//        setupFreeEvolution();
 
 //        Settings.multiplayerSettings();
 //        playSaveGame("07-17-214701.sav");
