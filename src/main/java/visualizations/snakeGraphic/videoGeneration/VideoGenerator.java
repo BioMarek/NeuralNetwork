@@ -44,7 +44,9 @@ public class VideoGenerator {
     private void createMP4() {
         ImageIterator imageIterator = new ImageIterator(gridVisualization);
         try {
-            SequenceEncoder encoder = new SequenceEncoder(NIOUtils.writableChannel(new File(Settings.VIDEO_BASE_PATH + gridVisualization.name().replace(".sav", "") + ".mp4")),
+            File directory = new File(Settings.VIDEO_BASE_PATH + settingsToDirectoryName());
+            directory.mkdirs();
+            SequenceEncoder encoder = new SequenceEncoder(NIOUtils.writableChannel(new File(Settings.VIDEO_BASE_PATH + settingsToDirectoryName() + gridVisualization.name().replace(".sav", "") + ".mp4")),
                     Rational.R(Settings.VIDEO_FPS, 1), Format.MOV, Codec.PNG, null);
             while (imageIterator.hasNext()) {
                 encoder.encodeNativeFrame(AWTUtil.fromBufferedImageRGB(imageIterator.next()));
@@ -59,8 +61,35 @@ public class VideoGenerator {
     }
 
     /**
+     * Creates name of directory for movies based on current configuration.
+     *
+     * @return name of directory
+     */
+    private String settingsToDirectoryName() {
+        return "pl" + Settings.NUM_OF_PLAYERS + "_" +
+                "sigh" + Settings.SNAKE_SIGHT + "_" +
+                "dp" + Settings.DEATH_PENALTY + "_" +
+                "crps" + shortBool(Settings.LEAVE_CORPSE) + "_" +
+                "wall" + shortBool(Settings.HAS_WALL) + "_" +
+                "coll" + shortBool(Settings.SELF_COLLISION) + "/";
+    }
+
+    /**
+     * Shortes boolean values to single letter
+     *
+     * @param bool boolean value
+     * @return "T" for True and "F" for False
+     */
+    private String shortBool(boolean bool) {
+        if (bool)
+            return "T";
+        return "F";
+    }
+
+    /**
      * For debugging.
-     * @param image to save
+     *
+     * @param image    to save
      * @param filePath where to save image
      */
     public static void saveAsJpg(BufferedImage image, String filePath) {
