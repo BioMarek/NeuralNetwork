@@ -31,7 +31,7 @@ public class GameConfiguration {
             Settings.SELF_COLLISION = false;
             Settings.SAVE_EVERY_N_GENERATIONS = 100;
             Settings.SNAKE_SIGHT_TYPE = SnakeSightType.RAYS;
-            return false;
+            Settings.IS_FREE_EVOLUTION = false;
         };
     }
 
@@ -50,7 +50,7 @@ public class GameConfiguration {
             Settings.SELF_COLLISION = false;
             Settings.SAVE_EVERY_N_GENERATIONS = 100;
             Settings.SNAKE_SIGHT_TYPE = SnakeSightType.RAYS;
-            return false;
+            Settings.IS_FREE_EVOLUTION = false;
         };
     }
 
@@ -74,7 +74,7 @@ public class GameConfiguration {
             Settings.OFFSPRING_THRESHOLD = 0.15d;
             Settings.MAX_NUM_OF_MOVES = 1000;
             Settings.MAX_NUM_OF_MOVES_VIDEO = 1000;
-            return true;
+            Settings.IS_FREE_EVOLUTION = true;
         };
     }
 }

@@ -44,9 +44,10 @@ public class VideoGenerator {
     private void createMP4() {
         ImageIterator imageIterator = new ImageIterator(gridVisualization);
         try {
-            File directory = new File(Settings.VIDEO_BASE_PATH + settingsToDirectoryName());
-            directory.mkdirs();
-            SequenceEncoder encoder = new SequenceEncoder(NIOUtils.writableChannel(new File(Settings.VIDEO_BASE_PATH + settingsToDirectoryName() + gridVisualization.name().replace(".sav", "") + ".mp4")),
+            // TODO refactor SRP
+            SaveGameUtil.createSaveGameDirectory();
+            SaveGameUtil.saveSettingsToFile();
+            SequenceEncoder encoder = new SequenceEncoder(NIOUtils.writableChannel(new File(Settings.VIDEO_BASE_PATH + SaveGameUtil.getSaveGameDirectoryName() + gridVisualization.name().replace(".sav", "") + ".mp4")),
                     Rational.R(Settings.VIDEO_FPS, 1), Format.MOV, Codec.PNG, null);
             while (imageIterator.hasNext()) {
                 encoder.encodeNativeFrame(AWTUtil.fromBufferedImageRGB(imageIterator.next()));
@@ -58,37 +59,6 @@ public class VideoGenerator {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    /**
-     * Creates name of directory for movies based on current configuration.
-     *
-     * @return name of directory
-     */
-    private String settingsToDirectoryName() {
-        // TODO different names for free evolution
-        return "pl" + Settings.NUM_OF_PLAYERS + "_" +
-                "sigh" + Settings.SNAKE_SIGHT + "_" +
-                "dp" + Settings.DEATH_PENALTY + "_" +
-                "lg" + shortBool(Settings.SHOW_LEGEND) + "_" +
-                "crps" + shortBool(Settings.LEAVE_CORPSE) + "_" +
-                "wall" + shortBool(Settings.HAS_WALL) + "_" +
-                "coll" + shortBool(Settings.SELF_COLLISION) + "_" +
-                "fcnt" + Settings.MAX_NUM_OF_FOOD + "_" +
-                "fgrnt" + shortBool(Settings.IS_FOOD_GUARANTEED) + "_" +
-                "save" + Settings.SAVE_EVERY_N_GENERATIONS + "/";
-    }
-
-    /**
-     * Shortes boolean values to single letter
-     *
-     * @param bool boolean value
-     * @return "T" for True and "F" for False
-     */
-    private String shortBool(boolean bool) {
-        if (bool)
-            return "T";
-        return "F";
     }
 
     /**

@@ -11,8 +11,8 @@ public class Runner {
 
     public static void runAllGamesInConfiguration() {
         for (var configurator : GameConfiguration.getConfigurations()) {
-            boolean isFreeEvolution = configurator.configure();
-            if (isFreeEvolution) {
+            configurator.configure();
+            if (Settings.IS_FREE_EVOLUTION) {
                 playFreeEvolution();
             } else {
                 playMultiplayerGame();
