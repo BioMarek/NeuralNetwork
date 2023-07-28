@@ -70,29 +70,33 @@ public class SaveGameUtil {
     }
 
     private static String settingsToString() {
-        return "NUM_OF_PLAYERS = " + Settings.NUM_OF_PLAYERS + "\n" +
-                "GRID_COLUMN_PIXELS = " + Settings.GRID_COLUMN_PIXELS + "\n" +
-                "GRID_ROW_PIXELS = " + Settings.GRID_ROW_PIXELS + "\n" +
-                "PIXELS_PER_SQUARE = " + Settings.PIXELS_PER_SQUARE + "\n" +
-                "SNAKE_SIGHT = " + Settings.SNAKE_SIGHT + "\n" +
-                "DEATH_PENALTY = " + Settings.DEATH_PENALTY + "\n" +
-                "MAX_NUM_OF_FOOD = " + Settings.MAX_NUM_OF_FOOD + "\n" +
-                "LEAVE_CORPSE = " + Settings.LEAVE_CORPSE + "\n" +
-                "HAS_WALL = " + Settings.HAS_WALL + "\n" +
-                "SELF_COLLISION = " + Settings.SELF_COLLISION + "\n" +
-                "SAVE_EVERY_N_GENERATIONS = " + Settings.SAVE_EVERY_N_GENERATIONS + "\n" +
-                "SNAKE_SIGHT_TYPE = " + Settings.SNAKE_SIGHT_TYPE + "\n" +
-                "CHANCE_ADD_NODE = " + Settings.CHANCE_ADD_NODE + "\n" +
-                "CHANCE_ADD_CONNECTION = " + Settings.CHANCE_ADD_CONNECTION + "\n" +
-                "OFFSPRING_THRESHOLD = " + Settings.OFFSPRING_THRESHOLD + "\n" +
-                "SNAKE_SIGHT_TYPE = " + Settings.SNAKE_SIGHT_TYPE + "\n" +
-                "STEPS_TO_REDUCTION = " + Settings.STEPS_TO_REDUCTION + "\n" +
-                "IS_FOOD_GUARANTEED = " + Settings.IS_FOOD_GUARANTEED + "\n" +
-                "IS_FREE_EVOLUTION = " + Settings.IS_FREE_EVOLUTION;
+        return String.format("%-35s %s%n", "NUM_OF_PLAYERS", Settings.NUM_OF_PLAYERS) +
+                String.format("%-35s %s%n", "NUM_OF_GENERATIONS", Settings.NUM_OF_GENERATIONS) +
+                String.format("%-35s %s%n", "GRID_COLUMN_PIXELS", Settings.GRID_COLUMN_PIXELS) +
+                String.format("%-35s %s%n", "GRID_ROW_PIXELS", Settings.GRID_ROW_PIXELS) +
+                String.format("%-35s %s%n", "PIXELS_PER_SQUARE", Settings.PIXELS_PER_SQUARE) +
+                String.format("%-35s %s%n", "SNAKE_SIGHT", Settings.SNAKE_SIGHT) +
+                String.format("%-35s %s%n", "DEATH_PENALTY", Settings.DEATH_PENALTY) +
+                String.format("%-35s %s%n", "MAX_NUM_OF_FOOD", Settings.MAX_NUM_OF_FOOD) +
+                String.format("%-35s %s%n", "PROTECTED_AGE", Settings.PROTECTED_AGE) +
+                String.format("%-35s %s%n", "FREQUENCY_OF_SPECIATION", Settings.FREQUENCY_OF_SPECIATION) +
+                String.format("%-35s %s%n", "LEAVE_CORPSE", Settings.LEAVE_CORPSE) +
+                String.format("%-35s %s%n", "HAS_WALL", Settings.HAS_WALL) +
+                String.format("%-35s %s%n", "SELF_COLLISION", Settings.SELF_COLLISION) +
+                String.format("%-35s %s%n", "SAVE_EVERY_N_GENERATIONS", Settings.SAVE_EVERY_N_GENERATIONS) +
+                String.format("%-35s %s%n", "SNAKE_SIGHT_TYPE", Settings.SNAKE_SIGHT_TYPE) +
+                String.format("%-35s %s%n", "CHANCE_ADD_NODE", Settings.CHANCE_ADD_NODE) +
+                String.format("%-35s %s%n", "CHANCE_ADD_CONNECTION", Settings.CHANCE_ADD_CONNECTION) +
+                String.format("%-35s %s%n", "CHANCE_SWITCH_CONNECTION_ENABLED", Settings.CHANCE_SWITCH_CONNECTION_ENABLED) +
+                String.format("%-35s %s%n", "OFFSPRING_THRESHOLD", Settings.OFFSPRING_THRESHOLD) +
+                String.format("%-35s %s%n", "STEPS_TO_REDUCTION", Settings.STEPS_TO_REDUCTION) +
+                String.format("%-35s %s%n", "IS_FOOD_GUARANTEED", Settings.IS_FOOD_GUARANTEED) +
+                String.format("%-35s %s%n", "MIN_PARENT_LENGTH_FOR_OFFSPRING", Settings.MIN_PARENT_LENGTH_FOR_OFFSPRING) +
+                String.format("%-35s %s%n", "IS_FREE_EVOLUTION", Settings.IS_FREE_EVOLUTION);
     }
 
     /**
-     * Shortes boolean values to single letter
+     * Shortens boolean values to single letter
      *
      * @param bool boolean value
      * @return "T" for True and "F" for False
