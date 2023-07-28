@@ -66,12 +66,17 @@ public class VideoGenerator {
      * @return name of directory
      */
     private String settingsToDirectoryName() {
+        // TODO different names for free evolution
         return "pl" + Settings.NUM_OF_PLAYERS + "_" +
                 "sigh" + Settings.SNAKE_SIGHT + "_" +
                 "dp" + Settings.DEATH_PENALTY + "_" +
+                "lg" + shortBool(Settings.SHOW_LEGEND) + "_" +
                 "crps" + shortBool(Settings.LEAVE_CORPSE) + "_" +
                 "wall" + shortBool(Settings.HAS_WALL) + "_" +
-                "coll" + shortBool(Settings.SELF_COLLISION) + "/";
+                "coll" + shortBool(Settings.SELF_COLLISION) + "_" +
+                "fcnt" + Settings.MAX_NUM_OF_FOOD + "_" +
+                "fgrnt" + shortBool(Settings.IS_FOOD_GUARANTEED) + "_" +
+                "save" + Settings.SAVE_EVERY_N_GENERATIONS + "/";
     }
 
     /**
