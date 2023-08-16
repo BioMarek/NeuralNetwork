@@ -23,13 +23,15 @@ public class VideoGenerator {
 
     public void generateSavedGameVideo(String filename) {
         var path = Settings.SAVE_GAME_PATH + filename;
-        var savedGameDTO = SaveGameUtil.loadObjectFromFile(path);
+        var savedGameDTO = SaveGameUtil.loadSaveGameFromFile(path);
         gridVisualization = new SnakeVisualization(savedGameDTO);
         createMP4();
     }
 
     public void generateSavedGameVideo(SavedGameDTO savedGameDTO) {
         gridVisualization = new SnakeVisualization(savedGameDTO);
+        SaveGameUtil.createSaveGameDirectory();
+        SaveGameUtil.saveSettingsToFile();
         createMP4();
     }
 
@@ -44,7 +46,7 @@ public class VideoGenerator {
     private void createMP4() {
         ImageIterator imageIterator = new ImageIterator(gridVisualization);
         try {
-            SequenceEncoder encoder = new SequenceEncoder(NIOUtils.writableChannel(new File(Settings.VIDEO_BASE_PATH + gridVisualization.name().replace(".sav", "") + ".mp4")),
+            SequenceEncoder encoder = new SequenceEncoder(NIOUtils.writableChannel(new File(Settings.VIDEO_BASE_PATH + SaveGameUtil.getSaveGameDirectoryName() + gridVisualization.name().replace(".sav", "") + ".mp4")),
                     Rational.R(Settings.VIDEO_FPS, 1), Format.MOV, Codec.PNG, null);
             while (imageIterator.hasNext()) {
                 encoder.encodeNativeFrame(AWTUtil.fromBufferedImageRGB(imageIterator.next()));
@@ -60,7 +62,8 @@ public class VideoGenerator {
 
     /**
      * For debugging.
-     * @param image to save
+     *
+     * @param image    to save
      * @param filePath where to save image
      */
     public static void saveAsJpg(BufferedImage image, String filePath) {

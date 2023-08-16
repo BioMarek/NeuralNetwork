@@ -45,6 +45,7 @@ public class Settings {
      * Free evolution
      */
     public static boolean SHOW_LEGEND = true;
+    public static boolean IS_FREE_EVOLUTION = false;
     public static int MIN_PARENT_LENGTH_FOR_OFFSPRING = 2;
     public static double OFFSPRING_THRESHOLD = 0.1d;
 
@@ -81,6 +82,7 @@ public class Settings {
         SELF_COLLISION = false;
         SAVE_EVERY_N_GENERATIONS = 50;
         SNAKE_SIGHT_TYPE = SnakeSightType.RAYS;
+        IS_FREE_EVOLUTION = false;
     }
 
     public static void multiplayerSettingsTopDown() {
@@ -101,6 +103,7 @@ public class Settings {
         CHANCE_HARD_MUTATE_WEIGHT = 0.5d;
         PROTECTED_AGE = 30;
         FREQUENCY_OF_SPECIATION = 20;
+        IS_FREE_EVOLUTION = false;
     }
 
     public static void introSettings() {
@@ -118,6 +121,7 @@ public class Settings {
         SAVE_EVERY_N_GENERATIONS = 100;
         STEPS_TO_REDUCTION = 501;
         SNAKE_SIGHT_TYPE = SnakeSightType.RAYS;
+        IS_FREE_EVOLUTION = false;
     }
 
     public static void freeEvolutionSettings() {
@@ -139,6 +143,7 @@ public class Settings {
         OFFSPRING_THRESHOLD = 0.15d;
         MAX_NUM_OF_MOVES = 1000;
         MAX_NUM_OF_MOVES_VIDEO = 1000;
+        IS_FREE_EVOLUTION = true;
     }
 
     public static void explanationSettings() {
@@ -158,5 +163,6 @@ public class Settings {
         SELF_COLLISION = true;
         SAVE_EVERY_N_GENERATIONS = 100;
         SNAKE_SIGHT_TYPE = SnakeSightType.RAYS;
+        IS_FREE_EVOLUTION = false;
     }
 }
