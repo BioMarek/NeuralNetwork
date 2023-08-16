@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class SaveGameUtil {
-    public static void saveDtoToFile(SavedGameDTO savedGameDTO) {
+    public static void saveSaveGameToFile(SavedGameDTO savedGameDTO) {
         String filename = Settings.SAVE_GAME_PATH + savedGameDTO.fileName;
         try (FileOutputStream fileOut = new FileOutputStream(filename); ObjectOutputStream out = new ObjectOutputStream(fileOut)) {
             out.writeObject(savedGameDTO);
@@ -24,7 +24,7 @@ public class SaveGameUtil {
         }
     }
 
-    public static SavedGameDTO loadObjectFromFile(String filename) {
+    public static SavedGameDTO loadSaveGameFromFile(String filename) {
         try (FileInputStream fileIn = new FileInputStream(filename); ObjectInputStream in = new ObjectInputStream(fileIn)) {
             return (SavedGameDTO) in.readObject();
         } catch (IOException | ClassNotFoundException exception) {

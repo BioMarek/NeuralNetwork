@@ -74,7 +74,7 @@ public class Main {
     public static void playSaveGame(String filename) {
         Settings.freeEvolutionSettings();
         var path = Settings.SAVE_GAME_PATH + filename;
-        var savedGameDTO = SaveGameUtil.loadObjectFromFile(path);
+        var savedGameDTO = SaveGameUtil.loadSaveGameFromFile(path);
         new SnakeFrame(new SnakePanel(savedGameDTO));
     }
 
