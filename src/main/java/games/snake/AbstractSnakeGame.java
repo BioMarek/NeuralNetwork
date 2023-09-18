@@ -6,6 +6,7 @@ import games.snake.savegame.SavedGameDTO;
 import neat.phenotype.NeuralNetwork;
 import utils.Direction;
 import utils.Settings;
+import utils.Util;
 
 import static utils.Util.randomCoordinate;
 import static utils.Util.randomFreeCoordinate;

@@ -29,6 +29,7 @@ public class Settings {
     public static String SAVE_GAME_PATH = "savedGames/";
     public static boolean SELF_COLLISION = false;
     public static SnakeSightType SNAKE_SIGHT_TYPE = SnakeSightType.RAYS;
+    public static String HASH;
 
     /**
      * Multiplayer game

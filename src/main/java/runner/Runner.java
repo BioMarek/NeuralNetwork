@@ -5,6 +5,7 @@ import games.snake.freeEvolution.FEGame;
 import games.snake.savegame.SavedGameDTO;
 import neat.evolution.GenePool;
 import utils.Settings;
+import utils.Util;
 import visualizations.snakeGraphic.videoGeneration.VideoGenerator;
 
 public class Runner {
@@ -12,6 +13,7 @@ public class Runner {
     public static void runAllGamesInConfiguration() {
         for (var configurator : GameConfiguration.getConfigurations()) {
             configurator.configure();
+            Settings.HASH = Util.generateRandomString(4);
             if (Settings.IS_FREE_EVOLUTION) {
                 playFreeEvolution();
             } else {

@@ -40,7 +40,7 @@ public class SaveGameUtil {
     }
 
     public static void saveSettingsToFile() {
-        String filePath = Settings.VIDEO_BASE_PATH + getSaveGameDirectoryName() + "settings.txt";
+        String filePath = Settings.VIDEO_BASE_PATH + Settings.HASH + "_" + getSaveGameDirectoryName() + "settings.txt";
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
             writer.write(settingsToString());
         } catch (IOException e) {
@@ -50,7 +50,7 @@ public class SaveGameUtil {
     }
 
     public static void createSaveGameDirectory() {
-        File directory = new File(Settings.VIDEO_BASE_PATH + getSaveGameDirectoryName());
+        File directory = new File(Settings.VIDEO_BASE_PATH + Settings.HASH + "_" + getSaveGameDirectoryName());
         directory.mkdirs();
     }
 

@@ -160,4 +160,19 @@ public class Util {
     public static Pair<Integer> randomCoordinate(int[][] grid) {
         return new Pair<>(Util.randomInt(1, grid.length - 1), Util.randomInt(1, grid[0].length - 1));
     }
+
+    private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+    public static String generateRandomString(int length) {
+        StringBuilder randomString = new StringBuilder();
+        Random random = new Random();
+
+        for (int i = 0; i < length; i++) {
+            int randomIndex = random.nextInt(CHARACTERS.length());
+            char randomChar = CHARACTERS.charAt(randomIndex);
+            randomString.append(randomChar);
+        }
+
+        return randomString.toString();
+    }
 }
