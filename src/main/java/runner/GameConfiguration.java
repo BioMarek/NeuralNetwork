@@ -92,7 +92,7 @@ public class GameConfiguration {
             Settings.LEAVE_CORPSE = false;
             Settings.HAS_WALL = true;
             Settings.SELF_COLLISION = true;
-            Settings.SAVE_EVERY_N_GENERATIONS = 100;
+            Settings.SAVE_EVERY_N_GENERATIONS = 1000;
             Settings.SNAKE_SIGHT_TYPE = SnakeSightType.RAYS;
             Settings.IS_FREE_EVOLUTION = false;
         };
@@ -112,7 +112,7 @@ public class GameConfiguration {
             Settings.LEAVE_CORPSE = false;
             Settings.HAS_WALL = true;
             Settings.SELF_COLLISION = true;
-            Settings.SAVE_EVERY_N_GENERATIONS = 100;
+            Settings.SAVE_EVERY_N_GENERATIONS = 1000;
             Settings.SNAKE_SIGHT_TYPE = SnakeSightType.RAYS;
             Settings.IS_FREE_EVOLUTION = false;
         };
@@ -132,7 +132,7 @@ public class GameConfiguration {
             Settings.LEAVE_CORPSE = false;
             Settings.HAS_WALL = true;
             Settings.SELF_COLLISION = true;
-            Settings.SAVE_EVERY_N_GENERATIONS = 100;
+            Settings.SAVE_EVERY_N_GENERATIONS = 1000;
             Settings.SNAKE_SIGHT_TYPE = SnakeSightType.RAYS;
             Settings.IS_FREE_EVOLUTION = false;
         };
