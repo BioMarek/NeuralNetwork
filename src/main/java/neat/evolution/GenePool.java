@@ -104,6 +104,15 @@ public class GenePool implements EvolutionEngine {
         }
         result.add(listOfPlayers);
 
+        // handles case where NUM_OF_PLAYERS doesn't divide TOTAL_NUM_OF_GENOTYPES
+        var lastListOfPlayers = result.get(result.size() - 1);
+        var numOfPlayersMissing = Settings.NUM_OF_PLAYERS - lastListOfPlayers.size();
+        if (numOfPlayersMissing > 0) {
+            for (int i = 0; i < numOfPlayersMissing; i++) {
+                lastListOfPlayers.add(listOfPlayers.get(i));
+            }
+        }
+
         return result;
     }
 
