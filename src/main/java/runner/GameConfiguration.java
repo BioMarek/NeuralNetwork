@@ -18,6 +18,8 @@ public class GameConfiguration {
 //        configurations.add(freeEvolutionSettings());
         configurations.add(multiplayerRandomSettings());
         configurations.add(multiplayerRandomSettings());
+        configurations.add(multiplayerRandomSettings());
+        configurations.add(multiplayerRandomSettings());
         return configurations;
     }
 
@@ -196,9 +198,9 @@ public class GameConfiguration {
             Settings.DEATH_PENALTY = Util.randomInt(-100, 0);
             Settings.MAX_NUM_OF_FOOD = Util.randomInt(1, 5000) / pixelsPerSquare;
             Settings.STEPS_TO_REDUCTION = Util.randomInt(10, 100);
-            Settings.LEAVE_CORPSE = Util.isRandomChanceTrue(50);
-            Settings.HAS_WALL = Util.isRandomChanceTrue(50);
-            Settings.SELF_COLLISION = Util.isRandomChanceTrue(50);
+            Settings.LEAVE_CORPSE = Util.isRandomChanceTrue(0.5);
+            Settings.HAS_WALL = Util.isRandomChanceTrue(0.5);
+            Settings.SELF_COLLISION = Util.isRandomChanceTrue(0.5);
             Settings.SAVE_EVERY_N_GENERATIONS = 200;
             Settings.SNAKE_SIGHT_TYPE = SnakeSightType.RAYS;
             Settings.IS_FREE_EVOLUTION = false;
