@@ -92,6 +92,11 @@ public class SaveGameUtil {
                 String.format("%-35s %s%n", "STEPS_TO_REDUCTION", Settings.STEPS_TO_REDUCTION) +
                 String.format("%-35s %s%n", "IS_FOOD_GUARANTEED", Settings.IS_FOOD_GUARANTEED) +
                 String.format("%-35s %s%n", "MIN_PARENT_LENGTH_FOR_OFFSPRING", Settings.MIN_PARENT_LENGTH_FOR_OFFSPRING) +
+                String.format("%-35s %s%n", "CHANCE_MUTATE_WEIGHT", Settings.CHANCE_MUTATE_WEIGHT) +
+                String.format("%-35s %s%n", "CHANCE_MUTATE_WEIGHT", Settings.CHANCE_MUTATE_WEIGHT) +
+                String.format("%-35s %s%n", "CHANCE_SWITCH_CONNECTION_ENABLED", Settings.CHANCE_SWITCH_CONNECTION_ENABLED) +
+                String.format("%-35s %s%n", "CHANCE_ADD_NODE", Settings.CHANCE_ADD_NODE) +
+                String.format("%-35s %s%n", "CHANCE_ADD_CONNECTION", Settings.CHANCE_ADD_CONNECTION) +
                 String.format("%-35s %s%n", "IS_FREE_EVOLUTION", Settings.IS_FREE_EVOLUTION);
     }
 

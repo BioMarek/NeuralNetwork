@@ -25,6 +25,13 @@ public class Util {
         return (to - from) * random.nextDouble() + from;
     }
 
+    public static double randomDouble(double from, double to) {
+        if (to < from)
+            throw new IllegalArgumentException(String.format("Upper bound '%f' cannot be smaller than lower bound '%f'.", to, from));
+
+        return (to - from) * random.nextDouble() + from;
+    }
+
     /**
      * The function returns random integer in [from, to) interval.
      *

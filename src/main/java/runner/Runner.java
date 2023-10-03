@@ -41,6 +41,7 @@ public class Runner {
     }
 
     public static void playFreeEvolution() {
+        printFESettings();
         long start = System.currentTimeMillis();
         var feGame = new FEGame(8, 5);
         SavedGameDTO savedGameDTO = feGame.saveSnakeMoves();
@@ -61,5 +62,15 @@ public class Runner {
         System.out.println("LEAVE_CORPSE " + Settings.LEAVE_CORPSE);
         System.out.println("HAS_WALL " + Settings.HAS_WALL);
         System.out.println("SELF_COLLISION " + Settings.SELF_COLLISION);
+    }
+
+    public static void printFESettings() {
+        System.out.println("CHANCE_MUTATE_WEIGHT " + Settings.CHANCE_MUTATE_WEIGHT);
+        System.out.println("CHANCE_HARD_MUTATE_WEIGHT " + Settings.CHANCE_HARD_MUTATE_WEIGHT);
+        System.out.println("CHANCE_SWITCH_CONNECTION_ENABLED " + Settings.CHANCE_SWITCH_CONNECTION_ENABLED);
+        System.out.println("CHANCE_ADD_NODE " + Settings.CHANCE_ADD_NODE);
+        System.out.println("CHANCE_ADD_CONNECTION " + Settings.CHANCE_ADD_CONNECTION);
+        System.out.println("IS_FOOD_GUARANTEED " + Settings.IS_FOOD_GUARANTEED);
+        System.out.println("OFFSPRING_THRESHOLD " + Settings.OFFSPRING_THRESHOLD);
     }
 }
