@@ -2,6 +2,7 @@ package runner;
 
 import games.snake.dtos.SnakeSightType;
 import utils.Settings;
+import utils.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,9 +11,20 @@ public class GameConfiguration {
 
     public static List<Configurator> getConfigurations() {
         List<Configurator> configurations = new ArrayList<>();
-        configurations.add(multiplayerSettings());
-//        configurations.add(multiplayerSettings2Players());
-        configurations.add(freeEvolutionSettings());
+//        configurations.add(multiplayerSettings());
+//        configurations.add(multiplayerSettings2PlayersBasic());
+//        configurations.add(multiplayerSettings2PlayersSmallGrid());
+//        configurations.add(multiplayerSettings2PlayersSmallGridHighPenalty());
+//        configurations.add(freeEvolutionSettings());
+
+//        configurations.add(multiplayerRandomSettings());
+//        configurations.add(multiplayerRandomSettings());
+//        configurations.add(multiplayerRandomSettings());
+//        configurations.add(multiplayerRandomSettings());
+//        configurations.add(multipleSnakesFillingBoard());
+        configurations.add(multipleSnakesFillingBoard2());
+        configurations.add(multipleSnakesFillingBoard3());
+
         return configurations;
     }
 
@@ -76,21 +88,121 @@ public class GameConfiguration {
         };
     }
 
-    public static Configurator multiplayerSettings2Players() {
+    public static Configurator multiplayerSettings2PlayersBasic() {
         return () -> {
-            Settings.NUM_OF_GENERATIONS = 300;
-            Settings.NUM_OF_PLAYERS = 2;
+            Settings.NUM_OF_GENERATIONS = 1000;
+            Settings.NUM_OF_PLAYERS = 6;
             Settings.GRID_COLUMN_PIXELS = 1500;
             Settings.GRID_ROW_PIXELS = 1080;
-            Settings.PIXELS_PER_SQUARE = 20;
+            Settings.PIXELS_PER_SQUARE = 40;
             Settings.SNAKE_SIGHT = 7;
             Settings.DEATH_PENALTY = -3;
+            Settings.MAX_NUM_OF_FOOD = 15;
+            Settings.STEPS_TO_REDUCTION = 15;
+            Settings.LEAVE_CORPSE = false;
+            Settings.HAS_WALL = true;
+            Settings.SELF_COLLISION = true;
+            Settings.SAVE_EVERY_N_GENERATIONS = 1000;
+            Settings.SNAKE_SIGHT_TYPE = SnakeSightType.RAYS;
+            Settings.IS_FREE_EVOLUTION = false;
+        };
+    }
+
+    public static Configurator multiplayerSettings2PlayersSmallGrid() {
+        return () -> {
+            Settings.NUM_OF_GENERATIONS = 1000;
+            Settings.NUM_OF_PLAYERS = 6;
+            Settings.GRID_COLUMN_PIXELS = 1500;
+            Settings.GRID_ROW_PIXELS = 1080;
+            Settings.PIXELS_PER_SQUARE = 60;
+            Settings.SNAKE_SIGHT = 7;
+            Settings.DEATH_PENALTY = -3;
+            Settings.MAX_NUM_OF_FOOD = 7;
+            Settings.STEPS_TO_REDUCTION = 15;
+            Settings.LEAVE_CORPSE = false;
+            Settings.HAS_WALL = true;
+            Settings.SELF_COLLISION = true;
+            Settings.SAVE_EVERY_N_GENERATIONS = 1000;
+            Settings.SNAKE_SIGHT_TYPE = SnakeSightType.RAYS;
+            Settings.IS_FREE_EVOLUTION = false;
+        };
+    }
+
+    public static Configurator multiplayerSettings2PlayersSmallGridHighPenalty() {
+        return () -> {
+            Settings.NUM_OF_GENERATIONS = 1000;
+            Settings.NUM_OF_PLAYERS = 6;
+            Settings.GRID_COLUMN_PIXELS = 1500;
+            Settings.GRID_ROW_PIXELS = 1080;
+            Settings.PIXELS_PER_SQUARE = 60;
+            Settings.SNAKE_SIGHT = 7;
+            Settings.DEATH_PENALTY = -30;
+            Settings.MAX_NUM_OF_FOOD = 7;
+            Settings.STEPS_TO_REDUCTION = 15;
+            Settings.LEAVE_CORPSE = false;
+            Settings.HAS_WALL = true;
+            Settings.SELF_COLLISION = true;
+            Settings.SAVE_EVERY_N_GENERATIONS = 1000;
+            Settings.SNAKE_SIGHT_TYPE = SnakeSightType.RAYS;
+            Settings.IS_FREE_EVOLUTION = false;
+        };
+    }
+
+    public static Configurator multipleSnakesFillingBoard() {
+        return () -> {
+            Settings.NUM_OF_GENERATIONS = 1000;
+            Settings.NUM_OF_PLAYERS = 6;
+            Settings.GRID_COLUMN_PIXELS = 1500;
+            Settings.GRID_ROW_PIXELS = 1080;
+            Settings.PIXELS_PER_SQUARE = 40;
+            Settings.SNAKE_SIGHT = 7;
+            Settings.DEATH_PENALTY = -30;
+            Settings.MAX_NUM_OF_FOOD = 100;
+            Settings.STEPS_TO_REDUCTION = 15;
+            Settings.LEAVE_CORPSE = true;
+            Settings.HAS_WALL = false;
+            Settings.SELF_COLLISION = false;
+            Settings.SAVE_EVERY_N_GENERATIONS = 200;
+            Settings.SNAKE_SIGHT_TYPE = SnakeSightType.RAYS;
+            Settings.IS_FREE_EVOLUTION = false;
+        };
+    }
+
+    public static Configurator multipleSnakesFillingBoard2() {
+        return () -> {
+            Settings.NUM_OF_GENERATIONS = 1000;
+            Settings.NUM_OF_PLAYERS = 12;
+            Settings.GRID_COLUMN_PIXELS = 1500;
+            Settings.GRID_ROW_PIXELS = 1080;
+            Settings.PIXELS_PER_SQUARE = 30;
+            Settings.SNAKE_SIGHT = 7;
+            Settings.DEATH_PENALTY = -75;
             Settings.MAX_NUM_OF_FOOD = 150;
             Settings.STEPS_TO_REDUCTION = 15;
             Settings.LEAVE_CORPSE = false;
             Settings.HAS_WALL = true;
             Settings.SELF_COLLISION = false;
-            Settings.SAVE_EVERY_N_GENERATIONS = 100;
+            Settings.SAVE_EVERY_N_GENERATIONS = 200;
+            Settings.SNAKE_SIGHT_TYPE = SnakeSightType.RAYS;
+            Settings.IS_FREE_EVOLUTION = false;
+        };
+    }
+
+    public static Configurator multipleSnakesFillingBoard3() {
+        return () -> {
+            Settings.NUM_OF_GENERATIONS = 1000;
+            Settings.NUM_OF_PLAYERS = 12;
+            Settings.GRID_COLUMN_PIXELS = 1500;
+            Settings.GRID_ROW_PIXELS = 1080;
+            Settings.PIXELS_PER_SQUARE = 30;
+            Settings.SNAKE_SIGHT = 7;
+            Settings.DEATH_PENALTY = -75;
+            Settings.MAX_NUM_OF_FOOD = 150;
+            Settings.STEPS_TO_REDUCTION = 15;
+            Settings.LEAVE_CORPSE = false;
+            Settings.HAS_WALL = false;
+            Settings.SELF_COLLISION = false;
+            Settings.SAVE_EVERY_N_GENERATIONS = 200;
             Settings.SNAKE_SIGHT_TYPE = SnakeSightType.RAYS;
             Settings.IS_FREE_EVOLUTION = false;
         };
@@ -136,6 +248,28 @@ public class GameConfiguration {
             Settings.MAX_NUM_OF_MOVES = 1000;
             Settings.MAX_NUM_OF_MOVES_VIDEO = 1000;
             Settings.IS_FREE_EVOLUTION = true;
+        };
+    }
+
+    public static Configurator multiplayerRandomSettings() {
+        var pixelsPerSquare = Util.randomInt(1, 6) * 10;
+        return () -> {
+            Settings.NUM_OF_GENERATIONS = 1000;
+            Settings.NUM_OF_PLAYERS = Util.randomInt(1, 12) * 2;
+            Settings.GRID_COLUMN_PIXELS = 1500;
+            Settings.GRID_ROW_PIXELS = 1080;
+            Settings.PIXELS_PER_SQUARE = pixelsPerSquare;
+            Settings.SNAKE_SIGHT = 7;
+            Settings.DEATH_PENALTY = Util.randomInt(-100, 0);
+            Settings.MAX_NUM_OF_FOOD = Util.randomInt(1, 5000) / pixelsPerSquare;
+            Settings.STEPS_TO_REDUCTION = Util.randomInt(10, 100);
+            Settings.LEAVE_CORPSE = Util.isRandomChanceTrue(0.5);
+            Settings.HAS_WALL = Util.isRandomChanceTrue(0.5);
+            Settings.SELF_COLLISION = Util.isRandomChanceTrue(0.5);
+            Settings.SAVE_EVERY_N_GENERATIONS = 200;
+            Settings.SNAKE_SIGHT_TYPE = SnakeSightType.RAYS;
+            Settings.IS_FREE_EVOLUTION = false;
+            Settings.MAX_NUM_OF_MOVES_VIDEO = 500;
         };
     }
 }
