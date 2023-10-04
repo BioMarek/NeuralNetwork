@@ -25,7 +25,11 @@ public class GameConfiguration {
 //        configurations.add(multipleSnakesFillingBoard2());
 //        configurations.add(multipleSnakesFillingBoard3());
 
-        configurations.add(freeEvolutionRandomSettings());
+        configurations.add(freeEvolutionSettings());
+        configurations.add(freeEvolutionSettings());
+        configurations.add(freeEvolutionSettings());
+        configurations.add(freeEvolutionSettings());
+        configurations.add(freeEvolutionSettings());
 
         return configurations;
     }
@@ -248,13 +252,11 @@ public class GameConfiguration {
             Settings.IS_FOOD_GUARANTEED = false;
             Settings.OFFSPRING_THRESHOLD = 0.15d;
             Settings.MAX_NUM_OF_MOVES = 1000;
-            Settings.MAX_NUM_OF_MOVES_VIDEO = 1000;
             Settings.IS_FREE_EVOLUTION = true;
         };
     }
 
     public static Configurator freeEvolutionRandomSettings() {
-        var pixelsPerSquare = Util.randomInt(1, 6) * 10;
         return () -> {
             Settings.SHOW_LEGEND = false;
             Settings.GRID_COLUMN_PIXELS = 1920;
@@ -265,15 +267,14 @@ public class GameConfiguration {
             Settings.CHANCE_SWITCH_CONNECTION_ENABLED = Util.randomDouble(0.05d, 3.0d);
             Settings.CHANCE_ADD_NODE = Util.randomDouble(0.01d, 1.0d);
             Settings.CHANCE_ADD_CONNECTION = Util.randomDouble(0.01d, 1.0d);
-            Settings.MAX_NUM_OF_FOOD = Util.randomInt(50, 5000) / pixelsPerSquare;
+            Settings.MAX_NUM_OF_FOOD = Util.randomInt(100, 500);
             Settings.LEAVE_CORPSE = Util.isRandomChanceTrue(0.5);
             Settings.HAS_WALL = Util.isRandomChanceTrue(0.5);
             Settings.SELF_COLLISION = Util.isRandomChanceTrue(0.5);
             Settings.SNAKE_SIGHT_TYPE = SnakeSightType.RAYS;
             Settings.IS_FOOD_GUARANTEED = Util.isRandomChanceTrue(0.5);
             Settings.OFFSPRING_THRESHOLD = Util.randomDouble(0.05d, 0.5d);
-            Settings.MAX_NUM_OF_MOVES = 1000;
-            Settings.MAX_NUM_OF_MOVES_VIDEO = 1000;
+            Settings.MAX_NUM_OF_MOVES = 2000;
             Settings.IS_FREE_EVOLUTION = true;
         };
     }
