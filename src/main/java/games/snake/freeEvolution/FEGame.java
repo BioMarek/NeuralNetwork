@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static utils.Util.arrayCopy;
+import static utils.Util.randomFreeCoordinate;
 import static utils.Util.repeat;
 
 public class FEGame extends AbstractSnakeGame {
@@ -122,7 +123,6 @@ public class FEGame extends AbstractSnakeGame {
         if (grid[row][column] == SnakeMap.FOOD.value) {
             snake.placeSnake();
             numOfFood--;
-            placeFood();
             snake.snakeScore += 1;
         } else {
             snake.removeSnake(false);
@@ -167,8 +167,8 @@ public class FEGame extends AbstractSnakeGame {
             }
             if (snakes.size() == 0)
                 break;
-            if (!Settings.IS_FOOD_GUARANTEED && numOfFood < Settings.MAX_NUM_OF_FOOD) {
-                placeFood(); // when food drops belows limit this tries to bring it up
+            for (int i = 0; i < Settings.NUM_FOOD_PER_TURN; i++) {
+                placeFood();
             }
         }
         setSaveGameMetadata(savedGameDTO);
@@ -181,6 +181,23 @@ public class FEGame extends AbstractSnakeGame {
             var offspring = snake.produceOffSpring();
             snakes.add(offspring);
             offspring.placeSnake();
+        }
+    }
+
+    /**
+     * If there is less food on the grid then Settings.maxNumberOfFood one additional food will be added on random grid
+     * square.
+     */
+    @Override
+    protected void placeFood() {
+        if (numOfFood >= Settings.MAX_NUM_OF_FOOD) {
+            return;
+        }
+
+        var coordinates = randomFreeCoordinate(grid);
+        if (grid[coordinates.getFirst()][coordinates.getSecond()] == SnakeMap.EMPTY.value) {
+            grid[coordinates.getFirst()][coordinates.getSecond()] = SnakeMap.FOOD.value;
+            numOfFood++;
         }
     }
 }

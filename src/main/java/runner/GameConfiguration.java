@@ -25,11 +25,11 @@ public class GameConfiguration {
 //        configurations.add(multipleSnakesFillingBoard2());
 //        configurations.add(multipleSnakesFillingBoard3());
 
-        configurations.add(freeEvolutionSettingsTest());
-        configurations.add(freeEvolutionSettingsTest());
-        configurations.add(freeEvolutionSettingsTest());
-        configurations.add(freeEvolutionSettingsTest());
-        configurations.add(freeEvolutionSettingsTest());
+        configurations.add(freeEvolutionRandomSettings());
+        configurations.add(freeEvolutionRandomSettings());
+        configurations.add(freeEvolutionRandomSettings());
+        configurations.add(freeEvolutionRandomSettings());
+        configurations.add(freeEvolutionRandomSettings());
 
         return configurations;
     }
@@ -256,29 +256,6 @@ public class GameConfiguration {
         };
     }
 
-    public static Configurator freeEvolutionSettingsTest() {
-        return () -> {
-            Settings.SHOW_LEGEND = false;
-            Settings.GRID_COLUMN_PIXELS = 1920;
-            Settings.PIXELS_PER_SQUARE = 20;
-            Settings.NUM_OF_PLAYERS = 25;
-            Settings.CHANCE_MUTATE_WEIGHT = 0.8d;
-            Settings.CHANCE_HARD_MUTATE_WEIGHT = 0.1d;
-            Settings.CHANCE_SWITCH_CONNECTION_ENABLED = 0.2d;
-            Settings.CHANCE_ADD_NODE = 0.03d;
-            Settings.CHANCE_ADD_CONNECTION = 0.03d;
-            Settings.MAX_NUM_OF_FOOD = 200;
-            Settings.LEAVE_CORPSE = false;
-            Settings.HAS_WALL = Util.isRandomChanceTrue(0.5);
-            Settings.SELF_COLLISION = false;
-            Settings.SNAKE_SIGHT_TYPE = SnakeSightType.RAYS;
-            Settings.IS_FOOD_GUARANTEED = Util.isRandomChanceTrue(0.5);
-            Settings.OFFSPRING_THRESHOLD = 0.15d;
-            Settings.MAX_NUM_OF_MOVES = 1000;
-            Settings.IS_FREE_EVOLUTION = true;
-        };
-    }
-
     public static Configurator freeEvolutionRandomSettings() {
         return () -> {
             Settings.SHOW_LEGEND = false;
@@ -295,9 +272,9 @@ public class GameConfiguration {
             Settings.HAS_WALL = Util.isRandomChanceTrue(0.5);
             Settings.SELF_COLLISION = Util.isRandomChanceTrue(0.5);
             Settings.SNAKE_SIGHT_TYPE = SnakeSightType.RAYS;
-            Settings.IS_FOOD_GUARANTEED = Util.isRandomChanceTrue(0.5);
+            Settings.NUM_FOOD_PER_TURN = Util.randomInt(1, 20);
             Settings.OFFSPRING_THRESHOLD = Util.randomDouble(0.05d, 0.5d);
-            Settings.MAX_NUM_OF_MOVES = 2000;
+            Settings.MAX_NUM_OF_MOVES = 10000;
             Settings.IS_FREE_EVOLUTION = true;
         };
     }

@@ -96,7 +96,8 @@ public class SaveGameUtil {
                 String.format("%-35s %s%n", "CHANCE_SWITCH_CONNECTION_ENABLED", Settings.CHANCE_SWITCH_CONNECTION_ENABLED) +
                 String.format("%-35s %s%n", "CHANCE_ADD_NODE", Settings.CHANCE_ADD_NODE) +
                 String.format("%-35s %s%n", "CHANCE_ADD_CONNECTION", Settings.CHANCE_ADD_CONNECTION) +
-                String.format("%-35s %s%n", "IS_FREE_EVOLUTION", Settings.IS_FREE_EVOLUTION);
+                String.format("%-35s %s%n", "IS_FREE_EVOLUTION", Settings.IS_FREE_EVOLUTION) +
+                String.format("%-35s %s%n", "NUM_FOOD_PER_TURN", Settings.NUM_FOOD_PER_TURN);
     }
 
     /**

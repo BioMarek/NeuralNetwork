@@ -72,5 +72,6 @@ public class Runner {
         System.out.println("CHANCE_ADD_CONNECTION " + Settings.CHANCE_ADD_CONNECTION);
         System.out.println("IS_FOOD_GUARANTEED " + Settings.IS_FOOD_GUARANTEED);
         System.out.println("OFFSPRING_THRESHOLD " + Settings.OFFSPRING_THRESHOLD);
+        System.out.println("NUM_FOOD_PER_TURN " + Settings.NUM_FOOD_PER_TURN);
     }
 }
