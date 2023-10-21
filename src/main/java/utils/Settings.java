@@ -47,8 +47,9 @@ public class Settings {
      */
     public static boolean SHOW_LEGEND = true;
     public static boolean IS_FREE_EVOLUTION = false;
-    public static int MIN_PARENT_LENGTH_FOR_OFFSPRING = 2;
+    public static int MIN_PARENT_LENGTH_FOR_OFFSPRING = 3;
     public static double OFFSPRING_THRESHOLD = 0.1d;
+    public static int NUM_FOOD_PER_TURN = 3;
 
     /**
      * Graphic

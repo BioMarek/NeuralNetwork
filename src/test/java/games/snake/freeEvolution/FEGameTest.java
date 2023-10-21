@@ -66,6 +66,20 @@ public class FEGameTest {
         Settings.MAX_NUM_OF_FOOD = 2;
     }
 
+    @Test
+    void snakeIsRemovedAfterCollision() {
+        Settings.NUM_OF_PLAYERS = 4;
+        Settings.MAX_NUM_OF_FOOD = 0;
+
+        var feGame = new FEGame(8, 5);
+        feGame.moveSnakeToDirection(feGame.snakes.get(0), Direction.DOWN);
+
+        assertThat(feGame.grid[1][1] == 0 || feGame.grid[1][2] == 0 || feGame.grid[2][1] == 0 || feGame.grid[2][2] == 0, is(true));
+
+        Settings.NUM_OF_PLAYERS = 2;
+        Settings.MAX_NUM_OF_FOOD = 2;
+    }
+
     @AfterEach
     void cleanup() {
         Settings.LEAVE_CORPSE = true;

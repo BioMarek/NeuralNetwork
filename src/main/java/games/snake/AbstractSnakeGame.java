@@ -6,7 +6,6 @@ import games.snake.savegame.SavedGameDTO;
 import neat.phenotype.NeuralNetwork;
 import utils.Direction;
 import utils.Settings;
-import utils.Util;
 
 import static utils.Util.randomCoordinate;
 import static utils.Util.randomFreeCoordinate;
@@ -80,7 +79,7 @@ public abstract class AbstractSnakeGame {
         int maxIndex = 0;
         double max = array[0];
 
-        for (int i = 0; i < array.length; i++) {
+        for (int i = 0; i < 4; i++) { // 4 because movement output nodes are only 4
             if (max < array[i]) {
                 max = array[i];
                 maxIndex = i;
