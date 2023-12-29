@@ -18,7 +18,7 @@ public class Main {
 //        setupNeatNeuralNetworkWithMultiplayer();
 //        setupNeatNeuralNetworkWithMultiplayerIntro();
 
-//        setupFreeEvolution();
+        setupFreeEvolution();
 
 //        Settings.multiplayerSettings();
 //        playSaveGame("07-17-214701.sav");
